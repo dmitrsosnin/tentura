@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import 'package:gravity/core/data/api_service.dart';
 import 'package:gravity/feature/auth/data/auth_controller.dart';
 
 class DI {
@@ -13,6 +14,7 @@ class DI {
   Future<void> init() async {
     if (_isInited) return;
 
+    GetIt.I.registerSingleton(await ApiService().init());
     GetIt.I.registerSingleton(await AuthController().init());
 
     _isInited = true;
