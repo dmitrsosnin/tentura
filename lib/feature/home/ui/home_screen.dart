@@ -21,10 +21,26 @@ class HomeScreen extends StatelessWidget {
         showSelectedLabels: false,
         onTap: child.goBranch,
         items: [
-          _generateNavBarItem(Icons.home_outlined, 'My field', color),
-          _generateNavBarItem(Icons.list_alt_rounded, 'Beacons', color),
-          _generateNavBarItem(Icons.notifications_rounded, 'Updates', color),
-          _generateNavBarItem(Icons.account_circle_outlined, 'Profile', color),
+          _generateNavBarItem(
+            Icons.home_outlined,
+            'My field',
+            color,
+          ),
+          _generateNavBarItem(
+            Icons.list_alt_rounded,
+            'Beacons',
+            color,
+          ),
+          _generateNavBarItem(
+            Icons.notifications_none_outlined,
+            'Updates',
+            color,
+          ),
+          _generateNavBarItem(
+            Icons.account_circle_outlined,
+            'Profile',
+            color,
+          ),
         ],
       ),
     );

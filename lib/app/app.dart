@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gravity/core/ui/theme.dart';
 import 'package:url_strategy/url_strategy.dart';
+
+import 'package:gravity/core/ui/theme.dart';
 
 import 'di.dart';
 import 'router.dart';
@@ -14,7 +15,10 @@ class App extends StatelessWidget {
     return const App(di: di);
   }
 
-  const App({super.key, required this.di});
+  const App({
+    super.key,
+    required this.di,
+  });
 
   final DI di;
 

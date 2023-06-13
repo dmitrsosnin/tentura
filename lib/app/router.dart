@@ -1,16 +1,18 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:gravity/core/consts.dart';
+import 'package:gravity/feature/auth/data/auth_repository.dart';
+
 import 'package:gravity/core/ui/screen/error_screen.dart';
 import 'package:gravity/feature/home/ui/home_screen.dart';
 import 'package:gravity/feature/auth/ui/login_screen.dart';
 import 'package:gravity/feature/field/ui/field_screen.dart';
+import 'package:gravity/feature/user/ui/profile_screen.dart';
 import 'package:gravity/feature/updates/ui/updates_screen.dart';
 import 'package:gravity/feature/beacons/ui/beacons_screen.dart';
-import 'package:gravity/feature/profile/ui/profile_screen.dart';
 
 export 'package:go_router/go_router.dart';
 
@@ -60,7 +62,7 @@ final router = GoRouter(
             GoRoute(
               path: pathProfile,
               redirect: _authGuardian,
-              builder: (context, state) => const ProfileScreen(),
+              builder: (context, state) => ProfileScreen(),
             ),
           ],
         ),
@@ -74,4 +76,4 @@ final router = GoRouter(
 );
 
 String? _authGuardian(BuildContext context, GoRouterState state) =>
-    FirebaseAuth.instance.currentUser == null ? pathLogin : null;
+    GetIt.I<AuthRepository>().authInfo.id.isEmpty ? pathLogin : null;
