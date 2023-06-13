@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-import 'package:gravity/core/ui/theme.dart';
+import 'package:gravity/_shared/ui/theme.dart';
 
 import 'di.dart';
 import 'router.dart';

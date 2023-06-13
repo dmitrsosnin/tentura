@@ -1,10 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:gravity/core/entity/user.dart';
-import 'package:gravity/feature/auth/data/auth_repository.dart';
-import 'package:gravity/feature/user/data/user_repository.dart';
+import 'package:gravity/user/entity/user.dart';
+import 'package:gravity/auth/data/auth_repository.dart';
+import 'package:gravity/user/data/user_repository.dart';
 
 part 'my_profile_state.dart';
 

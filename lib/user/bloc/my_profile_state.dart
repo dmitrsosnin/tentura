@@ -1,15 +1,16 @@
 part of 'my_profile_cubit.dart';
 
 @immutable
-class MyProfileState extends User {
+class MyProfileState extends Equatable {
+  final String id, uid, displayName, description, photoUrl;
   final Object error;
 
   const MyProfileState({
-    super.id,
-    super.uid,
-    super.displayName,
-    super.description,
-    super.photoUrl,
+    this.id = '',
+    this.uid = '',
+    this.displayName = '',
+    this.description = '',
+    this.photoUrl = '',
     this.error = false,
   });
 
@@ -21,10 +22,13 @@ class MyProfileState extends User {
         photoUrl: user.photoUrl,
       );
 
+  @override
+  List<Object> get props => [id, uid, displayName, description, photoUrl];
+
   bool get isLoading => id.isEmpty;
+
   bool get hasError => error is Exception;
 
-  @override
   MyProfileState copyWith({
     String? id,
     String? uid,

@@ -24,9 +24,6 @@ class User extends Equatable {
   @override
   List<Object> get props => [id, uid, displayName, description, photoUrl];
 
-  bool get isAuthenticated => id.isEmpty;
-  bool get isNotAuthenticated => id.isNotEmpty;
-
   User copyWith({
     String? id,
     String? uid,

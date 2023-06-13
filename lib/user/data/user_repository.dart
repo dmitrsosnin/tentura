@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:gravity/core/types.dart';
-import 'package:gravity/core/entity/user.dart';
-import 'package:gravity/core/data/api_service.dart';
+import 'package:gravity/_shared/types.dart';
+import 'package:gravity/user/entity/user.dart';
+import 'package:gravity/_shared/data/api_service.dart';
 
 class UserRepository {
   final _apiService = GetIt.I<ApiService>();

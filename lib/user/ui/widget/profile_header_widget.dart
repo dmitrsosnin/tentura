@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:extended_image/extended_image.dart';
 
-import 'package:gravity/app/router.dart';
-import 'package:gravity/core/consts.dart';
-import 'package:gravity/feature/user/bloc/my_profile_cubit.dart';
-import 'package:gravity/feature/user/ui/dialog/on_log_out_dialog.dart';
+import 'package:gravity/_app/router.dart';
+import 'package:gravity/_shared/consts.dart';
+import 'package:gravity/user/bloc/my_profile_cubit.dart';
+import 'package:gravity/user/ui/dialog/on_log_out_dialog.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
   const ProfileHeaderWidget({super.key});

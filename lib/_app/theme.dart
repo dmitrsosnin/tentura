@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/core/ui/theme.dart';
+import 'package:gravity/_shared/ui/theme.dart';
 
 final themeLight = ThemeData.light(useMaterial3: true).copyWith(
   colorScheme: ColorScheme.fromSeed(seedColor: primaryColor).copyWith(

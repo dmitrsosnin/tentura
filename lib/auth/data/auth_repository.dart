@@ -4,17 +4,19 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:gravity/core/data/api_service.dart';
-import 'package:gravity/feature/auth/data/firebase_options.dart';
+import 'package:gravity/_shared/data/api_service.dart';
+import 'package:gravity/auth/data/firebase_options.dart';
+
+typedef AuthInfo = ({String id, String dn, String photoUrl});
 
 class AuthRepository {
-  final _controller = StreamController<bool>();
+  final _controller = StreamController<AuthInfo>();
 
   late final _apiService = GetIt.I<ApiService>();
 
   User? _user;
 
-  ({String id, String dn, String photoUrl}) get authInfo => (
+  AuthInfo get authInfo => (
         id: _user?.uid ?? '',
         dn: _user?.displayName ?? '',
         photoUrl: _user?.photoURL ?? '',
@@ -29,8 +31,8 @@ class AuthRepository {
     }
     FirebaseAuth.instance.idTokenChanges().listen((user) async {
       _user = user;
-      _apiService.authToken = await user?.getIdToken();
-      _controller.add(user != null);
+      _controller.add(authInfo);
+      _apiService.getToken = user?.getIdToken;
     });
     return this;
   }

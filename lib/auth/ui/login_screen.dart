@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
-import 'package:gravity/core/consts.dart';
-import 'package:gravity/feature/auth/data/firebase_options.dart';
+import 'package:gravity/_shared/consts.dart';
+import 'package:gravity/auth/data/firebase_options.dart';
 
 class LogInScreen extends StatelessWidget {
   const LogInScreen({super.key});

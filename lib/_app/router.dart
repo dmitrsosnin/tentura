@@ -3,16 +3,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:gravity/core/consts.dart';
-import 'package:gravity/feature/auth/data/auth_repository.dart';
+import 'package:gravity/_shared/consts.dart';
+import 'package:gravity/auth/data/auth_repository.dart';
 
-import 'package:gravity/core/ui/screen/error_screen.dart';
-import 'package:gravity/feature/home/ui/home_screen.dart';
-import 'package:gravity/feature/auth/ui/login_screen.dart';
-import 'package:gravity/feature/field/ui/field_screen.dart';
-import 'package:gravity/feature/user/ui/profile_screen.dart';
-import 'package:gravity/feature/updates/ui/updates_screen.dart';
-import 'package:gravity/feature/beacons/ui/beacons_screen.dart';
+import 'package:gravity/home/ui/home_screen.dart';
+import 'package:gravity/auth/ui/login_screen.dart';
+import 'package:gravity/field/ui/field_screen.dart';
+import 'package:gravity/user/ui/profile_screen.dart';
+import 'package:gravity/updates/ui/updates_screen.dart';
+import 'package:gravity/beacons/ui/beacons_screen.dart';
+import 'package:gravity/_shared/ui/screen/error_screen.dart';
 
 export 'package:go_router/go_router.dart';
 

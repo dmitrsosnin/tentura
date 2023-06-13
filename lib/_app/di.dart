@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:gravity/core/data/api_service.dart';
-import 'package:gravity/feature/auth/data/auth_repository.dart';
-import 'package:gravity/feature/user/data/user_repository.dart';
-import 'package:gravity/feature/user/bloc/my_profile_cubit.dart';
+import 'package:gravity/_shared/data/api_service.dart';
+import 'package:gravity/auth/data/auth_repository.dart';
+import 'package:gravity/user/data/user_repository.dart';
+import 'package:gravity/user/bloc/my_profile_cubit.dart';
 
 class DI {
   static bool _isInited = false;

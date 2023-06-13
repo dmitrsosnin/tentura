@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/app/router.dart';
+import 'package:gravity/_app/router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({

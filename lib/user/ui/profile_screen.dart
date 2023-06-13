@@ -2,8 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:gravity/core/ui/dialog/on_error_dialog.dart';
-import 'package:gravity/feature/user/bloc/my_profile_cubit.dart';
+import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
+import 'package:gravity/user/bloc/my_profile_cubit.dart';
 
 import 'widget/my_rating_widget.dart';
 import 'widget/profile_header_widget.dart';

@@ -1,27 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'package:gravity/core/consts.dart';
-import 'package:gravity/core/types.dart';
+import 'package:gravity/_shared/consts.dart';
+import 'package:gravity/_shared/types.dart';
 
 class ApiService {
-  late final GraphQLClient client = GraphQLClient(
+  Future<String?> Function()? getToken;
+
+  late final _client = GraphQLClient(
     cache: GraphQLCache(),
     link: AuthLink(
-      getToken: () async => _authToken,
+      getToken: () async =>
+          getToken == null ? null : 'Bearer ${await getToken!()}',
     ).concat(HttpLink(apiUrl)),
   );
-
-  String? _authToken;
-
-  set authToken(String? token) =>
-      _authToken = token == null ? null : 'Bearer $token';
 
   Future<Json> query({
     required String query,
     Map<String, Object?> vars = const {},
   }) async {
-    final result = await client.query(QueryOptions(
+    final result = await _client.query(QueryOptions(
       document: gql(query),
       variables: vars,
       fetchPolicy: FetchPolicy.networkOnly,
@@ -38,7 +36,7 @@ class ApiService {
     required String query,
     Map<String, Object?> vars = const {},
   }) async {
-    final result = await client.mutate(MutationOptions(
+    final result = await _client.mutate(MutationOptions(
       document: gql(query),
       variables: vars,
       fetchPolicy: FetchPolicy.networkOnly,
