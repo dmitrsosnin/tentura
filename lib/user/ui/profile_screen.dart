@@ -1,14 +1,11 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
+import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/user/bloc/my_profile_cubit.dart';
+import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
 
 import 'widget/my_rating_widget.dart';
 import 'widget/profile_header_widget.dart';
-import 'widget/my_description_widget.dart';
-import 'widget/my_display_name_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key}) {
@@ -19,6 +16,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.share_rounded),
@@ -43,19 +41,97 @@ class ProfileScreen extends StatelessWidget {
                     );
                   }
                 },
-                buildWhen: (p, c) => p.isLoading != c.isLoading,
-                builder: (context, state) => state.isLoading
-                    ? const Center(child: CircularProgressIndicator.adaptive())
-                    : const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MyDisplayNameWidget(),
-                          SizedBox(height: 20),
-                          MyDescriptionWidget(),
-                          SizedBox(height: 20),
-                          MyRatingWidget(),
-                        ],
-                      ),
+                buildWhen: (p, c) =>
+                    p.isLoading != c.isLoading || p.isEditing != c.isEditing,
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  }
+                  final textTheme = Theme.of(context).textTheme;
+                  return ListView(
+                    shrinkWrap: true,
+                    children: state.isEditing
+                        // Edit Profile
+                        ? [
+                            Row(
+                              children: [
+                                // Display Name
+                                Expanded(
+                                  child: TextField(
+                                    maxLines: 1,
+                                    maxLength: displayNameLength,
+                                    controller: TextEditingController(
+                                      text: state.displayName,
+                                    ),
+                                    style: textTheme.headlineLarge,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Name',
+                                    ),
+                                    onChanged: (v) => _cubit.newDisplayName = v,
+                                  ),
+                                ),
+                                // Save Button
+                                IconButton.outlined(
+                                  icon: const Icon(Icons.save),
+                                  onPressed: _cubit.save,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            // User Description
+                            TextField(
+                              minLines: 1,
+                              maxLines: 10,
+                              style: textTheme.bodyLarge,
+                              maxLength: userDescriptionLength,
+                              keyboardType: TextInputType.multiline,
+                              decoration: const InputDecoration(
+                                labelText: 'Description',
+                              ),
+                              controller: TextEditingController(
+                                text: state.description,
+                              ),
+                              onChanged: (v) => _cubit.newDescription = v,
+                            ),
+                            const SizedBox(height: 40),
+                            // User Rating
+                            const MyRatingWidget(),
+                          ]
+                        // Display Profile
+                        : [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Display Name
+                                Text(
+                                  state.displayName.isEmpty
+                                      ? 'No name'
+                                      : state.displayName,
+                                  style: textTheme.headlineLarge,
+                                  maxLines: 1,
+                                ),
+                                // Edit Button
+                                IconButton.outlined(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: _cubit.edit,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            // User Description
+                            Text(
+                              state.description,
+                              style: textTheme.bodyLarge,
+                              textAlign: TextAlign.left,
+                            ),
+                            const SizedBox(height: 40),
+                            // User Rating
+                            const MyRatingWidget(),
+                          ],
+                  );
+                },
               ),
             ),
           ),

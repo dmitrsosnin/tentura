@@ -76,4 +76,4 @@ final router = GoRouter(
 );
 
 String? _authGuardian(BuildContext context, GoRouterState state) =>
-    GetIt.I<AuthRepository>().authInfo.id.isEmpty ? pathLogin : null;
+    GetIt.I<AuthRepository>().myId.isEmpty ? pathLogin : null;

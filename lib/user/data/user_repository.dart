@@ -7,39 +7,11 @@ import 'package:gravity/_shared/data/api_service.dart';
 class UserRepository {
   final _apiService = GetIt.I<ApiService>();
 
-  Future<User> createMyProfile({
-    String displayName = '',
-    String description = '',
-    String photoUrl = '',
-  }) async {
+  Future<User> createMyProfile() async {
     final data = await _apiService.mutate(
-      query: createUserMutation,
-      vars: {
-        'display_name': displayName,
-        'description': description,
-        'photo_url': photoUrl,
-      },
-    );
-    return User.fromJson(data['insert_user_one'] as Json);
-  }
-
-  Future<User> getUserById(String userId) async {
-    final data = await _apiService.query(
-      query: fetchUserProfile,
-      vars: {'id': userId},
-    );
-    if (data['user_by_pk'] == null) throw const UserNotFoundException();
-    return User.fromJson(data['user_by_pk'] as Json);
-  }
-}
-
-class UserNotFoundException implements Exception {
-  const UserNotFoundException();
-}
-
-const createUserMutation = r'''
-mutation CreateUser($display_name: String = "", $description: String = "", $photo_url: String = "") {
-  insert_user_one(object: {display_name: $display_name, photo_url: $photo_url, description: $description}) {
+      query: r'''
+mutation CreateUser {
+  insert_user_one(object: {display_name: "", description: "", photo_url: ""}) {
     id
     uid
     display_name
@@ -47,9 +19,44 @@ mutation CreateUser($display_name: String = "", $description: String = "", $phot
     photo_url
   }
 }
-''';
+''',
+    );
+    return User.fromJson(data['insert_user_one'] as Json);
+  }
 
-const fetchUserProfile = r'''
+  Future<User> updateMyProfile({
+    required String id,
+    required String displayName,
+    required String description,
+    required String photoUrl,
+  }) async {
+    final data = await _apiService.query(
+      vars: {
+        'id': id,
+        'display_name': displayName,
+        'description': description,
+        'photo_url': photoUrl,
+      },
+      query: r'''
+mutation UpdateUser($id: String!, $display_name: String!, $description: String!, $photo_url: String!) {
+  update_user_by_pk(pk_columns: {id: $id}, _set: {display_name: $display_name, description: $description, photo_url: $photo_url}) {
+    id
+    uid
+    display_name
+    description
+    photo_url
+  }
+}
+''',
+    );
+    if (data['update_user_by_pk'] == null) throw Exception('Can`t update');
+    return User.fromJson(data['update_user_by_pk'] as Json);
+  }
+
+  Future<User?> getUserById(String userId) async {
+    final data = await _apiService.query(
+      vars: {'id': userId},
+      query: r'''
 query FetchUserProfile($id: String!) {
   user_by_pk(id: $id) {
     id
@@ -59,4 +66,9 @@ query FetchUserProfile($id: String!) {
     photo_url
   }
 }
-''';
+''',
+    );
+    if (data['user_by_pk'] == null) return null;
+    return User.fromJson(data['user_by_pk'] as Json);
+  }
+}

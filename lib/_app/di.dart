@@ -1,4 +1,3 @@
-import 'package:get_it/get_it.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:gravity/_shared/data/api_service.dart';

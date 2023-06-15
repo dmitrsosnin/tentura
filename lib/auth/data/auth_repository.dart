@@ -7,20 +7,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gravity/_shared/data/api_service.dart';
 import 'package:gravity/auth/data/firebase_options.dart';
 
-typedef AuthInfo = ({String id, String dn, String photoUrl});
-
 class AuthRepository {
-  final _controller = StreamController<AuthInfo>();
+  final _controller = StreamController<String?>();
 
-  late final _apiService = GetIt.I<ApiService>();
+  String _myId = '';
 
-  User? _user;
-
-  AuthInfo get authInfo => (
-        id: _user?.uid ?? '',
-        dn: _user?.displayName ?? '',
-        photoUrl: _user?.photoURL ?? '',
-      );
+  String get myId => _myId;
 
   Future<AuthRepository> init() async {
     await Firebase.initializeApp(
@@ -29,13 +21,17 @@ class AuthRepository {
     if (kIsWeb) {
       await FirebaseAuth.instance.setPersistence(Persistence.SESSION);
     }
-    FirebaseAuth.instance.idTokenChanges().listen((user) async {
-      _user = user;
-      _controller.add(authInfo);
-      _apiService.getToken = user?.getIdToken;
+    FirebaseAuth.instance.idTokenChanges().listen((user) {
+      GetIt.I<ApiService>().getToken = user?.getIdToken;
+      _myId = user?.uid ?? '';
+      _controller.add(myId);
     });
     return this;
   }
 
-  Future<void> signOut() => FirebaseAuth.instance.signOut();
+  Future<void> signOut() {
+    _myId = '';
+    _controller.add(myId);
+    return FirebaseAuth.instance.signOut();
+  }
 }

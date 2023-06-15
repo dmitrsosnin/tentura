@@ -3,14 +3,16 @@ part of 'my_profile_cubit.dart';
 @immutable
 class MyProfileState extends Equatable {
   final String id, uid, displayName, description, photoUrl;
+  final bool isEditing;
   final Object error;
 
   const MyProfileState({
     this.id = '',
     this.uid = '',
+    this.photoUrl = '',
     this.displayName = '',
     this.description = '',
-    this.photoUrl = '',
+    this.isEditing = false,
     this.error = false,
   });
 
@@ -23,7 +25,15 @@ class MyProfileState extends Equatable {
       );
 
   @override
-  List<Object> get props => [id, uid, displayName, description, photoUrl];
+  List<Object> get props => [
+        id,
+        uid,
+        displayName,
+        description,
+        photoUrl,
+        isEditing,
+        error,
+      ];
 
   bool get isLoading => id.isEmpty;
 
@@ -35,14 +45,16 @@ class MyProfileState extends Equatable {
     String? displayName,
     String? description,
     String? photoUrl,
+    bool? isEditing,
     Object? error,
   }) =>
       MyProfileState(
         id: id ?? this.id,
         uid: uid ?? this.uid,
+        photoUrl: photoUrl ?? this.photoUrl,
         displayName: displayName ?? this.displayName,
         description: description ?? this.description,
-        photoUrl: photoUrl ?? this.photoUrl,
+        isEditing: isEditing ?? this.isEditing,
         error: error ?? this.error,
       );
 }

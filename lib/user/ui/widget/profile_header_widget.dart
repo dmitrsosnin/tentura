@@ -1,6 +1,4 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:extended_image/extended_image.dart';
 
 import 'package:gravity/_app/router.dart';
@@ -54,7 +52,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                 builder: (context, state) => ExtendedImage.network(
                   state.isLoading
                       // TBD: replace it with real placeholder url
-                      ? 'https://replace-with-real-placeholder-url'
+                      ? ''
                       : state.photoUrl,
                   cache: true,
                   height: 200,
@@ -65,7 +63,11 @@ class ProfileHeaderWidget extends StatelessWidget {
                   isAntiAlias: true,
                   loadStateChanged: (state) =>
                       switch (state.extendedImageLoadState) {
-                    LoadState.failed => const Icon(Icons.error_outline_rounded),
+                    LoadState.failed => const Icon(
+                        Icons.error_outline_rounded,
+                        color: Colors.red,
+                        size: 96,
+                      ),
                     LoadState.loading =>
                       const CircularProgressIndicator.adaptive(),
                     _ => null,
@@ -77,23 +79,14 @@ class ProfileHeaderWidget extends StatelessWidget {
             Positioned(
               bottom: 20,
               right: 20,
-              child: PopupMenuButton<void>(
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    child: const Text('Edit'),
-                    onTap: () {},
-                  ),
-                  const PopupMenuDivider(),
-                  PopupMenuItem(
-                    child: const Text('Log out'),
-                    onTap: () async {
-                      if (await OnLogOutDialog.show(context) == true) {
-                        await GetIt.I<MyProfileCubit>().signOut();
-                        if (context.mounted) context.go(pathLogin);
-                      }
-                    },
-                  ),
-                ],
+              child: IconButton(
+                icon: const Icon(Icons.logout_rounded),
+                onPressed: () async {
+                  if (await OnLogOutDialog.show(context) == true) {
+                    await GetIt.I<MyProfileCubit>().signOut();
+                    if (context.mounted) context.go(pathLogin);
+                  }
+                },
               ),
             ),
           ],
