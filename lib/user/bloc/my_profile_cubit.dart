@@ -44,6 +44,12 @@ class MyProfileCubit extends Cubit<MyProfileState> {
   }
 
   Future<void> save() async {
+    if (state.displayName == newDisplayName &&
+        state.description == newDescription &&
+        state.photoUrl == newPhotoUrl) {
+      emit(state.copyWith(isEditing: false));
+      return;
+    }
     try {
       emit(MyProfileState.fromEntity(await _userRepository.updateMyProfile(
         id: _authRepository.myId,

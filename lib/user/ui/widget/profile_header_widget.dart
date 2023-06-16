@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:extended_image/extended_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:gravity/_app/router.dart';
 import 'package:gravity/_shared/consts.dart';
@@ -44,34 +44,42 @@ class ProfileHeaderWidget extends StatelessWidget {
             ),
             // Avatar
             Positioned(
-              bottom: -100,
               left: 60,
+              bottom: -100,
               child: BlocBuilder<MyProfileCubit, MyProfileState>(
                 bloc: GetIt.I<MyProfileCubit>(),
-                buildWhen: (p, c) => p.photoUrl != c.photoUrl,
-                builder: (context, state) => ExtendedImage.network(
-                  state.isLoading
-                      // TBD: replace it with real placeholder url
-                      ? ''
-                      : state.photoUrl,
-                  cache: true,
-                  height: 200,
+                buildWhen: (p, c) =>
+                    p.photoUrl != c.photoUrl || p.isEditing != c.isEditing,
+                builder: (context, state) => CachedNetworkImage(
                   width: 200,
-                  border: Border.all(width: 8, color: Colors.white),
-                  borderRadius: BorderRadius.circular(100),
+                  height: 200,
+                  fit: BoxFit.fill,
                   filterQuality: FilterQuality.high,
-                  isAntiAlias: true,
-                  loadStateChanged: (state) =>
-                      switch (state.extendedImageLoadState) {
-                    LoadState.failed => const Icon(
-                        Icons.error_outline_rounded,
-                        color: Colors.red,
-                        size: 96,
-                      ),
-                    LoadState.loading =>
-                      const CircularProgressIndicator.adaptive(),
-                    _ => null,
-                  },
+                  imageUrl: state.photoUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(width: 8, color: Colors.white),
+                      image: DecorationImage(image: imageProvider),
+                    ),
+                    child: state.isEditing
+                        ? IconButton.outlined(
+                            iconSize: 48,
+                            splashRadius: 48,
+                            icon: const Icon(Icons.add_a_photo),
+                            onPressed: () {},
+                          )
+                        : null,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error_outline_rounded,
+                    color: Colors.red,
+                    size: 96,
+                  ),
+                  progressIndicatorBuilder: (context, url, progress) =>
+                      CircularProgressIndicator.adaptive(
+                    value: progress.progress,
+                  ),
                 ),
               ),
             ),
@@ -84,6 +92,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                 onPressed: () async {
                   if (await OnLogOutDialog.show(context) == true) {
                     await GetIt.I<MyProfileCubit>().signOut();
+                    // TBD: move navigation to screen`s BlocConsumer
                     if (context.mounted) context.go(pathLogin);
                   }
                 },

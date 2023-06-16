@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:gravity/_shared/data/api_service.dart';
-import 'package:gravity/auth/data/firebase_options.dart';
+import 'package:gravity/_shared/firebase_options.dart';
 
 class AuthRepository {
   final _controller = StreamController<String?>();
