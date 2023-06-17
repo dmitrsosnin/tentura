@@ -3,7 +3,7 @@ part of 'my_profile_cubit.dart';
 @immutable
 class MyProfileState extends Equatable {
   final String id, uid, displayName, description, photoUrl;
-  final bool isEditing;
+  final bool isLoading, isEditing;
   final Object error;
 
   const MyProfileState({
@@ -12,6 +12,7 @@ class MyProfileState extends Equatable {
     this.photoUrl = '',
     this.displayName = '',
     this.description = '',
+    this.isLoading = false,
     this.isEditing = false,
     this.error = false,
   });
@@ -35,8 +36,6 @@ class MyProfileState extends Equatable {
         error,
       ];
 
-  bool get isLoading => id.isEmpty;
-
   bool get hasError => error is Exception;
 
   MyProfileState copyWith({
@@ -45,6 +44,7 @@ class MyProfileState extends Equatable {
     String? displayName,
     String? description,
     String? photoUrl,
+    bool? isLoading,
     bool? isEditing,
     Object? error,
   }) =>
@@ -54,6 +54,7 @@ class MyProfileState extends Equatable {
         photoUrl: photoUrl ?? this.photoUrl,
         displayName: displayName ?? this.displayName,
         description: description ?? this.description,
+        isLoading: isLoading ?? this.isLoading,
         isEditing: isEditing ?? this.isEditing,
         error: error ?? this.error,
       );

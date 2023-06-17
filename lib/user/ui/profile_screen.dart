@@ -24,7 +24,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         body: Column(children: [
           // Header
-          const ProfileHeaderWidget(),
+          ProfileHeaderWidget(),
           // Body
           RefreshIndicator(
             onRefresh: _cubit.refresh,
