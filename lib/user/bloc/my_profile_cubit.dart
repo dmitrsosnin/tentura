@@ -21,7 +21,7 @@ class MyProfileCubit extends Cubit<MyProfileState> {
   final _userRepository = GetIt.I<UserRepository>();
   final _imageRepository = GetIt.I<ImageRepository>();
 
-  String newDisplayName = '', newDescription = '', newPhotoUrl = '';
+  String newDisplayName = '', newDescription = '';
 
   Future<void> refresh() async {
     if (_authRepository.myId.isEmpty) throw Exception('myId is empty!');
@@ -35,7 +35,6 @@ class MyProfileCubit extends Cubit<MyProfileState> {
       );
       newDisplayName = profile.displayName;
       newDescription = profile.description;
-      newPhotoUrl = profile.photoUrl;
       emit(profile);
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e));
@@ -45,14 +44,12 @@ class MyProfileCubit extends Cubit<MyProfileState> {
   void edit() {
     newDisplayName = state.displayName;
     newDescription = state.description;
-    newPhotoUrl = state.photoUrl;
     emit(state.copyWith(isEditing: true));
   }
 
   Future<void> save() async {
     if (state.displayName == newDisplayName &&
-        state.description == newDescription &&
-        state.photoUrl == newPhotoUrl) {
+        state.description == newDescription) {
       emit(state.copyWith(isEditing: false));
       return;
     }
@@ -61,7 +58,6 @@ class MyProfileCubit extends Cubit<MyProfileState> {
         id: _authRepository.myId,
         displayName: newDisplayName,
         description: newDescription,
-        photoUrl: newPhotoUrl,
       ))
           .copyWith(
         photoUrl: await _imageRepository.getAvatarURL(state.id),

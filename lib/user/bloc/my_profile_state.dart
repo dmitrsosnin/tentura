@@ -22,7 +22,6 @@ class MyProfileState extends Equatable {
         uid: user.uid,
         displayName: user.displayName,
         description: user.description,
-        photoUrl: user.photoUrl,
       );
 
   @override
@@ -32,6 +31,7 @@ class MyProfileState extends Equatable {
         displayName,
         description,
         photoUrl,
+        isLoading,
         isEditing,
         error,
       ];

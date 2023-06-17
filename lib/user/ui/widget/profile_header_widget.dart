@@ -58,7 +58,11 @@ class ProfileHeaderWidget extends StatelessWidget {
               buildWhen: (p, c) =>
                   p.photoUrl != c.photoUrl || p.isEditing != c.isEditing,
               builder: (context, state) => state.photoUrl.isEmpty
-                  ? const CircularProgressIndicator.adaptive()
+                  ? const SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: CircularProgressIndicator.adaptive(),
+                    )
                   : CachedNetworkImage(
                       width: 200,
                       height: 200,
@@ -79,6 +83,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                                 onPressed: () async {
                                   final file = await _picker.pickImage(
                                     source: ImageSource.gallery,
+                                    imageQuality: 100,
                                     maxHeight: 1024,
                                     maxWidth: 1024,
                                   );

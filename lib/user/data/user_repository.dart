@@ -11,12 +11,11 @@ class UserRepository {
     final data = await _apiService.mutate(
       query: r'''
 mutation CreateUser {
-  insert_user_one(object: {display_name: "", description: "", photo_url: ""}) {
+  insert_user_one(object: {display_name: "", description: ""}) {
     id
     uid
     display_name
     description
-    photo_url
   }
 }
 ''',
@@ -28,23 +27,20 @@ mutation CreateUser {
     required String id,
     required String displayName,
     required String description,
-    required String photoUrl,
   }) async {
     final data = await _apiService.query(
       vars: {
         'id': id,
         'display_name': displayName,
         'description': description,
-        'photo_url': photoUrl,
       },
       query: r'''
-mutation UpdateUser($id: String!, $display_name: String!, $description: String!, $photo_url: String!) {
-  update_user_by_pk(pk_columns: {id: $id}, _set: {display_name: $display_name, description: $description, photo_url: $photo_url}) {
+mutation UpdateUser($id: String!, $display_name: String!, $description: String!) {
+  update_user_by_pk(pk_columns: {id: $id}, _set: {display_name: $display_name, description: $description}) {
     id
     uid
     display_name
     description
-    photo_url
   }
 }
 ''',
@@ -63,7 +59,6 @@ query FetchUserProfile($id: String!) {
     uid
     display_name
     description
-    photo_url
   }
 }
 ''',

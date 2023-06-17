@@ -8,7 +8,6 @@ class User extends Equatable {
     this.uid = '',
     this.displayName = '',
     this.description = '',
-    this.photoUrl = '',
   });
 
   factory User.fromJson(Map<String, Object?> json) => User(
@@ -16,13 +15,12 @@ class User extends Equatable {
         uid: json['uid'] as String,
         displayName: json['display_name'] as String,
         description: json['description'] as String,
-        photoUrl: json['photo_url'] as String,
       );
 
-  final String id, uid, displayName, description, photoUrl;
+  final String id, uid, displayName, description;
 
   @override
-  List<Object> get props => [id, uid, displayName, description, photoUrl];
+  List<Object> get props => [id, uid, displayName, description];
 
   User copyWith({
     String? id,
@@ -36,6 +34,5 @@ class User extends Equatable {
         uid: uid ?? this.uid,
         displayName: displayName ?? this.displayName,
         description: description ?? this.description,
-        photoUrl: photoUrl ?? this.photoUrl,
       );
 }
