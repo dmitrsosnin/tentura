@@ -17,14 +17,14 @@ class Beacon extends Equatable {
     required this.description,
     required this.createdAt,
     required this.updatedAt,
+    this.isEnabled = true,
     this.dateRange,
     this.coordinates,
-    this.isEnabled = true,
   });
 
   factory Beacon.fromJson(Json json) {
     final place = json['place'] as Json?;
-    final coordinates = place?['coordinates'] as List<double>?;
+    final coordinates = place?['coordinates'] as List?;
     final timerange = json['timerange'] as String?;
     return Beacon(
       id: json['id'] as String,

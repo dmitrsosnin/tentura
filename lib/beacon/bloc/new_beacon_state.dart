@@ -7,31 +7,31 @@ import 'package:gravity/_shared/consts.dart';
 enum NewBeaconStatus { initial, done, error }
 
 class NewBeaconState extends Equatable {
+  final NewBeaconStatus status;
+  final Object? error;
   final String title, description, imagePath;
   final DateTimeRange? dateRange;
   final GeoCoords? coordinates;
-  final NewBeaconStatus status;
-  final Object? error;
 
   const NewBeaconState({
+    this.status = NewBeaconStatus.initial,
     this.title = '',
-    this.description = '',
     this.imagePath = '',
+    this.description = '',
+    this.error,
     this.dateRange,
     this.coordinates,
-    this.status = NewBeaconStatus.initial,
-    this.error,
   });
 
   @override
   List<Object?> get props => [
+        status,
+        error,
         title,
         description,
         imagePath,
         dateRange,
         coordinates,
-        status,
-        error,
       ];
 
   bool get isValid => title.length >= titleMinLength;

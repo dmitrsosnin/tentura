@@ -1,3 +1,4 @@
+import 'package:gravity/_shared/types.dart';
 import 'package:intl/intl.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,17 @@ class NewBeaconCubit extends Cubit<NewBeaconState> {
   void clearImage() {
     imageController.text = '';
     emit(state.copyWith(imagePath: ''));
+  }
+
+  void setCoords(GeoCoords? coords) {
+    if (coords == null) return;
+    locationController.text = coords.toString();
+    emit(state.copyWith(coordinates: coords));
+  }
+
+  void clearCoords() {
+    locationController.text = '';
+    emit(state.copyWith(clearCoordinates: true));
   }
 
   void setDateRange(DateTimeRange? value) {

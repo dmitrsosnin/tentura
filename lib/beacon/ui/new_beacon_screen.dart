@@ -6,6 +6,8 @@ import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
 import 'package:gravity/beacon/bloc/new_beacon_cubit.dart';
 
+import 'dialog/on_choose_location_dialog.dart';
+
 class NewBeaconScreen extends StatelessWidget {
   static const _padding = SizedBox(height: 20);
 
@@ -94,12 +96,18 @@ class NewBeaconScreen extends StatelessWidget {
                   TextField(
                     key: const Key('NewBeaconLocation'),
                     controller: cubit.locationController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Add location',
-                      suffixIcon: Icon(Icons.add_location_rounded),
+                      suffixIcon: state.coordinates == null
+                          ? const Icon(Icons.add_location_rounded)
+                          : IconButton(
+                              onPressed: cubit.clearCoords,
+                              icon: const Icon(Icons.cancel_rounded),
+                            ),
                     ),
                     readOnly: true,
-                    onTap: () {},
+                    onTap: () async => cubit
+                        .setCoords(await OnChooseLocationDialog.show(context)),
                   ),
                   _padding,
                   // Time
