@@ -1,7 +1,8 @@
 const apiUrl = 'https://hasura.gravity.intersubjective.space/v1/graphql';
 
-const displayNameLength = 64;
-const userDescriptionLength = 2048;
+const titleMinLength = 3;
+const titleMaxLength = 32;
+const descriptionLength = 2048;
 
 // Route path
 const pathRoot = '/';

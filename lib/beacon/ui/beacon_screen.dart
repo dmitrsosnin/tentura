@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class BeaconsScreen extends StatelessWidget {
-  const BeaconsScreen({super.key});
+import 'new_beacon_screen.dart';
+
+class BeaconScreen extends StatelessWidget {
+  const BeaconScreen({super.key});
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
@@ -14,9 +16,9 @@ class BeaconsScreen extends StatelessWidget {
                 onPressed: () {},
                 icon: const Icon(Icons.search_rounded),
               ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.qr_code_2_rounded),
+              const IconButton(
+                onPressed: null,
+                icon: Icon(Icons.qr_code_2_rounded),
               ),
             ],
             leading: Padding(
@@ -36,30 +38,25 @@ class BeaconsScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: TabBarView(children: [
+          body: const TabBarView(children: [
             Center(
                 child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Nothing here yet'),
-                const Text('Find your friends to get started!'),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FilledButton(
-                    onPressed: () {},
-                    child: const Text('Create one'),
-                  ),
-                ),
+                Text('Nothing here yet'),
+                Text('Find your friends to get started!'),
               ],
             )),
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(8.0),
               child: Text('Nothing here yet', textAlign: TextAlign.center),
             ),
           ]),
           floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const NewBeaconScreen(),
+            )),
           ),
         ),
       );

@@ -61,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
                                 Expanded(
                                   child: TextField(
                                     maxLines: 1,
-                                    maxLength: displayNameLength,
+                                    maxLength: titleMaxLength,
                                     controller: TextEditingController(
                                       text: state.displayName,
                                     ),
@@ -85,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                               minLines: 1,
                               maxLines: 10,
                               style: textTheme.bodyLarge,
-                              maxLength: userDescriptionLength,
+                              maxLength: descriptionLength,
                               keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
                                 labelText: 'Description',

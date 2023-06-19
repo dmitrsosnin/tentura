@@ -1,8 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 
+import 'package:gravity/_shared/types.dart';
+
 @immutable
 class User extends Equatable {
+  final String id, uid, displayName, description;
+
   const User({
     this.id = '',
     this.uid = '',
@@ -10,14 +14,12 @@ class User extends Equatable {
     this.description = '',
   });
 
-  factory User.fromJson(Map<String, Object?> json) => User(
+  factory User.fromJson(Json json) => User(
         id: json['id'] as String,
         uid: json['uid'] as String,
         displayName: json['display_name'] as String,
         description: json['description'] as String,
       );
-
-  final String id, uid, displayName, description;
 
   @override
   List<Object> get props => [id, uid, displayName, description];

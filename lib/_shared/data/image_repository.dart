@@ -1,11 +1,7 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
-typedef UploadProgress = ({
-  bool isFinished,
-  int totalBytes,
-  int bytesTransferred,
-});
+import 'package:gravity/_shared/types.dart';
 
 class ImageRepository {
   static const _avatar = '/avatar.jpg';

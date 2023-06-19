@@ -11,7 +11,6 @@ class ProfileHeaderWidget extends StatelessWidget {
   ProfileHeaderWidget({super.key});
 
   final _cubit = GetIt.I<MyProfileCubit>();
-  final _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) => Stack(
@@ -81,9 +80,8 @@ class ProfileHeaderWidget extends StatelessWidget {
                                 splashRadius: 48,
                                 icon: const Icon(Icons.add_a_photo),
                                 onPressed: () async {
-                                  final file = await _picker.pickImage(
+                                  final file = await ImagePicker().pickImage(
                                     source: ImageSource.gallery,
-                                    imageQuality: 100,
                                     maxHeight: 1024,
                                     maxWidth: 1024,
                                   );
