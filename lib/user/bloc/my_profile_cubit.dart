@@ -72,25 +72,16 @@ class MyProfileCubit extends Cubit<MyProfileState> {
   }
 
   Future<void> uploadPhoto(String path) async {
+    // TBD: use flag not empty photoUrl
     final origUrl = state.photoUrl;
     emit(state.copyWith(photoUrl: ''));
     try {
-      _imageRepository
-          .uploadAvatar(userId: _authRepository.myId, imagePath: path)
-          .listen(
-        (event) async {
-          if (event.isFinished) {
-            emit(state.copyWith(
-              photoUrl: await _imageRepository.getAvatarURL(state.id),
-            ));
-          }
-        },
-        onError: (e) {
-          if (kDebugMode) print(e);
-          emit(state.copyWith(photoUrl: origUrl));
-        },
-        cancelOnError: true,
-      );
+      await _imageRepository
+          .putAvatar(userId: _authRepository.myId, imagePath: path)
+          .firstWhere((e) => e.isFinished);
+      emit(state.copyWith(
+        photoUrl: await _imageRepository.getAvatarURL(state.id),
+      ));
     } catch (e) {
       if (kDebugMode) print(e);
       emit(state.copyWith(photoUrl: origUrl));

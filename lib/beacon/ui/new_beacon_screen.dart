@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:gravity/_shared/consts.dart';
-import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
+import 'package:gravity/user/bloc/my_profile_cubit.dart';
 import 'package:gravity/beacon/bloc/new_beacon_cubit.dart';
+import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
 
 import 'dialog/on_choose_location_dialog.dart';
+import 'widget/beacon_tile.dart';
 
 class NewBeaconScreen extends StatelessWidget {
   static const _padding = SizedBox(height: 20);
@@ -133,6 +135,19 @@ class NewBeaconScreen extends StatelessWidget {
                         initialEntryMode: DatePickerEntryMode.calendarOnly,
                       ));
                     },
+                  ),
+                  // Preview
+                  const SizedBox(height: 40),
+                  BlocBuilder<MyProfileCubit, MyProfileState>(
+                    bloc: GetIt.I<MyProfileCubit>(),
+                    builder: (context, me) => BeaconTile(
+                      userId: me.id,
+                      displayName: me.displayName,
+                      avatarUrl: me.photoUrl,
+                      title: state.title,
+                      description: state.description,
+                      imagePath: state.imagePath,
+                    ),
                   ),
                 ],
               ),

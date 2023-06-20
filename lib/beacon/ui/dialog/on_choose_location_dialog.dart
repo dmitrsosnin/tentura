@@ -16,7 +16,11 @@ class OnChooseLocationDialog extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
+          centerTitle: true,
+          title: const Text('Tap to choose location'),
+          forceMaterialTransparency: true,
         ),
+        extendBodyBehindAppBar: true,
         body: FlutterMap(
           options: MapOptions(
             interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,

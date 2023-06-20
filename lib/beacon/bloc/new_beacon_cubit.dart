@@ -1,9 +1,10 @@
-import 'package:gravity/_shared/types.dart';
 import 'package:intl/intl.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:gravity/_shared/types.dart';
+import 'package:gravity/_shared/data/image_repository.dart';
 import 'package:gravity/beacon/data/beacon_repository.dart';
 
 import 'new_beacon_state.dart';
@@ -20,6 +21,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState> {
   final dateRangeController = TextEditingController();
 
   final _dateFormater = DateFormat.yMd();
+  final _imageRepository = GetIt.I<ImageRepository>();
   final _beaconRepository = GetIt.I<BeaconRepository>();
 
   void setTitle(String value) => emit(state.copyWith(title: value));
@@ -61,12 +63,19 @@ class NewBeaconCubit extends Cubit<NewBeaconState> {
 
   void save() async {
     try {
-      await _beaconRepository.createBeacon(
+      final beacon = await _beaconRepository.createBeacon(
         title: state.title,
         description: state.description,
         coordinates: state.coordinates,
         dateRange: state.dateRange,
       );
+      await _imageRepository
+          .putBeacon(
+            userId: beacon.authorId,
+            beaconId: beacon.id,
+            imagePath: state.imagePath,
+          )
+          .firstWhere((e) => e.isFinished);
       emit(state.copyWith(status: NewBeaconStatus.done));
     } catch (e) {
       emit(state.copyWith(status: NewBeaconStatus.error, error: e));
