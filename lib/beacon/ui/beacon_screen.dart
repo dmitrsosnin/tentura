@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'new_beacon_screen.dart';
+import 'widget/my_beacons_list.dart';
 
 class BeaconScreen extends StatelessWidget {
   const BeaconScreen({super.key});
@@ -11,12 +12,12 @@ class BeaconScreen extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            actions: [
+            actions: const [
               IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.search_rounded),
+                onPressed: null,
+                icon: Icon(Icons.search_rounded),
               ),
-              const IconButton(
+              IconButton(
                 onPressed: null,
                 icon: Icon(Icons.qr_code_2_rounded),
               ),
@@ -38,19 +39,9 @@ class BeaconScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: const TabBarView(children: [
-            Center(
-                child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Nothing here yet'),
-                Text('Find your friends to get started!'),
-              ],
-            )),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('Nothing here yet', textAlign: TextAlign.center),
-            ),
+          body: TabBarView(children: [
+            MyBeaconList(),
+            const Center(child: Text('Nothing here yet')),
           ]),
           floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),

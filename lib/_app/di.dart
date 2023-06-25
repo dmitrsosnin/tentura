@@ -1,13 +1,14 @@
+import 'package:get_it/get_it.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:gravity/_shared/data/api_service.dart';
 
 import 'package:gravity/auth/data/auth_repository.dart';
 import 'package:gravity/user/data/user_repository.dart';
-import 'package:gravity/_shared/data/image_repository.dart';
+import 'package:gravity/image/data/image_repository.dart';
 import 'package:gravity/beacon/data/beacon_repository.dart';
 
-import 'package:gravity/user/bloc/my_profile_cubit.dart';
+import 'package:gravity/beacon/bloc/my_beacons_cubit.dart';
 
 class DI {
   static bool _isInited = false;
@@ -23,7 +24,7 @@ class DI {
     EquatableConfig.stringify = true;
 
     // Service
-    GetIt.I.registerSingleton(ApiService());
+    GetIt.I.registerSingleton(await ApiService().init());
 
     // Repository
     GetIt.I.registerSingleton(await AuthRepository().init());
@@ -32,7 +33,7 @@ class DI {
     GetIt.I.registerSingleton(BeaconRepository());
 
     // BLoC
-    GetIt.I.registerSingleton(MyProfileCubit());
+    GetIt.I.registerLazySingleton<MyBeaconsCubit>(() => MyBeaconsCubit());
 
     _isInited = true;
   }

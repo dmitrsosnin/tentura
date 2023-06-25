@@ -1,14 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:gravity/_shared/consts.dart';
-import 'package:gravity/user/bloc/my_profile_cubit.dart';
 import 'package:gravity/beacon/bloc/new_beacon_cubit.dart';
 import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
 
 import 'dialog/on_choose_location_dialog.dart';
-import 'widget/beacon_tile.dart';
 
 class NewBeaconScreen extends StatelessWidget {
   static const _padding = SizedBox(height: 20);
@@ -21,13 +20,14 @@ class NewBeaconScreen extends StatelessWidget {
         child: BlocConsumer<NewBeaconCubit, NewBeaconState>(
           listener: (context, state) {
             switch (state.status) {
+              case NewBeaconStatus.initial:
+                break;
               case NewBeaconStatus.done:
                 context.pop();
                 break;
               case NewBeaconStatus.error:
                 OnErrorDialog.show(context, text: state.error.toString());
                 break;
-              case NewBeaconStatus.initial:
             }
           },
           builder: (context, state) {
@@ -37,9 +37,7 @@ class NewBeaconScreen extends StatelessWidget {
                 automaticallyImplyLeading: true,
                 actions: [
                   TextButton(
-                    onPressed: state.isValid
-                        ? context.read<NewBeaconCubit>().save
-                        : null,
+                    onPressed: state.isValid ? cubit.save : null,
                     child: const Text('Done'),
                   ),
                   const SizedBox(width: 16),
@@ -87,8 +85,7 @@ class NewBeaconScreen extends StatelessWidget {
                     onTap: () async {
                       final file = await ImagePicker().pickImage(
                         source: ImageSource.gallery,
-                        maxHeight: 1024,
-                        maxWidth: 2048,
+                        maxWidth: 600,
                       );
                       if (file != null) cubit.setImage(file.name, file.path);
                     },
@@ -136,18 +133,23 @@ class NewBeaconScreen extends StatelessWidget {
                       ));
                     },
                   ),
-                  // Preview
-                  const SizedBox(height: 40),
-                  BlocBuilder<MyProfileCubit, MyProfileState>(
-                    bloc: GetIt.I<MyProfileCubit>(),
-                    builder: (context, me) => BeaconTile(
-                      userId: me.id,
-                      displayName: me.displayName,
-                      avatarUrl: me.photoUrl,
-                      title: state.title,
-                      description: state.description,
-                      imagePath: state.imagePath,
+                  // Image
+                  Container(
+                    decoration: BoxDecoration(
+                      border: state.imagePath.isEmpty
+                          ? Border.all(
+                              color: Colors.black12,
+                              width: 1,
+                            )
+                          : null,
                     ),
+                    margin: const EdgeInsets.symmetric(vertical: 48),
+                    child: state.imagePath.isEmpty
+                        ? const Icon(Icons.photo_outlined, size: 200)
+                        : Image.file(
+                            File(state.imagePath),
+                            fit: BoxFit.fitWidth,
+                          ),
                   ),
                 ],
               ),

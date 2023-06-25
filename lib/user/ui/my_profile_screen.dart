@@ -1,57 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/user/bloc/my_profile_cubit.dart';
 import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
 
 import 'widget/my_rating_widget.dart';
-import 'widget/profile_header_widget.dart';
+import 'widget/my_profile_header.dart';
 
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({super.key}) {
-    _cubit.refresh();
-  }
-
-  final _cubit = GetIt.I<MyProfileCubit>();
+class MyProfileScreen extends StatelessWidget {
+  const MyProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: true,
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.share_rounded),
-          onPressed: () {},
-        ),
-        body: Column(children: [
-          // Header
-          ProfileHeaderWidget(),
-          // Body
-          RefreshIndicator(
-            onRefresh: _cubit.refresh,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: BlocConsumer<MyProfileCubit, MyProfileState>(
-                bloc: _cubit,
-                listenWhen: (p, c) => p.hasError,
-                listener: (context, state) {
-                  if (state.hasError) {
+  Widget build(BuildContext context) => BlocProvider(
+        create: (context) => MyProfileCubit(),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          extendBodyBehindAppBar: true,
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.share_rounded),
+            onPressed: () {},
+          ),
+          body: Column(children: [
+            // Header
+            const MyProfileHeader(),
+            // Body
+            BlocConsumer<MyProfileCubit, MyProfileState>(
+              listenWhen: (p, c) => p.status != c.status,
+              listener: (context, state) {
+                switch (state.status) {
+                  case MyProfileStatus.initial:
+                    if (state.profile.isEmpty) context.go(pathLogin);
+                    break;
+                  case MyProfileStatus.error:
                     OnErrorDialog.show(
                       context,
                       text: state.error.toString(),
                     );
-                  }
-                },
-                buildWhen: (p, c) =>
-                    p.isLoading != c.isLoading || p.isEditing != c.isEditing,
-                builder: (context, state) {
-                  if (state.isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  }
-                  final textTheme = Theme.of(context).textTheme;
-                  return ListView(
+                    break;
+                  default:
+                }
+              },
+              buildWhen: (p, c) => p.status != c.status,
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
+                final textTheme = Theme.of(context).textTheme;
+                final cubit = context.read<MyProfileCubit>();
+                return RefreshIndicator(
+                  onRefresh: cubit.refresh,
+                  child: ListView(
                     shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     children: state.isEditing
                         // Edit Profile
                         ? [
@@ -63,19 +66,19 @@ class ProfileScreen extends StatelessWidget {
                                     maxLines: 1,
                                     maxLength: titleMaxLength,
                                     controller: TextEditingController(
-                                      text: state.displayName,
+                                      text: state.profile.displayName,
                                     ),
                                     style: textTheme.headlineLarge,
                                     decoration: const InputDecoration(
                                       labelText: 'Name',
                                     ),
-                                    onChanged: (v) => _cubit.newDisplayName = v,
+                                    onChanged: cubit.updateDisplayName,
                                   ),
                                 ),
                                 // Save Button
                                 IconButton.outlined(
                                   icon: const Icon(Icons.save),
-                                  onPressed: _cubit.save,
+                                  onPressed: cubit.save,
                                 ),
                               ],
                             ),
@@ -91,9 +94,9 @@ class ProfileScreen extends StatelessWidget {
                                 labelText: 'Description',
                               ),
                               controller: TextEditingController(
-                                text: state.description,
+                                text: state.profile.description,
                               ),
-                              onChanged: (v) => _cubit.newDescription = v,
+                              onChanged: cubit.updateDescription,
                             ),
                             const SizedBox(height: 40),
                             // User Rating
@@ -106,23 +109,23 @@ class ProfileScreen extends StatelessWidget {
                               children: [
                                 // Display Name
                                 Text(
-                                  state.displayName.isEmpty
+                                  state.profile.displayName.isEmpty
                                       ? 'No name'
-                                      : state.displayName,
+                                      : state.profile.displayName,
                                   style: textTheme.headlineLarge,
                                   maxLines: 1,
                                 ),
                                 // Edit Button
                                 IconButton.outlined(
                                   icon: const Icon(Icons.edit),
-                                  onPressed: _cubit.edit,
+                                  onPressed: cubit.edit,
                                 ),
                               ],
                             ),
                             const SizedBox(height: 20),
                             // User Description
                             Text(
-                              state.description,
+                              state.profile.description,
                               style: textTheme.bodyLarge,
                               textAlign: TextAlign.left,
                             ),
@@ -130,11 +133,11 @@ class ProfileScreen extends StatelessWidget {
                             // User Rating
                             const MyRatingWidget(),
                           ],
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-          ),
-        ]),
+          ]),
+        ),
       );
 }

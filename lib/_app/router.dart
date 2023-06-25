@@ -9,7 +9,7 @@ import 'package:gravity/auth/data/auth_repository.dart';
 import 'package:gravity/home/ui/home_screen.dart';
 import 'package:gravity/auth/ui/login_screen.dart';
 import 'package:gravity/field/ui/field_screen.dart';
-import 'package:gravity/user/ui/profile_screen.dart';
+import 'package:gravity/user/ui/my_profile_screen.dart';
 import 'package:gravity/beacon/ui/beacon_screen.dart';
 import 'package:gravity/updates/ui/updates_screen.dart';
 import 'package:gravity/_shared/ui/screen/error_screen.dart';
@@ -62,7 +62,7 @@ final router = GoRouter(
             GoRoute(
               path: pathProfile,
               redirect: _authGuardian,
-              builder: (context, state) => ProfileScreen(),
+              builder: (context, state) => const MyProfileScreen(),
             ),
           ],
         ),

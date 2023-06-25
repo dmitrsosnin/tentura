@@ -1,18 +1,20 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:gravity/beacon/entity/beacon.dart';
+import 'package:gravity/image/ui/widget/future_image.dart';
+import 'package:gravity/image/ui/widget/placeholder_image.dart';
 
 class BeaconTile extends StatelessWidget {
-  final String userId, displayName, avatarUrl, title, description, imagePath;
+  final Beacon beacon;
+  final Future<Uint8List?> Function(Beacon) futureAvatarImage;
+  final Future<Uint8List?> Function(Beacon) futureBeaconImage;
 
   const BeaconTile({
     super.key,
-    required this.userId,
-    required this.displayName,
-    required this.avatarUrl,
-    required this.title,
-    required this.description,
-    required this.imagePath,
+    required this.beacon,
+    required this.futureAvatarImage,
+    required this.futureBeaconImage,
   });
 
   @override
@@ -22,71 +24,119 @@ class BeaconTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Avatar
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: avatarUrl.isEmpty
-                ? const CircleAvatar(
-                    radius: 20,
-                    child: CircularProgressIndicator.adaptive(),
-                  )
-                : CircleAvatar(
-                    radius: 20,
-                    backgroundImage: CachedNetworkImageProvider(avatarUrl),
-                  ),
+          Container(
+            key: Key('AvatarImage:${beacon.author.id}'),
+            width: 40,
+            height: 40,
+            clipBehavior: Clip.hardEdge,
+            margin: const EdgeInsets.only(right: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: FutureImage(
+              key: Key('AvatarImage:${beacon.author.id}'),
+              placeholder: const PlaceholderImage.avatar(),
+              futureImage: futureAvatarImage(beacon),
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // User displayName
-              Text(
-                displayName,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              // Beacon Image
-              Container(
-                constraints: const BoxConstraints(
-                  minHeight: 200,
-                  maxHeight: 300,
-                  minWidth: 400,
-                  maxWidth: 600,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // User displayName
+                    Text(
+                      beacon.author.displayName,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      beacon.createdAt.toString(),
+                    ),
+                    const Spacer(),
+                    // Menu
+                    PopupMenuButton(
+                      itemBuilder: (context) => const [
+                        PopupMenuItem(child: Text('Share the code')),
+                        PopupMenuItem(child: Text('Graph view')),
+                      ],
+                    ),
+                  ],
                 ),
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  border: imagePath.isEmpty
-                      ? Border.all(
-                          color: Colors.black12,
-                          width: 1,
-                        )
-                      : null,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
+                // Beacon Image
+                Container(
+                  width: 300,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                  ),
+                  margin: const EdgeInsets.symmetric(vertical: 16),
+                  child: FutureImage(
+                    key: Key('BeaconImage:${beacon.author.id + beacon.id}'),
+                    placeholder: const PlaceholderImage.beacon(),
+                    futureImage: futureBeaconImage(beacon),
                   ),
                 ),
-                margin: const EdgeInsets.symmetric(vertical: 16),
-                child: imagePath.isEmpty
-                    ? const Icon(Icons.photo, size: 100)
-                    : Image.file(
-                        File(imagePath),
-                        fit: BoxFit.cover,
+                // Beacon Title
+                Text(
+                  beacon.title,
+                  maxLines: 1,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                // Beacon Description
+                Text(
+                  beacon.description,
+                  maxLines: 3,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 8),
+                // Bottom Buttons Block
+                Row(
+                  children: [
+                    // Like\Dislike
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceVariant,
+                        borderRadius: BorderRadius.circular(32),
                       ),
-              ),
-              // Beacon Title
-              Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              // Beacon Description
-              Text(
-                description,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ],
+                      child: const Row(children: [
+                        IconButton(
+                          icon: Icon(Icons.thumb_up_outlined),
+                          onPressed: null,
+                        ),
+                        Text('10'),
+                        IconButton(
+                          icon: Icon(Icons.thumb_down_outlined),
+                          onPressed: null,
+                        ),
+                      ]),
+                    ),
+                    const SizedBox(width: 8),
+                    // Reply
+                    FilledButton.icon(
+                      onPressed: null,
+                      icon: const Icon(Icons.comment_outlined),
+                      label: const Text('4'),
+                    ),
+                    const Spacer(),
+                    TextButton.icon(
+                      onPressed: null,
+                      icon: const Icon(Icons.percent_outlined),
+                      label: const Text('90%'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
           ),
         ],
       );

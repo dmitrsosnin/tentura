@@ -16,6 +16,7 @@ mutation CreateUser {
     uid
     display_name
     description
+    has_picture
   }
 }
 ''',
@@ -27,20 +28,23 @@ mutation CreateUser {
     required String id,
     required String displayName,
     required String description,
+    required bool hasPicture,
   }) async {
     final data = await _apiService.query(
       vars: {
         'id': id,
         'display_name': displayName,
         'description': description,
+        'has_picture': hasPicture,
       },
       query: r'''
-mutation UpdateUser($id: String!, $display_name: String!, $description: String!) {
-  update_user_by_pk(pk_columns: {id: $id}, _set: {display_name: $display_name, description: $description}) {
+mutation UpdateUser($id: String!, $display_name: String!, $description: String!, $has_picture: Boolean!) {
+  update_user_by_pk(pk_columns: {id: $id}, _set: {display_name: $display_name, description: $description, has_picture: $has_picture}) {
     id
     uid
     display_name
     description
+    has_picture
   }
 }
 ''',
@@ -59,6 +63,7 @@ query FetchUserProfile($id: String!) {
     uid
     display_name
     description
+    has_picture
   }
 }
 ''',

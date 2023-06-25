@@ -7,28 +7,38 @@ import 'package:gravity/_shared/types.dart';
 class ApiService {
   Future<String?> Function()? getToken;
 
-  late final _client = GraphQLClient(
-    cache: GraphQLCache(),
-    link: AuthLink(
-      getToken: () async =>
-          getToken == null ? null : 'Bearer ${await getToken!()}',
-    ).concat(HttpLink(apiUrl)),
-  );
+  late final GraphQLClient _client;
+
+  Future<ApiService> init() async {
+    await initHiveForFlutter();
+    _client = GraphQLClient(
+      cache: GraphQLCache(store: HiveStore()),
+      link: AuthLink(
+        getToken: () async =>
+            getToken == null ? null : 'Bearer ${await getToken!()}',
+      ).concat(HttpLink(apiUrl)),
+    );
+    return this;
+  }
 
   Future<Json> query({
     required String query,
     Map<String, Object?> vars = const {},
+    bool useCache = true,
   }) async {
     final result = await _client.query(QueryOptions(
       document: gql(query),
       variables: vars,
-      fetchPolicy: FetchPolicy.networkOnly,
+      fetchPolicy:
+          useCache ? FetchPolicy.cacheAndNetwork : FetchPolicy.networkOnly,
     ));
     if (kDebugMode) {
       print(result.data);
       print(result.exception);
     }
     if (result.hasException) throw result.exception!;
+    final data = result.data!;
+    data['cache_status'] = result.source == QueryResultSource.cache;
     return result.data!;
   }
 
