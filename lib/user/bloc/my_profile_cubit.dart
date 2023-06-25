@@ -5,10 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/user/entity/user.dart';
-import 'package:gravity/image/data/image_service.dart';
+import 'package:gravity/_shared/data/image_service.dart';
 import 'package:gravity/auth/data/auth_repository.dart';
 import 'package:gravity/user/data/user_repository.dart';
-import 'package:gravity/image/data/image_repository.dart';
+import 'package:gravity/_shared/data/image_repository.dart';
 
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';

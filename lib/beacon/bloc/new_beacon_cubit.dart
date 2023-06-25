@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/_shared/types.dart';
-import 'package:gravity/image/data/image_repository.dart';
+import 'package:gravity/_shared/data/image_repository.dart';
 import 'package:gravity/beacon/data/beacon_repository.dart';
 
 import 'new_beacon_state.dart';

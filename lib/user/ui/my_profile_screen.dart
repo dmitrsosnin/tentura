@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/user/bloc/my_profile_cubit.dart';
+import 'package:gravity/_shared/ui/widget/show_graph_fab.dart';
 import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
 
 import 'widget/my_rating_widget.dart';
@@ -17,10 +18,7 @@ class MyProfileScreen extends StatelessWidget {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.share_rounded),
-            onPressed: () {},
-          ),
+          floatingActionButton: const ShowGraphFAB(),
           body: Column(children: [
             // Header
             const MyProfileHeader(),
@@ -50,7 +48,7 @@ class MyProfileScreen extends StatelessWidget {
                 }
                 final textTheme = Theme.of(context).textTheme;
                 final cubit = context.read<MyProfileCubit>();
-                return RefreshIndicator(
+                return RefreshIndicator.adaptive(
                   onRefresh: cubit.refresh,
                   child: ListView(
                     shrinkWrap: true,

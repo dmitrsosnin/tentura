@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:gravity/user/bloc/my_profile_cubit.dart';
 import 'package:gravity/user/ui/dialog/on_log_out_dialog.dart';
-import 'package:gravity/image/ui/widget/placeholder_image.dart';
-import 'package:gravity/image/ui/widget/future_image.dart';
+import 'package:gravity/_shared/ui/widget/placeholder_image.dart';
+import 'package:gravity/_shared/ui/widget/future_image.dart';
 
 import 'profile_gradient.dart';
 

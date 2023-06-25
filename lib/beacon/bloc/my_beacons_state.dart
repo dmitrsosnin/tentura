@@ -1,37 +1,37 @@
-import 'package:equatable/equatable.dart';
+part of 'my_beacons_cubit.dart';
 
-import 'package:gravity/beacon/entity/beacon.dart';
+enum MyBeaconsStatus { initial, isLoading, hasData, hasError }
 
 class MyBeaconsState extends Equatable {
+  final MyBeaconsStatus status;
   final List<Beacon> beacons;
-
-  final bool isLoading;
   final Object? error;
 
   const MyBeaconsState({
-    this.isLoading = false,
-    this.error,
     this.beacons = const [],
+    this.status = MyBeaconsStatus.initial,
+    this.error,
   });
 
   @override
   List<Object?> get props => [
-        error,
+        status,
         beacons,
         beacons.length,
       ];
 
   bool get isEmpty => beacons.isEmpty;
 
+  bool get isLoading => status == MyBeaconsStatus.isLoading;
+
   MyBeaconsState copyWith({
-    bool? isLoading,
+    List<Beacon>? beacons,
+    MyBeaconsStatus? status,
     Object? error,
     bool clearError = false,
-    List<Beacon>? beacons,
   }) =>
       MyBeaconsState(
-        isLoading: isLoading ?? this.isLoading,
-        error: clearError ? null : error ?? this.error,
-        beacons: beacons ?? this.beacons,
-      );
+          error: clearError ? null : error ?? this.error,
+          beacons: beacons ?? this.beacons,
+          status: status ?? this.status);
 }
