@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/_shared/bloc/state_base.dart';
 import 'package:gravity/_shared/bloc/bloc_data_status.dart';
-import 'package:gravity/_shared/use_case/pick_image_case.dart';
 
 import 'package:gravity/auth/data/auth_repository.dart';
+import 'package:gravity/image/use_case/pick_image_case.dart';
 
 import 'package:gravity/user/entity/user.dart';
 import 'package:gravity/user/data/user_repository.dart';

@@ -7,11 +7,12 @@ import 'package:gravity/_shared/types.dart';
 import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/_shared/bloc/state_base.dart';
 import 'package:gravity/_shared/bloc/bloc_data_status.dart';
-import 'package:gravity/_shared/use_case/pick_image_case.dart';
 
+import 'package:gravity/image/use_case/pick_image_case.dart';
 import 'package:gravity/beacon/data/beacon_repository.dart';
 import 'package:gravity/beacon/use_case/beacon_image_case.dart';
 
+export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'new_beacon_state.dart';

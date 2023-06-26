@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:gravity/user/entity/user.dart';
 import 'package:gravity/beacon/entity/beacon.dart';
-
-import 'package:gravity/_shared/ui/widget/future_image.dart';
-import 'package:gravity/_shared/ui/widget/placeholder_image.dart';
+import 'package:gravity/image/ui/widget/future_image.dart';
+import 'package:gravity/image/ui/widget/placeholder_image.dart';
 
 class BeaconTile extends StatelessWidget {
   final Beacon beacon;
