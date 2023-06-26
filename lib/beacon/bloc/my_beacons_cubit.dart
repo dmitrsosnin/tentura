@@ -1,66 +1,57 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
-import 'package:flutter/services.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:gravity/beacon/entity/beacon.dart';
-import 'package:gravity/auth/data/auth_repository.dart';
-import 'package:gravity/beacon/data/beacon_repository.dart';
-import 'package:gravity/_shared/data/image_repository.dart';
+import 'package:gravity/_shared/bloc/state_base.dart';
+import 'package:gravity/_shared/bloc/bloc_data_status.dart';
 
+import 'package:gravity/auth/data/auth_repository.dart';
+import 'package:gravity/user/use_case/avatar_image_case.dart';
+
+import 'package:gravity/beacon/entity/beacon.dart';
+import 'package:gravity/beacon/data/beacon_repository.dart';
+import 'package:gravity/beacon/use_case/beacon_image_case.dart';
+
+export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'my_beacons_state.dart';
 
-class MyBeaconsCubit extends Cubit<MyBeaconsState> {
+class MyBeaconsCubit extends Cubit<MyBeaconsState>
+    with AvatarImageCase, BeaconImageCase {
   MyBeaconsCubit() : super(const MyBeaconsState()) {
-    _beaconRepository.updates.listen((beacon) {
-      emit(state.copyWith(
-        beacons: [beacon, ...state.beacons],
-      ));
-    });
+    _updates.resume();
     refresh(useCache: true);
   }
 
   final _authRepository = GetIt.I<AuthRepository>();
-  final _imageRepository = GetIt.I<ImageRepository>();
   final _beaconRepository = GetIt.I<BeaconRepository>();
 
-  Future<Uint8List?> getAvatarImageOf(Beacon beacon) async {
-    try {
-      return await _imageRepository
-          .getAvatarOf(beacon.author.id)
-          .timeout(const Duration(seconds: 3));
-    } on PlatformException catch (_) {
-      return null;
-    } catch (e) {
-      return Future.error(e);
-    }
-  }
+  late final _updates = _beaconRepository.updates.listen((beacon) {
+    emit(MyBeaconsState(
+      beacons: [beacon, ...state.beacons],
+      status: BlocDataStatus.hasData,
+    ));
+  });
 
-  Future<Uint8List?> getBeaconImageOf(Beacon beacon) async {
-    if (beacon.hasNoPicture) return null;
-    try {
-      return await _imageRepository
-          .getBeaconOf(beacon.author.id, beacon.id)
-          .timeout(const Duration(seconds: 3));
-    } on PlatformException catch (_) {
-      return null;
-    } catch (e) {
-      return Future.error(e);
-    }
+  @override
+  Future<void> close() async {
+    await _updates.cancel();
+    await super.close();
   }
 
   Future<void> refresh({bool useCache = false}) async {
     emit(state.copyWith(
-      status: MyBeaconsStatus.isLoading,
+      status: BlocDataStatus.isLoading,
     ));
-    final beacons = await _beaconRepository.getBeaconsOf(_authRepository.myId);
+    final beacons = await _beaconRepository.getBeaconsOf(
+      _authRepository.myId,
+      useCache: useCache,
+    );
     beacons.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    emit(state.copyWith(
+    emit(MyBeaconsState(
       beacons: beacons,
-      status: MyBeaconsStatus.hasData,
+      status: BlocDataStatus.hasData,
     ));
   }
 }

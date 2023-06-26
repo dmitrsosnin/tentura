@@ -1,43 +1,39 @@
 part of 'my_profile_cubit.dart';
 
-enum MyProfileStatus { initial, loading, editing, error }
-
-class MyProfileState extends Equatable {
-  final MyProfileStatus status;
-  final Object? error;
+class MyProfileState extends StateBase {
   final User profile;
+  final bool isEditing;
   final String newPicturePath;
 
   const MyProfileState({
-    this.status = MyProfileStatus.initial,
+    super.status,
+    super.error,
     this.profile = const User(),
     this.newPicturePath = '',
-    this.error,
+    this.isEditing = false,
   });
 
   @override
   List<Object> get props => [
         status,
         profile,
+        isEditing,
         newPicturePath,
-        error ?? '',
       ];
 
-  bool get hasError => status == MyProfileStatus.error;
-  bool get isLoading => status == MyProfileStatus.loading;
-  bool get isEditing => status == MyProfileStatus.editing;
-
   MyProfileState copyWith({
-    MyProfileStatus? status,
-    User? profile,
-    String? newPicturePath,
+    BlocDataStatus? status,
     Object? error,
     bool clearError = false,
+    User? profile,
+    bool? isEditing,
+    String? newPicturePath,
   }) =>
       MyProfileState(
         status: status ?? this.status,
+        error: clearError ? null : error ?? this.error,
+        isEditing: isEditing ?? this.isEditing,
         profile: profile ?? this.profile,
         newPicturePath: newPicturePath ?? this.newPicturePath,
-        error: clearError ? null : error ?? this.error,
       );
 }

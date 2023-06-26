@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/_shared/types.dart';
 
 class ApiService {
@@ -16,7 +15,9 @@ class ApiService {
       link: AuthLink(
         getToken: () async =>
             getToken == null ? null : 'Bearer ${await getToken!()}',
-      ).concat(HttpLink(apiUrl)),
+      ).concat(
+        HttpLink('https://hasura.gravity.intersubjective.space/v1/graphql'),
+      ),
     );
     return this;
   }

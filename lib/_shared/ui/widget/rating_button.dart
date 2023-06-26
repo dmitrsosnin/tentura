@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RatingButton extends StatelessWidget {
-  static const width = 112.0;
+  static const width = 120.0;
 
   const RatingButton({super.key});
 

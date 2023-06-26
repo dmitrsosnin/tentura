@@ -1,20 +1,16 @@
 part of 'my_beacons_cubit.dart';
 
-enum MyBeaconsStatus { initial, isLoading, hasData, hasError }
-
-class MyBeaconsState extends Equatable {
-  final MyBeaconsStatus status;
+class MyBeaconsState extends StateBase {
   final List<Beacon> beacons;
-  final Object? error;
 
   const MyBeaconsState({
+    super.status,
+    super.error,
     this.beacons = const [],
-    this.status = MyBeaconsStatus.initial,
-    this.error,
   });
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         status,
         beacons,
         beacons.length,
@@ -22,16 +18,15 @@ class MyBeaconsState extends Equatable {
 
   bool get isEmpty => beacons.isEmpty;
 
-  bool get isLoading => status == MyBeaconsStatus.isLoading;
-
   MyBeaconsState copyWith({
-    List<Beacon>? beacons,
-    MyBeaconsStatus? status,
+    BlocDataStatus? status,
     Object? error,
     bool clearError = false,
+    List<Beacon>? beacons,
   }) =>
       MyBeaconsState(
-          error: clearError ? null : error ?? this.error,
-          beacons: beacons ?? this.beacons,
-          status: status ?? this.status);
+        status: status ?? this.status,
+        error: clearError ? null : error ?? this.error,
+        beacons: beacons ?? this.beacons,
+      );
 }

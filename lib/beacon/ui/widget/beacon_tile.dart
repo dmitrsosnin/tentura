@@ -1,14 +1,17 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
+import 'package:gravity/user/entity/user.dart';
 import 'package:gravity/beacon/entity/beacon.dart';
+
 import 'package:gravity/_shared/ui/widget/future_image.dart';
 import 'package:gravity/_shared/ui/widget/placeholder_image.dart';
 
 class BeaconTile extends StatelessWidget {
   final Beacon beacon;
-  final Future<Uint8List?> Function(Beacon) futureAvatarImage;
-  final Future<Uint8List?> Function(Beacon) futureBeaconImage;
+
+  final Future<Uint8List?> Function(User user) futureAvatarImage;
+  final Future<Uint8List?> Function(Beacon beacon) futureBeaconImage;
 
   const BeaconTile({
     super.key,
@@ -36,7 +39,7 @@ class BeaconTile extends StatelessWidget {
             child: FutureImage(
               key: Key('AvatarImage:${beacon.author.id}'),
               placeholder: const PlaceholderImage.avatar(),
-              futureImage: futureAvatarImage(beacon),
+              futureImage: futureAvatarImage(beacon.author),
             ),
           ),
           Expanded(
@@ -107,28 +110,28 @@ class BeaconTile extends StatelessWidget {
                         color: Theme.of(context).colorScheme.surfaceVariant,
                         borderRadius: BorderRadius.circular(32),
                       ),
-                      child: const Row(children: [
+                      child: Row(children: [
                         IconButton(
-                          icon: Icon(Icons.thumb_up_outlined),
-                          onPressed: null,
+                          icon: const Icon(Icons.thumb_up_outlined),
+                          onPressed: () {},
                         ),
-                        Text('10'),
+                        const Text('10'),
                         IconButton(
-                          icon: Icon(Icons.thumb_down_outlined),
-                          onPressed: null,
+                          icon: const Icon(Icons.thumb_down_outlined),
+                          onPressed: () {},
                         ),
                       ]),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 20),
                     // Reply
                     FilledButton.icon(
-                      onPressed: null,
+                      onPressed: () {},
                       icon: const Icon(Icons.comment_outlined),
                       label: const Text('4'),
                     ),
                     const Spacer(),
                     TextButton.icon(
-                      onPressed: null,
+                      onPressed: () {},
                       icon: const Icon(Icons.percent_outlined),
                       label: const Text('90%'),
                     ),

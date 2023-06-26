@@ -1,22 +1,19 @@
 import 'package:equatable/equatable.dart';
 
-enum BlocDataStatus { isInitial, isLoading, hasData, hasError }
+import 'bloc_data_status.dart';
 
-class StateBase extends Equatable {
+abstract class StateBase extends Equatable {
   final BlocDataStatus status;
-  final String navigateTo;
   final Object? error;
 
   const StateBase({
     this.status = BlocDataStatus.isInitial,
-    this.navigateTo = '',
     this.error,
   });
 
   @override
   List<Object> get props => [
         status,
-        navigateTo,
         error ?? '',
       ];
 
@@ -27,16 +24,4 @@ class StateBase extends Equatable {
   bool get hasData => status == BlocDataStatus.hasData;
 
   bool get hasError => status == BlocDataStatus.hasError;
-
-  StateBase copyWith({
-    BlocDataStatus? status,
-    String? navigateTo,
-    Object? error,
-    bool clearError = false,
-  }) =>
-      StateBase(
-        status: status ?? this.status,
-        navigateTo: navigateTo ?? this.navigateTo,
-        error: clearError ? null : error ?? this.error,
-      );
 }

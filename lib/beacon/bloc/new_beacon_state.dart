@@ -1,60 +1,48 @@
-import 'package:flutter/material.dart';
-import 'package:equatable/equatable.dart';
+part of 'new_beacon_cubit.dart';
 
-import 'package:gravity/_shared/types.dart';
-import 'package:gravity/_shared/consts.dart';
-
-enum NewBeaconStatus { initial, done, error }
-
-class NewBeaconState extends Equatable {
-  final NewBeaconStatus status;
-  final Object? error;
-  final String title, description, imagePath;
-  final DateTimeRange? dateRange;
+class NewBeaconState extends StateBase {
+  final bool isValid;
+  final String imagePath;
   final GeoCoords? coordinates;
+  final DateTimeRange? dateRange;
 
   const NewBeaconState({
-    this.status = NewBeaconStatus.initial,
-    this.title = '',
+    super.status,
+    super.error,
+    this.isValid = false,
     this.imagePath = '',
-    this.description = '',
-    this.error,
-    this.dateRange,
     this.coordinates,
+    this.dateRange,
   });
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         status,
-        error,
-        title,
-        description,
+        isValid,
         imagePath,
-        dateRange,
-        coordinates,
+        dateRange ?? 0,
+        coordinates ?? 0,
       ];
 
-  bool get isValid => title.length >= titleMinLength;
+  bool get isNotValid => !isValid;
 
   NewBeaconState copyWith({
-    String? title,
-    String? description,
-    String? imagePath,
-    DateTimeRange? dateRange,
-    bool clearDateRange = false,
-    GeoCoords? coordinates,
-    bool clearCoordinates = false,
     Object? error,
     bool clearError = false,
-    NewBeaconStatus? status,
+    BlocDataStatus? status,
+    GeoCoords? coordinates,
+    bool clearCoordinates = false,
+    DateTimeRange? dateRange,
+    bool clearDateRange = false,
+    String? imagePath,
+    bool? isValid,
   }) =>
       NewBeaconState(
-        title: title ?? this.title,
-        description: description ?? this.description,
-        imagePath: imagePath ?? this.imagePath,
-        dateRange: clearDateRange ? null : dateRange ?? this.dateRange,
-        coordinates: clearCoordinates ? null : coordinates ?? this.coordinates,
-        error: clearError ? null : error ?? this.error,
         status: status ?? this.status,
+        error: clearError ? null : error ?? this.error,
+        coordinates: clearCoordinates ? null : coordinates ?? this.coordinates,
+        dateRange: clearDateRange ? null : dateRange ?? this.dateRange,
+        imagePath: imagePath ?? this.imagePath,
+        isValid: isValid ?? this.isValid,
       );
 }

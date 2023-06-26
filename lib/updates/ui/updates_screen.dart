@@ -5,7 +5,6 @@ class UpdatesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
-        initialIndex: 0,
         length: 2,
         child: Scaffold(
           appBar: AppBar(
@@ -25,20 +24,8 @@ class UpdatesScreen extends StatelessWidget {
           ),
           body: const TabBarView(
             children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'You don’t have more updates to review',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Nothing here yet',
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              Center(child: Text('You don’t have more updates to review')),
+              Center(child: Text('Nothing here yet')),
             ],
           ),
         ),

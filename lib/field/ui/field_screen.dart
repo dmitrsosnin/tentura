@@ -21,21 +21,12 @@ class FieldScreen extends StatelessWidget {
           ),
           leadingWidth: RatingButton.width,
         ),
-        body: Center(
-            child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Nothing here yet'),
-            const Text('Find your friends to get started!'),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FilledButton(
-                onPressed: () {},
-                child: const Center(child: Text('Search')),
-              ),
-            ),
-          ],
-        )),
-        floatingActionButton: const ShowGraphFAB(),
+        body: const Center(
+          child: Text(
+            'Nothing here yet\nFind your friends to get started!',
+            textAlign: TextAlign.center,
+          ),
+        ),
+        floatingActionButton: const ShowGraphFAB(heroTag: 'FAB.Graph.MyField'),
       );
 }

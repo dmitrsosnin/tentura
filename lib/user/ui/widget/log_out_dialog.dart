@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class OnLogOutDialog extends StatelessWidget {
-  static Future<bool?> show(BuildContext context) => showDialog<bool>(
-        context: context,
-        builder: (_) => const OnLogOutDialog(),
-      );
+class LogOutDialog extends StatelessWidget {
+  final VoidCallback onYes;
 
-  const OnLogOutDialog({super.key});
+  const LogOutDialog({
+    super.key,
+    required this.onYes,
+  });
 
   @override
   Widget build(BuildContext context) => AlertDialog(
@@ -14,7 +14,10 @@ class OnLogOutDialog extends StatelessWidget {
         content: const Text('Are you shure?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () {
+              Navigator.of(context).pop();
+              onYes();
+            },
             child: const Text('Yes'),
           ),
           TextButton(

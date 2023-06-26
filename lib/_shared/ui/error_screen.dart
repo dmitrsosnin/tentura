@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+import 'package:gravity/_app/router.dart';
 
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({super.key});
@@ -12,7 +13,7 @@ class ErrorScreen extends StatelessWidget {
         ),
         body: Center(
           child: FilledButton(
-            onPressed: () => context.go('/'),
+            onPressed: () => context.go(pathField),
             child: const Text('Back to Home'),
           ),
         ),

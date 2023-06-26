@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:go_router/go_router.dart';
 
 import 'package:gravity/_shared/consts.dart';
-import 'package:gravity/beacon/bloc/new_beacon_cubit.dart';
-import 'package:gravity/_shared/ui/dialog/on_error_dialog.dart';
+import 'package:gravity/_shared/bloc/bloc_data_status.dart';
+import 'package:gravity/_shared/ui/widget/error_dialog.dart';
 
-import 'dialog/on_choose_location_dialog.dart';
+import 'package:gravity/beacon/bloc/new_beacon_cubit.dart';
+
+import 'widget/choose_location_dialog.dart';
 
 class NewBeaconScreen extends StatelessWidget {
   static const _padding = SizedBox(height: 20);
@@ -20,14 +21,17 @@ class NewBeaconScreen extends StatelessWidget {
         child: BlocConsumer<NewBeaconCubit, NewBeaconState>(
           listener: (context, state) {
             switch (state.status) {
-              case NewBeaconStatus.initial:
+              case BlocDataStatus.hasData:
+                Navigator.of(context).pop();
+                // context.pop();
                 break;
-              case NewBeaconStatus.done:
-                context.pop();
+              case BlocDataStatus.hasError:
+                showDialog(
+                  context: context,
+                  builder: (_) => ErrorDialog(error: state.error),
+                );
                 break;
-              case NewBeaconStatus.error:
-                OnErrorDialog.show(context, text: state.error.toString());
-                break;
+              default:
             }
           },
           builder: (context, state) {
@@ -82,13 +86,7 @@ class NewBeaconScreen extends StatelessWidget {
                             ),
                     ),
                     readOnly: true,
-                    onTap: () async {
-                      final file = await ImagePicker().pickImage(
-                        source: ImageSource.gallery,
-                        maxWidth: 600,
-                      );
-                      if (file != null) cubit.setImage(file.name, file.path);
-                    },
+                    onTap: cubit.setImage,
                   ),
                   // Location
                   _padding,
@@ -105,8 +103,12 @@ class NewBeaconScreen extends StatelessWidget {
                             ),
                     ),
                     readOnly: true,
-                    onTap: () async => cubit
-                        .setCoords(await OnChooseLocationDialog.show(context)),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => ChooseLocationDialog(
+                        setCoords: cubit.setCoords,
+                      ),
+                    ),
                   ),
                   _padding,
                   // Time

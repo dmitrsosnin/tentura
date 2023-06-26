@@ -4,16 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/_shared/types.dart';
-import 'package:gravity/_shared/data/image_repository.dart';
-import 'package:gravity/beacon/data/beacon_repository.dart';
+import 'package:gravity/_shared/consts.dart';
+import 'package:gravity/_shared/bloc/state_base.dart';
+import 'package:gravity/_shared/bloc/bloc_data_status.dart';
+import 'package:gravity/_shared/use_case/pick_image_case.dart';
 
-import 'new_beacon_state.dart';
+import 'package:gravity/beacon/data/beacon_repository.dart';
+import 'package:gravity/beacon/use_case/beacon_image_case.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-export 'new_beacon_state.dart';
+part 'new_beacon_state.dart';
 
-class NewBeaconCubit extends Cubit<NewBeaconState> {
+class NewBeaconCubit extends Cubit<NewBeaconState>
+    with BeaconImageCase, PickImageCase {
   static final _dF = DateFormat.yMd();
 
   final imageController = TextEditingController();
@@ -22,33 +26,36 @@ class NewBeaconCubit extends Cubit<NewBeaconState> {
 
   NewBeaconCubit() : super(const NewBeaconState());
 
-  final _imageRepository = GetIt.I<ImageRepository>();
   final _beaconRepository = GetIt.I<BeaconRepository>();
 
-  void setTitle(String value) => emit(state.copyWith(
-        title: value,
-      ));
+  String _title = '', _description = '';
 
-  void setDescription(String value) => emit(state.copyWith(
-        description: value,
-      ));
+  void setTitle(String value) {
+    _title = value;
+    if (_title.length < titleMinLength && state.isValid) {
+      emit(state.copyWith(isValid: false));
+    } else if (_title.length >= titleMinLength && state.isNotValid) {
+      emit(state.copyWith(isValid: true));
+    }
+  }
 
-  void setImage(String name, String path) {
-    imageController.text = name;
-    emit(state.copyWith(
-      imagePath: path,
-    ));
+  void setDescription(String value) {
+    _description = value;
+  }
+
+  void setImage() async {
+    final newImage = await pickImage();
+    if (newImage == null) return;
+    imageController.text = newImage.name;
+    emit(state.copyWith(imagePath: newImage.path));
   }
 
   void clearImage() {
     imageController.text = '';
-    emit(state.copyWith(
-      imagePath: '',
-    ));
+    emit(state.copyWith(imagePath: ''));
   }
 
-  void setCoords(GeoCoords? coords) {
-    if (coords == null) return;
+  void setCoords(GeoCoords coords) {
     locationController.text = coords.toString();
     emit(state.copyWith(
       coordinates: coords,
@@ -81,27 +88,21 @@ class NewBeaconCubit extends Cubit<NewBeaconState> {
   void save() async {
     try {
       final beacon = await _beaconRepository.createBeacon(
-        title: state.title,
-        description: state.description,
-        coordinates: state.coordinates,
+        title: _title,
+        description: _description,
         dateRange: state.dateRange,
+        coordinates: state.coordinates,
         hasPicture: state.imagePath.isNotEmpty,
       );
       if (state.imagePath.isNotEmpty) {
-        await _imageRepository
-            .putBeacon(
-              userId: beacon.author.id,
-              beaconId: beacon.id,
-              imagePath: state.imagePath,
-            )
-            .firstWhere((e) => e.isFinished);
+        await setBeaconImageOf(beacon, state.imagePath);
       }
       emit(state.copyWith(
-        status: NewBeaconStatus.done,
+        status: BlocDataStatus.hasData,
       ));
     } catch (e) {
       emit(state.copyWith(
-        status: NewBeaconStatus.error,
+        status: BlocDataStatus.hasError,
         error: e,
       ));
     }

@@ -32,10 +32,11 @@ class BeaconScreen extends StatelessWidget {
             ),
           ),
           body: const TabBarView(children: [
-            MyBeaconList(),
+            MyBeaconList(key: Key('MyBeaconList')),
             Center(child: Text('Nothing here yet')),
           ]),
           floatingActionButton: FloatingActionButton(
+            heroTag: 'FAB.NewBeacon',
             child: const Icon(Icons.add),
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => const NewBeaconScreen(),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:gravity/_shared/types.dart';
+
 import 'package:gravity/user/entity/user.dart';
 
 class Beacon extends Equatable {

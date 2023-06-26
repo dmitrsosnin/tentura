@@ -1,29 +1,30 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
-import 'package:flutter/services.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:gravity/user/entity/user.dart';
-import 'package:gravity/_shared/data/image_service.dart';
+import 'package:gravity/_shared/bloc/state_base.dart';
+import 'package:gravity/_shared/bloc/bloc_data_status.dart';
+import 'package:gravity/_shared/use_case/pick_image_case.dart';
+
 import 'package:gravity/auth/data/auth_repository.dart';
+
+import 'package:gravity/user/entity/user.dart';
 import 'package:gravity/user/data/user_repository.dart';
-import 'package:gravity/_shared/data/image_repository.dart';
+import 'package:gravity/user/use_case/avatar_image_case.dart';
 
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'my_profile_state.dart';
 
-class MyProfileCubit extends Cubit<MyProfileState> {
+class MyProfileCubit extends Cubit<MyProfileState>
+    with AvatarImageCase, PickImageCase {
   MyProfileCubit() : super(const MyProfileState()) {
     refresh();
   }
 
-  final _imageService = const ImageService();
   final _authRepository = GetIt.I<AuthRepository>();
   final _userRepository = GetIt.I<UserRepository>();
-  final _imageRepository = GetIt.I<ImageRepository>();
 
   String _newDisplayName = '', _newDescription = '';
 
@@ -33,7 +34,9 @@ class MyProfileCubit extends Cubit<MyProfileState> {
 
   Future<void> refresh() async {
     if (_authRepository.myId.isEmpty) throw Exception('myId is empty!');
-    emit(state.copyWith(status: MyProfileStatus.loading));
+    emit(state.copyWith(
+      status: BlocDataStatus.isLoading,
+    ));
     try {
       final user = await _userRepository.getUserById(_authRepository.myId) ??
           await _userRepository.createMyProfile();
@@ -41,12 +44,12 @@ class MyProfileCubit extends Cubit<MyProfileState> {
       _newDescription = user.description;
       emit(state.copyWith(
         profile: user,
-        status: MyProfileStatus.initial,
         clearError: true,
+        status: BlocDataStatus.hasData,
       ));
     } catch (e) {
       emit(state.copyWith(
-        status: MyProfileStatus.error,
+        status: BlocDataStatus.hasError,
         error: e,
       ));
     }
@@ -55,23 +58,19 @@ class MyProfileCubit extends Cubit<MyProfileState> {
   void edit() {
     _newDisplayName = state.profile.displayName;
     _newDescription = state.profile.description;
-    emit(state.copyWith(status: MyProfileStatus.editing));
+    emit(state.copyWith(
+      isEditing: true,
+    ));
   }
 
-  Future<void> save() async {
+  void save() async {
+    // TBD: exit if no changes
     try {
       if (state.newPicturePath.isNotEmpty) {
-        await _imageRepository
-            .putAvatar(
-              userId: state.profile.id,
-              picturePath: state.newPicturePath,
-            )
-            .firstWhere((e) => e.isFinished);
-        _imageRepository.evictAvatarOf(state.profile.id);
+        await setAvatarImageOf(state.profile.id, state.newPicturePath);
       }
-      emit(state.copyWith(
-        newPicturePath: '',
-        status: MyProfileStatus.initial,
+      emit(MyProfileState(
+        status: BlocDataStatus.hasData,
         profile: await _userRepository.updateMyProfile(
           id: state.profile.id,
           displayName: _newDisplayName,
@@ -83,40 +82,31 @@ class MyProfileCubit extends Cubit<MyProfileState> {
     } catch (e) {
       emit(state.copyWith(
         newPicturePath: '',
-        status: MyProfileStatus.error,
+        status: BlocDataStatus.hasError,
         error: e,
       ));
     }
   }
 
-  Future<void> signOut(bool? isSubmited) async {
-    if (isSubmited != true) return;
+  void signOut() async {
+    await _authRepository.signOut();
     emit(const MyProfileState());
-    return _authRepository.signOut();
   }
 
-  Future<void> uploadPhoto() async {
-    final newPicturePath = await _imageService.pickImage();
-    if (newPicturePath == null) return;
-    emit(state.copyWith(newPicturePath: newPicturePath));
+  void uploadPhoto() async {
+    final newImage = await pickImage();
+    if (newImage == null) return;
+    emit(state.copyWith(
+      newPicturePath: newImage.path,
+    ));
   }
 
   void removePhoto() {
     emit(state.copyWith(
       newPicturePath: '',
-      profile: state.profile.copyWith(hasPicture: false),
+      profile: state.profile.copyWith(
+        hasPicture: false,
+      ),
     ));
-  }
-
-  Future<Uint8List?> getAvatarImageOf(String userId) async {
-    try {
-      return await _imageRepository
-          .getAvatarOf(userId)
-          .timeout(const Duration(seconds: 3));
-    } on PlatformException catch (_) {
-      return null;
-    } catch (e) {
-      return Future.error(e);
-    }
   }
 }

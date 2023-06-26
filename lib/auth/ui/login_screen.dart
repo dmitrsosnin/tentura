@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
-import 'package:gravity/_shared/consts.dart';
+import 'package:gravity/_app/router.dart';
 import 'package:gravity/_shared/firebase_options.dart';
 
 class LogInScreen extends StatelessWidget {

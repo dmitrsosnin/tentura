@@ -3,18 +3,23 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:gravity/_shared/consts.dart';
-import 'package:gravity/auth/data/auth_repository.dart';
-
 import 'package:gravity/home/ui/home_screen.dart';
 import 'package:gravity/auth/ui/login_screen.dart';
 import 'package:gravity/field/ui/field_screen.dart';
 import 'package:gravity/user/ui/my_profile_screen.dart';
 import 'package:gravity/beacon/ui/beacon_screen.dart';
 import 'package:gravity/updates/ui/updates_screen.dart';
-import 'package:gravity/_shared/ui/screen/error_screen.dart';
+import 'package:gravity/_shared/ui/error_screen.dart';
+
+import 'package:gravity/auth/data/auth_repository.dart';
 
 export 'package:go_router/go_router.dart';
+
+const pathLogin = '/login';
+const pathField = '/field';
+const pathBeacons = '/beacons';
+const pathUpdates = '/updates';
+const pathProfile = '/profile';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
@@ -29,6 +34,7 @@ final router = GoRouter(
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, child) => HomeScreen(child: child),
+      parentNavigatorKey: rootNavigatorKey,
       branches: <StatefulShellBranch>[
         StatefulShellBranch(
           routes: [
