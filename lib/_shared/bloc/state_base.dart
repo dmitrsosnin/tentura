@@ -12,9 +12,9 @@ abstract class StateBase extends Equatable {
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         status,
-        error ?? '',
+        error,
       ];
 
   bool get isInitial => status == BlocDataStatus.isInitial;

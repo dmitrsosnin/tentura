@@ -16,12 +16,13 @@ class NewBeaconState extends StateBase {
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
+        error,
         status,
         isValid,
         imagePath,
-        dateRange ?? 0,
-        coordinates ?? 0,
+        dateRange,
+        coordinates,
       ];
 
   bool get isNotValid => !isValid;

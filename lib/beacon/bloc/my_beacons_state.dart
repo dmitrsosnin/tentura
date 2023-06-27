@@ -10,7 +10,8 @@ class MyBeaconsState extends StateBase {
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
+        error,
         status,
         beacons,
         beacons.length,

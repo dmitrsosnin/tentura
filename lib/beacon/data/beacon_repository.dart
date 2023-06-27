@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gravity/_shared/types.dart';
 import 'package:gravity/_shared/data/api_service.dart';
 
+import 'package:gravity/user/entity/user.dart';
 import 'package:gravity/beacon/entity/beacon.dart';
 
 part 'beacon_queries.dart';
@@ -55,9 +56,7 @@ class BeaconRepository {
       vars: {'author_id': userId},
     );
     return (data['beacon'] as List)
-        .map<Beacon>(
-          (e) => Beacon.fromJson(e as Json),
-        )
+        .map<Beacon>((e) => Beacon.fromJson(e as Json))
         .toList();
   }
 }

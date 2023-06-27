@@ -3,6 +3,16 @@ import 'package:equatable/equatable.dart';
 import 'package:gravity/_shared/types.dart';
 
 class User extends Equatable {
+  static const fragment = '''
+fragment userFields on user {
+  id
+  uid
+  has_picture
+  description
+  display_name
+}
+''';
+
   final String id;
   final String uid;
   final String displayName;
@@ -29,9 +39,9 @@ class User extends Equatable {
   List<Object> get props => [
         id,
         uid,
+        hasPicture,
         displayName,
         description,
-        hasPicture,
       ];
 
   bool get isEmpty => id.isEmpty;

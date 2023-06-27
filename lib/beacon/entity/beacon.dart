@@ -6,6 +6,23 @@ import 'package:gravity/_shared/types.dart';
 import 'package:gravity/user/entity/user.dart';
 
 class Beacon extends Equatable {
+  static const fragment = '''
+fragment beaconFields on beacon {
+  id
+  title
+  description
+  created_at
+  updated_at
+  place
+  timerange
+  has_picture
+  enabled
+  author {
+    ...userFields
+  }
+}
+''';
+
   final String id;
   final String title;
   final String description;
