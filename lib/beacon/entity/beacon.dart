@@ -6,9 +6,13 @@ import 'package:gravity/_shared/types.dart';
 import 'package:gravity/user/entity/user.dart';
 
 class Beacon extends Equatable {
-  final String id, title, description;
-  final DateTime createdAt, updatedAt;
-  final bool isEnabled, hasPicture;
+  final String id;
+  final String title;
+  final String description;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isEnabled;
+  final bool hasPicture;
   final DateTimeRange? dateRange;
   final GeoCoords? coordinates;
   final User author;

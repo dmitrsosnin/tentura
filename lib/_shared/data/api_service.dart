@@ -27,12 +27,14 @@ class ApiService {
     Map<String, Object?> vars = const {},
     bool useCache = true,
   }) async {
-    final result = await _client.query(QueryOptions(
-      document: gql(query),
-      variables: vars,
-      fetchPolicy:
-          useCache ? FetchPolicy.cacheAndNetwork : FetchPolicy.networkOnly,
-    ));
+    final result = await _client.query(
+      QueryOptions(
+        document: gql(query),
+        variables: vars,
+        fetchPolicy:
+            useCache ? FetchPolicy.cacheAndNetwork : FetchPolicy.networkOnly,
+      ),
+    );
     if (kDebugMode) {
       print(result.data);
       print(result.exception);
@@ -47,11 +49,13 @@ class ApiService {
     required String query,
     Map<String, Object?> vars = const {},
   }) async {
-    final result = await _client.mutate(MutationOptions(
-      document: gql(query),
-      variables: vars,
-      fetchPolicy: FetchPolicy.networkOnly,
-    ));
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(query),
+        variables: vars,
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
     if (kDebugMode) {
       print(result.data);
       print(result.exception);

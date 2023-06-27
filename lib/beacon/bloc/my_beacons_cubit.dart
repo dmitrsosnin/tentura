@@ -28,10 +28,12 @@ class MyBeaconsCubit extends Cubit<MyBeaconsState>
   final _beaconRepository = GetIt.I<BeaconRepository>();
 
   late final _updates = _beaconRepository.updates.listen((beacon) {
-    emit(MyBeaconsState(
-      beacons: [beacon, ...state.beacons],
-      status: BlocDataStatus.hasData,
-    ));
+    emit(
+      MyBeaconsState(
+        beacons: [beacon, ...state.beacons],
+        status: BlocDataStatus.hasData,
+      ),
+    );
   });
 
   @override
@@ -41,17 +43,21 @@ class MyBeaconsCubit extends Cubit<MyBeaconsState>
   }
 
   Future<void> refresh({bool useCache = false}) async {
-    emit(state.copyWith(
-      status: BlocDataStatus.isLoading,
-    ));
+    emit(
+      state.copyWith(
+        status: BlocDataStatus.isLoading,
+      ),
+    );
     final beacons = await _beaconRepository.getBeaconsOf(
       _authRepository.myId,
       useCache: useCache,
     );
     beacons.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    emit(MyBeaconsState(
-      beacons: beacons,
-      status: BlocDataStatus.hasData,
-    ));
+    emit(
+      MyBeaconsState(
+        beacons: beacons,
+        status: BlocDataStatus.hasData,
+      ),
+    );
   }
 }

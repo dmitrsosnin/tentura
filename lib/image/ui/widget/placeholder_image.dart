@@ -5,9 +5,9 @@ class PlaceholderImage extends StatelessWidget {
   final String asset;
 
   const PlaceholderImage({
-    super.key,
     required this.asset,
     this.fit = BoxFit.cover,
+    super.key,
   });
 
   const PlaceholderImage.avatar({

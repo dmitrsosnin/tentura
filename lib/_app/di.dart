@@ -31,8 +31,8 @@ class DI {
     GetIt.I.registerSingleton(BeaconRepository());
 
     // BLoC (persisted)
-    GetIt.I.registerLazySingleton(() => MyProfileCubit());
-    GetIt.I.registerLazySingleton(() => MyBeaconsCubit());
+    GetIt.I.registerLazySingleton(MyProfileCubit.new);
+    GetIt.I.registerLazySingleton(MyBeaconsCubit.new);
 
     _isInited = true;
   }

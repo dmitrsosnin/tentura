@@ -10,7 +10,6 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SignInScreen(
-        resizeToAvoidBottomInset: true,
         showAuthActionSwitch: true,
         actions: [
           AuthStateChangeAction<SignedIn>(

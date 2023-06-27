@@ -13,10 +13,10 @@ class BeaconTile extends StatelessWidget {
   final Future<Uint8List?> Function(Beacon beacon) futureBeaconImage;
 
   const BeaconTile({
-    super.key,
     required this.beacon,
     required this.futureAvatarImage,
     required this.futureBeaconImage,
+    super.key,
   });
 
   @override
@@ -61,8 +61,8 @@ class BeaconTile extends StatelessWidget {
                     // Menu
                     PopupMenuButton(
                       itemBuilder: (context) => const [
-                        PopupMenuItem(child: Text('Share the code')),
-                        PopupMenuItem(child: Text('Graph view')),
+                        PopupMenuItem<void>(child: Text('Share the code')),
+                        PopupMenuItem<void>(child: Text('Graph view')),
                       ],
                     ),
                   ],
@@ -109,17 +109,19 @@ class BeaconTile extends StatelessWidget {
                         color: Theme.of(context).colorScheme.surfaceVariant,
                         borderRadius: BorderRadius.circular(32),
                       ),
-                      child: Row(children: [
-                        IconButton(
-                          icon: const Icon(Icons.thumb_up_outlined),
-                          onPressed: () {},
-                        ),
-                        const Text('10'),
-                        IconButton(
-                          icon: const Icon(Icons.thumb_down_outlined),
-                          onPressed: () {},
-                        ),
-                      ]),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.thumb_up_outlined),
+                            onPressed: () {},
+                          ),
+                          const Text('10'),
+                          IconButton(
+                            icon: const Icon(Icons.thumb_down_outlined),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(width: 20),
                     // Reply

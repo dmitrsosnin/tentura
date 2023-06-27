@@ -9,7 +9,7 @@ class UserRepository {
 
   Future<User> createMyProfile() async {
     final data = await _apiService.mutate(
-      query: r'''
+      query: '''
 mutation CreateUser {
   insert_user_one(object: {display_name: "", description: ""}) {
     id

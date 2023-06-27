@@ -4,8 +4,8 @@ class LogOutDialog extends StatelessWidget {
   final VoidCallback onYes;
 
   const LogOutDialog({
-    super.key,
     required this.onYes,
+    super.key,
   });
 
   @override

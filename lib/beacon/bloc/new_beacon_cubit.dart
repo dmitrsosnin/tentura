@@ -29,7 +29,8 @@ class NewBeaconCubit extends Cubit<NewBeaconState>
 
   final _beaconRepository = GetIt.I<BeaconRepository>();
 
-  String _title = '', _description = '';
+  String _title = '';
+  String _description = '';
 
   void setTitle(String value) {
     _title = value;
@@ -44,7 +45,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState>
     _description = value;
   }
 
-  void setImage() async {
+  Future<void> setImage() async {
     final newImage = await pickImage();
     if (newImage == null) return;
     imageController.text = newImage.name;
@@ -86,7 +87,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState>
     ));
   }
 
-  void save() async {
+  Future<void> save() async {
     try {
       final beacon = await _beaconRepository.createBeacon(
         title: _title,

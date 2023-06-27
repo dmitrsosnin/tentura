@@ -7,10 +7,10 @@ class FutureImage extends StatelessWidget {
   final BoxFit boxFit;
 
   const FutureImage({
-    super.key,
     required this.futureImage,
     required this.placeholder,
     this.boxFit = BoxFit.cover,
+    super.key,
   });
 
   @override

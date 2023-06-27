@@ -4,8 +4,8 @@ import 'package:gravity/_app/router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
-    super.key,
     required this.child,
+    super.key,
   });
 
   final StatefulNavigationShell child;

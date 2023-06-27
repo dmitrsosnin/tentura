@@ -3,7 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:gravity/_shared/types.dart';
 
 class User extends Equatable {
-  final String id, uid, displayName, description;
+  final String id;
+  final String uid;
+  final String displayName;
+  final String description;
   final bool hasPicture;
 
   const User({

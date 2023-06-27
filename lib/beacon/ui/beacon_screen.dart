@@ -20,7 +20,7 @@ class BeaconScreen extends StatelessWidget {
               QrCodeButton(),
             ],
             leading: const Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8),
               child: RatingButton(),
             ),
             leadingWidth: RatingButton.width,
@@ -31,16 +31,20 @@ class BeaconScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: const TabBarView(children: [
-            MyBeaconList(key: Key('MyBeaconList')),
-            Center(child: Text('Nothing here yet')),
-          ]),
+          body: const TabBarView(
+            children: [
+              MyBeaconList(key: Key('MyBeaconList')),
+              Center(child: Text('Nothing here yet')),
+            ],
+          ),
           floatingActionButton: FloatingActionButton(
             heroTag: 'FAB.NewBeacon',
             child: const Icon(Icons.add),
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const NewBeaconScreen(),
-            )),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (context) => const NewBeaconScreen(),
+              ),
+            ),
           ),
         ),
       );

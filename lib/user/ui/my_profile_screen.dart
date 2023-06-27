@@ -22,122 +22,123 @@ class MyProfileScreen extends StatelessWidget {
       floatingActionButton: const ShowGraphFAB(
         heroTag: 'FAB.Graph.MyProfile',
       ),
-      body: Column(children: [
-        // Header
-        const MyProfileHeader(),
-        // Body
-        BlocConsumer<MyProfileCubit, MyProfileState>(
-          bloc: cubit,
-          listener: (context, state) {
-            if (state.profile.isEmpty) {
-              context.go(pathLogin);
-              return;
-            }
-            if (state.hasError) {
-              showDialog(
-                context: context,
-                builder: (context) => ErrorDialog(error: state.error),
-              );
-              return;
-            }
-          },
-          buildWhen: (p, c) =>
-              p.status != c.status || p.isEditing != c.isEditing,
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator.adaptive(),
-              );
-            }
-            final textTheme = Theme.of(context).textTheme;
-            return RefreshIndicator.adaptive(
-              onRefresh: cubit.refresh,
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: state.isEditing
-                    // Edit Profile
-                    ? [
-                        Row(
-                          children: [
-                            // Display Name
-                            Expanded(
-                              child: TextField(
-                                maxLines: 1,
-                                maxLength: titleMaxLength,
-                                controller: TextEditingController(
-                                  text: state.profile.displayName,
+      body: Column(
+        children: [
+          // Header
+          const MyProfileHeader(),
+          // Body
+          BlocConsumer<MyProfileCubit, MyProfileState>(
+            bloc: cubit,
+            listener: (context, state) {
+              if (state.profile.isEmpty) {
+                context.go(pathLogin);
+                return;
+              }
+              if (state.hasError) {
+                showDialog<void>(
+                  context: context,
+                  builder: (context) => ErrorDialog(error: state.error),
+                );
+                return;
+              }
+            },
+            buildWhen: (p, c) =>
+                p.status != c.status || p.isEditing != c.isEditing,
+            builder: (context, state) {
+              if (state.isLoading) {
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                );
+              }
+              final textTheme = Theme.of(context).textTheme;
+              return RefreshIndicator.adaptive(
+                onRefresh: cubit.refresh,
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  children: state.isEditing
+                      // Edit Profile
+                      ? [
+                          Row(
+                            children: [
+                              // Display Name
+                              Expanded(
+                                child: TextField(
+                                  maxLength: titleMaxLength,
+                                  controller: TextEditingController(
+                                    text: state.profile.displayName,
+                                  ),
+                                  style: textTheme.headlineLarge,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Name',
+                                  ),
+                                  onChanged: cubit.updateDisplayName,
                                 ),
-                                style: textTheme.headlineLarge,
-                                decoration: const InputDecoration(
-                                  labelText: 'Name',
-                                ),
-                                onChanged: cubit.updateDisplayName,
                               ),
-                            ),
-                            // Save Button
-                            IconButton.outlined(
-                              icon: const Icon(Icons.save),
-                              onPressed: cubit.save,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        // User Description
-                        TextField(
-                          minLines: 1,
-                          maxLines: 10,
-                          style: textTheme.bodyLarge,
-                          maxLength: descriptionLength,
-                          keyboardType: TextInputType.multiline,
-                          decoration: const InputDecoration(
-                            labelText: 'Description',
+                              // Save Button
+                              IconButton.outlined(
+                                icon: const Icon(Icons.save),
+                                onPressed: cubit.save,
+                              ),
+                            ],
                           ),
-                          controller: TextEditingController(
-                            text: state.profile.description,
+                          const SizedBox(height: 20),
+                          // User Description
+                          TextField(
+                            minLines: 1,
+                            maxLines: 10,
+                            style: textTheme.bodyLarge,
+                            maxLength: descriptionLength,
+                            keyboardType: TextInputType.multiline,
+                            decoration: const InputDecoration(
+                              labelText: 'Description',
+                            ),
+                            controller: TextEditingController(
+                              text: state.profile.description,
+                            ),
+                            onChanged: cubit.updateDescription,
                           ),
-                          onChanged: cubit.updateDescription,
-                        ),
-                        const SizedBox(height: 40),
-                        // User Rating
-                        const MyRatingWidget(),
-                      ]
-                    // Display Profile
-                    : [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Display Name
-                            Text(
-                              state.profile.displayName.isEmpty
-                                  ? 'No name'
-                                  : state.profile.displayName,
-                              style: textTheme.headlineLarge,
-                              maxLines: 1,
-                            ),
-                            // Edit Button
-                            IconButton.outlined(
-                              icon: const Icon(Icons.edit),
-                              onPressed: cubit.edit,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        // User Description
-                        Text(
-                          state.profile.description,
-                          style: textTheme.bodyLarge,
-                          textAlign: TextAlign.left,
-                        ),
-                        const SizedBox(height: 40),
-                        // User Rating
-                        const MyRatingWidget(),
-                      ],
-              ),
-            );
-          },
-        ),
-      ]),
+                          const SizedBox(height: 40),
+                          // User Rating
+                          const MyRatingWidget(),
+                        ]
+                      // Display Profile
+                      : [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Display Name
+                              Text(
+                                state.profile.displayName.isEmpty
+                                    ? 'No name'
+                                    : state.profile.displayName,
+                                style: textTheme.headlineLarge,
+                                maxLines: 1,
+                              ),
+                              // Edit Button
+                              IconButton.outlined(
+                                icon: const Icon(Icons.edit),
+                                onPressed: cubit.edit,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          // User Description
+                          Text(
+                            state.profile.description,
+                            style: textTheme.bodyLarge,
+                            textAlign: TextAlign.left,
+                          ),
+                          const SizedBox(height: 40),
+                          // User Rating
+                          const MyRatingWidget(),
+                        ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

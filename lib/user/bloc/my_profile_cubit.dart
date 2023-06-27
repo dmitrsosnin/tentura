@@ -26,7 +26,8 @@ class MyProfileCubit extends Cubit<MyProfileState>
   final _authRepository = GetIt.I<AuthRepository>();
   final _userRepository = GetIt.I<UserRepository>();
 
-  String _newDisplayName = '', _newDescription = '';
+  var _newDisplayName = '';
+  var _newDescription = '';
 
   void updateDisplayName(String value) => _newDisplayName = value;
 
@@ -63,7 +64,7 @@ class MyProfileCubit extends Cubit<MyProfileState>
     ));
   }
 
-  void save() async {
+  Future<void> save() async {
     // TBD: exit if no changes
     try {
       if (state.newPicturePath.isNotEmpty) {
@@ -88,12 +89,12 @@ class MyProfileCubit extends Cubit<MyProfileState>
     }
   }
 
-  void signOut() async {
+  Future<void> signOut() async {
     await _authRepository.signOut();
     emit(const MyProfileState());
   }
 
-  void uploadPhoto() async {
+  Future<void> uploadPhoto() async {
     final newImage = await pickImage();
     if (newImage == null) return;
     emit(state.copyWith(

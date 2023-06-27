@@ -7,14 +7,13 @@ class ChooseLocationDialog extends StatelessWidget {
   final void Function(GeoCoords coords) setCoords;
 
   const ChooseLocationDialog({
-    super.key,
     required this.setCoords,
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: true,
           centerTitle: true,
           title: const Text('Tap to choose location'),
           forceMaterialTransparency: true,

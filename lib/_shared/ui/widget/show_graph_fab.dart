@@ -4,8 +4,8 @@ class ShowGraphFAB extends StatelessWidget {
   final String heroTag;
 
   const ShowGraphFAB({
-    super.key,
     required this.heroTag,
+    super.key,
   });
 
   @override

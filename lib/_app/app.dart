@@ -16,8 +16,8 @@ class App extends StatelessWidget {
   }
 
   const App({
-    super.key,
     required this.di,
+    super.key,
   });
 
   final DI di;

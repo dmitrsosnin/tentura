@@ -23,14 +23,11 @@ class NewBeaconScreen extends StatelessWidget {
             switch (state.status) {
               case BlocDataStatus.hasData:
                 Navigator.of(context).pop();
-                // context.pop();
-                break;
               case BlocDataStatus.hasError:
-                showDialog(
+                showDialog<void>(
                   context: context,
                   builder: (_) => ErrorDialog(error: state.error),
                 );
-                break;
               default:
             }
           },
@@ -38,7 +35,6 @@ class NewBeaconScreen extends StatelessWidget {
             final cubit = context.read<NewBeaconCubit>();
             return Scaffold(
               appBar: AppBar(
-                automaticallyImplyLeading: true,
                 actions: [
                   TextButton(
                     onPressed: state.isValid ? cubit.save : null,
@@ -103,7 +99,7 @@ class NewBeaconScreen extends StatelessWidget {
                             ),
                     ),
                     readOnly: true,
-                    onTap: () => showDialog(
+                    onTap: () => showDialog<void>(
                       context: context,
                       builder: (context) => ChooseLocationDialog(
                         setCoords: cubit.setCoords,
@@ -127,22 +123,21 @@ class NewBeaconScreen extends StatelessWidget {
                     readOnly: true,
                     onTap: () async {
                       final now = DateTime.now();
-                      cubit.setDateRange(await showDateRangePicker(
-                        context: context,
-                        firstDate: now,
-                        lastDate: now.add(const Duration(days: 365)),
-                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      ));
+                      cubit.setDateRange(
+                        await showDateRangePicker(
+                          context: context,
+                          firstDate: now,
+                          lastDate: now.add(const Duration(days: 365)),
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
+                        ),
+                      );
                     },
                   ),
                   // Image
                   Container(
                     decoration: BoxDecoration(
                       border: state.imagePath.isEmpty
-                          ? Border.all(
-                              color: Colors.black12,
-                              width: 1,
-                            )
+                          ? Border.all(color: Colors.black12)
                           : null,
                     ),
                     margin: const EdgeInsets.symmetric(vertical: 48),
