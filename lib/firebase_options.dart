@@ -17,16 +17,16 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -49,21 +49,22 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDxt2KOwmKtyw3eCGfIn4veO_Hok74TW8E',
-    appId: '1:388561553386:web:73c07e4e06cbb628201493',
-    messagingSenderId: '388561553386',
-    projectId: 'gravity-9e634',
-    authDomain: 'gravity-9e634.firebaseapp.com',
-    storageBucket: 'gravity-9e634.appspot.com',
-    measurementId: 'G-WW3H1EH1DZ',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA7wADXv36RnqR0w5q_E4fLtpGiKIg8ffc',
-    appId: '1:388561553386:android:72216da3fdefac18201493',
+    appId: '1:388561553386:android:8a8307155e7264e9201493',
     messagingSenderId: '388561553386',
     projectId: 'gravity-9e634',
     storageBucket: 'gravity-9e634.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyB1SmIJRzpcFVpd2KEPKLvKJzaGJAgGO9s',
+    appId: '1:388561553386:ios:b16a031a4fadff9a201493',
+    messagingSenderId: '388561553386',
+    projectId: 'gravity-9e634',
+    storageBucket: 'gravity-9e634.appspot.com',
+    androidClientId: '388561553386-35c0pjsa6eboertpr2d5lbkdi9mkrgtb.apps.googleusercontent.com',
+    iosClientId: '388561553386-79hrd4dvdei4uis44jme15o8vu3if5er.apps.googleusercontent.com',
+    iosBundleId: 'com.intersubjective.gravity',
   );
 }
