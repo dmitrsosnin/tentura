@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:gravity/graph/ui/graph_screen.dart';
+
 class ShowGraphFAB extends StatelessWidget {
   final String heroTag;
 
@@ -12,6 +14,11 @@ class ShowGraphFAB extends StatelessWidget {
   Widget build(BuildContext context) => FloatingActionButton(
         heroTag: heroTag,
         child: const Icon(Icons.share_rounded),
-        onPressed: () {},
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (context) => const GraphScreen(),
+          ),
+        ),
       );
 }

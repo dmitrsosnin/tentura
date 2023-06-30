@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gravity/_app/router.dart';
 import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/_shared/ui/widget/error_dialog.dart';
-import 'package:gravity/_shared/ui/widget/show_graph_fab.dart';
+import 'package:gravity/graph/ui/widget/show_graph_fab.dart';
 
 import 'package:gravity/user/bloc/my_profile_cubit.dart';
 
@@ -19,9 +19,7 @@ class MyProfileScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-      floatingActionButton: const ShowGraphFAB(
-        heroTag: 'FAB.Graph.MyProfile',
-      ),
+      floatingActionButton: const ShowGraphFAB(heroTag: 'FAB.Graph.MyProfile'),
       body: Column(
         children: [
           // Header

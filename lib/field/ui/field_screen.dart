@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gravity/_shared/ui/widget/rating_button.dart';
 import 'package:gravity/_shared/ui/widget/search_button.dart';
 import 'package:gravity/_shared/ui/widget/qr_code_button.dart';
-import 'package:gravity/_shared/ui/widget/show_graph_fab.dart';
+import 'package:gravity/graph/ui/widget/show_graph_fab.dart';
 
 class FieldScreen extends StatelessWidget {
   const FieldScreen({super.key});
