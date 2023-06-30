@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 
@@ -50,7 +51,7 @@ fragment beaconFields on beacon {
   factory Beacon.fromJson(Json json) {
     final place = json['place'] as Json?;
     final coordinates = place?['coordinates'] as List?;
-    final timerange = json['timerange'] as String?;
+    final timerange = jsonDecode(json['timerange'] as String? ?? '[]') as List;
     return Beacon(
       id: json['id'] as String,
       author: User.fromJson(json['author'] as Json),
@@ -60,11 +61,11 @@ fragment beaconFields on beacon {
       updatedAt: DateTime.parse(json['updated_at'] as String),
       isEnabled: json['enabled'] as bool,
       hasPicture: json['has_picture'] as bool,
-      dateRange: timerange == null
+      dateRange: timerange.isEmpty
           ? null
           : DateTimeRange(
-              start: DateTime.parse(timerange.substring(2, 24)),
-              end: DateTime.parse(timerange.substring(27, 49)),
+              start: DateTime.parse(timerange.first as String),
+              end: DateTime.parse(timerange.last as String),
             ),
       coordinates: coordinates == null
           ? null

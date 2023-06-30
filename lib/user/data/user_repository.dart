@@ -17,7 +17,7 @@ class UserRepository {
 
   Future<User> updateMyProfile({
     required String id,
-    required String displayName,
+    required String title,
     required String description,
     required bool hasPicture,
   }) async {
@@ -25,7 +25,7 @@ class UserRepository {
       query: _updateUser,
       vars: {
         'id': id,
-        'display_name': displayName,
+        'title': title,
         'description': description,
         'has_picture': hasPicture,
       },

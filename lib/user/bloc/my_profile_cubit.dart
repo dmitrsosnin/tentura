@@ -26,10 +26,10 @@ class MyProfileCubit extends Cubit<MyProfileState>
   final _authRepository = GetIt.I<AuthRepository>();
   final _userRepository = GetIt.I<UserRepository>();
 
-  var _newDisplayName = '';
+  var _newTitle = '';
   var _newDescription = '';
 
-  void updateDisplayName(String value) => _newDisplayName = value;
+  void updateTitle(String value) => _newTitle = value;
 
   void updateDescription(String value) => _newDescription = value;
 
@@ -41,7 +41,7 @@ class MyProfileCubit extends Cubit<MyProfileState>
     try {
       final user = await _userRepository.getUserById(_authRepository.myId) ??
           await _userRepository.createMyProfile();
-      _newDisplayName = user.displayName;
+      _newTitle = user.title;
       _newDescription = user.description;
       emit(state.copyWith(
         profile: user,
@@ -57,7 +57,7 @@ class MyProfileCubit extends Cubit<MyProfileState>
   }
 
   void edit() {
-    _newDisplayName = state.profile.displayName;
+    _newTitle = state.profile.title;
     _newDescription = state.profile.description;
     emit(state.copyWith(
       isEditing: true,
@@ -74,7 +74,7 @@ class MyProfileCubit extends Cubit<MyProfileState>
         status: BlocDataStatus.hasData,
         profile: await _userRepository.updateMyProfile(
           id: state.profile.id,
-          displayName: _newDisplayName,
+          title: _newTitle,
           description: _newDescription,
           hasPicture:
               state.profile.hasPicture || state.newPicturePath.isNotEmpty,

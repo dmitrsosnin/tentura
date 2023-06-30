@@ -13,8 +13,8 @@ mutation CreateBeacon($title: String!, $description: String!, $place: geography,
 const _getBeaconsOf = User.fragment +
     Beacon.fragment +
     r'''
-query GetBeaconsOf($author_id: String!) {
-  beacon(where: {author_id: {_eq: $author_id}}, order_by: {created_at: desc}) {
+query GetBeaconsOf($user_id: String!) {
+  beacon(where: {user_id: {_eq: $user_id}}, order_by: {created_at: desc}) {
     ...beaconFields
   }
 }

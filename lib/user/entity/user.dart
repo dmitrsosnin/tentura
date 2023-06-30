@@ -6,31 +6,27 @@ class User extends Equatable {
   static const fragment = '''
 fragment userFields on user {
   id
-  uid
-  has_picture
+  title
   description
-  display_name
+  has_picture
 }
 ''';
 
   final String id;
-  final String uid;
-  final String displayName;
+  final String title;
   final String description;
   final bool hasPicture;
 
   const User({
     this.id = '',
-    this.uid = '',
-    this.displayName = '',
+    this.title = '',
     this.description = '',
     this.hasPicture = false,
   });
 
   factory User.fromJson(Json json) => User(
         id: json['id'] as String,
-        uid: json['uid'] as String,
-        displayName: json['display_name'] as String,
+        title: json['title'] as String,
         description: json['description'] as String,
         hasPicture: json['has_picture'] as bool,
       );
@@ -38,10 +34,9 @@ fragment userFields on user {
   @override
   List<Object> get props => [
         id,
-        uid,
-        hasPicture,
-        displayName,
+        title,
         description,
+        hasPicture,
       ];
 
   bool get isEmpty => id.isEmpty;
@@ -50,15 +45,13 @@ fragment userFields on user {
 
   User copyWith({
     String? id,
-    String? uid,
-    String? displayName,
+    String? title,
     String? description,
     bool? hasPicture,
   }) =>
       User(
         id: id ?? this.id,
-        uid: uid ?? this.uid,
-        displayName: displayName ?? this.displayName,
+        title: title ?? this.title,
         description: description ?? this.description,
         hasPicture: hasPicture ?? this.hasPicture,
       );

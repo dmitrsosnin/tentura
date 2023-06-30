@@ -50,7 +50,7 @@ class BeaconTile extends StatelessWidget {
                   children: [
                     // User displayName
                     Text(
-                      beacon.author.displayName,
+                      beacon.author.title,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(width: 16),

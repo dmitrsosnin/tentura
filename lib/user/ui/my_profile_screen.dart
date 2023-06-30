@@ -66,13 +66,13 @@ class MyProfileScreen extends StatelessWidget {
                                 child: TextField(
                                   maxLength: titleMaxLength,
                                   controller: TextEditingController(
-                                    text: state.profile.displayName,
+                                    text: state.profile.title,
                                   ),
                                   style: textTheme.headlineLarge,
                                   decoration: const InputDecoration(
                                     labelText: 'Name',
                                   ),
-                                  onChanged: cubit.updateDisplayName,
+                                  onChanged: cubit.updateTitle,
                                 ),
                               ),
                               // Save Button
@@ -109,9 +109,9 @@ class MyProfileScreen extends StatelessWidget {
                             children: [
                               // Display Name
                               Text(
-                                state.profile.displayName.isEmpty
+                                state.profile.title.isEmpty
                                     ? 'No name'
-                                    : state.profile.displayName,
+                                    : state.profile.title,
                                 style: textTheme.headlineLarge,
                                 maxLines: 1,
                               ),

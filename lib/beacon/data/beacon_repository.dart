@@ -53,7 +53,7 @@ class BeaconRepository {
     final data = await _apiService.query(
       useCache: useCache,
       query: _getBeaconsOf,
-      vars: {'author_id': userId},
+      vars: {'user_id': userId},
     );
     return (data['beacon'] as List)
         .map<Beacon>((e) => Beacon.fromJson(e as Json))
