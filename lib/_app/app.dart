@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'package:gravity/_shared/ui/theme.dart';
@@ -10,6 +11,7 @@ class App extends StatelessWidget {
   static Future<App> init() async {
     WidgetsFlutterBinding.ensureInitialized();
     setPathUrlStrategy();
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     const di = DI();
     await di.init();
     return const App(di: di);

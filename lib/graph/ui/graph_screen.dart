@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:gravity/user/entity/user.dart';
+import 'package:gravity/beacon/entity/beacon.dart';
 import 'package:gravity/graph/entity/graph_node.dart';
 
 import 'widget/graph_node_widget.dart';
@@ -17,6 +18,14 @@ class GraphScreen extends StatefulWidget {
 class _GraphScreenState extends State<GraphScreen> {
   final _controller = GraphController();
   final _random = Random();
+  final _beacon = Beacon(
+    id: '',
+    author: const User(),
+    title: '',
+    description: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 
   @override
   void initState() {
@@ -25,10 +34,15 @@ class _GraphScreenState extends State<GraphScreen> {
       const nodeCount = 50;
 
       for (var i = 0; i < nodeCount; i++) {
-        final node = Node(
-          data: User(id: _random.nextInt(1024).toString()),
-          size: i + 20,
-        );
+        final node = _random.nextBool()
+            ? UserNode(
+                user: User(id: _random.nextInt(1024).toString()),
+                size: i + 20,
+              )
+            : BeaconNode(
+                beacon: _beacon,
+                size: i + 20,
+              );
         mutator.addNode(node);
 
         for (final other in _controller.nodes) {
@@ -61,20 +75,32 @@ class _GraphScreenState extends State<GraphScreen> {
         backgroundColor: Colors.black12,
         body: GraphView(
           controller: _controller,
-          maxScale: 5,
-          minScale: 0.1,
-          size: const Size.square(1000),
+          maxScale: 3,
+          minScale: 0.3,
+          size: const Size.square(3000),
           layoutAlgorithm: const FruchtermanReingoldAlgorithm(
             iterations: 500,
           ),
           nodeBuilder: (context, node) => GraphNodeWidget(
-            node: UserNode(
-              isActive: false,
-              size: node.size,
-              user: User(title: node.hashCode.toString()),
-            ),
+            node: node as GraphNode,
             onTap: () => _controller.jumpToNode(node),
           ),
+          labelBuilder: (context, node) => switch (node) {
+            final UserNode node => LabelConfiguration(
+                size: Size.square(node.size),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    node.user.title.isEmpty
+                        ? 'Unnamed person'
+                        : node.user.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: node.size / 5),
+                  ),
+                ),
+              ),
+            _ => null,
+          },
           edgePainter: (canvas, edge, sourcePosition, targetPosition) {
             canvas.drawLine(
               sourcePosition,
@@ -82,27 +108,6 @@ class _GraphScreenState extends State<GraphScreen> {
               Paint()
                 ..strokeWidth = edge.source.size / edge.target.size
                 ..color = Colors.black54,
-            );
-          },
-          labelBuilder: (context, node) {
-            if (node.size < 50) return null;
-            final user = node.data as User;
-            return LabelConfiguration(
-              size: Size.square(node.size * 2),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    user.title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: node.size / 5,
-                    ),
-                  ),
-                ),
-              ),
             );
           },
           loadingBuilder: (context) => const Center(

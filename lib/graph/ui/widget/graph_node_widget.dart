@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:gravity/graph/entity/graph_node.dart';
+import 'package:gravity/image/ui/widget/future_image.dart';
+import 'package:gravity/image/ui/widget/placeholder_image.dart';
 
 class GraphNodeWidget extends StatelessWidget {
+  static final _decorationUser = BoxDecoration(
+    border: Border.all(color: Colors.deepPurple, width: 3),
+  );
+
+  static final _decorationBeacon = BoxDecoration(
+    border: Border.all(color: Colors.deepPurple, width: 2),
+  );
+
   const GraphNodeWidget({
     required this.node,
     this.onTap,
@@ -15,24 +25,29 @@ class GraphNodeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
         onTap: onTap,
-        child: SizedBox(
-          width: node.size,
-          height: node.size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey,
-              border: Border.all(
-                color: node.isActive ? Colors.red : Colors.black,
-                width: 2,
+        child: switch (node) {
+          final UserNode node => Container(
+              width: node.size,
+              height: node.size,
+              foregroundDecoration: _decorationUser,
+              child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: const BoxDecoration(shape: BoxShape.circle),
+                child: FutureImage(
+                  futureImage: node.futureImage,
+                  placeholder: const PlaceholderImage.avatar(),
+                ),
               ),
             ),
-            child: Text(
-              (node as UserNode).user.title,
-              maxLines: 1,
-              overflow: TextOverflow.clip,
+          final BeaconNode node => Container(
+              width: node.size,
+              height: node.size,
+              foregroundDecoration: _decorationBeacon,
+              child: FutureImage(
+                futureImage: node.futureImage,
+                placeholder: const PlaceholderImage.beacon(),
+              ),
             ),
-          ),
-        ),
+        },
       );
 }
