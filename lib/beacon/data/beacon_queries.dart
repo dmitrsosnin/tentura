@@ -3,8 +3,8 @@ part of 'beacon_repository.dart';
 const _createBeacon = User.fragment +
     Beacon.fragment +
     r'''
-mutation CreateBeacon($title: String!, $description: String!, $place: geography, $place_name: String, $timerange: tstzrange, $has_picture: Boolean!) {
-  insert_beacon_one(object: {title: $title, description: $description, place: $place, place_name: $place_name, timerange: $timerange, has_picture: $has_picture}) {
+mutation CreateBeacon($title: String!, $description: String!, $place: geography, $timerange: tstzrange, $has_picture: Boolean!) {
+  insert_beacon_one(object: {title: $title, description: $description, place: $place, timerange: $timerange, has_picture: $has_picture}) {
     ...beaconFields
   }
 }

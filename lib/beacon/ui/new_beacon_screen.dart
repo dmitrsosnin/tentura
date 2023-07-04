@@ -102,6 +102,7 @@ class NewBeaconScreen extends StatelessWidget {
                       context: context,
                       builder: (context) => ChooseLocationDialog(
                         setCoords: cubit.setCoords,
+                        center: state.coordinates ?? cubit.myCoords,
                       ),
                     ),
                   ),
