@@ -22,6 +22,7 @@ class BeaconRepository {
     required bool hasPicture,
     DateTimeRange? dateRange,
     GeoCoords? coordinates,
+    String? placeName = '',
   }) async {
     final data = await _apiService.mutate(
       query: _createBeacon,
@@ -34,6 +35,7 @@ class BeaconRepository {
                 'type': 'Point',
                 'coordinates': [coordinates.lat, coordinates.long],
               },
+        'place_name': placeName,
         'timerange': dateRange == null
             ? null
             : '["${dateRange.start}","${dateRange.end}"]',

@@ -3,6 +3,7 @@ part of 'new_beacon_cubit.dart';
 class NewBeaconState extends StateBase {
   final bool isValid;
   final String imagePath;
+  final String placeName;
   final GeoCoords? coordinates;
   final DateTimeRange? dateRange;
 
@@ -11,6 +12,7 @@ class NewBeaconState extends StateBase {
     super.error,
     this.isValid = false,
     this.imagePath = '',
+    this.placeName = '',
     this.coordinates,
     this.dateRange,
   });
@@ -22,6 +24,7 @@ class NewBeaconState extends StateBase {
         isValid,
         imagePath,
         dateRange,
+        placeName,
         coordinates,
       ];
 
@@ -31,6 +34,7 @@ class NewBeaconState extends StateBase {
     Object? error,
     bool clearError = false,
     BlocDataStatus? status,
+    String? placeName,
     GeoCoords? coordinates,
     bool clearCoordinates = false,
     DateTimeRange? dateRange,
@@ -41,9 +45,10 @@ class NewBeaconState extends StateBase {
       NewBeaconState(
         status: status ?? this.status,
         error: clearError ? null : error ?? this.error,
-        coordinates: clearCoordinates ? null : coordinates ?? this.coordinates,
-        dateRange: clearDateRange ? null : dateRange ?? this.dateRange,
-        imagePath: imagePath ?? this.imagePath,
         isValid: isValid ?? this.isValid,
+        imagePath: imagePath ?? this.imagePath,
+        dateRange: clearDateRange ? null : dateRange ?? this.dateRange,
+        placeName: clearCoordinates ? '' : placeName ?? this.placeName,
+        coordinates: clearCoordinates ? null : coordinates ?? this.coordinates,
       );
 }

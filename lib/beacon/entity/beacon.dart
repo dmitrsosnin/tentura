@@ -15,6 +15,7 @@ fragment beaconFields on beacon {
   created_at
   updated_at
   place
+  place_name
   timerange
   has_picture
   enabled
@@ -33,6 +34,7 @@ fragment beaconFields on beacon {
   final bool hasPicture;
   final DateTimeRange? dateRange;
   final GeoCoords? coordinates;
+  final String placeName;
   final User author;
 
   const Beacon({
@@ -45,6 +47,7 @@ fragment beaconFields on beacon {
     this.hasPicture = false,
     this.isEnabled = true,
     this.coordinates,
+    this.placeName = '',
     this.dateRange,
   });
 
@@ -70,6 +73,7 @@ fragment beaconFields on beacon {
       coordinates: coordinates == null
           ? null
           : (lat: coordinates[0], long: coordinates[1]),
+      placeName: json['place_name'] as String? ?? '',
     );
   }
 
@@ -83,6 +87,7 @@ fragment beaconFields on beacon {
         updatedAt,
         isEnabled,
         dateRange,
+        placeName,
         coordinates,
         hasPicture,
       ];
@@ -98,6 +103,7 @@ fragment beaconFields on beacon {
     bool clearDateRange = false,
     GeoCoords? coordinates,
     bool clearCoordinates = false,
+    String? placeName,
   }) =>
       Beacon(
         id: id,
@@ -110,5 +116,6 @@ fragment beaconFields on beacon {
         hasPicture: hasPicture ?? this.hasPicture,
         dateRange: clearDateRange ? null : dateRange ?? this.dateRange,
         coordinates: clearCoordinates ? null : coordinates ?? this.coordinates,
+        placeName: placeName ?? this.placeName,
       );
 }

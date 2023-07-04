@@ -11,6 +11,7 @@ import 'package:gravity/_shared/bloc/bloc_data_status.dart';
 import 'package:gravity/image/use_case/pick_image_case.dart';
 import 'package:gravity/beacon/data/beacon_repository.dart';
 import 'package:gravity/beacon/use_case/beacon_image_case.dart';
+import 'package:gravity/geocoding/data/geocoding_repository.dart';
 
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +29,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState>
   NewBeaconCubit() : super(const NewBeaconState());
 
   final _beaconRepository = GetIt.I<BeaconRepository>();
+  final _geocodingRepository = GetIt.I<GeocodingRepository>();
 
   String _title = '';
   String _description = '';
@@ -57,11 +59,18 @@ class NewBeaconCubit extends Cubit<NewBeaconState>
     emit(state.copyWith(imagePath: ''));
   }
 
-  void setCoords(GeoCoords coords) {
+  Future<void> setCoords(GeoCoords coords) async {
     locationController.text = coords.toString();
     emit(state.copyWith(
       coordinates: coords,
     ));
+    final placeName = await _geocodingRepository.getPlaceByCoords(coords);
+    if (placeName != null) {
+      locationController.text = '${placeName.city}, ${placeName.country}';
+      emit(state.copyWith(
+        placeName: locationController.text,
+      ));
+    }
   }
 
   void clearCoords() {
@@ -93,6 +102,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState>
         title: _title,
         description: _description,
         dateRange: state.dateRange,
+        placeName: state.placeName,
         coordinates: state.coordinates,
         hasPicture: state.imagePath.isNotEmpty,
       );
