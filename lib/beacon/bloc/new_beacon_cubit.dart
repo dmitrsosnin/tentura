@@ -38,7 +38,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState> with BeaconImageCase {
   String _title = '';
   String _description = '';
 
-  GeoCoords? get myCoords => _geocodingRepository.myCoords;
+  LatLng? get myCoords => _geocodingRepository.myCoords;
 
   void setTitle(String value) {
     _title = value;
@@ -65,16 +65,15 @@ class NewBeaconCubit extends Cubit<NewBeaconState> with BeaconImageCase {
     emit(state.copyWith(imagePath: ''));
   }
 
-  Future<void> setCoords(GeoCoords coords) async {
+  Future<void> setCoords(LatLng coords) async {
     locationController.text = coords.toString();
     emit(state.copyWith(
       coordinates: coords,
     ));
-    final place = await _geocodingRepository.getPlaceByCoords(coords);
+    final place = await _platformService.getPlaceNameByCoords(coords);
     if (place != null) {
-      locationController.text = place.city.isEmpty
-          ? place.country
-          : '${place.city}, ${place.country}';
+      locationController.text =
+          '${place.locality ?? "Unknown"}, ${place.country ?? "Unknown"}';
     }
   }
 

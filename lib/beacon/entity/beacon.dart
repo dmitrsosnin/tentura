@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:gravity/_shared/types.dart';
-
 import 'package:gravity/user/entity/user.dart';
 
 class Beacon extends Equatable {
@@ -32,7 +31,7 @@ fragment beaconFields on beacon {
   final bool isEnabled;
   final bool hasPicture;
   final DateTimeRange? dateRange;
-  final GeoCoords? coordinates;
+  final LatLng? coordinates;
   final User author;
 
   const Beacon({
@@ -69,7 +68,7 @@ fragment beaconFields on beacon {
             ),
       coordinates: coordinates == null
           ? null
-          : (lat: coordinates[0], long: coordinates[1]),
+          : LatLng(coordinates[0] as double, coordinates[1] as double),
     );
   }
 
@@ -88,27 +87,4 @@ fragment beaconFields on beacon {
       ];
 
   bool get hasNoPicture => !hasPicture;
-
-  Beacon copyWith({
-    String? title,
-    String? description,
-    bool? isEnabled,
-    bool? hasPicture,
-    DateTimeRange? dateRange,
-    bool clearDateRange = false,
-    GeoCoords? coordinates,
-    bool clearCoordinates = false,
-  }) =>
-      Beacon(
-        id: id,
-        author: author,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        isEnabled: isEnabled ?? this.isEnabled,
-        hasPicture: hasPicture ?? this.hasPicture,
-        dateRange: clearDateRange ? null : dateRange ?? this.dateRange,
-        coordinates: clearCoordinates ? null : coordinates ?? this.coordinates,
-      );
 }

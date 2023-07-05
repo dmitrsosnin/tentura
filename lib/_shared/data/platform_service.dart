@@ -1,4 +1,7 @@
+import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'package:gravity/_shared/types.dart';
 
 class PlatformService {
   const PlatformService();
@@ -14,5 +17,14 @@ class PlatformService {
       maxWidth: 600,
     );
     return xFile == null ? null : (path: xFile.path, name: xFile.name);
+  }
+
+  Future<Placemark?> getPlaceNameByCoords(LatLng coords) async {
+    try {
+      return (await placemarkFromCoordinates(coords.latitude, coords.longitude))
+          .firstOrNull;
+    } catch (_) {
+      return null;
+    }
   }
 }

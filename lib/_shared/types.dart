@@ -1,3 +1,3 @@
-typedef Json = Map<String, Object?>;
+export 'package:latlong2/latlong.dart' show LatLng;
 
-typedef GeoCoords = ({double lat, double long});
+typedef Json = Map<String, dynamic>;

@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:gravity/_shared/types.dart';
 
 class GeocodingRepository {
-  GeoCoords? _myCoords;
+  LatLng? _myCoords;
 
-  GeoCoords? get myCoords {
+  LatLng? get myCoords {
     if (_myCoords == null) getMyCoords();
     return _myCoords;
   }
@@ -17,27 +16,7 @@ class GeocodingRepository {
     return this;
   }
 
-  Future<({String city, String country})?> getPlaceByCoords(
-    GeoCoords? coords,
-  ) async {
-    if (coords != null) {
-      try {
-        final place = (await placemarkFromCoordinates(coords.lat, coords.long))
-            .firstOrNull;
-        return place == null
-            ? null
-            : (
-                city: place.locality ?? 'Unknown',
-                country: place.country ?? place.name ?? 'Unknown',
-              );
-      } catch (e) {
-        if (kDebugMode) print(e);
-      }
-    }
-    return null;
-  }
-
-  Future<GeoCoords?> getMyCoords({bool isNeedRequest = true}) async {
+  Future<LatLng?> getMyCoords({bool isNeedRequest = true}) async {
     if (_myCoords != null) return _myCoords;
     if (await Geolocator.isLocationServiceEnabled() &&
         await _checkLocationPermission(isNeedRequest)) {
@@ -46,7 +25,7 @@ class GeocodingRepository {
           desiredAccuracy: LocationAccuracy.lowest,
           timeLimit: const Duration(seconds: 15),
         );
-        return _myCoords = (lat: position.latitude, long: position.longitude);
+        return _myCoords = LatLng(position.latitude, position.longitude);
       } catch (e) {
         if (kDebugMode) print(e);
       }

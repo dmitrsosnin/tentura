@@ -3,7 +3,7 @@ part of 'new_beacon_cubit.dart';
 class NewBeaconState extends StateBase {
   final bool isValid;
   final String imagePath;
-  final GeoCoords? coordinates;
+  final LatLng? coordinates;
   final DateTimeRange? dateRange;
 
   const NewBeaconState({
@@ -31,7 +31,7 @@ class NewBeaconState extends StateBase {
     Object? error,
     bool clearError = false,
     BlocDataStatus? status,
-    GeoCoords? coordinates,
+    LatLng? coordinates,
     bool clearCoordinates = false,
     DateTimeRange? dateRange,
     bool clearDateRange = false,

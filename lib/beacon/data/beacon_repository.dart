@@ -21,7 +21,7 @@ class BeaconRepository {
     required String description,
     required bool hasPicture,
     DateTimeRange? dateRange,
-    GeoCoords? coordinates,
+    LatLng? coordinates,
   }) async {
     final data = await _apiService.mutate(
       query: _createBeacon,
@@ -32,7 +32,7 @@ class BeaconRepository {
             ? null
             : {
                 'type': 'Point',
-                'coordinates': [coordinates.lat, coordinates.long],
+                'coordinates': [coordinates.latitude, coordinates.longitude],
               },
         'timerange': dateRange == null
             ? null
