@@ -10,6 +10,9 @@ mixin class BeaconImageCase {
 
   final _imageRepository = GetIt.I<ImageRepository>();
 
+  Future<({String path, String name})?> pickImage() =>
+      _imageRepository.pickImage();
+
   Future<Uint8List?> getBeaconImageOf(Beacon beacon) async {
     if (beacon.hasNoPicture) return null;
     try {

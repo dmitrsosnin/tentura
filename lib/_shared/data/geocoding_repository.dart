@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:gravity/_shared/types.dart';
@@ -43,5 +44,14 @@ class GeocodingRepository {
           permission == LocationPermission.always) return true;
     }
     return false;
+  }
+
+  Future<Placemark?> getPlaceNameByCoords(LatLng coords) async {
+    try {
+      return (await placemarkFromCoordinates(coords.latitude, coords.longitude))
+          .firstOrNull;
+    } catch (_) {
+      return null;
+    }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:gravity/_shared/data/api_service.dart';
-import 'package:gravity/_shared/data/platform_service.dart';
 
 import 'package:gravity/auth/data/auth_repository.dart';
 import 'package:gravity/user/data/user_repository.dart';
@@ -27,7 +26,6 @@ class DI {
 
     // Service
     GetIt.I.registerSingleton(await ApiService().init());
-    GetIt.I.registerSingleton(await const PlatformService().init());
 
     // Repository
     GetIt.I.registerSingleton(await AuthRepository().init());

@@ -10,6 +10,9 @@ mixin class AvatarImageCase {
 
   final _imageRepository = GetIt.I<ImageRepository>();
 
+  Future<({String path, String name})?> pickImage() =>
+      _imageRepository.pickImage();
+
   Future<Uint8List?> getAvatarImageOf(User user) async {
     if (user.isEmpty || user.hasNoPicture) return null;
     try {

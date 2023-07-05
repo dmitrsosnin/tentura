@@ -7,7 +7,6 @@ import 'package:gravity/_shared/types.dart';
 import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/_shared/bloc/state_base.dart';
 import 'package:gravity/_shared/bloc/bloc_data_status.dart';
-import 'package:gravity/_shared/data/platform_service.dart';
 
 import 'package:gravity/beacon/data/beacon_repository.dart';
 import 'package:gravity/beacon/use_case/beacon_image_case.dart';
@@ -31,7 +30,6 @@ class NewBeaconCubit extends Cubit<NewBeaconState> with BeaconImageCase {
     }
   }
 
-  final _platformService = GetIt.I<PlatformService>();
   final _beaconRepository = GetIt.I<BeaconRepository>();
   final _geocodingRepository = GetIt.I<GeocodingRepository>();
 
@@ -54,7 +52,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState> with BeaconImageCase {
   }
 
   Future<void> setImage() async {
-    final newImage = await _platformService.pickImage();
+    final newImage = await pickImage();
     if (newImage == null) return;
     imageController.text = newImage.name;
     emit(state.copyWith(imagePath: newImage.path));
@@ -70,7 +68,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState> with BeaconImageCase {
     emit(state.copyWith(
       coordinates: coords,
     ));
-    final place = await _platformService.getPlaceNameByCoords(coords);
+    final place = await _geocodingRepository.getPlaceNameByCoords(coords);
     if (place != null) {
       locationController.text =
           '${place.locality ?? "Unknown"}, ${place.country ?? "Unknown"}';

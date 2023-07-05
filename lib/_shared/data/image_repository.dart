@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 typedef UploadProgress = ({
@@ -13,6 +14,15 @@ class ImageRepository {
   // TBD: persistance cache, limit cached items count
   final Map<String, Uint8List> _cacheAvatar = {};
   final Map<String, Uint8List> _cacheBeacon = {};
+
+  Future<({String path, String name})?> pickImage() async {
+    final xFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      // TBD: resize and convert by packagr:image
+      maxWidth: 600,
+    );
+    return xFile == null ? null : (path: xFile.path, name: xFile.name);
+  }
 
   void evictAvatarOf(String userId) => _cacheAvatar.remove(userId);
 
