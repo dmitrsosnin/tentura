@@ -7,8 +7,8 @@ import 'package:gravity/_shared/types.dart';
 import 'package:gravity/_shared/consts.dart';
 import 'package:gravity/_shared/bloc/state_base.dart';
 import 'package:gravity/_shared/bloc/bloc_data_status.dart';
+import 'package:gravity/_shared/data/platform_service.dart';
 
-import 'package:gravity/image/use_case/pick_image_case.dart';
 import 'package:gravity/beacon/data/beacon_repository.dart';
 import 'package:gravity/beacon/use_case/beacon_image_case.dart';
 import 'package:gravity/_shared/data/geocoding_repository.dart';
@@ -18,8 +18,7 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'new_beacon_state.dart';
 
-class NewBeaconCubit extends Cubit<NewBeaconState>
-    with BeaconImageCase, PickImageCase {
+class NewBeaconCubit extends Cubit<NewBeaconState> with BeaconImageCase {
   static final _dF = DateFormat.yMd();
 
   final imageController = TextEditingController();
@@ -28,10 +27,11 @@ class NewBeaconCubit extends Cubit<NewBeaconState>
 
   NewBeaconCubit() : super(const NewBeaconState()) {
     if (_geocodingRepository.myCoords == null) {
-      _geocodingRepository.getMyCoords(useCached: false);
+      _geocodingRepository.getMyCoords();
     }
   }
 
+  final _platformService = GetIt.I<PlatformService>();
   final _beaconRepository = GetIt.I<BeaconRepository>();
   final _geocodingRepository = GetIt.I<GeocodingRepository>();
 
@@ -54,7 +54,7 @@ class NewBeaconCubit extends Cubit<NewBeaconState>
   }
 
   Future<void> setImage() async {
-    final newImage = await pickImage();
+    final newImage = await _platformService.pickImage();
     if (newImage == null) return;
     imageController.text = newImage.name;
     emit(state.copyWith(imagePath: newImage.path));

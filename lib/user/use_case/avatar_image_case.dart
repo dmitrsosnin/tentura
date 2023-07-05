@@ -2,9 +2,8 @@ import 'dart:io';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 
-import 'package:gravity/image/data/image_repository.dart';
-
 import 'package:gravity/user/entity/user.dart';
+import 'package:gravity/_shared/data/image_repository.dart';
 
 mixin class AvatarImageCase {
   static const _timeout = Duration(seconds: 3);

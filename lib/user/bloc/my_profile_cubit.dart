@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/_shared/bloc/state_base.dart';
 import 'package:gravity/_shared/bloc/bloc_data_status.dart';
+import 'package:gravity/_shared/data/platform_service.dart';
 
 import 'package:gravity/auth/data/auth_repository.dart';
-import 'package:gravity/image/use_case/pick_image_case.dart';
 
 import 'package:gravity/user/entity/user.dart';
 import 'package:gravity/user/data/user_repository.dart';
@@ -17,14 +17,14 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'my_profile_state.dart';
 
-class MyProfileCubit extends Cubit<MyProfileState>
-    with AvatarImageCase, PickImageCase {
+class MyProfileCubit extends Cubit<MyProfileState> with AvatarImageCase {
   MyProfileCubit() : super(const MyProfileState()) {
     refresh();
   }
 
   final _authRepository = GetIt.I<AuthRepository>();
   final _userRepository = GetIt.I<UserRepository>();
+  final _platformService = GetIt.I<PlatformService>();
 
   var _newTitle = '';
   var _newDescription = '';
@@ -95,7 +95,7 @@ class MyProfileCubit extends Cubit<MyProfileState>
   }
 
   Future<void> uploadPhoto() async {
-    final newImage = await pickImage();
+    final newImage = await _platformService.pickImage();
     if (newImage == null) return;
     emit(state.copyWith(
       newPicturePath: newImage.path,

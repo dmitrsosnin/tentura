@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:gravity/graph/entity/graph_node.dart';
-import 'package:gravity/image/ui/widget/future_image.dart';
-import 'package:gravity/image/ui/widget/placeholder_image.dart';
+import 'package:gravity/_shared/ui/widget/future_image.dart';
+import 'package:gravity/_shared/ui/widget/placeholder_image.dart';
 
 class GraphNodeWidget extends StatelessWidget {
   static final _decorationUser = BoxDecoration(

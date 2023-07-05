@@ -5,43 +5,16 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gravity/_shared/types.dart';
 
 class GeocodingRepository {
-  GeocodingRepository() {
-    getMyCoords(useCached: false).then((value) => _myCoords = value);
-  }
-
   GeoCoords? _myCoords;
 
   GeoCoords? get myCoords {
-    if (_myCoords == null) getMyCoords(useCached: false);
+    if (_myCoords == null) getMyCoords();
     return _myCoords;
   }
 
   Future<GeocodingRepository> init() async {
-    _myCoords = await getMyCoords(useCached: false);
+    _myCoords = await getMyCoords(isNeedRequest: false);
     return this;
-  }
-
-  Future<GeoCoords?> getMyCoords({bool useCached = true}) async {
-    if (useCached && _myCoords != null) return _myCoords;
-    if (await Geolocator.isLocationServiceEnabled()) {
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.deniedForever) return null;
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) return null;
-        if (permission == LocationPermission.deniedForever) return null;
-      }
-      try {
-        final position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.lowest,
-          timeLimit: const Duration(seconds: 15),
-        );
-        return _myCoords = (lat: position.latitude, long: position.longitude);
-      } catch (e) {
-        if (kDebugMode) print(e);
-      }
-    }
-    return null;
   }
 
   Future<({String city, String country})?> getPlaceByCoords(
@@ -62,5 +35,34 @@ class GeocodingRepository {
       }
     }
     return null;
+  }
+
+  Future<GeoCoords?> getMyCoords({bool isNeedRequest = true}) async {
+    if (_myCoords != null) return _myCoords;
+    if (await Geolocator.isLocationServiceEnabled() &&
+        await _checkLocationPermission(isNeedRequest)) {
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.lowest,
+          timeLimit: const Duration(seconds: 15),
+        );
+        return _myCoords = (lat: position.latitude, long: position.longitude);
+      } catch (e) {
+        if (kDebugMode) print(e);
+      }
+    }
+    return null;
+  }
+
+  Future<bool> _checkLocationPermission([bool isNeedRequest = false]) async {
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) return true;
+    if (isNeedRequest) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.whileInUse ||
+          permission == LocationPermission.always) return true;
+    }
+    return false;
   }
 }
