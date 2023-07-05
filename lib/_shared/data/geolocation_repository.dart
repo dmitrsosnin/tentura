@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:gravity/_shared/types.dart';
 
-class GeocodingRepository {
+class GeolocationRepository {
   LatLng? _myCoords;
 
   LatLng? get myCoords {
@@ -12,19 +12,24 @@ class GeocodingRepository {
     return _myCoords;
   }
 
-  Future<GeocodingRepository> init() async {
-    _myCoords = await getMyCoords(isNeedRequest: false);
+  Future<GeolocationRepository> init() async {
+    getMyCoords(isNeedRequest: false)
+        .then((value) => _myCoords = value)
+        .ignore();
     return this;
   }
 
-  Future<LatLng?> getMyCoords({bool isNeedRequest = true}) async {
+  Future<LatLng?> getMyCoords({
+    bool isNeedRequest = true,
+    Duration timeLimit = const Duration(seconds: 15),
+  }) async {
     if (_myCoords != null) return _myCoords;
     if (await Geolocator.isLocationServiceEnabled() &&
         await _checkLocationPermission(isNeedRequest)) {
       try {
         final position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.lowest,
-          timeLimit: const Duration(seconds: 15),
+          timeLimit: timeLimit,
         );
         return _myCoords = LatLng(position.latitude, position.longitude);
       } catch (e) {

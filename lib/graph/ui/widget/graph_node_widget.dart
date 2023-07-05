@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:gravity/graph/entity/graph_node.dart';
-import 'package:gravity/_shared/ui/widget/future_image.dart';
-import 'package:gravity/_shared/ui/widget/placeholder_image.dart';
+import 'package:gravity/user/ui/widget/avatar_image.dart';
+import 'package:gravity/beacon/ui/widget/beacon_image.dart';
 
 class GraphNodeWidget extends StatelessWidget {
   static final _decorationUser = BoxDecoration(
@@ -33,20 +33,14 @@ class GraphNodeWidget extends StatelessWidget {
               child: Container(
                 clipBehavior: Clip.hardEdge,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: FutureImage(
-                  futureImage: node.futureImage,
-                  placeholder: const PlaceholderImage.avatar(),
-                ),
+                child: AvatarImage(user: node.user),
               ),
             ),
           final BeaconNode node => Container(
               width: node.size,
               height: node.size,
               foregroundDecoration: _decorationBeacon,
-              child: FutureImage(
-                futureImage: node.futureImage,
-                placeholder: const PlaceholderImage.beacon(),
-              ),
+              child: BeaconImage(beacon: node.beacon),
             ),
         },
       );

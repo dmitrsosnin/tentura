@@ -11,5 +11,6 @@ linter:
     require_trailing_commas: false
     unnecessary_raw_strings: false
     always_use_package_imports: false
+    lines_longer_than_80_chars: false
     cast_nullable_to_non_nullable: false
     use_setters_to_change_properties: false

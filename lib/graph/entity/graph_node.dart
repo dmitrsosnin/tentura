@@ -1,8 +1,7 @@
-import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 
 // ignore: implementation_imports
-import 'package:force_directed_graphview/src/model/node.dart';
+import 'package:force_directed_graphview/src/model/node.dart' show Node;
 
 import 'package:gravity/user/entity/user.dart';
 import 'package:gravity/beacon/entity/beacon.dart';
@@ -12,12 +11,10 @@ sealed class GraphNode extends Equatable implements Node {
   final double size;
 
   final bool isActive;
-  final Future<Uint8List?>? futureImage;
 
   const GraphNode({
     required this.size,
     this.isActive = false,
-    this.futureImage,
   });
 }
 
@@ -34,7 +31,6 @@ class UserNode extends GraphNode {
   List<Object?> get props => [
         isActive,
         size,
-        futureImage,
         user,
       ];
 
@@ -55,7 +51,6 @@ class BeaconNode extends GraphNode {
   List<Object?> get props => [
         isActive,
         size,
-        futureImage,
         beacon,
       ];
 

@@ -42,19 +42,10 @@ class MyBeaconList extends StatelessWidget {
         return RefreshIndicator.adaptive(
           onRefresh: cubit.refresh,
           child: ListView.separated(
-            // key: ObjectKey(state),
             cacheExtent: 5,
             padding: const EdgeInsets.all(20),
             itemCount: state.beacons.length,
-            itemBuilder: (context, i) {
-              final beacon = state.beacons[i];
-              return BeaconTile(
-                key: ObjectKey(beacon),
-                beacon: beacon,
-                futureAvatarImage: cubit.getAvatarImageOf,
-                futureBeaconImage: cubit.getBeaconImageOf,
-              );
-            },
+            itemBuilder: (context, i) => BeaconTile(beacon: state.beacons[i]),
             separatorBuilder: (context, index) => const Divider(),
           ),
         );

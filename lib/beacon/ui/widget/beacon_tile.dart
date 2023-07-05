@@ -1,21 +1,15 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
-import 'package:gravity/user/entity/user.dart';
 import 'package:gravity/beacon/entity/beacon.dart';
-import 'package:gravity/_shared/ui/widget/future_image.dart';
-import 'package:gravity/_shared/ui/widget/placeholder_image.dart';
+import 'package:gravity/user/ui/widget/avatar_image.dart';
+
+import 'beacon_image.dart';
 
 class BeaconTile extends StatelessWidget {
   final Beacon beacon;
 
-  final Future<Uint8List?> Function(User user) futureAvatarImage;
-  final Future<Uint8List?> Function(Beacon beacon) futureBeaconImage;
-
   const BeaconTile({
     required this.beacon,
-    required this.futureAvatarImage,
-    required this.futureBeaconImage,
     super.key,
   });
 
@@ -35,11 +29,7 @@ class BeaconTile extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
             ),
-            child: FutureImage(
-              key: Key('AvatarImage:${beacon.author.id}'),
-              placeholder: const PlaceholderImage.avatar(),
-              futureImage: futureAvatarImage(beacon.author),
-            ),
+            child: AvatarImage(user: beacon.author),
           ),
           Expanded(
             child: Column(
@@ -70,6 +60,7 @@ class BeaconTile extends StatelessWidget {
                 // Beacon Image
                 Container(
                   width: 300,
+                  height: 200,
                   clipBehavior: Clip.hardEdge,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.vertical(
@@ -77,11 +68,7 @@ class BeaconTile extends StatelessWidget {
                     ),
                   ),
                   margin: const EdgeInsets.symmetric(vertical: 16),
-                  child: FutureImage(
-                    key: Key('BeaconImage:${beacon.author.id + beacon.id}'),
-                    placeholder: const PlaceholderImage.beacon(),
-                    futureImage: futureBeaconImage(beacon),
-                  ),
+                  child: BeaconImage(beacon: beacon),
                 ),
                 // Beacon Title
                 Text(

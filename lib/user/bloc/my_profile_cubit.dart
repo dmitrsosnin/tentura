@@ -1,28 +1,29 @@
+import 'dart:io';
 import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/_shared/bloc/state_base.dart';
 import 'package:gravity/_shared/bloc/bloc_data_status.dart';
-
-import 'package:gravity/auth/data/auth_repository.dart';
-
+import 'package:gravity/_shared/data/image_repository.dart';
 import 'package:gravity/user/entity/user.dart';
+
 import 'package:gravity/user/data/user_repository.dart';
-import 'package:gravity/user/use_case/avatar_image_case.dart';
+import 'package:gravity/auth/data/auth_repository.dart';
 
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'my_profile_state.dart';
 
-class MyProfileCubit extends Cubit<MyProfileState> with AvatarImageCase {
+class MyProfileCubit extends Cubit<MyProfileState> {
   MyProfileCubit() : super(const MyProfileState()) {
     refresh();
   }
 
   final _authRepository = GetIt.I<AuthRepository>();
   final _userRepository = GetIt.I<UserRepository>();
+  final _imageRepository = GetIt.I<ImageRepository>();
 
   var _newTitle = '';
   var _newDescription = '';
@@ -66,7 +67,12 @@ class MyProfileCubit extends Cubit<MyProfileState> with AvatarImageCase {
     // TBD: exit if no changes
     try {
       if (state.newPicturePath.isNotEmpty) {
-        await setAvatarImageOf(state.profile.id, state.newPicturePath);
+        await _imageRepository
+            .putAvatar(
+              userId: state.profile.id,
+              image: await File(state.newPicturePath).readAsBytes(),
+            )
+            .firstWhere((e) => e.isFinished);
       }
       emit(MyProfileState(
         status: BlocDataStatus.hasData,
@@ -93,7 +99,7 @@ class MyProfileCubit extends Cubit<MyProfileState> with AvatarImageCase {
   }
 
   Future<void> uploadPhoto() async {
-    final newImage = await pickImage();
+    final newImage = await _imageRepository.pickImage();
     if (newImage == null) return;
     emit(state.copyWith(
       newPicturePath: newImage.path,

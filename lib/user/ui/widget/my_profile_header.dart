@@ -2,9 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:gravity/user/bloc/my_profile_cubit.dart';
-import 'package:gravity/_shared/ui/widget/future_image.dart';
-import 'package:gravity/_shared/ui/widget/placeholder_image.dart';
 
+import 'avatar_image.dart';
 import 'profile_gradient.dart';
 import 'log_out_dialog.dart';
 
@@ -41,17 +40,12 @@ class MyProfileHeader extends StatelessWidget {
               child: Container(
                 clipBehavior: Clip.hardEdge,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: state.newPicturePath.isNotEmpty
-                    ? Image.file(
+                child: state.newPicturePath.isEmpty
+                    ? AvatarImage(user: state.profile)
+                    : Image.file(
                         File(state.newPicturePath),
                         fit: BoxFit.cover,
-                      )
-                    : state.profile.hasPicture
-                        ? FutureImage(
-                            placeholder: const PlaceholderImage.avatar(),
-                            futureImage: cubit.getAvatarImageOf(state.profile),
-                          )
-                        : const PlaceholderImage.avatar(),
+                      ),
               ),
             ),
           ),

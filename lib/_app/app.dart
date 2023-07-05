@@ -8,31 +8,40 @@ import 'di.dart';
 import 'router.dart';
 
 class App extends StatelessWidget {
-  static Future<App> init() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    setPathUrlStrategy();
-    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    const di = DI();
-    await di.init();
-    return const App(di: di);
-  }
-
   const App({
-    required this.di,
+    this.di = const DI(),
     super.key,
   });
 
   final DI di;
 
+  Future<App> init() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    setPathUrlStrategy();
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    return this;
+  }
+
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-        title: 'gravity',
-        restorationScopeId: 'app_gravity',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorSchemeSeed: primaryColor,
-          useMaterial3: true,
-        ),
-        routerConfig: router,
+  Widget build(BuildContext context) => FutureBuilder(
+        future: di.init(),
+        builder: (context, snapshot) => snapshot.hasData
+            ? MaterialApp.router(
+                title: 'gravity',
+                restorationScopeId: 'app_gravity',
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  colorSchemeSeed: primaryColor,
+                  useMaterial3: true,
+                ),
+                routerConfig: router,
+              )
+            : const MaterialApp(
+                title: 'gravity',
+                debugShowCheckedModeBanner: false,
+                home: Center(child: CircularProgressIndicator.adaptive()),
+              ),
       );
 }

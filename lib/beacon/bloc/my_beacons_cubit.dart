@@ -4,21 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/_shared/bloc/state_base.dart';
 import 'package:gravity/_shared/bloc/bloc_data_status.dart';
-
 import 'package:gravity/auth/data/auth_repository.dart';
-import 'package:gravity/user/use_case/avatar_image_case.dart';
 
 import 'package:gravity/beacon/entity/beacon.dart';
 import 'package:gravity/beacon/data/beacon_repository.dart';
-import 'package:gravity/beacon/use_case/beacon_image_case.dart';
 
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'my_beacons_state.dart';
 
-class MyBeaconsCubit extends Cubit<MyBeaconsState>
-    with AvatarImageCase, BeaconImageCase {
+class MyBeaconsCubit extends Cubit<MyBeaconsState> {
   MyBeaconsCubit() : super(const MyBeaconsState()) {
     _updates.resume();
     refresh(useCache: true);
