@@ -3,6 +3,8 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'package:gravity/_shared/types.dart';
 
+export 'package:graphql_flutter/graphql_flutter.dart' show FetchPolicy;
+
 class ApiService {
   Future<String?> Function()? getToken;
 
@@ -25,14 +27,13 @@ class ApiService {
   Future<Json> query({
     required String query,
     Map<String, Object?> vars = const {},
-    bool useCache = true,
+    FetchPolicy fetchPolicy = FetchPolicy.cacheFirst,
   }) async {
     final result = await _client.query(
       QueryOptions(
         document: gql(query),
         variables: vars,
-        fetchPolicy:
-            useCache ? FetchPolicy.cacheAndNetwork : FetchPolicy.networkOnly,
+        fetchPolicy: fetchPolicy,
       ),
     );
     if (kDebugMode) {

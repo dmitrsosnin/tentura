@@ -45,13 +45,13 @@ class BeaconRepository {
     return beacon;
   }
 
-  Future<List<Beacon>> getBeaconsOf(
+  Future<List<Beacon>> getBeaconsByUserId(
     String userId, {
     bool useCache = true,
   }) async {
     if (userId.isEmpty) return [];
     final data = await _apiService.query(
-      useCache: useCache,
+      fetchPolicy: useCache ? FetchPolicy.cacheFirst : FetchPolicy.networkOnly,
       query: _getBeaconsOf,
       vars: {'user_id': userId},
     );
@@ -60,10 +60,18 @@ class BeaconRepository {
         .toList();
   }
 
-  Future<List<Beacon>> searchBeaconById(String searchPrefix) async {
+  Future<List<Beacon>> getBeaconsByIdPrefix(
+    String searchPrefix, {
+    bool useCache = true,
+    int limit = 10,
+  }) async {
     final data = await _apiService.query(
+      fetchPolicy: FetchPolicy.networkOnly,
       query: _searchBeconById,
-      vars: {'startsWith': '$searchPrefix%'},
+      vars: {
+        'startsWith': '$searchPrefix%',
+        'limit': limit,
+      },
     );
     return (data['beacon'] as List)
         .map<Beacon>((e) => Beacon.fromJson(e as Json))

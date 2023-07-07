@@ -44,7 +44,7 @@ class MyBeaconsCubit extends Cubit<MyBeaconsState> {
         status: BlocDataStatus.isLoading,
       ),
     );
-    final beacons = await _beaconRepository.getBeaconsOf(
+    final beacons = await _beaconRepository.getBeaconsByUserId(
       _authRepository.myId,
       useCache: useCache,
     );

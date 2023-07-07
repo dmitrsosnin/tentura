@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/_shared/bloc/state_base.dart';
@@ -15,7 +16,10 @@ class BeaconSearchCubit extends Cubit<BeaconSearchState> {
   final _beaconRepository = GetIt.I<BeaconRepository>();
 
   Future<void> searchBeaconById(String value) async {
-    if (value.length < 3) return;
+    if (value.length < 3) {
+      emit(const BeaconSearchState());
+      return;
+    }
     emit(state.copyWith(
       searchQuery: value,
       status: BlocDataStatus.isLoading,
@@ -24,9 +28,10 @@ class BeaconSearchCubit extends Cubit<BeaconSearchState> {
       emit(state.copyWith(
         clearError: true,
         status: BlocDataStatus.hasData,
-        beacons: await _beaconRepository.searchBeaconById(value),
+        beacons: await _beaconRepository.getBeaconsByIdPrefix(value),
       ));
     } catch (e) {
+      if (kDebugMode) print(e);
       emit(state.copyWith(
         error: e,
         status: BlocDataStatus.hasError,

@@ -18,7 +18,12 @@ class BeaconSearchScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'Type a Code',
                   suffixIcon: state.isLoading
-                      ? const CircularProgressIndicator.adaptive()
+                      ? Transform.scale(
+                          scale: 0.5,
+                          child: const CircularProgressIndicator.adaptive(
+                            strokeWidth: 2,
+                          ),
+                        )
                       : const Icon(Icons.search_rounded),
                 ),
                 onChanged: context.read<BeaconSearchCubit>().searchBeaconById,
