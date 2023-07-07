@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/_shared/ui/widget/qr_code_button.dart';
 import 'package:gravity/_shared/ui/widget/rating_button.dart';
-import 'package:gravity/_shared/ui/widget/search_button.dart';
 
 import 'new_beacon_screen.dart';
 import 'widget/my_beacons_list.dart';
@@ -16,8 +14,10 @@ class BeaconScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             actions: const [
-              SearchButton(),
-              QrCodeButton(),
+              IconButton(
+                onPressed: null,
+                icon: Icon(Icons.search_rounded),
+              ),
             ],
             leading: const Padding(
               padding: EdgeInsets.all(8),

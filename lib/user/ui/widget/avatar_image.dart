@@ -16,10 +16,14 @@ class AvatarImage extends StatelessWidget {
 
   final User user;
   final BoxFit boxFit;
+  final double? height;
+  final double? width;
 
   const AvatarImage({
     required this.user,
     this.boxFit = BoxFit.cover,
+    this.height,
+    this.width,
     super.key,
   });
 
@@ -28,6 +32,8 @@ class AvatarImage extends StatelessWidget {
       ? CachedNetworkImage(
           imageUrl: '$firebaseStrorageBaseUrl${user.id}$_suffix',
           placeholder: (context, url) => placeholderImage,
+          height: height,
+          width: width,
         )
       : placeholderImage;
 }

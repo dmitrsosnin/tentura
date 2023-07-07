@@ -19,3 +19,13 @@ query GetBeaconsOf($user_id: String!) {
   }
 }
 ''';
+
+const _searchBeconById = User.fragment +
+    Beacon.fragment +
+    r'''
+query SearchBeacon($startsWith: String!) {
+  beacon(where: {id: {_like: $startsWith}}, limit: 10) {
+    ...beaconFields
+  }
+}
+''';

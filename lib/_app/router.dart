@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:gravity/home/ui/home_screen.dart';
 import 'package:gravity/auth/ui/login_screen.dart';
-import 'package:gravity/field/ui/field_screen.dart';
+import 'package:gravity/field/ui/my_field_screen.dart';
 import 'package:gravity/user/ui/my_profile_screen.dart';
 import 'package:gravity/beacon/ui/beacon_screen.dart';
 import 'package:gravity/updates/ui/updates_screen.dart';
@@ -41,7 +41,7 @@ final router = GoRouter(
             GoRoute(
               path: pathField,
               redirect: _authGuardian,
-              builder: (context, state) => const FieldScreen(),
+              builder: (context, state) => const MyFieldScreen(),
             ),
           ],
         ),

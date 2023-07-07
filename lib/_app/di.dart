@@ -10,6 +10,7 @@ import 'package:gravity/auth/data/auth_repository.dart';
 import 'package:gravity/user/data/user_repository.dart';
 import 'package:gravity/beacon/data/beacon_repository.dart';
 
+import 'package:gravity/field/bloc/my_field_cubit.dart';
 import 'package:gravity/user/bloc/my_profile_cubit.dart';
 import 'package:gravity/beacon/bloc/my_beacons_cubit.dart';
 
@@ -38,8 +39,9 @@ class DI {
     GetIt.I.registerLazySingleton(BeaconRepository.new);
 
     // BLoC (persisted)
-    GetIt.I.registerLazySingleton(MyProfileCubit.new);
     GetIt.I.registerLazySingleton(MyBeaconsCubit.new);
+    GetIt.I.registerLazySingleton(MyFieldCubit.new);
+    GetIt.I.registerLazySingleton(MyProfileCubit.new);
 
     _isInited = true;
     return this;

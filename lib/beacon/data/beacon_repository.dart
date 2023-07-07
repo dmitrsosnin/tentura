@@ -59,4 +59,14 @@ class BeaconRepository {
         .map<Beacon>((e) => Beacon.fromJson(e as Json))
         .toList();
   }
+
+  Future<List<Beacon>> searchBeaconById(String searchPrefix) async {
+    final data = await _apiService.query(
+      query: _searchBeconById,
+      vars: {'startsWith': '$searchPrefix%'},
+    );
+    return (data['beacon'] as List)
+        .map<Beacon>((e) => Beacon.fromJson(e as Json))
+        .toList();
+  }
 }
