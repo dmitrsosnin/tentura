@@ -12,10 +12,10 @@ import 'package:gravity/beacon/data/beacon_repository.dart';
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'my_beacons_state.dart';
+part 'my_beacons_page_state.dart';
 
-class MyBeaconsCubit extends Cubit<MyBeaconsState> {
-  MyBeaconsCubit() : super(const MyBeaconsState()) {
+class MyBeaconsPageCubit extends Cubit<MyBeaconsPageState> {
+  MyBeaconsPageCubit() : super(const MyBeaconsPageState()) {
     _updates.resume();
     refresh(useCache: true);
   }
@@ -25,7 +25,7 @@ class MyBeaconsCubit extends Cubit<MyBeaconsState> {
 
   late final _updates = _beaconRepository.updates.listen((beacon) {
     emit(
-      MyBeaconsState(
+      MyBeaconsPageState(
         beacons: [beacon, ...state.beacons],
         status: BlocDataStatus.hasData,
       ),
@@ -50,7 +50,7 @@ class MyBeaconsCubit extends Cubit<MyBeaconsState> {
     );
     beacons.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     emit(
-      MyBeaconsState(
+      MyBeaconsPageState(
         beacons: beacons,
         status: BlocDataStatus.hasData,
       ),

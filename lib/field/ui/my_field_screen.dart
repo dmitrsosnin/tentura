@@ -4,7 +4,7 @@ import 'package:gravity/_shared/ui/widget/rating_button.dart';
 
 import 'package:gravity/field/bloc/my_field_cubit.dart';
 
-import 'beacon_search_screen.dart';
+import '../../beacon/ui/beacon_search_screen.dart';
 import 'widget/scan_code_fab.dart';
 
 class MyFieldScreen extends StatelessWidget {

@@ -1,9 +1,9 @@
-part of 'my_beacons_cubit.dart';
+part of 'my_beacons_page_cubit.dart';
 
-class MyBeaconsState extends StateBase {
+class MyBeaconsPageState extends StateBase {
   final List<Beacon> beacons;
 
-  const MyBeaconsState({
+  const MyBeaconsPageState({
     super.status,
     super.error,
     this.beacons = const [],
@@ -19,13 +19,13 @@ class MyBeaconsState extends StateBase {
 
   bool get isEmpty => beacons.isEmpty;
 
-  MyBeaconsState copyWith({
+  MyBeaconsPageState copyWith({
     BlocDataStatus? status,
     Object? error,
     bool clearError = false,
     List<Beacon>? beacons,
   }) =>
-      MyBeaconsState(
+      MyBeaconsPageState(
         status: status ?? this.status,
         error: clearError ? null : error ?? this.error,
         beacons: beacons ?? this.beacons,

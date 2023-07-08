@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:gravity/_shared/ui/widget/rating_button.dart';
 
-import 'new_beacon_screen.dart';
-import 'widget/my_beacons_list.dart';
+import 'package:gravity/beacon/ui/new_beacon_screen.dart';
+import 'package:gravity/beacon/ui/page/my_beacons_page.dart';
+import 'package:gravity/beacon/ui/page/my_reactions_page.dart';
 
 class BeaconScreen extends StatelessWidget {
   const BeaconScreen({super.key});
@@ -33,8 +34,8 @@ class BeaconScreen extends StatelessWidget {
           ),
           body: const TabBarView(
             children: [
-              MyBeaconList(key: Key('MyBeaconList')),
-              Center(child: Text('Nothing here yet')),
+              MyBeaconPage(),
+              MyReactionsPage(),
             ],
           ),
           floatingActionButton: FloatingActionButton(

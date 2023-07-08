@@ -7,7 +7,7 @@ import 'package:gravity/home/ui/home_screen.dart';
 import 'package:gravity/auth/ui/login_screen.dart';
 import 'package:gravity/field/ui/my_field_screen.dart';
 import 'package:gravity/user/ui/my_profile_screen.dart';
-import 'package:gravity/beacon/ui/beacon_screen.dart';
+import 'package:gravity/home/ui/my_beacons_screen.dart';
 import 'package:gravity/updates/ui/updates_screen.dart';
 import 'package:gravity/_shared/ui/error_screen.dart';
 

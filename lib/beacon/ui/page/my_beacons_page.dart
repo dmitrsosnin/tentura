@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/beacon/bloc/my_beacons_cubit.dart';
+import 'package:gravity/beacon/bloc/my_beacons_page_cubit.dart';
+import 'package:gravity/beacon/ui/widget/beacon_tile.dart';
 
-import 'beacon_tile.dart';
-
-class MyBeaconList extends StatelessWidget {
-  const MyBeaconList({super.key});
+class MyBeaconPage extends StatelessWidget {
+  const MyBeaconPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cubit = GetIt.I<MyBeaconsCubit>();
-    return BlocBuilder<MyBeaconsCubit, MyBeaconsState>(
+    final cubit = GetIt.I<MyBeaconsPageCubit>();
+    return BlocBuilder<MyBeaconsPageCubit, MyBeaconsPageState>(
       bloc: cubit,
       builder: (context, state) {
         if (state.isLoading) {
