@@ -418,7 +418,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: ab533a4cc185ce7bb4cb22628e6b865565c7ae51
+      resolved-ref: "3a14d87c6031286dd53970ed174eaef296945a92"
       url: "https://github.com/cupofme/force_directed_graphview.git"
     source: git
     version: "0.0.1"
@@ -466,10 +466,10 @@ packages:
     dependency: transitive
     description:
       name: geolocator_android
-      sha256: "94c2cf51f4a8387335cc2d1a21cc50897bc93069e05fc09aee29bd353a14f6f5"
+      sha256: b06c72853c993ae533f482d81a12805d7a441f5231d9668718bc7131d7464082
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.9"
+    version: "4.2.0"
   geolocator_apple:
     dependency: transitive
     description:
@@ -514,10 +514,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "1531542666c2d052c44bbf6e2b48011bf3771da0404b94c60eabec1228a62906"
+      sha256: b33a88c67816312597e5e0f5906c5139a0b9bd9bb137346e872c788da7af8ea0
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.0"
+    version: "9.0.3"
   google_identity_services_web:
     dependency: transitive
     description:
@@ -538,10 +538,10 @@ packages:
     dependency: transitive
     description:
       name: google_sign_in_android
-      sha256: "258864d68b68f2b2846c10283b7afb95f26ff3307c410a2841a010d034b65439"
+      sha256: "8d60a787b29cb7d2bcf29230865f4a91f17323c6ac5b6b9027a6418e48d9ffc3"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.17"
+    version: "6.1.18"
   google_sign_in_ios:
     dependency: transitive
     description:

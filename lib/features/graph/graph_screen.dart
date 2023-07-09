@@ -110,9 +110,6 @@ class _GraphScreenState extends State<GraphScreen> {
                 ..color = Colors.black54,
             );
           },
-          loadingBuilder: (context) => const Center(
-            child: CircularProgressIndicator(),
-          ),
         ),
       );
 }
