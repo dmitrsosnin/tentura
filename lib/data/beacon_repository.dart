@@ -3,10 +3,9 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gravity/types.dart';
-import 'package:gravity/data/api_service.dart';
-
 import 'package:gravity/entity/user.dart';
 import 'package:gravity/entity/beacon.dart';
+import 'package:gravity/data/api_service.dart';
 
 part 'beacon_queries.dart';
 
