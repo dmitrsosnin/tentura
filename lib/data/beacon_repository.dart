@@ -3,11 +3,10 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gravity/types.dart';
-import 'package:gravity/entity/user.dart';
 import 'package:gravity/entity/beacon.dart';
 import 'package:gravity/data/api_service.dart';
 
-part 'beacon_queries.dart';
+import 'gql_queries.dart';
 
 class BeaconRepository {
   final _apiService = GetIt.I<ApiService>();
@@ -23,7 +22,7 @@ class BeaconRepository {
     LatLng? coordinates,
   }) async {
     final data = await _apiService.mutate(
-      query: _createBeacon,
+      query: mCreateBeacon,
       vars: {
         'title': title,
         'description': description,
@@ -51,7 +50,7 @@ class BeaconRepository {
     if (userId.isEmpty) return [];
     final data = await _apiService.query(
       fetchPolicy: useCache ? FetchPolicy.cacheFirst : FetchPolicy.networkOnly,
-      query: _getBeaconsOf,
+      query: qFetchBeaconsOf,
       vars: {'user_id': userId},
     );
     return (data['beacon'] as List)
@@ -61,12 +60,11 @@ class BeaconRepository {
 
   Future<List<Beacon>> getBeaconsByIdPrefix(
     String searchPrefix, {
-    bool useCache = true,
     int limit = 10,
   }) async {
     final data = await _apiService.query(
-      fetchPolicy: FetchPolicy.networkOnly,
-      query: _searchBeconById,
+      fetchPolicy: FetchPolicy.noCache,
+      query: qSearchBeconById,
       vars: {
         'startsWith': '$searchPrefix%',
         'limit': limit,

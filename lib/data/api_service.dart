@@ -8,12 +8,16 @@ export 'package:graphql_flutter/graphql_flutter.dart' show FetchPolicy;
 class ApiService {
   Future<String?> Function()? getToken;
 
-  late final GraphQLClient _client;
+  late final GraphQLClient client;
 
   Future<ApiService> init() async {
     await initHiveForFlutter();
-    _client = GraphQLClient(
+    client = GraphQLClient(
       cache: GraphQLCache(store: HiveStore()),
+      defaultPolicies: DefaultPolicies(
+        query: Policies(),
+        mutate: Policies(),
+      ),
       link: AuthLink(
         getToken: () async =>
             getToken == null ? null : 'Bearer ${await getToken!()}',
@@ -29,7 +33,7 @@ class ApiService {
     Map<String, Object?> vars = const {},
     FetchPolicy fetchPolicy = FetchPolicy.cacheFirst,
   }) async {
-    final result = await _client.query(
+    final result = await client.query(
       QueryOptions(
         document: gql(query),
         variables: vars,
@@ -50,7 +54,7 @@ class ApiService {
     required String query,
     Map<String, Object?> vars = const {},
   }) async {
-    final result = await _client.mutate(
+    final result = await client.mutate(
       MutationOptions(
         document: gql(query),
         variables: vars,

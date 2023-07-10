@@ -1,17 +1,16 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:gravity/types.dart';
+import 'package:gravity/entity/user.dart';
 import 'package:gravity/data/api_service.dart';
 
-import 'package:gravity/entity/user.dart';
-
-part 'user_queries.dart';
+import 'gql_queries.dart';
 
 class UserRepository {
   final _apiService = GetIt.I<ApiService>();
 
   Future<User> createMyProfile() async {
-    final data = await _apiService.mutate(query: _createUser);
+    final data = await _apiService.mutate(query: mCreateUser);
     return User.fromJson(data['insert_user_one'] as Json);
   }
 
@@ -22,7 +21,7 @@ class UserRepository {
     required bool hasPicture,
   }) async {
     final data = await _apiService.query(
-      query: _updateUser,
+      query: mUpdateUser,
       vars: {
         'id': id,
         'title': title,
@@ -36,7 +35,7 @@ class UserRepository {
 
   Future<User?> getUserById(String userId) async {
     final data = await _apiService.query(
-      query: _fetchUserProfile,
+      query: qFetchUserProfile,
       vars: {'id': userId},
     );
     if (data['user_by_pk'] == null) return null;

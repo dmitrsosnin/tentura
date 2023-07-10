@@ -4,17 +4,17 @@ import 'package:gravity/types.dart';
 import 'package:gravity/entity/comment.dart';
 import 'package:gravity/data/api_service.dart';
 
-part 'comment_queries.dart';
+import 'gql_queries.dart';
 
 class CommentRepository {
   final _apiService = GetIt.I<ApiService>();
 
-  Future<List<Comment>> getMommentsByBeaconId(
+  Future<List<Comment>> fetchMommentsByBeaconId(
     String beaconId, {
     bool useCache = true,
   }) async {
     final data = await _apiService.query(
-      query: '',
+      query: qFetchCommentsByBeaconId,
       vars: {'beacon_id': beaconId},
       fetchPolicy: useCache ? FetchPolicy.cacheFirst : FetchPolicy.networkOnly,
     );

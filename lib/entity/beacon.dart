@@ -33,6 +33,7 @@ fragment beaconFields on beacon {
   final DateTimeRange? dateRange;
   final LatLng? coordinates;
   final User author;
+  final int commentsCount;
 
   const Beacon({
     required this.id,
@@ -41,6 +42,7 @@ fragment beaconFields on beacon {
     required this.description,
     required this.createdAt,
     required this.updatedAt,
+    this.commentsCount = 0,
     this.hasPicture = false,
     this.isEnabled = true,
     this.coordinates,
@@ -69,6 +71,9 @@ fragment beaconFields on beacon {
       coordinates: coordinates == null
           ? null
           : LatLng(coordinates[0] as double, coordinates[1] as double),
+      commentsCount: ((json['comments_aggregate'] as Json?)?['aggregate']
+              as Json?)?['count'] as int? ??
+          0,
     );
   }
 
@@ -84,6 +89,7 @@ fragment beaconFields on beacon {
         dateRange,
         coordinates,
         hasPicture,
+        commentsCount,
       ];
 
   bool get hasNoPicture => !hasPicture;

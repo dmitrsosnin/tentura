@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'package:gravity/entity/beacon.dart';
-import 'package:gravity/ui/widget/beacon_image.dart';
+import 'package:gravity/data/gql_queries.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
+import 'package:gravity/ui/widget/beacon_image.dart';
 
-import 'beacon_details_cubit.dart';
+import 'widget/beacon_buttons_row.dart';
+import 'widget/comments_expansion_list.dart';
 
 class BeaconDetailsScreen extends StatelessWidget {
   final Beacon beacon;
@@ -16,27 +18,37 @@ class BeaconDetailsScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (context) => BeaconDetailsCubit(beacon: beacon),
-        child: BlocBuilder<BeaconDetailsCubit, BeaconDetailsState>(
-          builder: (context, state) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text('Beacon'),
-                bottom: const PreferredSize(
-                  preferredSize: Size(double.infinity, 1),
-                  child: Divider(),
-                ),
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.more_vert_outlined,
-                    ),
-                  )
-                ],
-              ),
-              body: ListView(
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Beacon'),
+          bottom: const PreferredSize(
+            preferredSize: Size(double.infinity, 1),
+            child: Divider(),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.more_vert_outlined),
+            )
+          ],
+        ),
+        body: Query(
+          options: QueryOptions(
+            document: gql(qFetchBeaconsOf),
+            variables: {'user_id': beacon.author.id},
+            fetchPolicy: FetchPolicy.cacheFirst,
+            parserFn: Beacon.fromJson,
+            optimisticResult: beacon,
+          ),
+          builder: (
+            QueryResult result, {
+            VoidCallback? refetch,
+            FetchMore? fetchMore,
+          }) {
+            final beacon = result.parsedData as Beacon? ?? this.beacon;
+            return RefreshIndicator.adaptive(
+              onRefresh: () async => refetch?.call(),
+              child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   // User row (Avatar and Name)
@@ -76,7 +88,6 @@ class BeaconDetailsScreen extends StatelessWidget {
                     beacon.description,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-
                   // Date
                   Text(
                     beacon.createdAt.toString(),
@@ -87,23 +98,14 @@ class BeaconDetailsScreen extends StatelessWidget {
                       beacon.coordinates!.toSexagesimal(),
                     ),
                   const Divider(),
-                  // Likes
-                  const Placeholder(
-                    color: Colors.black12,
-                    fallbackHeight: 40,
-                    child: Text('Like/Dislike, some counter'),
+                  // Buttons Row
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: BeaconButtonsRow(beacon: beacon),
                   ),
                   const Divider(),
                   // Comments
-                  ExpansionPanelList(
-                    children: [
-                      ExpansionPanel(
-                        headerBuilder: (context, isExpanded) =>
-                            const Text('2 new comments'),
-                        body: const Text('Some comment'),
-                      ),
-                    ],
-                  ),
+                  CommentsExpansionList(beacon: beacon),
                 ],
               ),
             );
