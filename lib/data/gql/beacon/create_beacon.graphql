@@ -1,0 +1,7 @@
+# import '_fragments.graphql'
+
+mutation CreateBeacon($title: String!, $description: String!, $place: geography, $timerange: tstzrange, $has_picture: Boolean!) {
+  insert_beacon_one(object: {title: $title, description: $description, place: $place, timerange: $timerange, has_picture: $has_picture}) {
+    ...beaconFields
+  }
+}

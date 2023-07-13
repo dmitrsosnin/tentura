@@ -28,7 +28,10 @@ class BeaconTile extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
             ),
-            child: AvatarImage(user: beacon.author),
+            child: AvatarImage(
+              userId: beacon.author.id,
+              hasImage: beacon.author.hasPicture,
+            ),
           ),
           Expanded(
             child: Column(

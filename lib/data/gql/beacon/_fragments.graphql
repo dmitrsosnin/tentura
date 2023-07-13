@@ -1,0 +1,16 @@
+# import '../user/_fragments.graphql'
+
+fragment beaconFields on beacon {
+  id
+  title
+  description
+  created_at
+  updated_at
+  place
+  timerange
+  has_picture
+  enabled
+  author {
+    ...userFields
+  }
+}

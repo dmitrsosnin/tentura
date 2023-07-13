@@ -1,0 +1,6 @@
+fragment userFields on user {
+  id
+  title
+  description
+  has_picture
+}

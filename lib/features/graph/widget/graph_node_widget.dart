@@ -33,7 +33,10 @@ class GraphNodeWidget extends StatelessWidget {
               child: Container(
                 clipBehavior: Clip.hardEdge,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: AvatarImage(user: node.user),
+                child: AvatarImage(
+                  userId: node.user.id,
+                  hasImage: node.user.hasPicture,
+                ),
               ),
             ),
           final BeaconNode node => Container(

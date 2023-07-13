@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+// import 'package:gravity/data/api_client.dart';
 import 'package:gravity/firebase_options.dart';
 import 'package:gravity/data/api_service.dart';
 import 'package:gravity/data/auth_repository.dart';
@@ -30,6 +31,7 @@ class DI {
     );
 
     // Data providers
+    // GetIt.I.registerSingleton(await initClient());
     GetIt.I.registerSingleton(await ApiService().init());
     GetIt.I.registerSingleton(await AuthRepository().init());
     GetIt.I.registerSingleton(await GeolocationRepository().init());

@@ -1,0 +1,11 @@
+# import '_fragments.graphql'
+
+query FetchCommentsByBeaconId($beacon_id: String!) {
+  comment(where: {beacon_id: {_eq: $beacon_id}}) {
+    ...commentFields
+    author {
+      title
+      has_picture
+    }
+  }
+}

@@ -40,7 +40,10 @@ class MyProfileHeader extends StatelessWidget {
                 clipBehavior: Clip.hardEdge,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
                 child: state.newPicturePath.isEmpty
-                    ? AvatarImage(user: state.profile)
+                    ? AvatarImage(
+                        userId: state.profile.id,
+                        hasImage: state.profile.hasPicture,
+                      )
                     : Image.file(
                         File(state.newPicturePath),
                         fit: BoxFit.cover,

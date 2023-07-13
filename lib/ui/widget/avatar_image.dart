@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:gravity/consts.dart';
-import 'package:gravity/entity/user.dart';
 
 class AvatarImage extends StatelessWidget {
   static const _suffix = '%2Favatar$firebaseStrorageUrlSuffix';
@@ -14,13 +13,15 @@ class AvatarImage extends StatelessWidget {
     key: const Key(_placeholderPath),
   );
 
-  final User user;
+  final bool hasImage;
+  final String userId;
   final BoxFit boxFit;
   final double? height;
   final double? width;
 
   const AvatarImage({
-    required this.user,
+    this.hasImage = false,
+    this.userId = '',
     this.boxFit = BoxFit.cover,
     this.height,
     this.width,
@@ -28,12 +29,16 @@ class AvatarImage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => user.hasPicture
-      ? CachedNetworkImage(
-          imageUrl: '$firebaseStrorageBaseUrl${user.id}$_suffix',
-          placeholder: (context, url) => placeholderImage,
-          height: height,
+  Widget build(BuildContext context) => hasImage
+      ? Container(
           width: width,
+          height: height,
+          clipBehavior: Clip.hardEdge,
+          decoration: const BoxDecoration(shape: BoxShape.circle),
+          child: CachedNetworkImage(
+            placeholder: (context, url) => placeholderImage,
+            imageUrl: firebaseStrorageBaseUrl + userId + _suffix,
+          ),
         )
       : placeholderImage;
 }

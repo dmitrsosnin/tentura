@@ -1,0 +1,7 @@
+fragment commentFields on comment {
+  id
+  user_id
+  beacon_id
+  created_at
+  content
+}

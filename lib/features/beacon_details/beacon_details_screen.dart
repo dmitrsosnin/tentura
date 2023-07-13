@@ -7,7 +7,7 @@ import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 
 import 'widget/beacon_buttons_row.dart';
-import 'widget/comments_expansion_list.dart';
+import 'widget/comments_expansion_tile.dart';
 
 class BeaconDetailsScreen extends StatelessWidget {
   final Beacon beacon;
@@ -57,7 +57,10 @@ class BeaconDetailsScreen extends StatelessWidget {
                       SizedBox(
                         width: 40,
                         height: 40,
-                        child: AvatarImage(user: beacon.author),
+                        child: AvatarImage(
+                          userId: beacon.author.id,
+                          hasImage: beacon.author.hasPicture,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -105,7 +108,7 @@ class BeaconDetailsScreen extends StatelessWidget {
                   ),
                   const Divider(),
                   // Comments
-                  CommentsExpansionList(beacon: beacon),
+                  CommentsExpansionTile(beacon: beacon),
                 ],
               ),
             );

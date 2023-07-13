@@ -35,7 +35,8 @@ class BeaconSearchScreen extends StatelessWidget {
                 for (final e in state.beacons)
                   ListTile(
                     leading: AvatarImage(
-                      user: e.author,
+                      hasImage: e.author.hasPicture,
+                      userId: e.author.id,
                       height: 40,
                       width: 40,
                     ),
