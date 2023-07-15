@@ -43,7 +43,7 @@ targets:
               import: "package:latlong2/latlong.dart"
 
           custom_serializers:
-            - import: "package:gravity/data/gql/timestamptz_serializer.dart"
+            - import: "package:gravity/data/gql/timestampz_serializer.dart"
               name: TimestamptzSerializer
 
             - import: "package:gravity/data/gql/tstzrange_serializer.dart"

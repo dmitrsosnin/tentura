@@ -159,7 +159,7 @@ import 'package:gravity/data/gql/comment/_g/fetch_comments_by_beacon_id.var.gql.
     show GFetchCommentsByBeaconIdVars;
 import 'package:gravity/data/gql/geography_serializer.dart'
     show GeographySerializer;
-import 'package:gravity/data/gql/timestamptz_serializer.dart'
+import 'package:gravity/data/gql/timestampz_serializer.dart'
     show TimestamptzSerializer;
 import 'package:gravity/data/gql/tstzrange_serializer.dart'
     show TstzrangeSerializer;
