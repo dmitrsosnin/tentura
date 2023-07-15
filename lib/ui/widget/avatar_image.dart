@@ -13,32 +13,28 @@ class AvatarImage extends StatelessWidget {
     key: const Key(_placeholderPath),
   );
 
-  final bool hasImage;
   final String userId;
   final BoxFit boxFit;
-  final double? height;
-  final double? width;
+  final double? size;
 
   const AvatarImage({
-    this.hasImage = false,
     this.userId = '',
     this.boxFit = BoxFit.cover,
-    this.height,
-    this.width,
+    this.size,
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) => hasImage
-      ? Container(
-          width: width,
-          height: height,
+  Widget build(BuildContext context) => userId.isEmpty
+      ? placeholderImage
+      : Container(
+          width: size,
+          height: size,
           clipBehavior: Clip.hardEdge,
           decoration: const BoxDecoration(shape: BoxShape.circle),
           child: CachedNetworkImage(
             placeholder: (context, url) => placeholderImage,
             imageUrl: firebaseStrorageBaseUrl + userId + _suffix,
           ),
-        )
-      : placeholderImage;
+        );
 }

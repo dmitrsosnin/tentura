@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:gravity/consts.dart';
-import 'package:gravity/entity/beacon.dart';
 
 class BeaconImage extends StatelessWidget {
   static const _placeholderPath = 'assets/images/image-placeholder.jpg';
@@ -13,21 +12,24 @@ class BeaconImage extends StatelessWidget {
     key: const Key(_placeholderPath),
   );
 
-  final Beacon beacon;
+  final String beaconId;
+  final String authorId;
   final BoxFit boxFit;
 
   const BeaconImage({
-    required this.beacon,
+    required this.authorId,
+    this.beaconId = '',
     this.boxFit = BoxFit.cover,
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) => beacon.hasPicture
-      ? CachedNetworkImage(
+  Widget build(BuildContext context) => beaconId.isEmpty || authorId.isEmpty
+      ? placeholderImage
+      : CachedNetworkImage(
           imageUrl:
-              '$firebaseStrorageBaseUrl${beacon.author.id}%2F${beacon.id}$firebaseStrorageUrlSuffix',
+              '$firebaseStrorageBaseUrl$authorId%2F$beaconId$firebaseStrorageUrlSuffix',
           placeholder: (context, url) => placeholderImage,
-        )
-      : placeholderImage;
+          useOldImageOnUrlChange: true,
+        );
 }

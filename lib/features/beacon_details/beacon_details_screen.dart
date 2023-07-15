@@ -54,13 +54,10 @@ class BeaconDetailsScreen extends StatelessWidget {
                   // User row (Avatar and Name)
                   Row(
                     children: [
-                      SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: AvatarImage(
-                          userId: beacon.author.id,
-                          hasImage: beacon.author.hasPicture,
-                        ),
+                      AvatarImage(
+                        userId:
+                            beacon.author.hasPicture ? beacon.author.id : '',
+                        size: 40,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -79,7 +76,10 @@ class BeaconDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: BeaconImage(beacon: beacon),
+                    child: BeaconImage(
+                      authorId: beacon.author.id,
+                      beaconId: beacon.hasPicture ? beacon.id : '',
+                    ),
                   ),
                   // Title
                   Text(

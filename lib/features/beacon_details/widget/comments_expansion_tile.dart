@@ -5,7 +5,7 @@ import 'package:gravity/entity/beacon.dart';
 import 'package:gravity/data/api_service.dart';
 import 'package:gravity/features/comment/ui/widget/comment_card.dart';
 
-import 'package:gravity/data/gql/comment/g/fetch_comments_by_beacon_id.req.gql.dart';
+import 'package:gravity/data/gql/comment/_g/fetch_comments_by_beacon_id.req.gql.dart';
 
 class CommentsExpansionTile extends StatelessWidget {
   final Beacon beacon;
@@ -29,7 +29,12 @@ class CommentsExpansionTile extends StatelessWidget {
           return ExpansionTile(
             title: Text('${response.data?.comment.length} comments'),
             children: [
-              for (final c in response.data!.comment) CommentWidget(comment: c),
+              for (final c in response.data!.comment)
+                CommentWidget(
+                  userId: c.author.has_picture ? c.user_id : '',
+                  userTitle: c.author.title,
+                  comment: c.content,
+                ),
             ],
           );
         },

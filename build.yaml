@@ -1,17 +1,53 @@
 targets:
   $default:
     builders:
+
       ferry_generator|graphql_builder:
         enabled: true
         options:
           schema: gravity|lib/data/gql/schema.graphql
           global_enum_fallbacks: true
-          output_dir: 'g'
+          output_dir: "_g"
           when_extensions:
             when: true
             maybeWhen: true
+
+          type_overrides:
+            timestamptz:
+              name: DateTime
+
+            tstzrange:
+              name: DateTimeRange
+              import: "package:flutter/material.dart"
+
+            geography:
+              name: LatLng
+              import: "package:latlong2/latlong.dart"
+
       ferry_generator|serializer_builder:
         enabled: true
         options:
           schema: gravity|lib/data/gql/schema.graphql
-          output_dir: 'g'
+          output_dir: "_g"
+
+          type_overrides:
+            timestamptz:
+              name: DateTime
+
+            tstzrange:
+              name: DateTimeRange
+              import: "package:flutter/material.dart"
+
+            geography:
+              name: LatLng
+              import: "package:latlong2/latlong.dart"
+
+          custom_serializers:
+            - import: "package:gravity/data/gql/timestamptz_serializer.dart"
+              name: TimestamptzSerializer
+
+            - import: "package:gravity/data/gql/tstzrange_serializer.dart"
+              name: TstzrangeSerializer
+
+            - import: "package:gravity/data/gql/geography_serializer.dart"
+              name: GeographySerializer

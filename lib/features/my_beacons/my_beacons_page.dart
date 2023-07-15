@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'my_beacons_cubit.dart';
-import 'widget/beacon_tile.dart';
+// import 'widget/beacon_tile.dart';
 
 class MyBeaconPage extends StatelessWidget {
   const MyBeaconPage({super.key});
@@ -44,7 +44,8 @@ class MyBeaconPage extends StatelessWidget {
             cacheExtent: 5,
             padding: const EdgeInsets.all(20),
             itemCount: state.beacons.length,
-            itemBuilder: (context, i) => BeaconTile(beacon: state.beacons[i]),
+            itemBuilder: (context, index) => Container(),
+            // itemBuilder: (context, i) => BeaconTile(beacon: state.beacons[i]),
             separatorBuilder: (context, index) => const Divider(),
           ),
         );

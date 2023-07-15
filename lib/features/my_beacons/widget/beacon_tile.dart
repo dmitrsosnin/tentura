@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/entity/beacon.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 
+import 'package:gravity/data/gql/beacon/_g/_fragments.data.gql.dart';
+
 class BeaconTile extends StatelessWidget {
-  final Beacon beacon;
+  final GbeaconFields beacon;
 
   const BeaconTile({
     required this.beacon,
@@ -19,19 +20,9 @@ class BeaconTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Avatar
-          Container(
-            key: Key('AvatarImage:${beacon.author.id}'),
-            width: 40,
-            height: 40,
-            clipBehavior: Clip.hardEdge,
-            margin: const EdgeInsets.only(right: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: AvatarImage(
-              userId: beacon.author.id,
-              hasImage: beacon.author.hasPicture,
-            ),
+          AvatarImage(
+            size: 40,
+            userId: beacon.author.has_picture ? beacon.author.id : '',
           ),
           Expanded(
             child: Column(
@@ -47,7 +38,7 @@ class BeaconTile extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      beacon.createdAt.toString(),
+                      beacon.created_at.toString(),
                     ),
                     const Spacer(),
                     // Menu
@@ -70,7 +61,10 @@ class BeaconTile extends StatelessWidget {
                     ),
                   ),
                   margin: const EdgeInsets.symmetric(vertical: 16),
-                  child: BeaconImage(beacon: beacon),
+                  child: BeaconImage(
+                    authorId: beacon.author.id,
+                    beaconId: beacon.has_picture ? beacon.id : '',
+                  ),
                 ),
                 // Beacon Title
                 Text(

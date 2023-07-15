@@ -30,20 +30,18 @@ class GraphNodeWidget extends StatelessWidget {
               width: node.size,
               height: node.size,
               foregroundDecoration: _decorationUser,
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: AvatarImage(
-                  userId: node.user.id,
-                  hasImage: node.user.hasPicture,
-                ),
+              child: AvatarImage(
+                userId: node.user.hasPicture ? node.user.id : '',
               ),
             ),
           final BeaconNode node => Container(
               width: node.size,
               height: node.size,
               foregroundDecoration: _decorationBeacon,
-              child: BeaconImage(beacon: node.beacon),
+              child: BeaconImage(
+                authorId: node.beacon.author.id,
+                beaconId: node.beacon.hasPicture ? node.beacon.id : '',
+              ),
             ),
         },
       );

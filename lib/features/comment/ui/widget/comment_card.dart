@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:gravity/ui/widget/avatar_image.dart';
 
-import 'package:gravity/data/gql/comment/g/fetch_comments_by_beacon_id.data.gql.dart';
-
 class CommentWidget extends StatelessWidget {
-  final GFetchCommentsByBeaconIdData_comment comment;
+  final String userId;
+  final String userTitle;
+  final String comment;
 
   const CommentWidget({
+    required this.userId,
+    required this.userTitle,
     required this.comment,
     super.key,
   });
@@ -15,19 +17,13 @@ class CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
         children: [
-          SizedBox.square(
-            dimension: 40,
-            child: AvatarImage(
-              userId: comment.user_id,
-              hasImage: comment.author.has_picture,
-            ),
-          ),
+          AvatarImage(userId: userId, size: 40),
           Column(
             children: [
               // Header
               Row(
                 children: [
-                  Text(comment.author.title),
+                  Text(userTitle),
                   const Icon(Icons.visibility_outlined),
                   IconButton(
                     icon: const Icon(Icons.more_vert),
@@ -36,7 +32,7 @@ class CommentWidget extends StatelessWidget {
                 ],
               ),
               // Body
-              Text(comment.content),
+              Text(comment),
               // Buttons
               Row(
                 children: [

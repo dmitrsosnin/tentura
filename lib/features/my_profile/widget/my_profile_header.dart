@@ -36,19 +36,18 @@ class MyProfileHeader extends StatelessWidget {
                 border: Border.all(width: 8, color: Colors.white),
                 shape: BoxShape.circle,
               ),
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: state.newPicturePath.isEmpty
-                    ? AvatarImage(
-                        userId: state.profile.id,
-                        hasImage: state.profile.hasPicture,
-                      )
-                    : Image.file(
+              child: state.newPicturePath.isEmpty
+                  ? AvatarImage(
+                      userId: state.profile.hasPicture ? state.profile.id : '',
+                    )
+                  : Container(
+                      clipBehavior: Clip.hardEdge,
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                      child: Image.file(
                         File(state.newPicturePath),
                         fit: BoxFit.cover,
                       ),
-              ),
+                    ),
             ),
           ),
           // Upload\Remove Picture Button
