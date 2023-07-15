@@ -77,7 +77,7 @@ class _GraphScreenState extends State<GraphScreen> {
           controller: _controller,
           maxScale: 3,
           minScale: 0.3,
-          size: const Size.square(3000),
+          canvasSize: const GraphCanvasSize.fixed(Size.square(3000)),
           layoutAlgorithm: const FruchtermanReingoldAlgorithm(
             iterations: 500,
           ),
@@ -101,15 +101,16 @@ class _GraphScreenState extends State<GraphScreen> {
               ),
             _ => null,
           },
-          edgePainter: (canvas, edge, sourcePosition, targetPosition) {
-            canvas.drawLine(
-              sourcePosition,
-              targetPosition,
-              Paint()
-                ..strokeWidth = edge.source.size / edge.target.size
-                ..color = Colors.black54,
-            );
-          },
+          edgePainter: const LineEdgePainter(color: Colors.black54),
+          // edgePainter: (canvas, edge, sourcePosition, targetPosition) {
+          //   canvas.drawLine(
+          //     sourcePosition,
+          //     targetPosition,
+          //     Paint()
+          //       ..strokeWidth = edge.source.size / edge.target.size
+          //       ..color = Colors.black54,
+          //   );
+          // },
         ),
       );
 }

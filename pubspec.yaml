@@ -2,7 +2,7 @@ name: gravity
 description: 'Gravity for a social ranking'
 publish_to: 'none'
 
-version: 0.0.3+1
+version: 0.0.4+1
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
@@ -15,11 +15,11 @@ dependencies:
   get_it: ^7.6.0
   intl: ^0.18.0
 
-  firebase_ui_oauth_google: ^1.2.2
-  firebase_storage: ^11.2.3
-  firebase_ui_auth: ^1.4.2
-  firebase_core: ^2.13.1
-  firebase_auth: ^4.6.2
+  firebase_ui_oauth_google: ^1.2.5
+  firebase_storage: ^11.2.5
+  firebase_ui_auth: ^1.6.0
+  firebase_core: ^2.15.0
+  firebase_auth: ^4.7.0
 
   ferry_hive_store: ^0.5.1
   graphql_flutter: ^5.1.2
@@ -32,7 +32,7 @@ dependencies:
   ferry: ^0.14.2+1
 
   cached_network_image: ^3.2.3
-  image_picker: ^1.0.0
+  image_picker: ^1.0.1
   flutter_map: ^5.0.0
   geolocator: ^9.0.2
   geocoding: ^2.1.0
