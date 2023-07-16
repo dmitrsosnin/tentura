@@ -1,9 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gravity/data/api_service.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+
+import 'package:gravity/data/api_service.dart';
 
 import 'di.dart';
 import 'theme.dart';

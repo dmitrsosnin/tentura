@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:gravity/ui/error_screen.dart';
 import 'package:gravity/data/auth_repository.dart';
@@ -27,6 +28,7 @@ final router = GoRouter(
   debugLogDiagnostics: true,
   initialLocation: pathField,
   navigatorKey: rootNavigatorKey,
+  observers: [SentryNavigatorObserver()],
   routes: [
     GoRoute(
       path: pathLogin,
