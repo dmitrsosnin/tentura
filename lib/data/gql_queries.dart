@@ -1,6 +1,5 @@
 import 'package:gravity/entity/user.dart';
 import 'package:gravity/entity/beacon.dart';
-import 'package:gravity/entity/comment.dart';
 
 // User
 const mCreateUser = User.fragment +
@@ -41,37 +40,12 @@ mutation CreateBeacon($title: String!, $description: String!, $place: geography,
 }
 ''';
 
-const qFetchBeaconsOf = User.fragment +
-    Beacon.fragment +
-    r'''
-query FetchBeaconsOf($user_id: String!) {
-  beacon(where: {user_id: {_eq: $user_id}}, order_by: {created_at: desc}) {
-    ...beaconFields
-    comments_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-}
-''';
-
 const qSearchBeconById = User.fragment +
     Beacon.fragment +
     r'''
 query SearchBeacon($startsWith: String!, $limit: Int = 10) {
   beacon(where: {id: {_like: $startsWith}}, limit: $limit) {
     ...beaconFields
-  }
-}
-''';
-
-// Comment
-const qFetchCommentsByBeaconId = Comment.fragment +
-    r'''
-query GetCommentsByBeaconId($beacon_id: String!) {
-  comment(where: {beacon_id: {_eq: $beacon_id}}) {
-    ...commentFields
   }
 }
 ''';

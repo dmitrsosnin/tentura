@@ -9,7 +9,6 @@ import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/beacon_repository.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 
-import 'package:gravity/features/my_beacons/my_beacons_cubit.dart';
 import 'package:gravity/features/my_field/bloc/my_field_cubit.dart';
 import 'package:gravity/features/my_profile/bloc/my_profile_cubit.dart';
 
@@ -38,7 +37,6 @@ class DI {
     GetIt.I.registerLazySingleton(BeaconRepository.new);
 
     // BLoC (persisted)
-    GetIt.I.registerLazySingleton(MyBeaconsCubit.new);
     GetIt.I.registerLazySingleton(MyFieldCubit.new);
     GetIt.I.registerLazySingleton(MyProfileCubit.new);
 
