@@ -1,5 +1,4 @@
 import 'package:gravity/entity/user.dart';
-import 'package:gravity/entity/beacon.dart';
 
 // User
 const mCreateUser = User.fragment +
@@ -25,17 +24,6 @@ const qFetchUserProfile = User.fragment +
 query FetchUserProfile($id: String!) {
   user_by_pk(id: $id) {
     ...userFields
-  }
-}
-''';
-
-// Beacon
-const mCreateBeacon = User.fragment +
-    Beacon.fragment +
-    r'''
-mutation CreateBeacon($title: String!, $description: String!, $place: geography, $timerange: tstzrange, $has_picture: Boolean!) {
-  insert_beacon_one(object: {title: $title, description: $description, place: $place, timerange: $timerange, has_picture: $has_picture}) {
-    ...beaconFields
   }
 }
 ''';

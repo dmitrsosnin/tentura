@@ -1,7 +1,9 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-import 'package:gravity/types.dart';
+import 'package:gravity/data/geolocation_repository.dart';
 
 class ChooseLocationDialog extends StatelessWidget {
   static Future<LatLng?> show({
@@ -14,8 +16,9 @@ class ChooseLocationDialog extends StatelessWidget {
       );
 
   final LatLng? center;
+  final _mapController = MapController();
 
-  const ChooseLocationDialog({
+  ChooseLocationDialog({
     this.center,
     super.key,
   });
@@ -29,12 +32,20 @@ class ChooseLocationDialog extends StatelessWidget {
         ),
         extendBodyBehindAppBar: true,
         body: FlutterMap(
+          mapController: _mapController,
           options: MapOptions(
             zoom: 10,
             maxZoom: 12,
             center: center,
             interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
             onTap: (tapPosition, point) => Navigator.of(context).pop(point),
+            onMapReady: () =>
+                GetIt.I<GeolocationRepository>().getMyCoords().then(
+              (value) {
+                if (value == null) return;
+                _mapController.move(value, _mapController.zoom);
+              },
+            ),
           ),
           children: [
             TileLayer(

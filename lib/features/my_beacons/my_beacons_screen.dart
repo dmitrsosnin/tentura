@@ -1,14 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:gravity/app/router.dart';
 
 import 'package:gravity/data/api_service.dart';
 import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/ui/widget/rating_button.dart';
-import 'package:gravity/ui/widget/unknown_error_text.dart';
-
-import 'package:gravity/features/beacon_create/beacon_create_screen.dart';
-
 import 'package:gravity/data/gql/beacon/_g/fetch_beacon_by_user_id.req.gql.dart';
+import 'package:gravity/ui/widget/unknown_error_text.dart';
+import 'package:gravity/ui/widget/rating_button.dart';
 
 import 'widget/beacon_tile.dart';
 
@@ -33,16 +31,14 @@ class MyBeaconsScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           heroTag: 'FAB.NewBeacon',
           child: const Icon(Icons.add),
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (context) => const BeaconCreateScreen(),
-            ),
-          ),
+          onPressed: () => context.push(pathBeaconCreate),
         ),
         body: Operation(
           client: GetIt.I<ApiService>().ferry,
           operationRequest: GFetchBeaconsByUserIdReq(
-            (b) => b..vars.user_id = GetIt.I<AuthRepository>().myId,
+            (b) => b
+              ..fetchPolicy = FetchPolicy.CacheAndNetwork
+              ..vars.user_id = GetIt.I<AuthRepository>().myId,
           ),
           builder: (context, response, error) {
             if (response?.loading ?? false) {

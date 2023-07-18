@@ -1,157 +1,224 @@
 import 'dart:io';
+import 'package:intl/intl.dart';
+import 'package:ferry/ferry.dart';
+import 'package:get_it/get_it.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gravity/consts.dart';
-import 'package:gravity/bloc/bloc_data_status.dart';
-import 'package:gravity/ui/widget/error_dialog.dart';
+import 'package:gravity/data/api_service.dart';
+import 'package:gravity/data/image_repository.dart';
+import 'package:gravity/data/geolocation_repository.dart';
+import 'package:gravity/data/gql/beacon/_g/create_beacon.req.gql.dart';
 import 'package:gravity/ui/dialog/choose_location_dialog.dart';
+import 'package:gravity/ui/widget/error_dialog.dart';
 
-import 'beacon_create_cubit.dart';
-
-class BeaconCreateScreen extends StatelessWidget {
-  static const _padding = SizedBox(height: 20);
-
+class BeaconCreateScreen extends StatefulWidget {
   const BeaconCreateScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (context) => BeaconCreateCubit(),
-        child: BlocConsumer<BeaconCreateCubit, BeaconCreateState>(
-          listener: (context, state) {
-            switch (state.status) {
-              case BlocDataStatus.hasData:
-                Navigator.of(context).pop();
-              case BlocDataStatus.hasError:
-                showDialog<void>(
-                  context: context,
-                  builder: (_) => ErrorDialog(error: state.error),
-                );
-              default:
-            }
-          },
-          builder: (context, state) {
-            final cubit = context.read<BeaconCreateCubit>();
-            return Scaffold(
-              appBar: AppBar(
-                actions: [
-                  TextButton(
-                    onPressed: state.isValid ? cubit.save : null,
-                    child: const Text('Done'),
-                  ),
-                  const SizedBox(width: 16),
-                ],
+  State<BeaconCreateScreen> createState() => _BeaconCreateScreenState();
+}
+
+class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
+  final _dF = DateFormat.yMd();
+  final _titleController = TextEditingController();
+  final _imageController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _dateRangeController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  var _imagePath = '';
+  LatLng? _coordinates;
+  DateTimeRange? _dateRange;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _imageController.dispose();
+    _locationController.dispose();
+    _dateRangeController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          actions: [
+            TextButton(
+              onPressed: _publish,
+              child: const Text('Publish'),
+            ),
+            const SizedBox(width: 16),
+          ],
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            // Title
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                hintText: 'Beacon title',
               ),
-              body: ListView(
-                key: const Key('NewBeaconListView'),
-                padding: const EdgeInsets.all(20),
-                children: [
-                  // Title
-                  TextField(
-                    key: const Key('NewBeaconTitle'),
-                    decoration: const InputDecoration(
-                      hintText: 'Beacon title',
-                    ),
-                    keyboardType: TextInputType.text,
-                    maxLength: titleMaxLength,
-                    onChanged: cubit.setTitle,
-                  ),
-                  // Description
-                  TextField(
-                    key: const Key('NewBeaconDescription'),
-                    decoration: const InputDecoration(
-                      hintText: 'Description',
-                    ),
-                    keyboardType: TextInputType.multiline,
-                    maxLength: descriptionLength,
-                    maxLines: null,
-                    onChanged: cubit.setDescription,
-                  ),
-                  // Image
-                  TextField(
-                    key: const Key('NewBeaconImage'),
-                    controller: cubit.imageController,
-                    decoration: InputDecoration(
-                      hintText: 'Attach image',
-                      suffixIcon: state.imagePath.isEmpty
-                          ? const Icon(Icons.add_a_photo_rounded)
-                          : IconButton(
-                              onPressed: cubit.clearImage,
-                              icon: const Icon(Icons.cancel_rounded),
-                            ),
-                    ),
-                    readOnly: true,
-                    onTap: cubit.setImage,
-                  ),
-                  // Location
-                  _padding,
-                  TextField(
-                    key: const Key('NewBeaconLocation'),
-                    controller: cubit.locationController,
-                    decoration: InputDecoration(
-                      hintText: 'Add location',
-                      suffixIcon: state.coordinates == null
-                          ? const Icon(Icons.add_location_rounded)
-                          : IconButton(
-                              onPressed: cubit.clearCoords,
-                              icon: const Icon(Icons.cancel_rounded),
-                            ),
-                    ),
-                    readOnly: true,
-                    onTap: () async {
-                      final point = await ChooseLocationDialog.show(
-                        context: context,
-                        center: state.coordinates ?? cubit.myCoords,
-                      );
-                      if (context.mounted) await cubit.setCoords(point);
-                    },
-                  ),
-                  _padding,
-                  // Time
-                  TextField(
-                    key: const Key('NewBeaconTime'),
-                    controller: cubit.dateRangeController,
-                    decoration: InputDecoration(
-                      hintText: 'Set time',
-                      suffixIcon: state.dateRange == null
-                          ? const Icon(Icons.date_range_rounded)
-                          : IconButton(
-                              onPressed: cubit.clearDateRange,
-                              icon: const Icon(Icons.cancel_rounded),
-                            ),
-                    ),
-                    readOnly: true,
-                    onTap: () async {
-                      final now = DateTime.now();
-                      cubit.setDateRange(
-                        await showDateRangePicker(
-                          context: context,
-                          firstDate: now,
-                          lastDate: now.add(const Duration(days: 365)),
-                          initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        ),
-                      );
-                    },
-                  ),
-                  // Image
-                  Container(
-                    decoration: BoxDecoration(
-                      border: state.imagePath.isEmpty
-                          ? Border.all(color: Colors.black12)
-                          : null,
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 48),
-                    child: state.imagePath.isEmpty
-                        ? const Icon(Icons.photo_outlined, size: 200)
-                        : Image.file(
-                            File(state.imagePath),
-                            fit: BoxFit.fitWidth,
-                          ),
-                  ),
-                ],
+              keyboardType: TextInputType.text,
+              maxLength: titleMaxLength,
+            ),
+            // Description
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(
+                hintText: 'Description',
               ),
-            );
-          },
+              keyboardType: TextInputType.multiline,
+              maxLength: descriptionLength,
+              maxLines: null,
+            ),
+            // Image
+            TextField(
+              controller: _imageController,
+              decoration: InputDecoration(
+                hintText: 'Attach image',
+                suffixIcon: _imagePath.isEmpty
+                    ? const Icon(Icons.add_a_photo_rounded)
+                    : IconButton(
+                        onPressed: () {
+                          _imageController.clear();
+                          setState(() => _imagePath = '');
+                        },
+                        icon: const Icon(Icons.cancel_rounded),
+                      ),
+              ),
+              readOnly: true,
+              onTap: () async {
+                final newImage = await GetIt.I<ImageRepository>().pickImage();
+                if (newImage != null) {
+                  _imageController.text = newImage.name;
+                  setState(() => _imagePath = newImage.path);
+                }
+              },
+            ),
+            // Location
+            const SizedBox(height: 20),
+            TextField(
+              controller: _locationController,
+              decoration: InputDecoration(
+                hintText: 'Add location',
+                suffixIcon: _locationController.text.isEmpty
+                    ? const Icon(Icons.add_location_rounded)
+                    : IconButton(
+                        onPressed: () {
+                          _coordinates = null;
+                          _locationController.clear();
+                        },
+                        icon: const Icon(Icons.cancel_rounded),
+                      ),
+              ),
+              readOnly: true,
+              onTap: _onChooseLocation,
+            ),
+            const SizedBox(height: 20),
+            // Time
+            TextField(
+              controller: _dateRangeController,
+              decoration: InputDecoration(
+                hintText: 'Set time',
+                suffixIcon: _dateRangeController.text.isEmpty
+                    ? const Icon(Icons.date_range_rounded)
+                    : IconButton(
+                        onPressed: () {
+                          _dateRange = null;
+                          _dateRangeController.clear();
+                        },
+                        icon: const Icon(Icons.cancel_rounded),
+                      ),
+              ),
+              readOnly: true,
+              onTap: _onChooseDateRange,
+            ),
+            // Image
+            Container(
+              decoration: BoxDecoration(
+                border: _imagePath.isEmpty
+                    ? Border.all(color: Colors.black12)
+                    : null,
+              ),
+              margin: const EdgeInsets.symmetric(vertical: 48),
+              child: _imagePath.isEmpty
+                  ? const Icon(Icons.photo_outlined, size: 200)
+                  : Image.file(File(_imagePath), fit: BoxFit.fitWidth),
+            ),
+          ],
         ),
       );
+
+  Future<void> _onChooseLocation() async {
+    final point = await ChooseLocationDialog.show(
+      context: context,
+      center: _coordinates,
+    );
+    if (point == null) return;
+    _coordinates = point;
+    _locationController.text = point.toString();
+    final place =
+        await GetIt.I<GeolocationRepository>().getPlaceNameByCoords(point);
+    if (place != null) {
+      _locationController.text =
+          '${place.locality ?? "Unknown"}, ${place.country ?? "Unknown"}';
+    }
+  }
+
+  Future<void> _onChooseDateRange() async {
+    final now = DateTime.now();
+    _dateRange = await showDateRangePicker(
+          context: context,
+          firstDate: now,
+          lastDate: now.add(const Duration(days: 365)),
+          initialEntryMode: DatePickerEntryMode.calendarOnly,
+        ) ??
+        _dateRange;
+    if (_dateRange != null) {
+      _dateRangeController.text =
+          '${_dF.format(_dateRange!.start)} - ${_dF.format(_dateRange!.end)}';
+    }
+  }
+
+  Future<void> _publish() async {
+    if (_titleController.text.length < titleMinLength) {
+      return showDialog<void>(
+        context: context,
+        builder: (_) => const ErrorDialog(error: 'Title have too short'),
+      );
+    }
+    final response = await GetIt.I<ApiService>()
+        .ferry
+        .request(GCreateBeaconReq(
+          (b) => b.vars
+            ..title = _titleController.text
+            ..description = _descriptionController.text
+            ..timerange = _dateRange
+            ..place = _coordinates
+            ..has_picture = _imageController.text.isNotEmpty,
+        ))
+        .firstWhere((e) => e.dataSource != DataSource.Optimistic);
+    final beacon = response.data?.insert_beacon_one;
+    if (beacon != null && _imagePath.isNotEmpty) {
+      await GetIt.I<ImageRepository>()
+          .putBeacon(
+            userId: beacon.author.id,
+            beaconId: beacon.id,
+            image: await File(_imagePath).readAsBytes(),
+          )
+          .firstWhere((e) => e.isFinished);
+    }
+    if (mounted) {
+      beacon == null
+          ? showDialog<void>(
+              context: context,
+              builder: (_) => const ErrorDialog(error: 'Something went wrong'),
+            )
+          : Navigator.of(context).pop(beacon);
+    }
+  }
 }

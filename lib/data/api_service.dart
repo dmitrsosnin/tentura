@@ -6,7 +6,7 @@ import 'package:ferry_hive_store/ferry_hive_store.dart' as fh;
 
 import 'package:gravity/types.dart';
 
-export 'package:graphql_flutter/graphql_flutter.dart' show FetchPolicy;
+export 'package:ferry/ferry.dart' show FetchPolicy;
 export 'package:ferry_flutter/ferry_flutter.dart';
 
 class ApiService {
