@@ -70,6 +70,8 @@ abstract class GSearchBeaconData_beacon
   @override
   bool get has_picture;
   @override
+  int get comments_count;
+  @override
   bool get enabled;
   @override
   GSearchBeaconData_beacon_author get author;

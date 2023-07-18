@@ -73,6 +73,8 @@ abstract class GFetchBeaconsByUserIdData_beacon
   @override
   bool get has_picture;
   @override
+  int get comments_count;
+  @override
   bool get enabled;
   @override
   GFetchBeaconsByUserIdData_beacon_author get author;

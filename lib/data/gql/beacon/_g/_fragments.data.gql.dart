@@ -21,6 +21,7 @@ abstract class GbeaconFields {
   _i1.LatLng? get place;
   _i2.DateTimeRange? get timerange;
   bool get has_picture;
+  int get comments_count;
   bool get enabled;
   GbeaconFields_author get author;
   Map<String, dynamic> toJson();
@@ -71,6 +72,8 @@ abstract class GbeaconFieldsData
   _i2.DateTimeRange? get timerange;
   @override
   bool get has_picture;
+  @override
+  int get comments_count;
   @override
   bool get enabled;
   @override

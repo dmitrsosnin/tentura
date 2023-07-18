@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/entity/beacon.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
+import 'package:gravity/ui/widget/like_control_button.dart';
 
-import 'widget/beacon_buttons_row.dart';
+import 'package:gravity/data/gql/beacon/_g/search_beacon.data.gql.dart';
+
 import 'widget/comments_expansion_tile.dart';
 
 class BeaconDetailsScreen extends StatelessWidget {
-  final Beacon beacon;
+  final GSearchBeaconData_beacon beacon;
 
   const BeaconDetailsScreen({
     required this.beacon,
@@ -39,7 +40,7 @@ class BeaconDetailsScreen extends StatelessWidget {
               Row(
                 children: [
                   AvatarImage(
-                    userId: beacon.author.hasPicture ? beacon.author.id : '',
+                    userId: beacon.author.has_picture ? beacon.author.id : '',
                     size: 40,
                   ),
                   Padding(
@@ -61,7 +62,7 @@ class BeaconDetailsScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: BeaconImage(
                   authorId: beacon.author.id,
-                  beaconId: beacon.hasPicture ? beacon.id : '',
+                  beaconId: beacon.has_picture ? beacon.id : '',
                 ),
               ),
               // Title
@@ -76,22 +77,20 @@ class BeaconDetailsScreen extends StatelessWidget {
               ),
               // Date
               Text(
-                beacon.createdAt.toString(),
+                beacon.created_at.toString(),
               ),
               // Place
-              if (beacon.coordinates != null)
+              if (beacon.place != null)
                 Text(
-                  beacon.coordinates!.toSexagesimal(),
+                  beacon.place!.toSexagesimal(),
                 ),
-              const Divider(),
               // Buttons Row
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: BeaconButtonsRow(beacon: beacon),
+                child: LikeControlButton(beaconId: beacon.id),
               ),
-              const Divider(),
               // Comments
-              CommentsExpansionTile(beacon: beacon),
+              CommentsExpansionTile(beaconId: beacon.id),
             ],
           ),
         ),

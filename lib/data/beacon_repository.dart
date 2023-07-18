@@ -42,21 +42,4 @@ class BeaconRepository {
     _updatesController.add(beacon);
     return beacon;
   }
-
-  Future<List<Beacon>> getBeaconsByIdPrefix(
-    String searchPrefix, {
-    int limit = 10,
-  }) async {
-    final data = await _apiService.query(
-      fetchPolicy: FetchPolicy.noCache,
-      query: qSearchBeconById,
-      vars: {
-        'startsWith': '$searchPrefix%',
-        'limit': limit,
-      },
-    );
-    return (data['beacon'] as List)
-        .map<Beacon>((e) => Beacon.fromJson(e as Json))
-        .toList();
-  }
 }

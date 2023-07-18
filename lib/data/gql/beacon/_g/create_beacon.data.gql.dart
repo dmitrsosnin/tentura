@@ -71,6 +71,8 @@ abstract class GCreateBeaconData_insert_beacon_one
   @override
   bool get has_picture;
   @override
+  int get comments_count;
+  @override
   bool get enabled;
   @override
   GCreateBeaconData_insert_beacon_one_author get author;

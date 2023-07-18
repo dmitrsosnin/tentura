@@ -39,13 +39,3 @@ mutation CreateBeacon($title: String!, $description: String!, $place: geography,
   }
 }
 ''';
-
-const qSearchBeconById = User.fragment +
-    Beacon.fragment +
-    r'''
-query SearchBeacon($startsWith: String!, $limit: Int = 10) {
-  beacon(where: {id: {_like: $startsWith}}, limit: $limit) {
-    ...beaconFields
-  }
-}
-''';

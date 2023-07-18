@@ -9,6 +9,7 @@ fragment beaconFields on beacon {
   place
   timerange
   has_picture
+  comments_count
   enabled
   author {
     ...userFields

@@ -112,6 +112,9 @@ class _$GFetchBeaconsByUserIdData_beaconSerializer
       'has_picture',
       serializers.serialize(object.has_picture,
           specifiedType: const FullType(bool)),
+      'comments_count',
+      serializers.serialize(object.comments_count,
+          specifiedType: const FullType(int)),
       'enabled',
       serializers.serialize(object.enabled,
           specifiedType: const FullType(bool)),
@@ -190,6 +193,10 @@ class _$GFetchBeaconsByUserIdData_beaconSerializer
         case 'has_picture':
           result.has_picture = serializers.deserialize(value,
               specifiedType: const FullType(bool))! as bool;
+          break;
+        case 'comments_count':
+          result.comments_count = serializers.deserialize(value,
+              specifiedType: const FullType(int))! as int;
           break;
         case 'enabled':
           result.enabled = serializers.deserialize(value,
@@ -548,6 +555,8 @@ class _$GFetchBeaconsByUserIdData_beacon
   @override
   final bool has_picture;
   @override
+  final int comments_count;
+  @override
   final bool enabled;
   @override
   final GFetchBeaconsByUserIdData_beacon_author author;
@@ -568,6 +577,7 @@ class _$GFetchBeaconsByUserIdData_beacon
       this.place,
       this.timerange,
       required this.has_picture,
+      required this.comments_count,
       required this.enabled,
       required this.author,
       required this.comments_aggregate})
@@ -586,6 +596,8 @@ class _$GFetchBeaconsByUserIdData_beacon
         updated_at, r'GFetchBeaconsByUserIdData_beacon', 'updated_at');
     BuiltValueNullFieldError.checkNotNull(
         has_picture, r'GFetchBeaconsByUserIdData_beacon', 'has_picture');
+    BuiltValueNullFieldError.checkNotNull(
+        comments_count, r'GFetchBeaconsByUserIdData_beacon', 'comments_count');
     BuiltValueNullFieldError.checkNotNull(
         enabled, r'GFetchBeaconsByUserIdData_beacon', 'enabled');
     BuiltValueNullFieldError.checkNotNull(
@@ -616,6 +628,7 @@ class _$GFetchBeaconsByUserIdData_beacon
         place == other.place &&
         timerange == other.timerange &&
         has_picture == other.has_picture &&
+        comments_count == other.comments_count &&
         enabled == other.enabled &&
         author == other.author &&
         comments_aggregate == other.comments_aggregate;
@@ -633,6 +646,7 @@ class _$GFetchBeaconsByUserIdData_beacon
     _$hash = $jc(_$hash, place.hashCode);
     _$hash = $jc(_$hash, timerange.hashCode);
     _$hash = $jc(_$hash, has_picture.hashCode);
+    _$hash = $jc(_$hash, comments_count.hashCode);
     _$hash = $jc(_$hash, enabled.hashCode);
     _$hash = $jc(_$hash, author.hashCode);
     _$hash = $jc(_$hash, comments_aggregate.hashCode);
@@ -652,6 +666,7 @@ class _$GFetchBeaconsByUserIdData_beacon
           ..add('place', place)
           ..add('timerange', timerange)
           ..add('has_picture', has_picture)
+          ..add('comments_count', comments_count)
           ..add('enabled', enabled)
           ..add('author', author)
           ..add('comments_aggregate', comments_aggregate))
@@ -701,6 +716,11 @@ class GFetchBeaconsByUserIdData_beaconBuilder
   bool? get has_picture => _$this._has_picture;
   set has_picture(bool? has_picture) => _$this._has_picture = has_picture;
 
+  int? _comments_count;
+  int? get comments_count => _$this._comments_count;
+  set comments_count(int? comments_count) =>
+      _$this._comments_count = comments_count;
+
   bool? _enabled;
   bool? get enabled => _$this._enabled;
   set enabled(bool? enabled) => _$this._enabled = enabled;
@@ -737,6 +757,7 @@ class GFetchBeaconsByUserIdData_beaconBuilder
       _place = $v.place;
       _timerange = $v.timerange;
       _has_picture = $v.has_picture;
+      _comments_count = $v.comments_count;
       _enabled = $v.enabled;
       _author = $v.author.toBuilder();
       _comments_aggregate = $v.comments_aggregate.toBuilder();
@@ -780,8 +801,9 @@ class GFetchBeaconsByUserIdData_beaconBuilder
               timerange: timerange,
               has_picture: BuiltValueNullFieldError.checkNotNull(
                   has_picture, r'GFetchBeaconsByUserIdData_beacon', 'has_picture'),
-              enabled:
-                  BuiltValueNullFieldError.checkNotNull(enabled, r'GFetchBeaconsByUserIdData_beacon', 'enabled'),
+              comments_count:
+                  BuiltValueNullFieldError.checkNotNull(comments_count, r'GFetchBeaconsByUserIdData_beacon', 'comments_count'),
+              enabled: BuiltValueNullFieldError.checkNotNull(enabled, r'GFetchBeaconsByUserIdData_beacon', 'enabled'),
               author: author.build(),
               comments_aggregate: comments_aggregate.build());
     } catch (_) {
