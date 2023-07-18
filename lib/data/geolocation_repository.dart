@@ -1,8 +1,7 @@
+import 'package:latlong2/latlong.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-
-import 'package:gravity/types.dart';
 
 class GeolocationRepository {
   LatLng? _myCoords;

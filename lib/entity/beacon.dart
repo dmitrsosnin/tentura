@@ -1,28 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:gravity/types.dart';
-import 'package:gravity/entity/user.dart';
+import 'user.dart';
 
 class Beacon extends Equatable {
-  static const fragment = '''
-fragment beaconFields on beacon {
-  id
-  title
-  description
-  created_at
-  updated_at
-  place
-  timerange
-  has_picture
-  enabled
-  author {
-    ...userFields
-  }
-}
-''';
-
   final String id;
   final String title;
   final String description;
@@ -49,34 +31,6 @@ fragment beaconFields on beacon {
     this.dateRange,
   });
 
-  factory Beacon.fromJson(Json json) {
-    final place = json['place'] as Json?;
-    final coordinates = place?['coordinates'] as List?;
-    final timerange = jsonDecode(json['timerange'] as String? ?? '[]') as List;
-    return Beacon(
-      id: json['id'] as String,
-      author: User.fromJson(json['author'] as Json),
-      title: json['title'] as String,
-      description: json['description'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
-      isEnabled: json['enabled'] as bool,
-      hasPicture: json['has_picture'] as bool,
-      dateRange: timerange.isEmpty
-          ? null
-          : DateTimeRange(
-              start: DateTime.parse(timerange.first as String),
-              end: DateTime.parse(timerange.last as String),
-            ),
-      coordinates: coordinates == null
-          ? null
-          : LatLng(coordinates[0] as double, coordinates[1] as double),
-      commentsCount: ((json['comments_aggregate'] as Json?)?['aggregate']
-              as Json?)?['count'] as int? ??
-          0,
-    );
-  }
-
   @override
   List<Object?> get props => [
         id,
@@ -91,6 +45,4 @@ fragment beaconFields on beacon {
         hasPicture,
         commentsCount,
       ];
-
-  bool get hasNoPicture => !hasPicture;
 }

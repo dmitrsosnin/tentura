@@ -1,17 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:gravity/types.dart';
-
 class User extends Equatable {
-  static const fragment = '''
-fragment userFields on user {
-  id
-  title
-  description
-  has_picture
-}
-''';
-
   final String id;
   final String title;
   final String description;
@@ -24,7 +13,7 @@ fragment userFields on user {
     this.hasPicture = false,
   });
 
-  factory User.fromJson(Json json) => User(
+  factory User.fromJson(Map<String, dynamic> json) => User(
         id: json['id'] as String,
         title: json['title'] as String,
         description: json['description'] as String,

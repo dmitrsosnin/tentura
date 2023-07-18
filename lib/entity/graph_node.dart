@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
-
 // ignore: implementation_imports
 import 'package:force_directed_graphview/src/model/node.dart' show Node;
+import 'package:equatable/equatable.dart';
 
 import 'package:gravity/entity/user.dart';
 import 'package:gravity/entity/beacon.dart';

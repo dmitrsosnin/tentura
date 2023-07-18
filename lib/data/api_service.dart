@@ -4,8 +4,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart' as hf;
 import 'package:ferry_hive_store/ferry_hive_store.dart' as fh;
 
-import 'package:gravity/types.dart';
-
 export 'package:ferry/ferry.dart' show FetchPolicy;
 export 'package:ferry_flutter/ferry_flutter.dart';
 
@@ -46,7 +44,7 @@ class ApiService {
     return this;
   }
 
-  Future<Json> query({
+  Future<Map<String, dynamic>> query({
     required String query,
     Map<String, Object?> vars = const {},
     FetchPolicy fetchPolicy = FetchPolicy.cacheFirst,
@@ -68,7 +66,7 @@ class ApiService {
     return result.data!;
   }
 
-  Future<Json> mutate({
+  Future<Map<String, dynamic>> mutate({
     required String query,
     Map<String, Object?> vars = const {},
   }) async {
