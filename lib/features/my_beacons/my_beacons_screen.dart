@@ -16,12 +16,6 @@ class MyBeaconsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          actions: const [
-            IconButton(
-              icon: Icon(Icons.search_rounded),
-              onPressed: null, // TBD
-            ),
-          ],
           leading: const Padding(
             padding: EdgeInsets.all(8),
             child: RatingButton(),

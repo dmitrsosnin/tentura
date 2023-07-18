@@ -29,15 +29,13 @@ class App extends StatelessWidget {
         builder: (context, snapshot) => snapshot.hasData
             ? MaterialApp.router(
                 title: 'Gravity',
+                theme: themeLight,
                 routerConfig: router,
                 debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  colorSchemeSeed: primaryColor,
-                  useMaterial3: true,
-                ),
               )
-            : const MaterialApp(
-                home: Center(
+            : MaterialApp(
+                theme: themeLight,
+                home: const Center(
                   child: CircularProgressIndicator.adaptive(),
                 ),
               ),

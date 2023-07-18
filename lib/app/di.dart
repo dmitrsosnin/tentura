@@ -8,7 +8,6 @@ import 'package:gravity/data/user_repository.dart';
 import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 
-import 'package:gravity/features/my_field/bloc/my_field_cubit.dart';
 import 'package:gravity/features/my_profile/bloc/my_profile_cubit.dart';
 
 class DI {
@@ -35,7 +34,6 @@ class DI {
     GetIt.I.registerLazySingleton(ImageRepository.new);
 
     // BLoC (persisted)
-    GetIt.I.registerLazySingleton(MyFieldCubit.new);
     GetIt.I.registerLazySingleton(MyProfileCubit.new);
 
     _isInited = true;

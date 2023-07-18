@@ -9,6 +9,7 @@ import 'package:gravity/data/auth_repository.dart';
 
 import 'package:gravity/features/home/home_screen.dart';
 import 'package:gravity/features/auth/login_screen.dart';
+import 'package:gravity/features/connect/connect_screen.dart';
 import 'package:gravity/features/updates/updates_screen.dart';
 import 'package:gravity/features/my_field/my_field_screen.dart';
 import 'package:gravity/features/my_profile/my_profile_screen.dart';
@@ -19,10 +20,12 @@ export 'package:go_router/go_router.dart';
 
 const pathLogin = '/login';
 const pathField = '/field';
-const pathBeaconsMy = '/beacon/my';
-const pathBeaconCreate = '/beacon/create';
+const pathConnect = '/connect';
+const pathBeacons = '/beacons';
 const pathUpdates = '/updates';
 const pathProfile = '/profile';
+
+const pathBeaconCreate = '/beacon/create';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
@@ -52,9 +55,18 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: pathBeaconsMy,
+              path: pathBeacons,
               redirect: _authGuardian,
               builder: (context, state) => const MyBeaconsScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: pathConnect,
+              redirect: _authGuardian,
+              builder: (context, state) => const ConnectScreen(),
             ),
           ],
         ),
