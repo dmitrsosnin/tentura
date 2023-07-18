@@ -21,7 +21,8 @@ class BeaconCreateScreen extends StatefulWidget {
 }
 
 class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
-  final _dF = DateFormat.yMd();
+  static final _dF = DateFormat.yMd();
+
   final _titleController = TextEditingController();
   final _imageController = TextEditingController();
   final _locationController = TextEditingController();

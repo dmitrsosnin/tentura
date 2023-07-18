@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:gravity/data/api_service.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
-
 import 'package:gravity/data/gql/beacon/_g/search_beacon.req.gql.dart';
+import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
 
 class BeaconSearchScreen extends StatefulWidget {
   const BeaconSearchScreen({super.key});
@@ -48,8 +47,8 @@ class _BeaconSearchScreenState extends State<BeaconSearchScreen> {
                     for (final e in result!.data!.beacon)
                       ListTile(
                         leading: AvatarImage(
-                          userId: e.author.has_picture ? e.author.id : '',
                           size: 40,
+                          userId: e.author.has_picture ? e.author.id : '',
                         ),
                         title: Text(e.title),
                         subtitle: Text(

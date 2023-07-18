@@ -7,8 +7,7 @@ import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/beacon/_g/fetch_beacon_by_user_id.req.gql.dart';
 import 'package:gravity/ui/widget/unknown_error_text.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
-
-import 'widget/beacon_tile.dart';
+import 'package:gravity/ui/widget/beacon_tile.dart';
 
 class MyBeaconsScreen extends StatelessWidget {
   const MyBeaconsScreen({super.key});

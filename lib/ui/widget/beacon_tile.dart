@@ -1,11 +1,15 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 
 import 'package:gravity/data/gql/beacon/_g/_fragments.data.gql.dart';
+import 'package:gravity/ui/widget/like_control_button.dart';
 
 class BeaconTile extends StatelessWidget {
+  static final _dF = DateFormat.yMd();
+
   final GbeaconFields beacon;
 
   const BeaconTile({
@@ -16,13 +20,15 @@ class BeaconTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
           // Avatar
-          AvatarImage(
-            size: 40,
-            userId: beacon.author.has_picture ? beacon.author.id : '',
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: AvatarImage(
+              size: 40,
+              userId: beacon.author.has_picture ? beacon.author.id : '',
+            ),
           ),
           Expanded(
             child: Column(
@@ -37,9 +43,8 @@ class BeaconTile extends StatelessWidget {
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(width: 16),
-                    Text(
-                      beacon.created_at.toString(),
-                    ),
+                    // Date
+                    Text(_dF.format(beacon.created_at)),
                     const Spacer(),
                     // Menu
                     PopupMenuButton(
@@ -82,46 +87,23 @@ class BeaconTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                const SizedBox(height: 8),
                 // Bottom Buttons Block
-                Row(
-                  children: [
-                    // Like\Dislike
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
-                        borderRadius: BorderRadius.circular(32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      // Like\Dislike
+                      LikeControlButton(beaconId: beacon.id),
+                      const SizedBox(width: 20),
+                      // Comments count
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.comment_outlined),
+                        label: Text(beacon.comments_count.toString()),
+                        onPressed: null,
                       ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.thumb_up_outlined),
-                            onPressed: () {},
-                          ),
-                          const Text('10'),
-                          IconButton(
-                            icon: const Icon(Icons.thumb_down_outlined),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    // Reply
-                    FilledButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.comment_outlined),
-                      label: const Text('4'),
-                    ),
-                    const Spacer(),
-                    TextButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.percent_outlined),
-                      label: const Text('90%'),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 8),
               ],
             ),
           ),

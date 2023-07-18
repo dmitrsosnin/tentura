@@ -38,6 +38,7 @@ class MyProfileHeader extends StatelessWidget {
               ),
               child: state.newPicturePath.isEmpty
                   ? AvatarImage(
+                      size: 200,
                       userId: state.profile.hasPicture ? state.profile.id : '',
                     )
                   : Container(

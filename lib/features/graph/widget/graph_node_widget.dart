@@ -31,6 +31,7 @@ class GraphNodeWidget extends StatelessWidget {
               height: node.size,
               foregroundDecoration: _decorationUser,
               child: AvatarImage(
+                size: 40,
                 userId: node.user.hasPicture ? node.user.id : '',
               ),
             ),
