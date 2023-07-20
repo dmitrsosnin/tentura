@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:gravity/firebase_options.dart';
@@ -19,7 +18,6 @@ class DI {
   Future<DI> init() async {
     if (_isInited) return this;
 
-    EquatableConfig.stringify = true;
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
