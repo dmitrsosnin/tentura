@@ -1,14 +1,12 @@
+import 'package:get_it/get_it.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:gravity/firebase_options.dart';
 import 'package:gravity/data/api_service.dart';
 import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/user_repository.dart';
 import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/geolocation_repository.dart';
-
-import 'package:gravity/features/my_profile/bloc/my_profile_cubit.dart';
 
 class DI {
   static bool _isInited = false;
@@ -26,15 +24,10 @@ class DI {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    // Data providers
     GetIt.I.registerSingleton(await ApiService().init());
     GetIt.I.registerSingleton(await AuthRepository().init());
     GetIt.I.registerSingleton(await GeolocationRepository().init());
-    GetIt.I.registerLazySingleton(UserRepository.new);
     GetIt.I.registerLazySingleton(ImageRepository.new);
-
-    // BLoC (persisted)
-    GetIt.I.registerLazySingleton(MyProfileCubit.new);
 
     _isInited = true;
     return this;

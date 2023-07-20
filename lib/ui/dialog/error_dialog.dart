@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'package:gravity/app/router.dart';
+
 class ErrorDialog extends StatelessWidget {
+  static Future<void> show({
+    required BuildContext context,
+    Object? error,
+  }) =>
+      showDialog<void>(
+        context: context,
+        builder: (context) => ErrorDialog(error: error),
+      );
+
   final Object? error;
 
   const ErrorDialog({
@@ -14,7 +25,7 @@ class ErrorDialog extends StatelessWidget {
         content: Text(error.toString()),
         actions: [
           TextButton(
-            onPressed: Navigator.of(context).pop,
+            onPressed: context.pop,
             child: const Text('Close'),
           ),
         ],

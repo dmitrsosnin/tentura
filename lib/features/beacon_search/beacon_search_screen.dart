@@ -18,7 +18,7 @@ class _BeaconSearchScreenState extends State<BeaconSearchScreen> {
 
   @override
   Widget build(BuildContext context) => Operation(
-        client: GetIt.I<ApiService>().ferry,
+        client: GetIt.I<ApiService>().client,
         operationRequest: GSearchBeaconReq(
           (b) => b.vars.startsWith = '$_prefix%',
         ),

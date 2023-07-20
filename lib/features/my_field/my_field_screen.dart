@@ -1,11 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:gravity/data/api_service.dart';
 
-import 'package:gravity/ui/widget/beacon_tile.dart';
-import 'package:gravity/ui/widget/rating_button.dart';
-import 'package:gravity/ui/widget/unknown_error_text.dart';
+import 'package:gravity/data/api_service.dart';
 import 'package:gravity/data/gql/beacon/_g/search_beacon.req.gql.dart';
+import 'package:gravity/ui/widget/error_center_text.dart';
+import 'package:gravity/ui/widget/rating_button.dart';
+import 'package:gravity/ui/widget/beacon_tile.dart';
 
 class MyFieldScreen extends StatelessWidget {
   const MyFieldScreen({super.key});
@@ -20,13 +20,13 @@ class MyFieldScreen extends StatelessWidget {
           leadingWidth: RatingButton.width,
         ),
         body: Operation(
-          client: GetIt.I<ApiService>().ferry,
+          client: GetIt.I<ApiService>().client,
           operationRequest: GSearchBeaconReq((b) => b.vars.startsWith = '%'),
           builder: (context, response, error) {
             if (response?.loading ?? false) {
               return const CircularProgressIndicator.adaptive();
             } else if (response?.data == null) {
-              return unknownErrorText;
+              return ErrorCenterText(response: response, error: error);
             }
             return RefreshIndicator.adaptive(
               onRefresh: () async {},

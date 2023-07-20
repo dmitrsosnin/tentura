@@ -2,10 +2,9 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gravity/data/api_service.dart';
-import 'package:gravity/ui/widget/unknown_error_text.dart';
-import 'package:gravity/features/comment/ui/widget/comment_card.dart';
-
+import 'package:gravity/ui/widget/error_center_text.dart';
 import 'package:gravity/data/gql/comment/_g/fetch_comments_by_beacon_id.req.gql.dart';
+import 'package:gravity/features/comment/ui/widget/comment_card.dart';
 
 class CommentsExpansionTile extends StatelessWidget {
   final String beaconId;
@@ -17,7 +16,7 @@ class CommentsExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Operation(
-        client: GetIt.I<ApiService>().ferry,
+        client: GetIt.I<ApiService>().client,
         operationRequest: GFetchCommentsByBeaconIdReq(
           (b) => b..vars.beacon_id = beaconId,
         ),
@@ -25,7 +24,7 @@ class CommentsExpansionTile extends StatelessWidget {
           if (response?.loading ?? false) {
             return const CircularProgressIndicator.adaptive();
           } else if (response?.data == null) {
-            return unknownErrorText;
+            return ErrorCenterText(response: response, error: error);
           }
           return ExpansionTile(
             title: Text('${response!.data!.comment.length} comments'),

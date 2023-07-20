@@ -1,141 +1,186 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gravity/app/router.dart';
-import 'package:gravity/consts.dart';
-import 'package:gravity/ui/widget/error_dialog.dart';
-import 'package:gravity/features/graph/widget/show_graph_fab.dart';
-import 'package:gravity/features/my_profile/bloc/my_profile_cubit.dart';
-
-import 'widget/my_rating_widget.dart';
-import 'widget/my_profile_header.dart';
+import 'package:gravity/data/api_service.dart';
+import 'package:gravity/data/auth_repository.dart';
+import 'package:gravity/data/gql/user/_g/fetch_user_profile.req.gql.dart';
+import 'package:gravity/ui/widget/error_center_text.dart';
+import 'package:gravity/ui/widget/header_gradient.dart';
+import 'package:gravity/ui/widget/rating_button.dart';
+import 'package:gravity/ui/widget/avatar_image.dart';
 
 class MyProfileScreen extends StatelessWidget {
   const MyProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final cubit = GetIt.I<MyProfileCubit>();
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      floatingActionButton: const ShowGraphFAB(heroTag: 'FAB.Graph.MyProfile'),
-      body: Column(
-        children: [
-          // Header
-          const MyProfileHeader(),
-          // Body
-          BlocConsumer<MyProfileCubit, MyProfileState>(
-            bloc: cubit,
-            listener: (context, state) {
-              if (state.profile.isEmpty) {
-                context.go(pathLogin);
-                return;
-              }
-              if (state.hasError) {
-                showDialog<void>(
-                  context: context,
-                  builder: (context) => ErrorDialog(error: state.error),
-                );
-                return;
-              }
-            },
-            buildWhen: (p, c) =>
-                p.status != c.status || p.isEditing != c.isEditing,
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
-              final textTheme = Theme.of(context).textTheme;
-              return RefreshIndicator.adaptive(
-                onRefresh: cubit.refresh,
-                child: ListView(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  children: state.isEditing
-                      // Edit Profile
-                      ? [
-                          Row(
-                            children: [
-                              // Display Name
-                              Expanded(
-                                child: TextField(
-                                  maxLength: titleMaxLength,
-                                  controller: TextEditingController(
-                                    text: state.profile.title,
-                                  ),
-                                  style: textTheme.headlineLarge,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Name',
-                                  ),
-                                  onChanged: cubit.updateTitle,
-                                ),
-                              ),
-                              // Save Button
-                              IconButton.outlined(
-                                icon: const Icon(Icons.save),
-                                onPressed: cubit.save,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          // User Description
-                          TextField(
-                            minLines: 1,
-                            maxLines: 10,
-                            style: textTheme.bodyLarge,
-                            maxLength: descriptionLength,
-                            keyboardType: TextInputType.multiline,
-                            decoration: const InputDecoration(
-                              labelText: 'Description',
-                            ),
-                            controller: TextEditingController(
-                              text: state.profile.description,
-                            ),
-                            onChanged: cubit.updateDescription,
-                          ),
-                          const SizedBox(height: 40),
-                          // User Rating
-                          const MyRatingWidget(),
-                        ]
-                      // Display Profile
-                      : [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Display Name
-                              Text(
-                                state.profile.title.isEmpty
-                                    ? 'No name'
-                                    : state.profile.title,
-                                style: textTheme.headlineLarge,
-                                maxLines: 1,
-                              ),
-                              // Edit Button
-                              IconButton.outlined(
-                                icon: const Icon(Icons.edit),
-                                onPressed: cubit.edit,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          // User Description
-                          Text(
-                            state.profile.description,
-                            style: textTheme.bodyLarge,
-                            textAlign: TextAlign.left,
-                          ),
-                          const SizedBox(height: 40),
-                          // User Rating
-                          const MyRatingWidget(),
-                        ],
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          actions: [
+            PopupMenuButton(
+              itemBuilder: (context) => <PopupMenuEntry<void>>[
+                // Share
+                PopupMenuItem<void>(
+                  onTap: () {},
+                  child: const Text('Share'),
                 ),
-              );
-            },
+                // Edit profile
+                PopupMenuItem<void>(
+                  onTap: () => context.push(pathProfileEdit),
+                  child: const Text('Edit profile'),
+                ),
+                const PopupMenuDivider(),
+                // Delete profile
+                PopupMenuItem<void>(
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text(
+                        'Are you sure you want to delete your profile?',
+                      ),
+                      content: const Text(
+                        'All your beacons and personal data will be deleted completely.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            // TBD
+                            if (context.mounted) context.go(pathLogin);
+                          },
+                          child: const Text('Delete'),
+                        ),
+                        TextButton(
+                          onPressed: Navigator.of(context).pop,
+                          child: const Text('Cancel'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  child: const Text('Delete profile'),
+                ),
+                const PopupMenuDivider(),
+                // Log out
+                PopupMenuItem<void>(
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Log out'),
+                      content: const Text('Are you shure?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            await GetIt.I<AuthRepository>().signOut();
+                            if (context.mounted) context.go(pathLogin);
+                          },
+                          child: const Text('Yes'),
+                        ),
+                        TextButton(
+                          onPressed: Navigator.of(context).pop,
+                          child: const Text('No'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  child: const Text('Logout'),
+                ),
+              ],
+            ),
+            const SizedBox(width: 12),
+          ],
+          backgroundColor: Colors.transparent,
+          leadingWidth: RatingButton.width,
+          leading: const Padding(
+            padding: EdgeInsets.all(8),
+            child: RatingButton(),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
+        // FAB to Graph
+        floatingActionButton: FloatingActionButton(
+          heroTag: 'FAB.MyProfile',
+          child: const Icon(Icons.share_rounded),
+          onPressed: () => context.push(pathGraphView),
+        ),
+        // Body
+        body: Operation(
+          client: GetIt.I<ApiService>().client,
+          operationRequest: GFetchUserProfileReq(
+            (b) => b..vars.id = GetIt.I<AuthRepository>().myId,
+          ),
+          builder: (context, response, error) {
+            if (response?.loading ?? false) {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            } else if (response?.data?.user_by_pk == null) {
+              return ErrorCenterText(response: response, error: error);
+            }
+            final profile = response!.data!.user_by_pk!;
+            final textTheme = Theme.of(context).textTheme;
+            return RefreshIndicator.adaptive(
+              onRefresh: () async {},
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  // Header
+                  Stack(
+                    clipBehavior: Clip.none,
+                    fit: StackFit.passthrough,
+                    children: [
+                      // Gradient
+                      const HeaderGradient(),
+                      // Avatar
+                      Positioned(
+                        top: 100,
+                        left: 50,
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 8,
+                              color: Colors.white,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: AvatarImage(
+                            userId: profile.has_picture ? profile.id : '',
+                            size: 200,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Display Name
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 20,
+                    ),
+                    child: Text(
+                      profile.title.isEmpty ? 'No name' : profile.title,
+                      style: textTheme.headlineLarge,
+                      maxLines: 1,
+                    ),
+                  ),
+                  // User Description
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 20,
+                    ),
+                    child: Text(
+                      profile.description,
+                      style: textTheme.bodyLarge,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            );
+          },
+        ),
+      );
 }

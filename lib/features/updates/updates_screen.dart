@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:gravity/ui/widget/rating_button.dart';
+
 class UpdatesScreen extends StatelessWidget {
   const UpdatesScreen({super.key});
 
@@ -8,7 +10,11 @@ class UpdatesScreen extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Updates'),
+            leadingWidth: RatingButton.width,
+            leading: const Padding(
+              padding: EdgeInsets.all(8),
+              child: RatingButton(),
+            ),
             actions: [
               TextButton(
                 onPressed: () {},

@@ -9,16 +9,20 @@ import 'package:gravity/data/auth_repository.dart';
 
 import 'package:gravity/features/home/home_screen.dart';
 import 'package:gravity/features/auth/login_screen.dart';
+// import 'package:gravity/features/graph/graph_screen.dart';
 import 'package:gravity/features/connect/connect_screen.dart';
 import 'package:gravity/features/updates/updates_screen.dart';
 import 'package:gravity/features/my_field/my_field_screen.dart';
 import 'package:gravity/features/my_profile/my_profile_screen.dart';
 import 'package:gravity/features/my_beacons/my_beacons_screen.dart';
+import 'package:gravity/features/my_profile/edit_profile_screen.dart';
 import 'package:gravity/features/beacon_create/beacon_create_screen.dart';
 
 export 'package:go_router/go_router.dart';
 
 const pathLogin = '/login';
+
+// Home screen tabs
 const pathField = '/field';
 const pathConnect = '/connect';
 const pathBeacons = '/beacons';
@@ -26,6 +30,8 @@ const pathUpdates = '/updates';
 const pathProfile = '/profile';
 
 const pathBeaconCreate = '/beacon/create';
+const pathProfileEdit = '/profile/edit';
+const pathGraphView = '/graph';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
@@ -38,6 +44,21 @@ final router = GoRouter(
     GoRoute(
       path: pathLogin,
       builder: (context, state) => const LogInScreen(),
+    ),
+    // GoRoute(
+    //   path: pathGraphView,
+    //   redirect: _authGuardian,
+    //   builder: (context, state) => const GraphScreen(),
+    // ),
+    GoRoute(
+      path: pathProfileEdit,
+      redirect: _authGuardian,
+      builder: (context, state) => const EditProfileScreen(),
+    ),
+    GoRoute(
+      path: pathBeaconCreate,
+      redirect: _authGuardian,
+      builder: (context, state) => const BeaconCreateScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, child) => HomeScreen(child: child),
@@ -89,10 +110,6 @@ final router = GoRouter(
           ],
         ),
       ],
-    ),
-    GoRoute(
-      path: pathBeaconCreate,
-      builder: (context, state) => const BeaconCreateScreen(),
     ),
   ],
   errorBuilder: (context, state) {

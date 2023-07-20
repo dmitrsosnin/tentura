@@ -11,7 +11,7 @@ import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 import 'package:gravity/data/gql/beacon/_g/create_beacon.req.gql.dart';
 import 'package:gravity/ui/dialog/choose_location_dialog.dart';
-import 'package:gravity/ui/widget/error_dialog.dart';
+import 'package:gravity/ui/dialog/error_dialog.dart';
 
 class BeaconCreateScreen extends StatefulWidget {
   const BeaconCreateScreen({super.key});
@@ -187,13 +187,13 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
 
   Future<void> _publish() async {
     if (_titleController.text.length < titleMinLength) {
-      return showDialog<void>(
+      return ErrorDialog.show(
         context: context,
-        builder: (_) => const ErrorDialog(error: 'Title have too short'),
+        error: 'Title have too short',
       );
     }
     final response = await GetIt.I<ApiService>()
-        .ferry
+        .client
         .request(GCreateBeaconReq(
           (b) => b.vars
             ..title = _titleController.text
@@ -215,9 +215,9 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
     }
     if (mounted) {
       beacon == null
-          ? showDialog<void>(
+          ? ErrorDialog.show(
               context: context,
-              builder: (_) => const ErrorDialog(error: 'Something went wrong'),
+              error: 'Something went wrong',
             )
           : Navigator.of(context).pop(beacon);
     }
