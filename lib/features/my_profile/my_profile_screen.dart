@@ -1,8 +1,9 @@
+import 'package:ferry/ferry.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:ferry_flutter/ferry_flutter.dart';
 
 import 'package:gravity/app/router.dart';
-import 'package:gravity/data/api_service.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/user/_g/fetch_user_profile.req.gql.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
@@ -50,7 +51,7 @@ class MyProfileScreen extends StatelessWidget {
                           child: const Text('Delete'),
                         ),
                         TextButton(
-                          onPressed: Navigator.of(context).pop,
+                          onPressed: context.pop,
                           child: const Text('Cancel'),
                         ),
                       ],
@@ -75,7 +76,7 @@ class MyProfileScreen extends StatelessWidget {
                           child: const Text('Yes'),
                         ),
                         TextButton(
-                          onPressed: Navigator.of(context).pop,
+                          onPressed: context.pop,
                           child: const Text('No'),
                         ),
                       ],
@@ -85,26 +86,22 @@ class MyProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(width: 12),
           ],
           backgroundColor: Colors.transparent,
           leadingWidth: RatingButton.width,
-          leading: const Padding(
-            padding: EdgeInsets.all(8),
-            child: RatingButton(),
-          ),
+          leading: const RatingButton(),
         ),
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
         // FAB to Graph
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'FAB.MyProfile',
-          child: const Icon(Icons.share_rounded),
-          onPressed: () => context.push(pathGraphView),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   heroTag: 'FAB.MyProfile',
+        //   child: const Icon(Icons.share_rounded),
+        //   onPressed: () => context.push(pathGraphView),
+        // ),
         // Body
         body: Operation(
-          client: GetIt.I<ApiService>().client,
+          client: GetIt.I<Client>(),
           operationRequest: GFetchUserProfileReq(
             (b) => b..vars.id = GetIt.I<AuthRepository>().myId,
           ),
@@ -176,7 +173,6 @@ class MyProfileScreen extends StatelessWidget {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  const Spacer(),
                 ],
               ),
             );

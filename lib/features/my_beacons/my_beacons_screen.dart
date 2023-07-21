@@ -1,8 +1,9 @@
+import 'package:ferry/ferry.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:ferry_flutter/ferry_flutter.dart';
 
 import 'package:gravity/app/router.dart';
-import 'package:gravity/data/api_service.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/beacon/_g/fetch_beacon_by_user_id.req.gql.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
@@ -15,27 +16,22 @@ class MyBeaconsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          leading: const Padding(
-            padding: EdgeInsets.all(8),
-            child: RatingButton(),
-          ),
+          leading: const RatingButton(),
           leadingWidth: RatingButton.width,
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: 'FAB.NewBeacon',
           child: const Icon(Icons.add),
-          onPressed: () => context.push(pathBeaconCreate),
+          onPressed: () => context.push(pathBeaconsCreate),
         ),
         body: Operation(
-          client: GetIt.I<ApiService>().client,
+          client: GetIt.I<Client>(),
           operationRequest: GFetchBeaconsByUserIdReq(
-            (b) => b
-              ..fetchPolicy = FetchPolicy.CacheAndNetwork
-              ..vars.user_id = GetIt.I<AuthRepository>().myId,
+            (b) => b..vars.user_id = GetIt.I<AuthRepository>().myId,
           ),
           builder: (context, response, error) {
             if (response?.loading ?? false) {
-              return const CircularProgressIndicator.adaptive();
+              return const Center(child: CircularProgressIndicator.adaptive());
             } else if (response?.data == null) {
               return ErrorCenterText(response: response, error: error);
             }

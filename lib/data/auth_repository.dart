@@ -1,32 +1,44 @@
 import 'dart:async';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fresh_graphql/fresh_graphql.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:gravity/data/api_service.dart';
+import 'package:gravity/firebase_options.dart';
 
 class AuthRepository {
-  final _controller = StreamController<String?>();
+  final freshLink = FreshLink.oAuth2(
+    tokenStorage: InMemoryTokenStorage(),
+    tokenHeader: (token) => {
+      'Authorization': 'Bearer ${token?.accessToken}',
+    },
+    refreshToken: (token, client) async {
+      final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+      return token == null ? null : OAuth2Token(accessToken: token);
+    },
+    shouldRefresh: (response) => response.errors != null,
+  );
 
-  String _myId = '';
-
-  String get myId => _myId;
+  String? get myId => FirebaseAuth.instance.currentUser?.uid;
 
   Future<AuthRepository> init() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
     if (kIsWeb) {
       await FirebaseAuth.instance.setPersistence(Persistence.SESSION);
     }
-    FirebaseAuth.instance.idTokenChanges().listen((user) {
-      GetIt.I<ApiService>().getToken = user?.getIdToken;
-      _myId = user?.uid ?? '';
-      _controller.add(myId);
-    });
+
+    final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (token != null) {
+      await freshLink.setToken(OAuth2Token(accessToken: token));
+    }
     return this;
   }
 
-  Future<void> signOut() {
-    _myId = '';
-    _controller.add(myId);
-    return FirebaseAuth.instance.signOut();
-  }
+  Future<String?> getIdToken() async =>
+      await FirebaseAuth.instance.currentUser?.getIdToken();
+
+  Future<void> signOut() => FirebaseAuth.instance.signOut();
 }

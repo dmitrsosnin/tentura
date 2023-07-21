@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gravity/consts.dart';
-import 'package:gravity/data/api_service.dart';
+import 'package:gravity/app/router.dart';
 import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 import 'package:gravity/data/gql/beacon/_g/create_beacon.req.gql.dart';
@@ -192,8 +192,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
         error: 'Title have too short',
       );
     }
-    final response = await GetIt.I<ApiService>()
-        .client
+    final response = await GetIt.I<Client>()
         .request(GCreateBeaconReq(
           (b) => b.vars
             ..title = _titleController.text
@@ -217,9 +216,11 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
       beacon == null
           ? ErrorDialog.show(
               context: context,
-              error: 'Something went wrong',
+              error: response.linkException ??
+                  response.graphqlErrors ??
+                  'Something went wrong',
             )
-          : Navigator.of(context).pop(beacon);
+          : context.pop(beacon);
     }
   }
 }

@@ -1,7 +1,8 @@
+import 'package:ferry/ferry.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:ferry_flutter/ferry_flutter.dart';
 
-import 'package:gravity/data/api_service.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/data/gql/beacon/_g/search_beacon.req.gql.dart';
 import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
@@ -18,7 +19,7 @@ class _BeaconSearchScreenState extends State<BeaconSearchScreen> {
 
   @override
   Widget build(BuildContext context) => Operation(
-        client: GetIt.I<ApiService>().client,
+        client: GetIt.I<Client>(),
         operationRequest: GSearchBeaconReq(
           (b) => b.vars.startsWith = '$_prefix%',
         ),

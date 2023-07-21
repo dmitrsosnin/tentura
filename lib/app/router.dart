@@ -24,25 +24,30 @@ const pathLogin = '/login';
 
 // Home screen tabs
 const pathField = '/field';
-const pathConnect = '/connect';
-const pathBeacons = '/beacons';
-const pathUpdates = '/updates';
-const pathProfile = '/profile';
 
-const pathBeaconCreate = '/beacon/create';
+const pathBeacons = '/beacons';
+const pathBeaconsCreate = '/beacons/create';
+
+const pathConnect = '/connect';
+const pathUpdates = '/updates';
+
+const pathProfile = '/profile';
 const pathProfileEdit = '/profile/edit';
-const pathGraphView = '/graph';
+
+// const pathGraphView = '/graph';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 final router = GoRouter(
   debugLogDiagnostics: true,
-  initialLocation: pathField,
+  initialLocation: pathLogin,
   navigatorKey: rootNavigatorKey,
   observers: [SentryNavigatorObserver()],
   routes: [
     GoRoute(
       path: pathLogin,
+      redirect: (context, state) =>
+          GetIt.I<AuthRepository>().myId == null ? null : pathField,
       builder: (context, state) => const LogInScreen(),
     ),
     // GoRoute(
@@ -56,7 +61,7 @@ final router = GoRouter(
       builder: (context, state) => const EditProfileScreen(),
     ),
     GoRoute(
-      path: pathBeaconCreate,
+      path: pathBeaconsCreate,
       redirect: _authGuardian,
       builder: (context, state) => const BeaconCreateScreen(),
     ),
@@ -119,4 +124,4 @@ final router = GoRouter(
 );
 
 String? _authGuardian(BuildContext context, GoRouterState state) =>
-    GetIt.I<AuthRepository>().myId.isEmpty ? pathLogin : null;
+    GetIt.I<AuthRepository>().myId == null ? pathLogin : null;

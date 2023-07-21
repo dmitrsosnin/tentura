@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 
+import 'package:gravity/app/router.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 
 class ChooseLocationDialog extends StatelessWidget {
@@ -38,7 +39,7 @@ class ChooseLocationDialog extends StatelessWidget {
             maxZoom: 12,
             center: center,
             interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-            onTap: (tapPosition, point) => Navigator.of(context).pop(point),
+            onTap: (tapPosition, point) => context.pop(point),
             onMapReady: () =>
                 GetIt.I<GeolocationRepository>().getMyCoords().then(
               (value) {

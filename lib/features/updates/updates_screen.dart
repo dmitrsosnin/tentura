@@ -10,11 +10,8 @@ class UpdatesScreen extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            leading: const RatingButton(),
             leadingWidth: RatingButton.width,
-            leading: const Padding(
-              padding: EdgeInsets.all(8),
-              child: RatingButton(),
-            ),
             actions: [
               TextButton(
                 onPressed: () {},

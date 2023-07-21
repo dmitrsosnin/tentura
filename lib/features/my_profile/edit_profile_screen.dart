@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:ferry/ferry.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:ferry_flutter/ferry_flutter.dart';
 
 import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
-import 'package:gravity/data/api_service.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/gql/user/_g/update_user.req.gql.dart';
@@ -24,17 +24,16 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final _apiService = GetIt.I<ApiService>();
-  final _myId = GetIt.I<AuthRepository>().myId;
-
   String? _title;
   String? _description;
   String? _newImagePath;
 
   @override
   Widget build(BuildContext context) => Operation(
-        client: _apiService.client,
-        operationRequest: GFetchUserProfileReq((b) => b..vars.id = _myId),
+        client: GetIt.I<Client>(),
+        operationRequest: GFetchUserProfileReq(
+          (b) => b..vars.id = GetIt.I<AuthRepository>().myId,
+        ),
         builder: (context, response, error) {
           if (response?.loading ?? false) {
             return const Center(
@@ -181,7 +180,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (_newImagePath != null) {
         await GetIt.I<ImageRepository>()
             .putAvatar(
-              userId: _myId,
+              userId: GetIt.I<AuthRepository>().myId!,
               image: await File(_newImagePath!).readAsBytes(),
             )
             .firstWhere((e) => e.isFinished);
@@ -189,10 +188,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     } catch (e) {
       await ErrorDialog.show(context: context, error: e);
     }
-    final response = await _apiService.client
+    final response = await GetIt.I<Client>()
         .request(GUpdateUserReq(
           (b) => b.vars
-            ..id = _myId
+            ..id = GetIt.I<AuthRepository>().myId
             ..title = _title ?? profile.title
             ..description = _description ?? profile.description
             ..has_picture = _newImagePath != null || profile.has_picture,
