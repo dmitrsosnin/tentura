@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:gravity/app/router.dart';
+import 'package:gravity/ui/consts.dart';
 
 class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({super.key});
+  final Object? error;
+
+  const ErrorScreen({
+    this.error,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -11,11 +17,18 @@ class ErrorScreen extends StatelessWidget {
           centerTitle: true,
           title: const Text('Error'),
         ),
-        body: Center(
-          child: FilledButton(
-            onPressed: () => context.go(pathField),
-            child: const Text('Back to Home'),
-          ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: paddingAll20,
+              child: Text(error?.toString() ?? 'Something went wrong!'),
+            ),
+            FilledButton(
+              onPressed: () => context.go(pathField),
+              child: const Text('Back to Home'),
+            ),
+          ],
         ),
       );
 }

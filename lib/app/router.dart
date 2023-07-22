@@ -34,8 +34,9 @@ const pathBeaconCreate = '/beacon/create';
 const pathBeaconDetails = '/beacon/details';
 
 const pathProfileEdit = '/profile/edit';
-
 // const pathGraphView = '/graph';
+
+const pathErrorUnknown = '/error_unknown';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
@@ -121,6 +122,10 @@ final router = GoRouter(
           ],
         ),
       ],
+    ),
+    GoRoute(
+      path: pathErrorUnknown,
+      builder: (context, state) => ErrorScreen(error: state.extra),
     ),
   ],
   errorBuilder: (context, state) {
