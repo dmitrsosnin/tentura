@@ -1,4 +1,4 @@
-fragment commentFields on comment {
+fragment CommentFields on comment {
   id
   user_id
   beacon_id

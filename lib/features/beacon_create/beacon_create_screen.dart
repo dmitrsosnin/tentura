@@ -1,17 +1,15 @@
 import 'dart:io';
 import 'package:intl/intl.dart';
-import 'package:ferry/ferry.dart';
-import 'package:get_it/get_it.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter/material.dart';
 
 import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
 import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/geolocation_repository.dart';
-import 'package:gravity/data/gql/beacon/_g/create_beacon.req.gql.dart';
+import 'package:gravity/data/gql/beacon/_g/beacon_create.req.gql.dart';
 import 'package:gravity/ui/dialog/choose_location_dialog.dart';
 import 'package:gravity/ui/dialog/error_dialog.dart';
+import 'package:gravity/ui/ferry.dart';
 
 class BeaconCreateScreen extends StatefulWidget {
   const BeaconCreateScreen({super.key});
@@ -193,7 +191,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
       );
     }
     final response = await GetIt.I<Client>()
-        .request(GCreateBeaconReq(
+        .request(GBeaconCreateReq(
           (b) => b.vars
             ..title = _titleController.text
             ..description = _descriptionController.text

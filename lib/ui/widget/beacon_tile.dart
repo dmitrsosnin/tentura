@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
-
-import 'package:gravity/data/gql/beacon/_g/_fragments.data.gql.dart';
 import 'package:gravity/ui/widget/like_control_button.dart';
+
+import 'package:gravity/data/gql/user/user_utils.dart';
+import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 
 class BeaconTile extends StatelessWidget {
   static final _dF = DateFormat.yMd();
 
-  final GbeaconFields beacon;
+  final GBeaconFields beacon;
 
   const BeaconTile({
     required this.beacon,
@@ -27,7 +28,7 @@ class BeaconTile extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8),
             child: AvatarImage(
               size: 40,
-              userId: beacon.author.has_picture ? beacon.author.id : '',
+              userId: beacon.author.imageId,
             ),
           ),
           Expanded(
@@ -68,7 +69,7 @@ class BeaconTile extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(vertical: 16),
                   child: BeaconImage(
                     authorId: beacon.author.id,
-                    beaconId: beacon.has_picture ? beacon.id : '',
+                    beaconId: beacon.imageId,
                   ),
                 ),
                 // Beacon Title

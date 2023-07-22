@@ -1,14 +1,12 @@
-import 'package:ferry/ferry.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter/material.dart';
-import 'package:ferry_flutter/ferry_flutter.dart';
-
 import 'package:gravity/app/router.dart';
+
 import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/gql/beacon/_g/fetch_beacon_by_user_id.req.gql.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
-import 'package:gravity/ui/widget/rating_button.dart';
+import 'package:gravity/data/gql/beacon/_g/beacon_fetch_by_user_id.req.gql.dart';
+
+import 'package:gravity/ui/ferry.dart';
 import 'package:gravity/ui/widget/beacon_tile.dart';
+import 'package:gravity/ui/widget/rating_button.dart';
+import 'package:gravity/ui/widget/error_center_text.dart';
 
 class MyBeaconsScreen extends StatelessWidget {
   const MyBeaconsScreen({super.key});
@@ -26,7 +24,7 @@ class MyBeaconsScreen extends StatelessWidget {
         ),
         body: Operation(
           client: GetIt.I<Client>(),
-          operationRequest: GFetchBeaconsByUserIdReq(
+          operationRequest: GBeaconFetchByUserIdReq(
             (b) => b..vars.user_id = GetIt.I<AuthRepository>().myId,
           ),
           builder: (context, response, error) {

@@ -2,6 +2,6 @@
 
 query BeaconFetchById($id: String!) {
   beacon_by_pk(id: $id) {
-    ...beaconFields
+    ...BeaconFields
   }
 }

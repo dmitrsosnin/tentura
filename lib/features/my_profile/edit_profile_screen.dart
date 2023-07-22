@@ -1,20 +1,19 @@
 import 'dart:io';
-import 'package:ferry/ferry.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter/material.dart';
-import 'package:ferry_flutter/ferry_flutter.dart';
 
 import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
+
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/image_repository.dart';
-import 'package:gravity/data/gql/user/_g/update_user.req.gql.dart';
-import 'package:gravity/data/gql/user/_g/fetch_user_profile.req.gql.dart';
-import 'package:gravity/data/gql/user/_g/fetch_user_profile.data.gql.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
-import 'package:gravity/ui/widget/header_gradient.dart';
+import 'package:gravity/data/gql/user/_g/_fragments.data.gql.dart';
+import 'package:gravity/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
+import 'package:gravity/data/gql/user/_g/user_update.req.gql.dart';
+
+import 'package:gravity/ui/ferry.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/dialog/error_dialog.dart';
+import 'package:gravity/ui/widget/header_gradient.dart';
+import 'package:gravity/ui/widget/error_center_text.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -31,7 +30,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) => Operation(
         client: GetIt.I<Client>(),
-        operationRequest: GFetchUserProfileReq(
+        operationRequest: GUserFetchByIdReq(
           (b) => b..vars.id = GetIt.I<AuthRepository>().myId,
         ),
         builder: (context, response, error) {
@@ -166,7 +165,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (image != null) setState(() => _newImagePath = image.path);
   }
 
-  Future<void> _onSavePressed(GFetchUserProfileData_user_by_pk profile) async {
+  Future<void> _onSavePressed(GUserFields profile) async {
     if (_title == null && _description == null && _newImagePath == null) {
       return context.pop();
     }
@@ -189,7 +188,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await ErrorDialog.show(context: context, error: e);
     }
     final response = await GetIt.I<Client>()
-        .request(GUpdateUserReq(
+        .request(GUserUpdateReq(
           (b) => b.vars
             ..id = GetIt.I<AuthRepository>().myId
             ..title = _title ?? profile.title

@@ -1,7 +1,7 @@
 # import '_fragments.graphql'
 
-query FetchUserProfile($id: String!) {
+query UserFetchById($id: String!) {
   user_by_pk(id: $id) {
-    ...userFields
+    ...UserFields
   }
 }

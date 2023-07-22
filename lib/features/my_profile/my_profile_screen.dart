@@ -1,15 +1,13 @@
-import 'package:ferry/ferry.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter/material.dart';
-import 'package:ferry_flutter/ferry_flutter.dart';
-
 import 'package:gravity/app/router.dart';
+
 import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/gql/user/_g/fetch_user_profile.req.gql.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
-import 'package:gravity/ui/widget/header_gradient.dart';
-import 'package:gravity/ui/widget/rating_button.dart';
+import 'package:gravity/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
+
+import 'package:gravity/ui/ferry.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
+import 'package:gravity/ui/widget/rating_button.dart';
+import 'package:gravity/ui/widget/header_gradient.dart';
+import 'package:gravity/ui/widget/error_center_text.dart';
 
 class MyProfileScreen extends StatelessWidget {
   const MyProfileScreen({super.key});
@@ -102,7 +100,7 @@ class MyProfileScreen extends StatelessWidget {
         // Body
         body: Operation(
           client: GetIt.I<Client>(),
-          operationRequest: GFetchUserProfileReq(
+          operationRequest: GUserFetchByIdReq(
             (b) => b..vars.id = GetIt.I<AuthRepository>().myId,
           ),
           builder: (context, response, error) {

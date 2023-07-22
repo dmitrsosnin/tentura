@@ -1,4 +1,4 @@
-fragment userFields on user {
+fragment UserFields on user {
   id
   title
   description

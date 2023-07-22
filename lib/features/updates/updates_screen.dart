@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:gravity/ui/ferry.dart';
 
 import 'package:gravity/ui/widget/rating_button.dart';
 

@@ -37,7 +37,7 @@ class BeaconDetailsScreen extends StatelessWidget {
             ),
             builder: (context, response, error) {
               final beacon = response?.data?.beacon_by_pk ??
-                  GoRouterState.of(context).extra as GbeaconFields?;
+                  GoRouterState.of(context).extra as GBeaconFields?;
               if (beacon == null) {
                 return response?.loading ?? false
                     ? const Center(

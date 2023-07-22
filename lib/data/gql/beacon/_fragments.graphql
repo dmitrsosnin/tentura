@@ -1,6 +1,6 @@
 # import '../user/_fragments.graphql'
 
-fragment beaconFields on beacon {
+fragment BeaconFields on beacon {
   id
   title
   description
@@ -12,6 +12,6 @@ fragment beaconFields on beacon {
   comments_count
   enabled
   author {
-    ...userFields
+    ...UserFields
   }
 }

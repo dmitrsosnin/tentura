@@ -1,7 +1,7 @@
 # import '_fragments.graphql'
 
-mutation CreateUser {
+mutation UserCreate {
   insert_user_one(object: {title: "", description: ""}) {
-    ...userFields
+    ...UserFields
   }
 }

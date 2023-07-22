@@ -1,13 +1,11 @@
-import 'package:ferry/ferry.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter/material.dart';
-import 'package:ferry_flutter/ferry_flutter.dart';
-
 import 'package:gravity/app/router.dart';
+
+import 'package:gravity/data/gql/beacon/_g/beacon_search_by_id.req.gql.dart';
+
+import 'package:gravity/ui/ferry.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
-import 'package:gravity/data/gql/beacon/_g/search_beacon.req.gql.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
@@ -56,7 +54,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
             if (_searchController.text.length > 2)
               Operation(
                 client: GetIt.I<Client>(),
-                operationRequest: GSearchBeaconReq(
+                operationRequest: GBeaconSearchByIdReq(
                   (b) => b..vars.startsWith = '${_searchController.text}%',
                 ),
                 builder: (context, response, error) {

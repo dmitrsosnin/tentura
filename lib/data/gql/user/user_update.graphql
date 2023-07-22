@@ -1,7 +1,7 @@
 # import '_fragments.graphql'
 
-mutation UpdateUser($id: String!, $title: String!, $description: String!, $has_picture: Boolean!) {
+mutation UserUpdate($id: String!, $title: String!, $description: String!, $has_picture: Boolean!) {
   update_user_by_pk(pk_columns: {id: $id}, _set: {title: $title, description: $description, has_picture: $has_picture}) {
-    ...userFields
+    ...UserFields
   }
 }
