@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'package:gravity/ui/error_screen.dart';
 import 'package:gravity/data/auth_repository.dart';
 
+import 'package:gravity/ui/screens/error_screen.dart';
 import 'package:gravity/features/home/home_screen.dart';
 import 'package:gravity/features/auth/login_screen.dart';
 // import 'package:gravity/features/graph/graph_screen.dart';
@@ -17,6 +17,7 @@ import 'package:gravity/features/my_profile/my_profile_screen.dart';
 import 'package:gravity/features/my_beacons/my_beacons_screen.dart';
 import 'package:gravity/features/my_profile/edit_profile_screen.dart';
 import 'package:gravity/features/beacon_create/beacon_create_screen.dart';
+import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
 
 export 'package:go_router/go_router.dart';
 
@@ -24,14 +25,14 @@ const pathLogin = '/login';
 
 // Home screen tabs
 const pathField = '/field';
-
 const pathBeacons = '/beacons';
-const pathBeaconsCreate = '/beacons/create';
-
 const pathConnect = '/connect';
 const pathUpdates = '/updates';
-
 const pathProfile = '/profile';
+
+const pathBeaconCreate = '/beacon/create';
+const pathBeaconDetails = '/beacon/details';
+
 const pathProfileEdit = '/profile/edit';
 
 // const pathGraphView = '/graph';
@@ -47,7 +48,7 @@ final router = GoRouter(
     GoRoute(
       path: pathLogin,
       redirect: (context, state) =>
-          GetIt.I<AuthRepository>().myId == null ? null : pathField,
+          GetIt.I<AuthRepository>().isAuthenticated ? pathField : null,
       builder: (context, state) => const LogInScreen(),
     ),
     // GoRoute(
@@ -61,9 +62,14 @@ final router = GoRouter(
       builder: (context, state) => const EditProfileScreen(),
     ),
     GoRoute(
-      path: pathBeaconsCreate,
+      path: pathBeaconCreate,
       redirect: _authGuardian,
       builder: (context, state) => const BeaconCreateScreen(),
+    ),
+    GoRoute(
+      path: pathBeaconDetails,
+      redirect: _authGuardian,
+      builder: (context, state) => const BeaconDetailsScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, child) => HomeScreen(child: child),
@@ -124,4 +130,4 @@ final router = GoRouter(
 );
 
 String? _authGuardian(BuildContext context, GoRouterState state) =>
-    GetIt.I<AuthRepository>().myId == null ? pathLogin : null;
+    GetIt.I<AuthRepository>().isAuthenticated ? null : pathLogin;

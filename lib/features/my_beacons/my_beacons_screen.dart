@@ -22,7 +22,7 @@ class MyBeaconsScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           heroTag: 'FAB.NewBeacon',
           child: const Icon(Icons.add),
-          onPressed: () => context.push(pathBeaconsCreate),
+          onPressed: () => context.push(pathBeaconCreate),
         ),
         body: Operation(
           client: GetIt.I<Client>(),

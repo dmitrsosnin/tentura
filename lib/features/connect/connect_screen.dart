@@ -3,11 +3,11 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:ferry_flutter/ferry_flutter.dart';
 
+import 'package:gravity/app/router.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
+import 'package:gravity/ui/widget/error_center_text.dart';
 import 'package:gravity/data/gql/beacon/_g/search_beacon.req.gql.dart';
-import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
@@ -83,11 +83,12 @@ class _ConnectScreenState extends State<ConnectScreen> {
                         beacons[i].description,
                         maxLines: 1,
                       ),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (context) =>
-                              BeaconDetailsScreen(beacon: beacons[i]),
-                        ),
+                      onTap: () => context.push(
+                        Uri(
+                          path: pathBeaconDetails,
+                          queryParameters: {'id': beacons[i].id},
+                        ).toString(),
+                        extra: beacons[i],
                       ),
                     ),
                     padding: const EdgeInsets.all(20),

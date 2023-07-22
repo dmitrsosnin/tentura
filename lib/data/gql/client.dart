@@ -7,9 +7,9 @@ Future<Client> getGQLClient(Link authLink) async {
   await Hive.initFlutter();
   return Client(
     cache: Cache(store: HiveStore(await Hive.openBox('graphql'))),
-    defaultFetchPolicies: {
-      OperationType.query: FetchPolicy.CacheAndNetwork,
-    },
+    // defaultFetchPolicies: {
+    //   OperationType.query: FetchPolicy.CacheAndNetwork,
+    // },
     link: Link.from([
       authLink,
       HttpLink('https://hasura.gravity.intersubjective.space/v1/graphql'),
