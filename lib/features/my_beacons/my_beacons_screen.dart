@@ -57,7 +57,13 @@ class MyBeaconsScreen extends StatelessWidget {
                     ),
                   )
                 : RefreshIndicator.adaptive(
-                    onRefresh: () async {}, // TBD
+                    onRefresh: () async => GetIt.I<Client>()
+                        .requestController
+                        .add(GBeaconFetchByUserIdReq(
+                          (b) => b
+                            ..fetchPolicy = FetchPolicy.CacheAndNetwork
+                            ..vars.user_id = GetIt.I<AuthRepository>().myId,
+                        )),
                     child: ListView.separated(
                       cacheExtent: 5,
                       padding: const EdgeInsets.all(20),

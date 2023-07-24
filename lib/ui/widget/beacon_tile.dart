@@ -1,12 +1,14 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
-import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/widget/beacon_image.dart';
-import 'package:gravity/ui/widget/like_control_button.dart';
+import 'package:gravity/app/router.dart';
 
 import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
+
+import 'package:gravity/ui/widget/avatar_image.dart';
+import 'package:gravity/ui/widget/beacon_image.dart';
+import 'package:gravity/ui/widget/like_control_button.dart';
 
 class BeaconTile extends StatelessWidget {
   static final _dF = DateFormat.yMd();
@@ -50,28 +52,29 @@ class BeaconTile extends StatelessWidget {
                     // Menu
                     PopupMenuButton(
                       itemBuilder: (context) => const [
-                        PopupMenuItem<void>(child: Text('Share the code')),
-                        PopupMenuItem<void>(child: Text('Graph view')),
+                        PopupMenuItem<void>(
+                          child: Text('Hide from My field'),
+                        ),
+                        PopupMenuItem<void>(
+                          child: Text('Share the code'),
+                        ),
                       ],
                     ),
                   ],
                 ),
+                const SizedBox(height: 16),
                 // Beacon Image
-                Container(
-                  width: 300,
-                  height: 200,
-                  clipBehavior: Clip.hardEdge,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
                   ),
-                  margin: const EdgeInsets.symmetric(vertical: 16),
                   child: BeaconImage(
                     authorId: beacon.author.id,
                     beaconId: beacon.imageId,
+                    width: 300,
                   ),
                 ),
+                const SizedBox(height: 16),
                 // Beacon Title
                 Text(
                   beacon.title,
@@ -94,13 +97,16 @@ class BeaconTile extends StatelessWidget {
                   child: Row(
                     children: [
                       // Like\Dislike
-                      LikeControlButton(beaconId: beacon.id),
+                      LikeControlButton(beacon: beacon),
                       const SizedBox(width: 20),
                       // Comments count
                       OutlinedButton.icon(
                         icon: const Icon(Icons.comment_outlined),
                         label: Text(beacon.comments_count.toString()),
-                        onPressed: null,
+                        onPressed: () => context.push(Uri(
+                          path: pathBeaconDetails,
+                          queryParameters: {'id': beacon.id},
+                        ).toString()),
                       ),
                     ],
                   ),

@@ -74,11 +74,57 @@ type beacon {
   enabled: Boolean!
   has_picture: Boolean!
   id: String!
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
   place: geography
   timerange: tstzrange
   title: String!
   updated_at: timestamptz!
   user_id: String!
+
+  """An array relationship"""
+  vote_beacons(
+    """distinct select on columns"""
+    distinct_on: [vote_beacon_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_beacon_order_by!]
+
+    """filter the rows returned"""
+    where: vote_beacon_bool_exp
+  ): [vote_beacon!]!
+
+  """An aggregate relationship"""
+  vote_beacons_aggregate(
+    """distinct select on columns"""
+    distinct_on: [vote_beacon_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_beacon_order_by!]
+
+    """filter the rows returned"""
+    where: vote_beacon_bool_exp
+  ): vote_beacon_aggregate!
 }
 
 """
@@ -87,6 +133,33 @@ aggregated selection of "beacon"
 type beacon_aggregate {
   aggregate: beacon_aggregate_fields
   nodes: [beacon!]!
+}
+
+input beacon_aggregate_bool_exp {
+  bool_and: beacon_aggregate_bool_exp_bool_and
+  bool_or: beacon_aggregate_bool_exp_bool_or
+  count: beacon_aggregate_bool_exp_count
+}
+
+input beacon_aggregate_bool_exp_bool_and {
+  arguments: beacon_select_column_beacon_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: beacon_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input beacon_aggregate_bool_exp_bool_or {
+  arguments: beacon_select_column_beacon_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: beacon_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input beacon_aggregate_bool_exp_count {
+  arguments: [beacon_select_column!]
+  distinct: Boolean
+  filter: beacon_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -106,9 +179,53 @@ type beacon_aggregate_fields {
   variance: beacon_variance_fields
 }
 
+"""
+order by aggregate values of table "beacon"
+"""
+input beacon_aggregate_order_by {
+  avg: beacon_avg_order_by
+  count: order_by
+  max: beacon_max_order_by
+  min: beacon_min_order_by
+  stddev: beacon_stddev_order_by
+  stddev_pop: beacon_stddev_pop_order_by
+  stddev_samp: beacon_stddev_samp_order_by
+  sum: beacon_sum_order_by
+  var_pop: beacon_var_pop_order_by
+  var_samp: beacon_var_samp_order_by
+  variance: beacon_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "beacon"
+"""
+input beacon_arr_rel_insert_input {
+  data: [beacon_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: beacon_on_conflict
+}
+
 """aggregate avg on columns"""
 type beacon_avg_fields {
   comments_count: Float
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
+}
+
+"""
+order by avg() on columns of table "beacon"
+"""
+input beacon_avg_order_by {
+  comments_count: order_by
 }
 
 """
@@ -132,6 +249,8 @@ input beacon_bool_exp {
   title: String_comparison_exp
   updated_at: timestamptz_comparison_exp
   user_id: String_comparison_exp
+  vote_beacons: vote_beacon_bool_exp
+  vote_beacons_aggregate: vote_beacon_aggregate_bool_exp
 }
 
 """
@@ -168,6 +287,7 @@ input beacon_insert_input {
   title: String
   updated_at: timestamptz
   user_id: String
+  vote_beacons: vote_beacon_arr_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -176,9 +296,32 @@ type beacon_max_fields {
   created_at: timestamptz
   description: String
   id: String
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
   title: String
   updated_at: timestamptz
   user_id: String
+}
+
+"""
+order by max() on columns of table "beacon"
+"""
+input beacon_max_order_by {
+  comments_count: order_by
+  created_at: order_by
+  description: order_by
+  id: order_by
+  title: order_by
+  updated_at: order_by
+  user_id: order_by
 }
 
 """aggregate min on columns"""
@@ -187,9 +330,32 @@ type beacon_min_fields {
   created_at: timestamptz
   description: String
   id: String
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
   title: String
   updated_at: timestamptz
   user_id: String
+}
+
+"""
+order by min() on columns of table "beacon"
+"""
+input beacon_min_order_by {
+  comments_count: order_by
+  created_at: order_by
+  description: order_by
+  id: order_by
+  title: order_by
+  updated_at: order_by
+  user_id: order_by
 }
 
 """
@@ -201,6 +367,16 @@ type beacon_mutation_response {
 
   """data from the rows affected by the mutation"""
   returning: [beacon!]!
+}
+
+"""
+input type for inserting object relation for remote table "beacon"
+"""
+input beacon_obj_rel_insert_input {
+  data: beacon_insert_input!
+
+  """upsert condition"""
+  on_conflict: beacon_on_conflict
 }
 
 """
@@ -227,6 +403,7 @@ input beacon_order_by {
   title: order_by
   updated_at: order_by
   user_id: order_by
+  vote_beacons_aggregate: vote_beacon_aggregate_order_by
 }
 
 """primary key columns input for table: beacon"""
@@ -273,6 +450,28 @@ enum beacon_select_column {
 }
 
 """
+select "beacon_aggregate_bool_exp_bool_and_arguments_columns" columns of table "beacon"
+"""
+enum beacon_select_column_beacon_aggregate_bool_exp_bool_and_arguments_columns {
+  """column name"""
+  enabled
+
+  """column name"""
+  has_picture
+}
+
+"""
+select "beacon_aggregate_bool_exp_bool_or_arguments_columns" columns of table "beacon"
+"""
+enum beacon_select_column_beacon_aggregate_bool_exp_bool_or_arguments_columns {
+  """column name"""
+  enabled
+
+  """column name"""
+  has_picture
+}
+
+"""
 input type for updating data in table "beacon"
 """
 input beacon_set_input {
@@ -292,16 +491,67 @@ input beacon_set_input {
 """aggregate stddev on columns"""
 type beacon_stddev_fields {
   comments_count: Float
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
+}
+
+"""
+order by stddev() on columns of table "beacon"
+"""
+input beacon_stddev_order_by {
+  comments_count: order_by
 }
 
 """aggregate stddev_pop on columns"""
 type beacon_stddev_pop_fields {
   comments_count: Float
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
+}
+
+"""
+order by stddev_pop() on columns of table "beacon"
+"""
+input beacon_stddev_pop_order_by {
+  comments_count: order_by
 }
 
 """aggregate stddev_samp on columns"""
 type beacon_stddev_samp_fields {
   comments_count: Float
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
+}
+
+"""
+order by stddev_samp() on columns of table "beacon"
+"""
+input beacon_stddev_samp_order_by {
+  comments_count: order_by
 }
 
 """
@@ -333,6 +583,23 @@ input beacon_stream_cursor_value_input {
 """aggregate sum on columns"""
 type beacon_sum_fields {
   comments_count: Int
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
+}
+
+"""
+order by sum() on columns of table "beacon"
+"""
+input beacon_sum_order_by {
+  comments_count: order_by
 }
 
 """
@@ -387,16 +654,67 @@ input beacon_updates {
 """aggregate var_pop on columns"""
 type beacon_var_pop_fields {
   comments_count: Float
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
+}
+
+"""
+order by var_pop() on columns of table "beacon"
+"""
+input beacon_var_pop_order_by {
+  comments_count: order_by
 }
 
 """aggregate var_samp on columns"""
 type beacon_var_samp_fields {
   comments_count: Float
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
+}
+
+"""
+order by var_samp() on columns of table "beacon"
+"""
+input beacon_var_samp_order_by {
+  comments_count: order_by
 }
 
 """aggregate variance on columns"""
 type beacon_variance_fields {
   comments_count: Float
+
+  """
+  A computed field, executes function "get_my_vote"
+  """
+  my_vote(
+    """
+    input parameters for computed field "my_vote" defined on table "beacon"
+    """
+    args: my_vote_beacon_args!
+  ): Int
+}
+
+"""
+order by variance() on columns of table "beacon"
+"""
+input beacon_variance_order_by {
+  comments_count: order_by
 }
 
 """
@@ -420,11 +738,50 @@ columns and relationships of "comment"
 type comment {
   """An object relationship"""
   author: user!
+
+  """An object relationship"""
+  beacon: beacon!
   beacon_id: String!
   content: String!
   created_at: timestamptz!
   id: String!
   user_id: String!
+
+  """An array relationship"""
+  vote_comments(
+    """distinct select on columns"""
+    distinct_on: [vote_comment_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_comment_order_by!]
+
+    """filter the rows returned"""
+    where: vote_comment_bool_exp
+  ): [vote_comment!]!
+
+  """An aggregate relationship"""
+  vote_comments_aggregate(
+    """distinct select on columns"""
+    distinct_on: [vote_comment_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_comment_order_by!]
+
+    """filter the rows returned"""
+    where: vote_comment_bool_exp
+  ): vote_comment_aggregate!
 }
 
 """
@@ -482,11 +839,14 @@ input comment_bool_exp {
   _not: comment_bool_exp
   _or: [comment_bool_exp!]
   author: user_bool_exp
+  beacon: beacon_bool_exp
   beacon_id: String_comparison_exp
   content: String_comparison_exp
   created_at: timestamptz_comparison_exp
   id: String_comparison_exp
   user_id: String_comparison_exp
+  vote_comments: vote_comment_bool_exp
+  vote_comments_aggregate: vote_comment_aggregate_bool_exp
 }
 
 """
@@ -504,11 +864,13 @@ input type for inserting data into table "comment"
 """
 input comment_insert_input {
   author: user_obj_rel_insert_input
+  beacon: beacon_obj_rel_insert_input
   beacon_id: String
   content: String
   created_at: timestamptz
   id: String
   user_id: String
+  vote_comments: vote_comment_arr_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -563,6 +925,16 @@ type comment_mutation_response {
 }
 
 """
+input type for inserting object relation for remote table "comment"
+"""
+input comment_obj_rel_insert_input {
+  data: comment_insert_input!
+
+  """upsert condition"""
+  on_conflict: comment_on_conflict
+}
+
+"""
 on_conflict condition type for table "comment"
 """
 input comment_on_conflict {
@@ -574,11 +946,13 @@ input comment_on_conflict {
 """Ordering options when selecting data from "comment"."""
 input comment_order_by {
   author: user_order_by
+  beacon: beacon_order_by
   beacon_id: order_by
   content: order_by
   created_at: order_by
   id: order_by
   user_id: order_by
+  vote_comments_aggregate: vote_comment_aggregate_order_by
 }
 
 """primary key columns input for table: comment"""
@@ -786,6 +1160,8 @@ input Int_comparison_exp {
   _neq: Int
   _nin: [Int!]
 }
+
+scalar json
 
 """mutation root"""
 type mutation_root {
@@ -1190,6 +1566,10 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [vote_user_updates!]!
   ): [vote_user_mutation_response]
+}
+
+input my_vote_beacon_args {
+  hasura_session: json
 }
 
 """column ordering options"""
@@ -1940,12 +2320,227 @@ input tstzrange_comparison_exp {
 columns and relationships of "user"
 """
 type user {
+  """An array relationship"""
+  beacons(
+    """distinct select on columns"""
+    distinct_on: [beacon_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_bool_exp
+  ): [beacon!]!
+
+  """An aggregate relationship"""
+  beacons_aggregate(
+    """distinct select on columns"""
+    distinct_on: [beacon_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_bool_exp
+  ): beacon_aggregate!
+
+  """An array relationship"""
+  comments(
+    """distinct select on columns"""
+    distinct_on: [comment_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [comment_order_by!]
+
+    """filter the rows returned"""
+    where: comment_bool_exp
+  ): [comment!]!
+
+  """An aggregate relationship"""
+  comments_aggregate(
+    """distinct select on columns"""
+    distinct_on: [comment_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [comment_order_by!]
+
+    """filter the rows returned"""
+    where: comment_bool_exp
+  ): comment_aggregate!
   created_at: timestamptz!
   description: String!
   has_picture: Boolean!
   id: String!
   title: String!
   updated_at: timestamptz!
+
+  """An array relationship"""
+  voteUsersBySubject(
+    """distinct select on columns"""
+    distinct_on: [vote_user_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_user_order_by!]
+
+    """filter the rows returned"""
+    where: vote_user_bool_exp
+  ): [vote_user!]!
+
+  """An aggregate relationship"""
+  voteUsersBySubject_aggregate(
+    """distinct select on columns"""
+    distinct_on: [vote_user_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_user_order_by!]
+
+    """filter the rows returned"""
+    where: vote_user_bool_exp
+  ): vote_user_aggregate!
+
+  """An array relationship"""
+  vote_beacons(
+    """distinct select on columns"""
+    distinct_on: [vote_beacon_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_beacon_order_by!]
+
+    """filter the rows returned"""
+    where: vote_beacon_bool_exp
+  ): [vote_beacon!]!
+
+  """An aggregate relationship"""
+  vote_beacons_aggregate(
+    """distinct select on columns"""
+    distinct_on: [vote_beacon_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_beacon_order_by!]
+
+    """filter the rows returned"""
+    where: vote_beacon_bool_exp
+  ): vote_beacon_aggregate!
+
+  """An array relationship"""
+  vote_comments(
+    """distinct select on columns"""
+    distinct_on: [vote_comment_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_comment_order_by!]
+
+    """filter the rows returned"""
+    where: vote_comment_bool_exp
+  ): [vote_comment!]!
+
+  """An aggregate relationship"""
+  vote_comments_aggregate(
+    """distinct select on columns"""
+    distinct_on: [vote_comment_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_comment_order_by!]
+
+    """filter the rows returned"""
+    where: vote_comment_bool_exp
+  ): vote_comment_aggregate!
+
+  """An array relationship"""
+  vote_users(
+    """distinct select on columns"""
+    distinct_on: [vote_user_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_user_order_by!]
+
+    """filter the rows returned"""
+    where: vote_user_bool_exp
+  ): [vote_user!]!
+
+  """An aggregate relationship"""
+  vote_users_aggregate(
+    """distinct select on columns"""
+    distinct_on: [vote_user_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [vote_user_order_by!]
+
+    """filter the rows returned"""
+    where: vote_user_bool_exp
+  ): vote_user_aggregate!
 }
 
 """
@@ -1972,12 +2567,24 @@ input user_bool_exp {
   _and: [user_bool_exp!]
   _not: user_bool_exp
   _or: [user_bool_exp!]
+  beacons: beacon_bool_exp
+  beacons_aggregate: beacon_aggregate_bool_exp
+  comments: comment_bool_exp
+  comments_aggregate: comment_aggregate_bool_exp
   created_at: timestamptz_comparison_exp
   description: String_comparison_exp
   has_picture: Boolean_comparison_exp
   id: String_comparison_exp
   title: String_comparison_exp
   updated_at: timestamptz_comparison_exp
+  voteUsersBySubject: vote_user_bool_exp
+  voteUsersBySubject_aggregate: vote_user_aggregate_bool_exp
+  vote_beacons: vote_beacon_bool_exp
+  vote_beacons_aggregate: vote_beacon_aggregate_bool_exp
+  vote_comments: vote_comment_bool_exp
+  vote_comments_aggregate: vote_comment_aggregate_bool_exp
+  vote_users: vote_user_bool_exp
+  vote_users_aggregate: vote_user_aggregate_bool_exp
 }
 
 """
@@ -1994,12 +2601,18 @@ enum user_constraint {
 input type for inserting data into table "user"
 """
 input user_insert_input {
+  beacons: beacon_arr_rel_insert_input
+  comments: comment_arr_rel_insert_input
   created_at: timestamptz
   description: String
   has_picture: Boolean
   id: String
   title: String
   updated_at: timestamptz
+  voteUsersBySubject: vote_user_arr_rel_insert_input
+  vote_beacons: vote_beacon_arr_rel_insert_input
+  vote_comments: vote_comment_arr_rel_insert_input
+  vote_users: vote_user_arr_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -2052,12 +2665,18 @@ input user_on_conflict {
 
 """Ordering options when selecting data from "user"."""
 input user_order_by {
+  beacons_aggregate: beacon_aggregate_order_by
+  comments_aggregate: comment_aggregate_order_by
   created_at: order_by
   description: order_by
   has_picture: order_by
   id: order_by
   title: order_by
   updated_at: order_by
+  voteUsersBySubject_aggregate: vote_user_aggregate_order_by
+  vote_beacons_aggregate: vote_beacon_aggregate_order_by
+  vote_comments_aggregate: vote_comment_aggregate_order_by
+  vote_users_aggregate: vote_user_aggregate_order_by
 }
 
 """primary key columns input for table: user"""
@@ -2157,10 +2776,16 @@ columns and relationships of "vote_beacon"
 """
 type vote_beacon {
   amount: Int!
+
+  """An object relationship"""
+  beacon: beacon!
   created_at: timestamptz!
   object: String!
   subject: String!
   updated_at: timestamptz!
+
+  """An object relationship"""
+  user: user!
 }
 
 """
@@ -2169,6 +2794,17 @@ aggregated selection of "vote_beacon"
 type vote_beacon_aggregate {
   aggregate: vote_beacon_aggregate_fields
   nodes: [vote_beacon!]!
+}
+
+input vote_beacon_aggregate_bool_exp {
+  count: vote_beacon_aggregate_bool_exp_count
+}
+
+input vote_beacon_aggregate_bool_exp_count {
+  arguments: [vote_beacon_select_column!]
+  distinct: Boolean
+  filter: vote_beacon_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -2188,9 +2824,43 @@ type vote_beacon_aggregate_fields {
   variance: vote_beacon_variance_fields
 }
 
+"""
+order by aggregate values of table "vote_beacon"
+"""
+input vote_beacon_aggregate_order_by {
+  avg: vote_beacon_avg_order_by
+  count: order_by
+  max: vote_beacon_max_order_by
+  min: vote_beacon_min_order_by
+  stddev: vote_beacon_stddev_order_by
+  stddev_pop: vote_beacon_stddev_pop_order_by
+  stddev_samp: vote_beacon_stddev_samp_order_by
+  sum: vote_beacon_sum_order_by
+  var_pop: vote_beacon_var_pop_order_by
+  var_samp: vote_beacon_var_samp_order_by
+  variance: vote_beacon_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "vote_beacon"
+"""
+input vote_beacon_arr_rel_insert_input {
+  data: [vote_beacon_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: vote_beacon_on_conflict
+}
+
 """aggregate avg on columns"""
 type vote_beacon_avg_fields {
   amount: Float
+}
+
+"""
+order by avg() on columns of table "vote_beacon"
+"""
+input vote_beacon_avg_order_by {
+  amount: order_by
 }
 
 """
@@ -2201,10 +2871,12 @@ input vote_beacon_bool_exp {
   _not: vote_beacon_bool_exp
   _or: [vote_beacon_bool_exp!]
   amount: Int_comparison_exp
+  beacon: beacon_bool_exp
   created_at: timestamptz_comparison_exp
   object: String_comparison_exp
   subject: String_comparison_exp
   updated_at: timestamptz_comparison_exp
+  user: user_bool_exp
 }
 
 """
@@ -2229,10 +2901,12 @@ input type for inserting data into table "vote_beacon"
 """
 input vote_beacon_insert_input {
   amount: Int
+  beacon: beacon_obj_rel_insert_input
   created_at: timestamptz
   object: String
   subject: String
   updated_at: timestamptz
+  user: user_obj_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -2244,6 +2918,17 @@ type vote_beacon_max_fields {
   updated_at: timestamptz
 }
 
+"""
+order by max() on columns of table "vote_beacon"
+"""
+input vote_beacon_max_order_by {
+  amount: order_by
+  created_at: order_by
+  object: order_by
+  subject: order_by
+  updated_at: order_by
+}
+
 """aggregate min on columns"""
 type vote_beacon_min_fields {
   amount: Int
@@ -2251,6 +2936,17 @@ type vote_beacon_min_fields {
   object: String
   subject: String
   updated_at: timestamptz
+}
+
+"""
+order by min() on columns of table "vote_beacon"
+"""
+input vote_beacon_min_order_by {
+  amount: order_by
+  created_at: order_by
+  object: order_by
+  subject: order_by
+  updated_at: order_by
 }
 
 """
@@ -2276,10 +2972,12 @@ input vote_beacon_on_conflict {
 """Ordering options when selecting data from "vote_beacon"."""
 input vote_beacon_order_by {
   amount: order_by
+  beacon: beacon_order_by
   created_at: order_by
   object: order_by
   subject: order_by
   updated_at: order_by
+  user: user_order_by
 }
 
 """primary key columns input for table: vote_beacon"""
@@ -2324,14 +3022,35 @@ type vote_beacon_stddev_fields {
   amount: Float
 }
 
+"""
+order by stddev() on columns of table "vote_beacon"
+"""
+input vote_beacon_stddev_order_by {
+  amount: order_by
+}
+
 """aggregate stddev_pop on columns"""
 type vote_beacon_stddev_pop_fields {
   amount: Float
 }
 
+"""
+order by stddev_pop() on columns of table "vote_beacon"
+"""
+input vote_beacon_stddev_pop_order_by {
+  amount: order_by
+}
+
 """aggregate stddev_samp on columns"""
 type vote_beacon_stddev_samp_fields {
   amount: Float
+}
+
+"""
+order by stddev_samp() on columns of table "vote_beacon"
+"""
+input vote_beacon_stddev_samp_order_by {
+  amount: order_by
 }
 
 """
@@ -2357,6 +3076,13 @@ input vote_beacon_stream_cursor_value_input {
 """aggregate sum on columns"""
 type vote_beacon_sum_fields {
   amount: Int
+}
+
+"""
+order by sum() on columns of table "vote_beacon"
+"""
+input vote_beacon_sum_order_by {
+  amount: order_by
 }
 
 """
@@ -2395,9 +3121,23 @@ type vote_beacon_var_pop_fields {
   amount: Float
 }
 
+"""
+order by var_pop() on columns of table "vote_beacon"
+"""
+input vote_beacon_var_pop_order_by {
+  amount: order_by
+}
+
 """aggregate var_samp on columns"""
 type vote_beacon_var_samp_fields {
   amount: Float
+}
+
+"""
+order by var_samp() on columns of table "vote_beacon"
+"""
+input vote_beacon_var_samp_order_by {
+  amount: order_by
 }
 
 """aggregate variance on columns"""
@@ -2406,14 +3146,27 @@ type vote_beacon_variance_fields {
 }
 
 """
+order by variance() on columns of table "vote_beacon"
+"""
+input vote_beacon_variance_order_by {
+  amount: order_by
+}
+
+"""
 columns and relationships of "vote_comment"
 """
 type vote_comment {
   amount: Int!
+
+  """An object relationship"""
+  comment: comment!
   created_at: timestamptz!
   object: String!
   subject: String!
   updated_at: timestamptz!
+
+  """An object relationship"""
+  user: user!
 }
 
 """
@@ -2422,6 +3175,17 @@ aggregated selection of "vote_comment"
 type vote_comment_aggregate {
   aggregate: vote_comment_aggregate_fields
   nodes: [vote_comment!]!
+}
+
+input vote_comment_aggregate_bool_exp {
+  count: vote_comment_aggregate_bool_exp_count
+}
+
+input vote_comment_aggregate_bool_exp_count {
+  arguments: [vote_comment_select_column!]
+  distinct: Boolean
+  filter: vote_comment_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -2441,9 +3205,43 @@ type vote_comment_aggregate_fields {
   variance: vote_comment_variance_fields
 }
 
+"""
+order by aggregate values of table "vote_comment"
+"""
+input vote_comment_aggregate_order_by {
+  avg: vote_comment_avg_order_by
+  count: order_by
+  max: vote_comment_max_order_by
+  min: vote_comment_min_order_by
+  stddev: vote_comment_stddev_order_by
+  stddev_pop: vote_comment_stddev_pop_order_by
+  stddev_samp: vote_comment_stddev_samp_order_by
+  sum: vote_comment_sum_order_by
+  var_pop: vote_comment_var_pop_order_by
+  var_samp: vote_comment_var_samp_order_by
+  variance: vote_comment_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "vote_comment"
+"""
+input vote_comment_arr_rel_insert_input {
+  data: [vote_comment_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: vote_comment_on_conflict
+}
+
 """aggregate avg on columns"""
 type vote_comment_avg_fields {
   amount: Float
+}
+
+"""
+order by avg() on columns of table "vote_comment"
+"""
+input vote_comment_avg_order_by {
+  amount: order_by
 }
 
 """
@@ -2454,10 +3252,12 @@ input vote_comment_bool_exp {
   _not: vote_comment_bool_exp
   _or: [vote_comment_bool_exp!]
   amount: Int_comparison_exp
+  comment: comment_bool_exp
   created_at: timestamptz_comparison_exp
   object: String_comparison_exp
   subject: String_comparison_exp
   updated_at: timestamptz_comparison_exp
+  user: user_bool_exp
 }
 
 """
@@ -2482,10 +3282,12 @@ input type for inserting data into table "vote_comment"
 """
 input vote_comment_insert_input {
   amount: Int
+  comment: comment_obj_rel_insert_input
   created_at: timestamptz
   object: String
   subject: String
   updated_at: timestamptz
+  user: user_obj_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -2497,6 +3299,17 @@ type vote_comment_max_fields {
   updated_at: timestamptz
 }
 
+"""
+order by max() on columns of table "vote_comment"
+"""
+input vote_comment_max_order_by {
+  amount: order_by
+  created_at: order_by
+  object: order_by
+  subject: order_by
+  updated_at: order_by
+}
+
 """aggregate min on columns"""
 type vote_comment_min_fields {
   amount: Int
@@ -2504,6 +3317,17 @@ type vote_comment_min_fields {
   object: String
   subject: String
   updated_at: timestamptz
+}
+
+"""
+order by min() on columns of table "vote_comment"
+"""
+input vote_comment_min_order_by {
+  amount: order_by
+  created_at: order_by
+  object: order_by
+  subject: order_by
+  updated_at: order_by
 }
 
 """
@@ -2529,10 +3353,12 @@ input vote_comment_on_conflict {
 """Ordering options when selecting data from "vote_comment"."""
 input vote_comment_order_by {
   amount: order_by
+  comment: comment_order_by
   created_at: order_by
   object: order_by
   subject: order_by
   updated_at: order_by
+  user: user_order_by
 }
 
 """primary key columns input for table: vote_comment"""
@@ -2577,14 +3403,35 @@ type vote_comment_stddev_fields {
   amount: Float
 }
 
+"""
+order by stddev() on columns of table "vote_comment"
+"""
+input vote_comment_stddev_order_by {
+  amount: order_by
+}
+
 """aggregate stddev_pop on columns"""
 type vote_comment_stddev_pop_fields {
   amount: Float
 }
 
+"""
+order by stddev_pop() on columns of table "vote_comment"
+"""
+input vote_comment_stddev_pop_order_by {
+  amount: order_by
+}
+
 """aggregate stddev_samp on columns"""
 type vote_comment_stddev_samp_fields {
   amount: Float
+}
+
+"""
+order by stddev_samp() on columns of table "vote_comment"
+"""
+input vote_comment_stddev_samp_order_by {
+  amount: order_by
 }
 
 """
@@ -2610,6 +3457,13 @@ input vote_comment_stream_cursor_value_input {
 """aggregate sum on columns"""
 type vote_comment_sum_fields {
   amount: Int
+}
+
+"""
+order by sum() on columns of table "vote_comment"
+"""
+input vote_comment_sum_order_by {
+  amount: order_by
 }
 
 """
@@ -2648,14 +3502,35 @@ type vote_comment_var_pop_fields {
   amount: Float
 }
 
+"""
+order by var_pop() on columns of table "vote_comment"
+"""
+input vote_comment_var_pop_order_by {
+  amount: order_by
+}
+
 """aggregate var_samp on columns"""
 type vote_comment_var_samp_fields {
   amount: Float
 }
 
+"""
+order by var_samp() on columns of table "vote_comment"
+"""
+input vote_comment_var_samp_order_by {
+  amount: order_by
+}
+
 """aggregate variance on columns"""
 type vote_comment_variance_fields {
   amount: Float
+}
+
+"""
+order by variance() on columns of table "vote_comment"
+"""
+input vote_comment_variance_order_by {
+  amount: order_by
 }
 
 """
@@ -2667,6 +3542,12 @@ type vote_user {
   object: String!
   subject: String!
   updated_at: timestamptz!
+
+  """An object relationship"""
+  user: user!
+
+  """An object relationship"""
+  userBySubject: user!
 }
 
 """
@@ -2675,6 +3556,17 @@ aggregated selection of "vote_user"
 type vote_user_aggregate {
   aggregate: vote_user_aggregate_fields
   nodes: [vote_user!]!
+}
+
+input vote_user_aggregate_bool_exp {
+  count: vote_user_aggregate_bool_exp_count
+}
+
+input vote_user_aggregate_bool_exp_count {
+  arguments: [vote_user_select_column!]
+  distinct: Boolean
+  filter: vote_user_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -2694,9 +3586,43 @@ type vote_user_aggregate_fields {
   variance: vote_user_variance_fields
 }
 
+"""
+order by aggregate values of table "vote_user"
+"""
+input vote_user_aggregate_order_by {
+  avg: vote_user_avg_order_by
+  count: order_by
+  max: vote_user_max_order_by
+  min: vote_user_min_order_by
+  stddev: vote_user_stddev_order_by
+  stddev_pop: vote_user_stddev_pop_order_by
+  stddev_samp: vote_user_stddev_samp_order_by
+  sum: vote_user_sum_order_by
+  var_pop: vote_user_var_pop_order_by
+  var_samp: vote_user_var_samp_order_by
+  variance: vote_user_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "vote_user"
+"""
+input vote_user_arr_rel_insert_input {
+  data: [vote_user_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: vote_user_on_conflict
+}
+
 """aggregate avg on columns"""
 type vote_user_avg_fields {
   amount: Float
+}
+
+"""
+order by avg() on columns of table "vote_user"
+"""
+input vote_user_avg_order_by {
+  amount: order_by
 }
 
 """
@@ -2711,6 +3637,8 @@ input vote_user_bool_exp {
   object: String_comparison_exp
   subject: String_comparison_exp
   updated_at: timestamptz_comparison_exp
+  user: user_bool_exp
+  userBySubject: user_bool_exp
 }
 
 """
@@ -2739,6 +3667,8 @@ input vote_user_insert_input {
   object: String
   subject: String
   updated_at: timestamptz
+  user: user_obj_rel_insert_input
+  userBySubject: user_obj_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -2750,6 +3680,17 @@ type vote_user_max_fields {
   updated_at: timestamptz
 }
 
+"""
+order by max() on columns of table "vote_user"
+"""
+input vote_user_max_order_by {
+  amount: order_by
+  created_at: order_by
+  object: order_by
+  subject: order_by
+  updated_at: order_by
+}
+
 """aggregate min on columns"""
 type vote_user_min_fields {
   amount: Int
@@ -2757,6 +3698,17 @@ type vote_user_min_fields {
   object: String
   subject: String
   updated_at: timestamptz
+}
+
+"""
+order by min() on columns of table "vote_user"
+"""
+input vote_user_min_order_by {
+  amount: order_by
+  created_at: order_by
+  object: order_by
+  subject: order_by
+  updated_at: order_by
 }
 
 """
@@ -2786,6 +3738,8 @@ input vote_user_order_by {
   object: order_by
   subject: order_by
   updated_at: order_by
+  user: user_order_by
+  userBySubject: user_order_by
 }
 
 """primary key columns input for table: vote_user"""
@@ -2830,14 +3784,35 @@ type vote_user_stddev_fields {
   amount: Float
 }
 
+"""
+order by stddev() on columns of table "vote_user"
+"""
+input vote_user_stddev_order_by {
+  amount: order_by
+}
+
 """aggregate stddev_pop on columns"""
 type vote_user_stddev_pop_fields {
   amount: Float
 }
 
+"""
+order by stddev_pop() on columns of table "vote_user"
+"""
+input vote_user_stddev_pop_order_by {
+  amount: order_by
+}
+
 """aggregate stddev_samp on columns"""
 type vote_user_stddev_samp_fields {
   amount: Float
+}
+
+"""
+order by stddev_samp() on columns of table "vote_user"
+"""
+input vote_user_stddev_samp_order_by {
+  amount: order_by
 }
 
 """
@@ -2863,6 +3838,13 @@ input vote_user_stream_cursor_value_input {
 """aggregate sum on columns"""
 type vote_user_sum_fields {
   amount: Int
+}
+
+"""
+order by sum() on columns of table "vote_user"
+"""
+input vote_user_sum_order_by {
+  amount: order_by
 }
 
 """
@@ -2901,13 +3883,34 @@ type vote_user_var_pop_fields {
   amount: Float
 }
 
+"""
+order by var_pop() on columns of table "vote_user"
+"""
+input vote_user_var_pop_order_by {
+  amount: order_by
+}
+
 """aggregate var_samp on columns"""
 type vote_user_var_samp_fields {
   amount: Float
 }
 
+"""
+order by var_samp() on columns of table "vote_user"
+"""
+input vote_user_var_samp_order_by {
+  amount: order_by
+}
+
 """aggregate variance on columns"""
 type vote_user_variance_fields {
   amount: Float
+}
+
+"""
+order by variance() on columns of table "vote_user"
+"""
+input vote_user_variance_order_by {
+  amount: order_by
 }
 

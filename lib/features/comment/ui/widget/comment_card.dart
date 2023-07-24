@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gravity/ui/consts.dart';
 
 import 'package:gravity/ui/widget/avatar_image.dart';
 
@@ -16,33 +17,44 @@ class CommentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AvatarImage(userId: userId, size: 40),
+          Padding(
+            padding: paddingH8,
+            child: AvatarImage(userId: userId, size: 40),
+          ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              Row(
-                children: [
-                  Text(userTitle),
-                  const Icon(Icons.visibility_outlined),
-                  IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {},
-                  ),
-                ],
+              // Title
+              Text(
+                userTitle,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               // Body
-              Text(comment),
+              Text(
+                comment,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               // Buttons
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(),
                   TextButton.icon(
                     label: const Text('Reply'),
                     icon: const Icon(Icons.comment_bank_outlined),
                     onPressed: () {},
                   ),
                 ],
+              ),
+            ],
+          ),
+          const Spacer(),
+          // Menu
+          PopupMenuButton(
+            itemBuilder: (context) => const [
+              PopupMenuItem<void>(
+                child: Text('Share the code'),
               ),
             ],
           ),

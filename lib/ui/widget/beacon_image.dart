@@ -5,31 +5,40 @@ import 'package:gravity/consts.dart';
 
 class BeaconImage extends StatelessWidget {
   static const _placeholderPath = 'assets/images/image-placeholder.jpg';
-
-  static final placeholderImage = Image.asset(
-    _placeholderPath,
-    fit: BoxFit.cover,
-    key: const Key(_placeholderPath),
-  );
-
   final String beaconId;
   final String authorId;
+  final double? height;
+  final double? width;
   final BoxFit boxFit;
 
   const BeaconImage({
     required this.authorId,
     this.beaconId = '',
+    this.height,
+    this.width,
     this.boxFit = BoxFit.cover,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) => beaconId.isEmpty || authorId.isEmpty
-      ? placeholderImage
+      ? Image.asset(
+          _placeholderPath,
+          height: height,
+          width: width,
+          fit: boxFit,
+        )
       : CachedNetworkImage(
+          useOldImageOnUrlChange: true,
+          height: height,
+          width: width,
           imageUrl:
               '$firebaseStrorageBaseUrl$authorId%2F$beaconId$firebaseStrorageUrlSuffix',
-          placeholder: (context, url) => placeholderImage,
-          useOldImageOnUrlChange: true,
+          placeholder: (context, url) => Image.asset(
+            _placeholderPath,
+            height: height,
+            width: width,
+            fit: boxFit,
+          ),
         );
 }

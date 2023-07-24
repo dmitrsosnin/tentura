@@ -81,13 +81,10 @@ class _ConnectScreenState extends State<ConnectScreen> {
                         beacons[i].description,
                         maxLines: 1,
                       ),
-                      onTap: () => context.push(
-                        Uri(
-                          path: pathBeaconDetails,
-                          queryParameters: {'id': beacons[i].id},
-                        ).toString(),
-                        extra: beacons[i],
-                      ),
+                      onTap: () => context.push(Uri(
+                        path: pathBeaconDetails,
+                        queryParameters: {'id': beacons[i].id},
+                      ).toString()),
                     ),
                     padding: const EdgeInsets.all(20),
                     separatorBuilder: (_, __) => const Divider(),

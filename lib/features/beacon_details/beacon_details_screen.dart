@@ -23,8 +23,8 @@ class BeaconDetailsScreen extends StatelessWidget {
           bottom: appBarBottomLine,
           actions: [
             IconButton(
-              onPressed: () {},
               icon: const Icon(Icons.more_vert_outlined),
+              onPressed: () {},
             )
           ],
         ),
@@ -32,23 +32,19 @@ class BeaconDetailsScreen extends StatelessWidget {
             client: GetIt.I<Client>(),
             operationRequest: GBeaconFetchByIdReq(
               (b) => b
-                ..executeOnListen = GoRouterState.of(context).extra == null
                 ..vars.id = GoRouterState.of(context).uri.queryParameters['id'],
             ),
             builder: (context, response, error) {
-              final beacon = response?.data?.beacon_by_pk ??
-                  GoRouterState.of(context).extra as GBeaconFields?;
+              final beacon = response?.data?.beacon_by_pk;
               if (beacon == null) {
                 return response?.loading ?? false
-                    ? const Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      )
+                    ? const Center(child: CircularProgressIndicator.adaptive())
                     : ErrorCenterText(response: response, error: error);
               }
-              return RefreshIndicator.adaptive(
-                onRefresh: () async => {},
-                child: ListView(
-                  padding: paddingH20,
+              return Padding(
+                padding: paddingAll20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // User row (Avatar and Name)
                     Row(
@@ -64,19 +60,19 @@ class BeaconDetailsScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                         ),
-                        const Icon(Icons.visibility_off_outlined),
                       ],
                     ),
+                    const SizedBox(height: 8),
                     // Image of Beacon
-                    Container(
-                      height: 200,
-                      margin: paddingV8,
-                      decoration: decorationRadius20,
+                    ClipRRect(
+                      borderRadius: borderRadius20,
                       child: BeaconImage(
                         authorId: beacon.author.id,
                         beaconId: beacon.imageId,
+                        height: 200,
                       ),
                     ),
+                    const SizedBox(height: 8),
                     // Title
                     Text(
                       beacon.title,
@@ -99,7 +95,7 @@ class BeaconDetailsScreen extends StatelessWidget {
                     // Buttons Row
                     Padding(
                       padding: paddingV8,
-                      child: LikeControlButton(beaconId: beacon.id),
+                      child: LikeControlButton(beacon: beacon),
                     ),
                     // Comments
                     CommentsExpansionTile(beaconId: beacon.id),

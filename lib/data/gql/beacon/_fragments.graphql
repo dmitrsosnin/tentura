@@ -6,11 +6,12 @@ fragment BeaconFields on beacon {
   description
   created_at
   updated_at
+  enabled
   place
   timerange
   has_picture
   comments_count
-  enabled
+  my_vote
   author {
     ...UserFields
   }

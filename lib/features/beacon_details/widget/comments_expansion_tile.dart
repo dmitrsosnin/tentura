@@ -21,7 +21,7 @@ class CommentsExpansionTile extends StatelessWidget {
         ),
         builder: (context, response, error) {
           if (response?.loading ?? false) {
-            return const CircularProgressIndicator.adaptive();
+            return const Center(child: CircularProgressIndicator.adaptive());
           } else if (response?.data == null) {
             return ErrorCenterText(response: response, error: error);
           }
