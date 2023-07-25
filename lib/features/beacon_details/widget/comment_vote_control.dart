@@ -1,22 +1,22 @@
+import 'package:gravity/data/gql/comment/_g/_fragments.data.gql.dart';
+import 'package:gravity/data/gql/comment/_g/comment_vote_by_id.req.gql.dart';
+
 import 'package:gravity/ui/ferry.dart';
 
-import 'package:gravity/data/gql/beacon/beacon_utils.dart';
-import 'package:gravity/data/gql/vote/_g/vote_for_beacon_by_id.req.gql.dart';
+class CommentVoteControl extends StatefulWidget {
+  final GCommentFields comment;
 
-class LikeControlButton extends StatefulWidget {
-  final GBeaconFields beacon;
-
-  const LikeControlButton({
-    required this.beacon,
+  const CommentVoteControl({
+    required this.comment,
     super.key,
   });
 
   @override
-  State<LikeControlButton> createState() => _LikeControlButtonState();
+  State<CommentVoteControl> createState() => _CommentVoteControlState();
 }
 
-class _LikeControlButtonState extends State<LikeControlButton> {
-  late int _likeAmount = widget.beacon.my_vote ?? 0;
+class _CommentVoteControlState extends State<CommentVoteControl> {
+  late int _likeAmount = widget.comment.my_vote ?? 0;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -41,15 +41,15 @@ class _LikeControlButtonState extends State<LikeControlButton> {
       );
 
   Future<void> _updateVote([int? amount]) => GetIt.I<Client>()
-          .request(GVoteForBeaconByIdReq(
+          .request(GCommentVoteByIdReq(
             (b) => b
               ..vars.amount = _likeAmount
-              ..vars.beacon_id = widget.beacon.id,
+              ..vars.comment_id = widget.comment.id,
           ))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
         (response) {
-          final amount = response.data?.insert_vote_beacon_one?.amount;
+          final amount = response.data?.insert_vote_comment_one?.amount;
           if (amount != null) setState(() => _likeAmount = amount);
         },
       );

@@ -8,7 +8,7 @@ import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
-import 'package:gravity/ui/widget/like_control_button.dart';
+import 'package:gravity/features/beacon_details/widget/beacon_vote_control.dart';
 
 class BeaconTile extends StatelessWidget {
   static final _dF = DateFormat.yMd();
@@ -97,7 +97,7 @@ class BeaconTile extends StatelessWidget {
                   child: Row(
                     children: [
                       // Like\Dislike
-                      LikeControlButton(beacon: beacon),
+                      BeaconVoteControl(beacon: beacon),
                       const SizedBox(width: 20),
                       // Comments count
                       OutlinedButton.icon(

@@ -1,9 +1,9 @@
 import 'package:gravity/data/gql/beacon/_g/beacon_search_by_id.req.gql.dart';
 
 import 'package:gravity/ui/ferry.dart';
-import 'package:gravity/ui/widget/beacon_tile.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
+import 'package:gravity/features/beacon_details/widget/beacon_tile.dart';
 
 class MyFieldScreen extends StatelessWidget {
   const MyFieldScreen({super.key});

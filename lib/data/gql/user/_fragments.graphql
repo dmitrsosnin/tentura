@@ -3,4 +3,5 @@ fragment UserFields on user {
   title
   description
   has_picture
+  my_vote
 }

@@ -1,15 +1,16 @@
+import 'package:gravity/data/gql/beacon/beacon_utils.dart';
+import 'package:gravity/data/gql/comment/_g/comment_fetch_by_beacon_id.req.gql.dart';
+
 import 'package:gravity/ui/ferry.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
 
-import 'package:gravity/data/gql/comment/_g/comment_fetch_by_beacon_id.req.gql.dart';
-
-import 'package:gravity/features/comment/ui/widget/comment_card.dart';
+import 'comment_card.dart';
 
 class CommentsExpansionTile extends StatelessWidget {
-  final String beaconId;
+  final GBeaconFields beacon;
 
   const CommentsExpansionTile({
-    required this.beaconId,
+    required this.beacon,
     super.key,
   });
 
@@ -17,25 +18,19 @@ class CommentsExpansionTile extends StatelessWidget {
   Widget build(BuildContext context) => Operation(
         client: GetIt.I<Client>(),
         operationRequest: GCommentFetchByBeaconIdReq(
-          (b) => b..vars.beacon_id = beaconId,
+          (b) => b..vars.beacon_id = beacon.id,
         ),
-        builder: (context, response, error) {
-          if (response?.loading ?? false) {
-            return const Center(child: CircularProgressIndicator.adaptive());
-          } else if (response?.data == null) {
-            return ErrorCenterText(response: response, error: error);
-          }
-          return ExpansionTile(
-            title: Text('${response!.data!.comment.length} comments'),
-            children: [
-              for (final c in response.data!.comment)
-                CommentWidget(
-                  userId: c.author.has_picture ? c.user_id : '',
-                  userTitle: c.author.title,
-                  comment: c.content,
-                ),
-            ],
-          );
-        },
+        builder: (context, response, error) => ExpansionTile(
+          title: Text('${beacon.comments_count} comments'),
+          trailing: response?.loading ?? false
+              ? const CircularProgressIndicator.adaptive()
+              : null,
+          children: response?.data == null
+              ? [ErrorCenterText(response: response, error: error)]
+              : [
+                  for (final c in response!.data!.comment)
+                    CommentCard(comment: c),
+                ],
+        ),
       );
 }

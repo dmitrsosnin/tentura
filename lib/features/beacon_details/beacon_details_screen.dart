@@ -9,7 +9,7 @@ import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
-import 'package:gravity/ui/widget/like_control_button.dart';
+import 'package:gravity/features/beacon_details/widget/beacon_vote_control.dart';
 
 import 'widget/comments_expansion_tile.dart';
 
@@ -95,10 +95,10 @@ class BeaconDetailsScreen extends StatelessWidget {
                     // Buttons Row
                     Padding(
                       padding: paddingV8,
-                      child: LikeControlButton(beacon: beacon),
+                      child: BeaconVoteControl(beacon: beacon),
                     ),
                     // Comments
-                    CommentsExpansionTile(beaconId: beacon.id),
+                    CommentsExpansionTile(beacon: beacon),
                   ],
                 ),
               );
