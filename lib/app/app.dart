@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'di.dart';
-import 'theme.dart';
 import 'router.dart';
 
 class App extends StatelessWidget {
@@ -28,16 +27,14 @@ class App extends StatelessWidget {
         future: di.init(),
         builder: (context, snapshot) => snapshot.hasData
             ? MaterialApp.router(
-                title: 'Gravity',
-                theme: themeLight,
-                routerConfig: router,
                 debugShowCheckedModeBanner: false,
+                routerConfig: router,
+                title: 'Gravity',
+                theme: ThemeData.light(useMaterial3: true),
+                darkTheme: ThemeData.dark(useMaterial3: true),
               )
-            : MaterialApp(
-                theme: themeLight,
-                home: const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                ),
+            : const MaterialApp(
+                home: Center(child: CircularProgressIndicator.adaptive()),
               ),
       );
 }

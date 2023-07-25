@@ -14,36 +14,34 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: child.currentIndex,
-          showSelectedLabels: true,
-          showUnselectedLabels: false,
-          onTap: child.goBranch,
-          items: const [
-            BottomNavigationBarItem(
+        drawer: kDebugMode ? const ColorsDrawer() : null,
+        resizeToAvoidBottomInset: false,
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: child.currentIndex,
+          onDestinationSelected: child.goBranch,
+          destinations: const [
+            NavigationDestination(
               icon: Icon(Icons.home_outlined),
               label: 'My field',
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: Icon(Icons.list_alt_rounded),
               label: 'Beacons',
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: Icon(Icons.share_outlined),
               label: 'Connect',
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: Icon(Icons.notifications_none_outlined),
               label: 'Updates',
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: Icon(Icons.account_circle_outlined),
               label: 'Profile',
             ),
           ],
         ),
         body: child,
-        drawer: kDebugMode ? const ColorsDrawer() : null,
-        resizeToAvoidBottomInset: false,
       );
 }
