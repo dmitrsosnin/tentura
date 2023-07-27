@@ -22,7 +22,7 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
-          color: Theme.of(context).colorScheme.surfaceVariant,
+          color: Theme.of(context).colorScheme.secondaryContainer,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

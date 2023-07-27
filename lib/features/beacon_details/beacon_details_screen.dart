@@ -1,4 +1,5 @@
 import 'package:gravity/app/router.dart';
+import 'package:gravity/data/geolocation_repository.dart';
 
 import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
@@ -20,88 +21,92 @@ class BeaconDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: const Text('Beacon'),
-          bottom: appBarBottomLine,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert_outlined),
-              onPressed: () {},
-            )
-          ],
         ),
         body: Operation(
-            client: GetIt.I<Client>(),
-            operationRequest: GBeaconFetchByIdReq(
-              (b) => b
-                ..vars.id = GoRouterState.of(context).uri.queryParameters['id'],
-            ),
-            builder: (context, response, error) {
-              final beacon = response?.data?.beacon_by_pk;
-              if (beacon == null) {
-                return response?.loading ?? false
-                    ? const Center(child: CircularProgressIndicator.adaptive())
-                    : ErrorCenterText(response: response, error: error);
-              }
-              return Padding(
-                padding: paddingAll20,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          client: GetIt.I<Client>(),
+          operationRequest: GBeaconFetchByIdReq(
+            (b) => b
+              ..vars.id = GoRouterState.of(context).uri.queryParameters['id'],
+          ),
+          builder: (context, response, error) {
+            final beacon = response?.data?.beacon_by_pk;
+            if (beacon == null) {
+              return response?.loading ?? false
+                  ? const Center(child: CircularProgressIndicator.adaptive())
+                  : ErrorCenterText(response: response, error: error);
+            }
+            final textTheme = Theme.of(context).textTheme;
+            return ListView(
+              padding: paddingAll20,
+              children: [
+                // User row (Avatar and Name)
+                Row(
                   children: [
-                    // User row (Avatar and Name)
-                    Row(
-                      children: [
-                        AvatarImage(
-                          userId: beacon.author.imageId,
-                          size: 40,
-                        ),
-                        Padding(
-                          padding: paddingH8,
-                          child: Text(
-                            beacon.author.title,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                        ),
-                      ],
+                    AvatarImage(
+                      userId: beacon.author.imageId,
+                      size: 40,
                     ),
-                    const SizedBox(height: 8),
-                    // Image of Beacon
-                    ClipRRect(
-                      borderRadius: borderRadius20,
-                      child: BeaconImage(
-                        authorId: beacon.author.id,
-                        beaconId: beacon.imageId,
-                        height: 200,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    // Title
-                    Text(
-                      beacon.title,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    // Description
-                    Text(
-                      beacon.description,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    // Date
-                    Text(
-                      beacon.created_at.toString(),
-                    ),
-                    // Place
-                    if (beacon.place != null)
-                      Text(
-                        beacon.place!.toSexagesimal(),
-                      ),
-                    // Buttons Row
                     Padding(
-                      padding: paddingV8,
-                      child: BeaconVoteControl(beacon: beacon),
+                      padding: paddingH8,
+                      child: Text(
+                        beacon.author.title,
+                        style: textTheme.headlineSmall,
+                      ),
                     ),
-                    // Comments
-                    CommentsExpansionTile(beacon: beacon),
                   ],
                 ),
-              );
-            }),
+                // Image of Beacon
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: paddingV20,
+                  child: ClipRRect(
+                    borderRadius: borderRadius20,
+                    child: BeaconImage(
+                      authorId: beacon.author.id,
+                      beaconId: beacon.imageId,
+                      height: 200,
+                    ),
+                  ),
+                ),
+                // Title
+                Text(
+                  beacon.title,
+                  style: textTheme.headlineMedium,
+                ),
+                // Description
+                Text(
+                  beacon.description,
+                  style: textTheme.bodyLarge,
+                ),
+                // Date
+                Text(
+                  beacon.created_at.toString(),
+                  style: textTheme.bodyLarge,
+                ),
+                // Place
+                if (beacon.place != null)
+                  FutureBuilder(
+                    future: GetIt.I<GeolocationRepository>()
+                        .getPlaceNameByCoords(beacon.place!),
+                    builder: (context, snapshot) => Text(
+                      snapshot.data == null
+                          ? beacon.place!.toSexagesimal()
+                          : '${snapshot.data?.locality}, ${snapshot.data?.country}',
+                      style: textTheme.bodyLarge,
+                    ),
+                  ),
+                // Buttons Row
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: paddingV8,
+                  child: BeaconVoteControl(beacon: beacon),
+                ),
+                // Comments
+                if (beacon.comments_count > 0)
+                  CommentsExpansionTile(beacon: beacon),
+              ],
+            );
+          },
+        ),
       );
 }

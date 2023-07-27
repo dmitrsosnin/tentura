@@ -33,7 +33,6 @@ class MyFieldScreen extends StatelessWidget {
                 separatorBuilder: (_, __) => const Divider(),
                 itemBuilder: (context, i) => BeaconTile(
                   beacon: response.data!.beacon[i],
-                  // likeAmount: response.data!.beacon[i].comments_count,
                 ),
               ),
             );

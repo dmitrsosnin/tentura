@@ -16,33 +16,39 @@ class CommentCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: paddingH8,
-            child: AvatarImage(
-              userId: comment.author.has_picture ? comment.user_id : '',
-              size: 40,
+  Widget build(BuildContext context) => Padding(
+        padding: paddingV8,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: paddingH8,
+              child: AvatarImage(
+                userId: comment.author.has_picture ? comment.user_id : '',
+                size: 40,
+              ),
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Title
-              Text(
-                comment.author.title,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              // Body
-              Text(
-                comment.content,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              // Buttons
-              CommentVoteControl(comment: comment),
-            ],
-          ),
-        ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title
+                Text(
+                  comment.author.title,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                // Body
+                Padding(
+                  padding: paddingV8,
+                  child: Text(
+                    comment.content,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+                // Buttons
+                CommentVoteControl(comment: comment),
+              ],
+            ),
+          ],
+        ),
       );
 }

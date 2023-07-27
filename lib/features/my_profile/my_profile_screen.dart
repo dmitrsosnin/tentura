@@ -135,7 +135,7 @@ class MyProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             border: Border.all(
                               width: 8,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.background,
                             ),
                             shape: BoxShape.circle,
                           ),

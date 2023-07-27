@@ -554,18 +554,18 @@ packages:
     dependency: transitive
     description:
       name: fresh
-      sha256: ddac8f76fdd51f5edb6c17af784a077b0df7afe5086d126602f8b6ec7e354e20
+      sha256: d0adae5799932b7aed7f17bed05862f994e4f592e9de9f8a9a513377b773fe50
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.1"
+    version: "0.4.2"
   fresh_graphql:
     dependency: "direct main"
     description:
       name: fresh_graphql
-      sha256: "1d1aab2e117c14857bf936b0a06638d4c9dadb810bf35f3767504a0d261e8e8e"
+      sha256: "5d04cbfff7fc3502b8f57cc293b8341c457522ec4bbc1d351b6c393acd159734"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.2"
+    version: "0.6.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -730,10 +730,10 @@ packages:
     dependency: transitive
     description:
       name: gql
-      sha256: "07ae289bc5ccfbfd143883bfe9a380f5bf52c94559ded740cf3fb152fcbdbe2e"
+      sha256: b05d544d709d276c0cced82d630518e92139b426b20d1b11e973e123d07fbf52
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1-alpha+1686240655988"
+    version: "1.0.0"
   gql_code_builder:
     dependency: transitive
     description:
@@ -742,30 +742,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.2"
-  gql_dedupe_link:
-    dependency: transitive
-    description:
-      name: gql_dedupe_link
-      sha256: dac8e5eec5e9f6274302e5c01f77c7558f89d727f2c0dff7cda568c440a171cd
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.4-alpha+1686240656097"
-  gql_error_link:
-    dependency: transitive
-    description:
-      name: gql_error_link
-      sha256: bfdb543137da89448cc5d003fd029c2e8718931d39d4a7dedb16f9169862fbb9
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   gql_exec:
     dependency: transitive
     description:
       name: gql_exec
-      sha256: "04fb14e41fdc3fafa80fa7218224bceba019e00b80de9130c2dd0a9a77c6392d"
+      sha256: "50bcdb389e25411dce84cca8af50d9277492fc55d6358fa2ec2039e58b8fe22d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1-alpha+1686240655996"
+    version: "1.0.0"
   gql_http_link:
     dependency: "direct main"
     description:
@@ -778,26 +762,10 @@ packages:
     dependency: transitive
     description:
       name: gql_link
-      sha256: ecf2419e6c543d1b8dedd7dbbc538ce037f4d53a3b5b7d694a98a7d636da2817
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1-alpha+1686240656001"
-  gql_transform_link:
-    dependency: transitive
-    description:
-      name: gql_transform_link
-      sha256: "0645fdd874ca1be695fd327271fdfb24c0cd6fa40774a64b946062f321a59709"
+      sha256: c09b7a5797bdb9acb946083072d223c16658fd7b3ac4ff91b9d5a83c30ee8cf2
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  graphql:
-    dependency: transitive
-    description:
-      name: graphql
-      sha256: "1e3720c13cd1c9a345fed40dfac35759b626ff907661567d299616e9d9903e0c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.0-beta.5"
   graphs:
     dependency: transitive
     description:
@@ -1202,18 +1170,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "8f4f1d3ef3ca1801aa3138392bbf0851b39eff703008111765b265f76c8f0190"
+      sha256: "39c23342fc96105da449914f7774139a17a0ca8a4e70d9ad5200171f7e47d6ba"
       url: "https://pub.dev"
     source: hosted
-    version: "7.8.0"
+    version: "7.9.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: bbc1048558cf8ae65c1e27b1249357298cfca50e5843ad0367387f5c873b8e42
+      sha256: ff68ab31918690da004a42e20204242a3ad9ad57da7e2712da8487060ac9767f
       url: "https://pub.dev"
     source: hosted
-    version: "7.8.0"
+    version: "7.9.0"
   shelf:
     dependency: transitive
     description:
@@ -1255,18 +1223,18 @@ packages:
     dependency: transitive
     description:
       name: sqflite
-      sha256: b4d6710e1200e96845747e37338ea8a819a12b51689a3bcf31eff0003b37a0b9
+      sha256: "591f1602816e9c31377d5f008c2d9ef7b8aca8941c3f89cc5fd9d84da0c38a9a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.8+4"
+    version: "2.3.0"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: "8f7603f3f8f126740bc55c4ca2d1027aab4b74a1267a3e31ce51fe40e3b65b8f"
+      sha256: "1b92f368f44b0dee2425bb861cfa17b6f6cf3961f762ff6f941d20b33355660a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.5+1"
+    version: "2.5.0"
   stack_trace:
     dependency: transitive
     description:
@@ -1423,10 +1391,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: dfdf0136e0aa7a1b474ea133e67cb0154a0acd2599c4f3ada3b49d38d38793ee
+      sha256: f2add6fa510d3ae152903412227bda57d0d5a8da61d2c39c1fb022c9429a41c0
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.5"
+    version: "5.0.6"
   wkt_parser:
     dependency: transitive
     description:

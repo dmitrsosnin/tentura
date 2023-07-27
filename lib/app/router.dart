@@ -9,7 +9,6 @@ import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/ui/screens/error_screen.dart';
 import 'package:gravity/features/home/home_screen.dart';
 import 'package:gravity/features/auth/login_screen.dart';
-// import 'package:gravity/features/graph/graph_screen.dart';
 import 'package:gravity/features/connect/connect_screen.dart';
 import 'package:gravity/features/updates/updates_screen.dart';
 import 'package:gravity/features/my_field/my_field_screen.dart';
@@ -30,18 +29,20 @@ const pathConnect = '/connect';
 const pathUpdates = '/updates';
 const pathProfile = '/profile';
 
+const pathProfileEdit = '/profile/edit';
+const pathProfileView = '/profile/view';
 const pathBeaconCreate = '/beacon/create';
 const pathBeaconDetails = '/beacon/details';
-
-const pathProfileEdit = '/profile/edit';
-// const pathGraphView = '/graph';
 
 const pathErrorUnknown = '/error_unknown';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+final homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 
 final router = GoRouter(
-  debugLogDiagnostics: true,
+  debugLogDiagnostics: kDebugMode,
+  redirect: (BuildContext context, GoRouterState state) =>
+      GetIt.I<AuthRepository>().isAuthenticated ? null : pathLogin,
   initialLocation: pathLogin,
   navigatorKey: rootNavigatorKey,
   observers: [SentryNavigatorObserver()],
@@ -52,74 +53,53 @@ final router = GoRouter(
           GetIt.I<AuthRepository>().isAuthenticated ? pathField : null,
       builder: (context, state) => const LogInScreen(),
     ),
-    // GoRoute(
-    //   path: pathGraphView,
-    //   redirect: _authGuardian,
-    //   builder: (context, state) => const GraphScreen(),
-    // ),
     GoRoute(
       path: pathProfileEdit,
-      redirect: _authGuardian,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const EditProfileScreen(),
     ),
     GoRoute(
       path: pathBeaconCreate,
-      redirect: _authGuardian,
       builder: (context, state) => const BeaconCreateScreen(),
+      parentNavigatorKey: rootNavigatorKey,
     ),
     GoRoute(
       path: pathBeaconDetails,
-      redirect: _authGuardian,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const BeaconDetailsScreen(),
     ),
-    StatefulShellRoute.indexedStack(
-      builder: (context, state, child) => HomeScreen(child: child),
+    ShellRoute(
+      navigatorKey: homeNavigatorKey,
       parentNavigatorKey: rootNavigatorKey,
-      branches: <StatefulShellBranch>[
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: pathField,
-              redirect: _authGuardian,
-              builder: (context, state) => const MyFieldScreen(),
-            ),
-          ],
+      builder: (context, state, child) => HomeScreen(
+        path: state.path,
+        child: child,
+      ),
+      routes: [
+        GoRoute(
+          path: pathField,
+          parentNavigatorKey: homeNavigatorKey,
+          builder: (context, state) => const MyFieldScreen(),
         ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: pathBeacons,
-              redirect: _authGuardian,
-              builder: (context, state) => const MyBeaconsScreen(),
-            ),
-          ],
+        GoRoute(
+          path: pathBeacons,
+          parentNavigatorKey: homeNavigatorKey,
+          builder: (context, state) => const MyBeaconsScreen(),
         ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: pathConnect,
-              redirect: _authGuardian,
-              builder: (context, state) => const ConnectScreen(),
-            ),
-          ],
+        GoRoute(
+          path: pathConnect,
+          parentNavigatorKey: homeNavigatorKey,
+          builder: (context, state) => const ConnectScreen(),
         ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: pathUpdates,
-              redirect: _authGuardian,
-              builder: (context, state) => const UpdatesScreen(),
-            ),
-          ],
+        GoRoute(
+          path: pathUpdates,
+          parentNavigatorKey: homeNavigatorKey,
+          builder: (context, state) => const UpdatesScreen(),
         ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: pathProfile,
-              redirect: _authGuardian,
-              builder: (context, state) => const MyProfileScreen(),
-            ),
-          ],
+        GoRoute(
+          path: pathProfile,
+          parentNavigatorKey: homeNavigatorKey,
+          builder: (context, state) => const MyProfileScreen(),
         ),
       ],
     ),
@@ -133,6 +113,3 @@ final router = GoRouter(
     return const ErrorScreen();
   },
 );
-
-String? _authGuardian(BuildContext context, GoRouterState state) =>
-    GetIt.I<AuthRepository>().isAuthenticated ? null : pathLogin;

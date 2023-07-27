@@ -18,7 +18,7 @@ class ColorsDrawer extends StatelessWidget {
                   backgroundColor: colorScheme.primary,
                   color: colorScheme.onPrimary,
                 )),
-            Text('onPrimaryContainer',
+            Text('PrimaryContainer',
                 style: TextStyle(
                   backgroundColor: colorScheme.primaryContainer,
                   color: colorScheme.onPrimaryContainer,
