@@ -1,7 +1,7 @@
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/data/gql/comment/_g/comment_fetch_by_beacon_id.req.gql.dart';
 
-import 'package:gravity/ui/ferry.dart';
+import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
 
 import 'comment_card.dart';
@@ -18,7 +18,9 @@ class CommentsExpansionTile extends StatelessWidget {
   Widget build(BuildContext context) => Operation(
         client: GetIt.I<Client>(),
         operationRequest: GCommentFetchByBeaconIdReq(
-          (b) => b..vars.beacon_id = beacon.id,
+          (b) => b
+            ..fetchPolicy = FetchPolicy.CacheAndNetwork
+            ..vars.beacon_id = beacon.id,
         ),
         builder: (context, response, error) => ExpansionTile(
           title: Text('${beacon.comments_count} comments'),

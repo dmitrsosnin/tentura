@@ -1,15 +1,22 @@
 import 'package:gravity/app/router.dart';
 
 import 'package:gravity/data/auth_repository.dart';
+import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
 
-import 'package:gravity/ui/ferry.dart';
+import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
-import 'package:gravity/ui/widget/header_gradient.dart';
+import 'package:gravity/ui/widget/gradient_stack.dart';
+import 'package:gravity/ui/widget/avatar_positioned.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
 
+import 'dialog/my_profile_delete.dart';
+import 'dialog/my_profile_logout.dart';
+
 class MyProfileScreen extends StatelessWidget {
+  static const _requestId = 'FetchMyProfile';
+
   const MyProfileScreen({super.key});
 
   @override
@@ -18,11 +25,6 @@ class MyProfileScreen extends StatelessWidget {
           actions: [
             PopupMenuButton(
               itemBuilder: (context) => <PopupMenuEntry<void>>[
-                // Share
-                PopupMenuItem<void>(
-                  onTap: () {},
-                  child: const Text('Share'),
-                ),
                 // Edit profile
                 PopupMenuItem<void>(
                   onTap: () => context.push(pathProfileEdit),
@@ -31,55 +33,13 @@ class MyProfileScreen extends StatelessWidget {
                 const PopupMenuDivider(),
                 // Delete profile
                 PopupMenuItem<void>(
-                  onTap: () => showDialog<void>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text(
-                        'Are you sure you want to delete your profile?',
-                      ),
-                      content: const Text(
-                        'All your beacons and personal data will be deleted completely.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () async {
-                            // TBD
-                            if (context.mounted) context.go(pathLogin);
-                          },
-                          child: const Text('Delete'),
-                        ),
-                        TextButton(
-                          onPressed: context.pop,
-                          child: const Text('Cancel'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  onTap: () => MyProfileDeleteDialog.show(context),
                   child: const Text('Delete profile'),
                 ),
                 const PopupMenuDivider(),
                 // Log out
                 PopupMenuItem<void>(
-                  onTap: () => showDialog<void>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Log out'),
-                      content: const Text('Are you shure?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () async {
-                            await GetIt.I<AuthRepository>().signOut();
-                            if (context.mounted) context.go(pathLogin);
-                          },
-                          child: const Text('Yes'),
-                        ),
-                        TextButton(
-                          onPressed: context.pop,
-                          child: const Text('No'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  onTap: () => MyProfileLogoutDialog.show(context),
                   child: const Text('Logout'),
                 ),
               ],
@@ -91,58 +51,40 @@ class MyProfileScreen extends StatelessWidget {
         ),
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
-        // FAB to Graph
-        // floatingActionButton: FloatingActionButton(
-        //   heroTag: 'FAB.MyProfile',
-        //   child: const Icon(Icons.share_rounded),
-        //   onPressed: () => context.push(pathGraphView),
-        // ),
         // Body
         body: Operation(
           client: GetIt.I<Client>(),
           operationRequest: GUserFetchByIdReq(
-            (b) => b..vars.id = GetIt.I<AuthRepository>().myId,
+            (b) => b
+              ..requestId = _requestId
+              ..vars.id = GetIt.I<AuthRepository>().myId,
           ),
           builder: (context, response, error) {
-            if (response?.loading ?? false) {
-              return const Center(
-                child: CircularProgressIndicator.adaptive(),
-              );
-            } else if (response?.data?.user_by_pk == null) {
-              return ErrorCenterText(response: response, error: error);
+            final profile = response?.data?.user_by_pk;
+            if (profile == null) {
+              return response?.loading ?? false
+                  ? const Center(child: CircularProgressIndicator.adaptive())
+                  : ErrorCenterText(response: response, error: error);
             }
-            final profile = response!.data!.user_by_pk!;
             final textTheme = Theme.of(context).textTheme;
             return RefreshIndicator.adaptive(
-              onRefresh: () async {},
+              onRefresh: () async =>
+                  GetIt.I<Client>().requestController.add(GUserFetchByIdReq(
+                        (b) => b
+                          ..requestId = _requestId
+                          ..fetchPolicy = FetchPolicy.NetworkOnly
+                          ..vars.id = GetIt.I<AuthRepository>().myId,
+                      )),
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
                   // Header
-                  Stack(
-                    clipBehavior: Clip.none,
-                    fit: StackFit.passthrough,
+                  GradientStack(
                     children: [
-                      // Gradient
-                      const HeaderGradient(),
-                      // Avatar
-                      Positioned(
-                        top: 100,
-                        left: 50,
-                        child: Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 8,
-                              color: Theme.of(context).colorScheme.background,
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: AvatarImage(
-                            userId: profile.has_picture ? profile.id : '',
-                            size: 200,
-                          ),
+                      AvatarPositioned(
+                        child: AvatarImage(
+                          userId: profile.imageId,
+                          size: AvatarPositioned.childSize,
                         ),
                       ),
                     ],

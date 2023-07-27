@@ -9,7 +9,7 @@ import 'package:gravity/data/geolocation_repository.dart';
 import 'package:gravity/data/gql/beacon/_g/beacon_create.req.gql.dart';
 import 'package:gravity/ui/dialog/choose_location_dialog.dart';
 import 'package:gravity/ui/dialog/error_dialog.dart';
-import 'package:gravity/ui/ferry.dart';
+import 'package:gravity/ui/ferry_utils.dart';
 
 class BeaconCreateScreen extends StatefulWidget {
   const BeaconCreateScreen({super.key});

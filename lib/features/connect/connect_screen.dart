@@ -2,7 +2,7 @@ import 'package:gravity/app/router.dart';
 
 import 'package:gravity/data/gql/beacon/_g/beacon_search_by_id.req.gql.dart';
 
-import 'package:gravity/ui/ferry.dart';
+import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';

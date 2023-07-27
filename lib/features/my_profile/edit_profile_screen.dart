@@ -5,14 +5,15 @@ import 'package:gravity/app/router.dart';
 
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/image_repository.dart';
-import 'package:gravity/data/gql/user/_g/_fragments.data.gql.dart';
-import 'package:gravity/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
+import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/gql/user/_g/user_update.req.gql.dart';
+import 'package:gravity/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
 
-import 'package:gravity/ui/ferry.dart';
+import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/dialog/error_dialog.dart';
-import 'package:gravity/ui/widget/header_gradient.dart';
+import 'package:gravity/ui/widget/gradient_stack.dart';
+import 'package:gravity/ui/widget/avatar_positioned.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -34,14 +35,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           (b) => b..vars.id = GetIt.I<AuthRepository>().myId,
         ),
         builder: (context, response, error) {
-          if (response?.loading ?? false) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
-          } else if (response?.data?.user_by_pk == null) {
-            return ErrorCenterText(response: response, error: error);
+          final profile = response?.data?.user_by_pk;
+          if (profile == null) {
+            return response?.loading ?? false
+                ? const Center(child: CircularProgressIndicator.adaptive())
+                : ErrorCenterText(response: response, error: error);
           }
-          final profile = response!.data!.user_by_pk!;
           final textTheme = Theme.of(context).textTheme;
           return Scaffold(
             appBar: AppBar(
@@ -51,7 +50,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   icon: const Icon(Icons.save),
                   onPressed: () => _onSavePressed(profile),
                 ),
-                const SizedBox(width: 12),
               ],
               backgroundColor: Colors.transparent,
             ),
@@ -60,42 +58,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             body: Column(
               children: [
                 // Header
-                Stack(
-                  clipBehavior: Clip.none,
-                  fit: StackFit.passthrough,
+                GradientStack(
                   children: [
-                    // Gradient
-                    const HeaderGradient(),
                     // Avatar
-                    Positioned(
-                      top: 100,
-                      left: 50,
-                      child: Container(
-                        width: 200,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 8,
-                            color: Colors.white,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: _newImagePath == null
-                            ? AvatarImage(
-                                size: 200,
-                                userId: profile.has_picture ? profile.id : '',
-                              )
-                            : Container(
-                                clipBehavior: Clip.hardEdge,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Image.file(
-                                  File(_newImagePath!),
-                                  fit: BoxFit.cover,
-                                ),
+                    AvatarPositioned(
+                      child: _newImagePath == null
+                          ? AvatarImage(
+                              size: AvatarPositioned.childSize,
+                              userId: profile.imageId,
+                            )
+                          : Container(
+                              clipBehavior: Clip.hardEdge,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
                               ),
-                      ),
+                              child: Image.file(
+                                File(_newImagePath!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                     // Upload\Remove Picture Button
                     Positioned(

@@ -7,7 +7,7 @@ import 'package:gravity/app/router.dart';
 
 import 'package:gravity/data/gql/user/_g/user_create.req.gql.dart';
 
-import 'package:gravity/ui/ferry.dart';
+import 'package:gravity/ui/ferry_utils.dart';
 
 class LogInScreen extends StatelessWidget {
   const LogInScreen({super.key});
