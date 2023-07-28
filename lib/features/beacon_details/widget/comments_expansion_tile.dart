@@ -23,6 +23,7 @@ class CommentsExpansionTile extends StatelessWidget {
             ..vars.beacon_id = beacon.id,
         ),
         builder: (context, response, error) => ExpansionTile(
+          initiallyExpanded: true,
           title: Text('${beacon.comments_count} comments'),
           trailing: response?.loading ?? false
               ? const CircularProgressIndicator.adaptive()

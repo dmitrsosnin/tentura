@@ -5,6 +5,7 @@ import 'package:gravity/consts.dart';
 
 class BeaconImage extends StatelessWidget {
   static const _placeholderPath = 'assets/images/image-placeholder.jpg';
+
   final String beaconId;
   final String authorId;
   final double? height;
