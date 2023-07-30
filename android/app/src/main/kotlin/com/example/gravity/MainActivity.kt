@@ -1,4 +1,4 @@
-package com.example.gravity
+package com.intersubjective.gravity
 
 import io.flutter.embedding.android.FlutterActivity
 

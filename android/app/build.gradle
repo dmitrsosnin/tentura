@@ -35,7 +35,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.example.gravity"
+    namespace "com.intersubjective.gravity"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

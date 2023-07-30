@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:388561553386:android:72216da3fdefac18201493",
         "android_client_info": {
-          "package_name": "com.example.gravity"
+          "package_name": "com.intersubjective.gravity"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "388561553386-35c0pjsa6eboertpr2d5lbkdi9mkrgtb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.gravity",
+            "package_name": "com.intersubjective.gravity",
             "certificate_hash": "5a3b14284a2d58201c6d314761e7dd416fc9553e"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "388561553386-bga42tt0442onchaf1297n2s28ccopph.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.gravity",
+            "package_name": "com.intersubjective.gravity",
             "certificate_hash": "256fe9f567735f1afef8995ad09607fe7d019262"
           }
         },
