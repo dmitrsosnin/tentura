@@ -1,5 +1,5 @@
 import 'package:gravity/app/router.dart';
-
+import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
@@ -63,6 +63,7 @@ class BeaconDetailsScreen extends StatelessWidget {
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : ErrorCenterText(response: response, error: error);
           }
+          final isNotMine = beacon.author.id != GetIt.I<AuthRepository>().myId;
           return RefreshIndicator.adaptive(
             onRefresh: () async =>
                 GetIt.I<Client>().requestController.add(refreshRequest),
@@ -70,20 +71,29 @@ class BeaconDetailsScreen extends StatelessWidget {
               padding: paddingAll20,
               children: [
                 // User row (Avatar and Name)
-                Row(
-                  children: [
-                    AvatarImage(
-                      userId: beacon.author.imageId,
-                      size: 40,
+                if (isNotMine)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        AvatarImage(
+                          userId: beacon.author.imageId,
+                          size: 40,
+                        ),
+                        Padding(
+                          padding: paddingH8,
+                          child: Text(
+                            beacon.author.title,
+                            style: textTheme.headlineSmall,
+                          ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: paddingH8,
-                      child: Text(
-                        beacon.author.title,
-                        style: textTheme.headlineSmall,
-                      ),
-                    ),
-                  ],
+                  ),
+                // Title
+                Text(
+                  beacon.title,
+                  style: textTheme.headlineMedium,
                 ),
                 // Image of Beacon
                 Container(
@@ -98,16 +108,12 @@ class BeaconDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Title
-                Text(
-                  beacon.title,
-                  style: textTheme.headlineMedium,
-                ),
                 // Description
-                Text(
-                  beacon.description,
-                  style: textTheme.bodyLarge,
-                ),
+                if (beacon.description.isNotEmpty)
+                  Text(
+                    beacon.description,
+                    style: textTheme.bodyLarge,
+                  ),
                 // Date
                 Text(
                   beacon.created_at.toString(),
@@ -127,18 +133,19 @@ class BeaconDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 // Buttons Row
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: paddingV8,
-                  child: BeaconVoteControl(
-                    key: ObjectKey(beacon),
-                    beacon: beacon,
+                if (isNotMine)
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: paddingV8,
+                    child: BeaconVoteControl(
+                      key: ObjectKey(beacon),
+                      beacon: beacon,
+                    ),
                   ),
-                ),
                 // Comments
                 if (beacon.comments_count > 0)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 64),
+                    padding: const EdgeInsets.only(top: 8, bottom: 64),
                     child: CommentsExpansionTile(
                       key: ObjectKey(beacon),
                       beacon: beacon,

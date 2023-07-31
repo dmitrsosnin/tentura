@@ -1,11 +1,13 @@
-import 'package:gravity/app/router.dart';
+import 'package:gravity/data/auth_repository.dart';
+import 'package:gravity/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
 
-import 'package:gravity/data/gql/beacon/_g/beacon_search_by_id.req.gql.dart';
-
+import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
-import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
+
+import 'package:gravity/features/my_field/widget/beacon_tile.dart';
+import 'package:gravity/features/my_beacons/widget/my_beacon_tile.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
@@ -15,6 +17,8 @@ class ConnectScreen extends StatefulWidget {
 }
 
 class _ConnectScreenState extends State<ConnectScreen> {
+  static const _beaconIdLength = 12;
+
   final _searchController = TextEditingController();
 
   @override
@@ -29,69 +33,68 @@ class _ConnectScreenState extends State<ConnectScreen> {
           leading: const RatingButton(),
           leadingWidth: RatingButton.width,
         ),
-        body: Column(
-          children: [
-            // Search control
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Type a Code (at least 3 symbols)',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      _searchController.clear();
-                      setState(() {});
-                    },
-                  ),
+        body: Padding(
+          padding: paddingAll20,
+          child: Flex(
+            direction: Axis.vertical,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // Scan Code Button
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 40),
+                child: FilledButton(
+                  child: const Text('Scan QR'),
+                  onPressed: () {},
                 ),
-                onSubmitted: (value) {
-                  if (value.length > 2) setState(() {});
-                },
               ),
-            ),
-            if (_searchController.text.length > 2)
-              Operation(
-                client: GetIt.I<Client>(),
-                operationRequest: GBeaconSearchByIdReq(
-                  (b) => b..vars.startsWith = '${_searchController.text}%',
-                ),
-                builder: (context, response, error) {
-                  if (response?.loading ?? false) {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  } else if (response?.data == null) {
-                    return ErrorCenterText(response: response, error: error);
-                  }
-                  final beacons = response!.data!.beacon;
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: beacons.length,
-                    itemBuilder: (context, i) => ListTile(
-                      leading: AvatarImage(
-                        size: 40,
-                        userId: beacons[i].author.has_picture
-                            ? beacons[i].author.id
-                            : '',
-                      ),
-                      title: Text(beacons[i].title),
-                      subtitle: Text(
-                        beacons[i].description,
-                        maxLines: 1,
-                      ),
-                      onTap: () => context.push(Uri(
-                        path: pathBeaconDetails,
-                        queryParameters: {'id': beacons[i].id},
-                      ).toString()),
+              // Search control
+              Padding(
+                padding: const EdgeInsets.all(40),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Input a Code',
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {});
+                      },
                     ),
-                    padding: const EdgeInsets.all(20),
-                    separatorBuilder: (_, __) => const Divider(),
-                  );
-                },
+                  ),
+                  maxLength: _beaconIdLength,
+                  onSubmitted: (value) {
+                    if (value.length == _beaconIdLength) setState(() {});
+                  },
+                ),
               ),
-          ],
+              if (_searchController.text.length == _beaconIdLength)
+                Operation(
+                  client: GetIt.I<Client>(),
+                  operationRequest: GBeaconFetchByIdReq(
+                    (b) => b..vars.id = _searchController.text,
+                  ),
+                  builder: (context, response, error) {
+                    if (response?.loading ?? false) {
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    } else if (response?.data == null) {
+                      return ErrorCenterText(response: response, error: error);
+                    } else if (response?.data?.beacon_by_pk == null) {
+                      return Text(
+                        'No result',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      );
+                    }
+                    final beacon = response!.data!.beacon_by_pk!;
+                    return beacon.author.id == GetIt.I<AuthRepository>().myId
+                        ? MyBeaconTile(beacon: beacon)
+                        : BeaconTile(beacon: beacon);
+                  },
+                ),
+            ],
+          ),
         ),
       );
 }

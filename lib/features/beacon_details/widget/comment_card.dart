@@ -1,5 +1,7 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
+import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/comment/_g/comment_fetch_by_beacon_id.data.gql.dart';
 
 import 'package:gravity/ui/consts.dart';
@@ -28,25 +30,28 @@ class CommentCard extends StatelessWidget {
                 size: 40,
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-                Text(
-                  comment.author.title,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                // Body
-                Padding(
-                  padding: paddingV8,
-                  child: Text(
-                    comment.content,
-                    style: Theme.of(context).textTheme.bodyLarge,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    comment.author.title,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                ),
-                // Buttons
-                CommentVoteControl(comment: comment),
-              ],
+                  // Body
+                  Padding(
+                    padding: paddingV8,
+                    child: Text(
+                      comment.content,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                  // Buttons
+                  if (comment.user_id != GetIt.I<AuthRepository>().myId)
+                    CommentVoteControl(comment: comment),
+                ],
+              ),
             ),
           ],
         ),

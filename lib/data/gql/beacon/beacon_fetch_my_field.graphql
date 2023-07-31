@@ -1,0 +1,7 @@
+# import '_fragments.graphql'
+
+query BeaconFetchMyField($user_id: String!, $limit: Int = 10) {
+  beacon(where: {user_id: {_neq: $user_id}}, limit: $limit) {
+    ...BeaconFields
+  }
+}

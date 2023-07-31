@@ -1,8 +1,10 @@
-import 'package:gravity/data/gql/beacon/_g/beacon_search_by_id.req.gql.dart';
+import 'package:gravity/data/auth_repository.dart';
+import 'package:gravity/data/gql/beacon/_g/beacon_fetch_my_field.req.gql.dart';
 
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
-import 'package:gravity/features/beacon_details/widget/beacon_tile.dart';
+
+import 'widget/beacon_tile.dart';
 
 class MyFieldScreen extends StatelessWidget {
   static const _requestId = 'FetchMyField';
@@ -17,21 +19,21 @@ class MyFieldScreen extends StatelessWidget {
         ),
         body: Operation(
           client: GetIt.I<Client>(),
-          operationRequest: GBeaconSearchByIdReq(
+          operationRequest: GBeaconFetchMyFieldReq(
             (b) => b
               ..requestId = _requestId
-              ..vars.startsWith = '%',
+              ..vars.user_id = GetIt.I<AuthRepository>().myId,
           ),
           builder: (context, response, error) =>
               showLoaderOrErrorOr(response, error) ??
               RefreshIndicator.adaptive(
                 onRefresh: () async => GetIt.I<Client>()
                     .requestController
-                    .add(GBeaconSearchByIdReq(
+                    .add(GBeaconFetchMyFieldReq(
                       (b) => b
                         ..requestId = _requestId
                         ..fetchPolicy = FetchPolicy.NetworkOnly
-                        ..vars.startsWith = '%',
+                        ..vars.user_id = GetIt.I<AuthRepository>().myId,
                     )),
                 child: ListView.separated(
                   cacheExtent: 5,

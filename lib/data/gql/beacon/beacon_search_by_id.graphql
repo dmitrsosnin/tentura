@@ -1,7 +1,0 @@
-# import '_fragments.graphql'
-
-query BeaconSearchById($startsWith: String!, $limit: Int = 10) {
-  beacon(where: {id: {_like: $startsWith}}, limit: $limit) {
-    ...BeaconFields
-  }
-}
