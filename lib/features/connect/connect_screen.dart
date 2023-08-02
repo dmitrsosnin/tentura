@@ -5,9 +5,7 @@ import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
-
-import 'package:gravity/features/my_field/widget/beacon_tile.dart';
-import 'package:gravity/features/my_beacons/widget/my_beacon_tile.dart';
+import 'package:gravity/features/beacon/widget/beacon_tile.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
@@ -88,9 +86,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       );
                     }
                     final beacon = response!.data!.beacon_by_pk!;
-                    return beacon.author.id == GetIt.I<AuthRepository>().myId
-                        ? MyBeaconTile(beacon: beacon)
-                        : BeaconTile(beacon: beacon);
+                    return BeaconTile(
+                      beacon: beacon,
+                      isMine:
+                          beacon.author.id == GetIt.I<AuthRepository>().myId,
+                    );
                   },
                 ),
             ],

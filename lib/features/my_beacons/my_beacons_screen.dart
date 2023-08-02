@@ -1,13 +1,11 @@
 import 'package:gravity/app/router.dart';
-
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/beacon/_g/beacon_fetch_by_user_id.req.gql.dart';
 
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
-
-import 'widget/my_beacon_tile.dart';
+import 'package:gravity/features/beacon/widget/beacon_tile.dart';
 
 class MyBeaconsScreen extends StatelessWidget {
   static const _requestId = 'FetchMyBeacons';
@@ -60,8 +58,9 @@ class MyBeaconsScreen extends StatelessWidget {
                         padding: paddingAll20,
                         itemCount: response.data!.beacon.length,
                         separatorBuilder: (_, __) => const Divider(),
-                        itemBuilder: (context, i) => MyBeaconTile(
+                        itemBuilder: (context, i) => BeaconTile(
                           beacon: response.data!.beacon[i],
+                          isMine: true,
                         ),
                       ),
               ),

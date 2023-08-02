@@ -11,9 +11,10 @@ import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
 
-import 'widget/new_comment_input.dart';
-import 'widget/beacon_vote_control.dart';
-import 'widget/comments_expansion_tile.dart';
+import 'package:gravity/features/beacon/widget/beacon_popup_menu.dart';
+import 'package:gravity/features/beacon/widget/beacon_vote_control.dart';
+import 'package:gravity/features/comment/widget/comments_expansion_tile.dart';
+import 'package:gravity/features/comment/widget/new_comment_input.dart';
 
 class BeaconDetailsScreen extends StatelessWidget {
   static const _requestId = 'FetchBeaconById';
@@ -43,35 +44,46 @@ class BeaconDetailsScreen extends StatelessWidget {
         ..fetchPolicy = FetchPolicy.NetworkOnly
         ..vars.id = beaconId,
     );
-    return Scaffold(
-      appBar: AppBar(title: const Text('Beacon')),
-      bottomSheet: NewCommentInput(
-        beaconId: beaconId,
-        refreshRequest: refreshRequest,
+    return Operation(
+      client: GetIt.I<Client>(),
+      operationRequest: GBeaconFetchByIdReq(
+        (b) => b
+          ..requestId = _requestId + beaconId
+          ..vars.id = beaconId,
       ),
-      body: Operation(
-        client: GetIt.I<Client>(),
-        operationRequest: GBeaconFetchByIdReq(
-          (b) => b
-            ..requestId = _requestId + beaconId
-            ..vars.id = beaconId,
-        ),
-        builder: (context, response, error) {
-          final beacon = response?.data?.beacon_by_pk;
-          if (beacon == null) {
-            return response?.loading ?? false
+      builder: (context, response, error) {
+        final beacon = response?.data?.beacon_by_pk;
+        if (beacon == null) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Beacon')),
+            body: response?.loading ?? false
                 ? const Center(child: CircularProgressIndicator.adaptive())
-                : ErrorCenterText(response: response, error: error);
-          }
-          final isNotMine = beacon.author.id != GetIt.I<AuthRepository>().myId;
-          return RefreshIndicator.adaptive(
+                : ErrorCenterText(response: response, error: error),
+          );
+        }
+        final isMine = beacon.author.id == GetIt.I<AuthRepository>().myId;
+        return Scaffold(
+          appBar: AppBar(
+            actions: [
+              BeaconPopupMenu(
+                beacon: beacon,
+                isMine: isMine,
+              ),
+            ],
+            title: const Text('Beacon'),
+          ),
+          bottomSheet: NewCommentInput(
+            beaconId: beaconId,
+            refreshRequest: refreshRequest,
+          ),
+          body: RefreshIndicator.adaptive(
             onRefresh: () async =>
                 GetIt.I<Client>().requestController.add(refreshRequest),
             child: ListView(
               padding: paddingAll20,
               children: [
                 // User row (Avatar and Name)
-                if (isNotMine)
+                if (!isMine)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
@@ -96,18 +108,19 @@ class BeaconDetailsScreen extends StatelessWidget {
                   style: textTheme.headlineMedium,
                 ),
                 // Image of Beacon
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: paddingV20,
-                  child: ClipRRect(
-                    borderRadius: borderRadius20,
-                    child: BeaconImage(
-                      authorId: beacon.author.id,
-                      beaconId: beacon.imageId,
-                      height: 200,
+                if (beacon.has_picture)
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: paddingV20,
+                    child: ClipRRect(
+                      borderRadius: borderRadius20,
+                      child: BeaconImage(
+                        authorId: beacon.author.id,
+                        beaconId: beacon.imageId,
+                        height: 200,
+                      ),
                     ),
                   ),
-                ),
                 // Description
                 if (beacon.description.isNotEmpty)
                   Text(
@@ -133,9 +146,9 @@ class BeaconDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 // Buttons Row
-                if (isNotMine)
+                if (!isMine)
                   Container(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.centerRight,
                     padding: paddingV8,
                     child: BeaconVoteControl(
                       key: ObjectKey(beacon),
@@ -153,9 +166,9 @@ class BeaconDetailsScreen extends StatelessWidget {
                   ),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

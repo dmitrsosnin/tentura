@@ -4,7 +4,7 @@ import 'package:gravity/data/gql/beacon/_g/beacon_fetch_my_field.req.gql.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/rating_button.dart';
 
-import 'widget/beacon_tile.dart';
+import '../beacon/widget/beacon_tile.dart';
 
 class MyFieldScreen extends StatelessWidget {
   static const _requestId = 'FetchMyField';
