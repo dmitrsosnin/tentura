@@ -187,7 +187,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
     if (_titleController.text.length < titleMinLength) {
       return ErrorDialog.show(
         context: context,
-        error: 'Title have too short',
+        error: 'Title too short',
       );
     }
     final response = await GetIt.I<Client>()

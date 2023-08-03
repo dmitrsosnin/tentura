@@ -1,12 +1,11 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
 import 'package:gravity/firebase_options.dart';
 
 import 'package:gravity/app/router.dart';
-
 import 'package:gravity/data/gql/user/_g/user_create.req.gql.dart';
-
 import 'package:gravity/ui/ferry_utils.dart';
 
 class LogInScreen extends StatelessWidget {
@@ -40,7 +39,10 @@ class LogInScreen extends StatelessWidget {
           ),
         ],
         providers: [
-          GoogleProvider(clientId: DefaultFirebaseOptions.currentPlatform.appId)
+          AppleProvider(),
+          GoogleProvider(
+            clientId: DefaultFirebaseOptions.currentPlatform.appId,
+          ),
         ],
       );
 }
