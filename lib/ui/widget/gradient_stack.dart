@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class GradientStack extends StatelessWidget {
-  static const gradientLight = LinearGradient(
+  static const defaultHeight = 300.0;
+
+  static const _gradientLight = LinearGradient(
     colors: [
       Color(0xFFF9A396),
       Color(0xFFC52AEE),
@@ -21,7 +23,7 @@ class GradientStack extends StatelessWidget {
     tileMode: TileMode.mirror,
     transform: GradientRotation(0.3),
   );
-  static const gradientDark = LinearGradient(
+  static const _gradientDark = LinearGradient(
     colors: [
       Color(0x77F9A396),
       Color(0x77C52AEE),
@@ -48,7 +50,7 @@ class GradientStack extends StatelessWidget {
 
   const GradientStack({
     required this.children,
-    this.height = 300,
+    this.height = defaultHeight,
     this.borderWidth,
     super.key,
   });
@@ -70,8 +72,8 @@ class GradientStack extends StatelessWidget {
               ),
               gradient:
                   MediaQuery.of(context).platformBrightness == Brightness.light
-                      ? gradientLight
-                      : gradientDark,
+                      ? _gradientLight
+                      : _gradientDark,
             ),
           ),
           ...children,

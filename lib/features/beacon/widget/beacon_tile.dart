@@ -2,12 +2,12 @@ import 'package:gravity/app/router.dart';
 import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
-import 'package:gravity/features/beacon/widget/beacon_popup_menu.dart';
 
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
+import 'package:gravity/features/beacon/widget/beacon_popup_menu.dart';
 import 'package:gravity/features/beacon/widget/beacon_vote_control.dart';
 
 class BeaconTile extends StatelessWidget {
@@ -27,22 +27,28 @@ class BeaconTile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!isMine)
-          Row(
-            children: [
-              // Avatar
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: AvatarImage(
-                  userId: beacon.author.imageId,
-                  size: 40,
+          GestureDetector(
+            onTap: () => context.push(Uri(
+              path: pathProfile,
+              queryParameters: {'id': beacon.author.id},
+            ).toString()),
+            child: Row(
+              children: [
+                // Avatar
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: AvatarImage(
+                    userId: beacon.author.imageId,
+                    size: 40,
+                  ),
                 ),
-              ),
-              // User displayName
-              Text(
-                beacon.author.title,
-                style: textTheme.headlineMedium,
-              ),
-            ],
+                // User displayName
+                Text(
+                  beacon.author.title,
+                  style: textTheme.headlineMedium,
+                ),
+              ],
+            ),
           ),
         Row(
           children: [

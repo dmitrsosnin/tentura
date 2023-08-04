@@ -7,6 +7,7 @@ import 'package:gravity/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
 
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/screens/error_screen.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
@@ -26,16 +27,9 @@ class BeaconDetailsScreen extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final beaconId = GoRouterState.of(context).uri.queryParameters['id'];
     if (beaconId == null || beaconId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Beacon')),
-        body: Center(
-          child: Text(
-            'Beacon identifier is wrong!',
-            style: textTheme.headlineLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onError,
-            ),
-          ),
-        ),
+      return const ErrorScreen(
+        title: 'Beacon',
+        error: 'Beacon identifier is wrong!',
       );
     }
     final refreshRequest = GBeaconFetchByIdReq(

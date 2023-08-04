@@ -22,12 +22,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.qr_code),
-              onPressed: () {},
-            ),
-          ],
           leading: const RatingButton(),
           leadingWidth: RatingButton.width,
         ),

@@ -5,32 +5,26 @@ import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:gravity/data/auth_repository.dart';
-
 import 'package:gravity/ui/screens/error_screen.dart';
 import 'package:gravity/features/home/home_screen.dart';
 import 'package:gravity/features/auth/login_screen.dart';
 import 'package:gravity/features/connect/connect_screen.dart';
 import 'package:gravity/features/updates/updates_screen.dart';
 import 'package:gravity/features/my_field/my_field_screen.dart';
-import 'package:gravity/features/my_profile/my_profile_screen.dart';
-import 'package:gravity/features/my_beacons/my_beacons_screen.dart';
-import 'package:gravity/features/my_profile/edit_profile_screen.dart';
+import 'package:gravity/features/profile/profile_view_screen.dart';
+import 'package:gravity/features/profile/profile_edit_screen.dart';
 import 'package:gravity/features/beacon_create/beacon_create_screen.dart';
 import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
 
 export 'package:go_router/go_router.dart';
 
 const pathLogin = '/login';
-
-// Home screen tabs
 const pathField = '/field';
-const pathBeacons = '/beacons';
 const pathConnect = '/connect';
 const pathUpdates = '/updates';
 const pathProfile = '/profile';
-
-const pathProfileEdit = '/profile/edit';
 const pathProfileView = '/profile/view';
+const pathProfileEdit = '/profile/edit';
 const pathBeaconCreate = '/beacon/create';
 const pathBeaconDetails = '/beacon/details';
 
@@ -54,9 +48,14 @@ final router = GoRouter(
       builder: (context, state) => const LogInScreen(),
     ),
     GoRoute(
+      path: pathProfile,
+      parentNavigatorKey: rootNavigatorKey,
+      builder: (context, state) => const ProfileViewScreen(),
+    ),
+    GoRoute(
       path: pathProfileEdit,
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const EditProfileScreen(),
+      builder: (context, state) => const ProfileEditScreen(),
     ),
     GoRoute(
       path: pathBeaconCreate,
@@ -82,11 +81,6 @@ final router = GoRouter(
           builder: (context, state) => const MyFieldScreen(),
         ),
         GoRoute(
-          path: pathBeacons,
-          parentNavigatorKey: homeNavigatorKey,
-          builder: (context, state) => const MyBeaconsScreen(),
-        ),
-        GoRoute(
           path: pathConnect,
           parentNavigatorKey: homeNavigatorKey,
           builder: (context, state) => const ConnectScreen(),
@@ -97,9 +91,9 @@ final router = GoRouter(
           builder: (context, state) => const UpdatesScreen(),
         ),
         GoRoute(
-          path: pathProfile,
+          path: pathProfileView,
           parentNavigatorKey: homeNavigatorKey,
-          builder: (context, state) => const MyProfileScreen(),
+          builder: (context, state) => const ProfileViewScreen(),
         ),
       ],
     ),

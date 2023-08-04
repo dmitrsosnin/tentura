@@ -1,3 +1,4 @@
+import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/comment/_g/comment_fetch_by_beacon_id.data.gql.dart';
 
@@ -20,20 +21,26 @@ class CommentCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Divider(),
-          Row(
-            children: [
-              // Avatar
-              AvatarImage(
-                userId: comment.author.has_picture ? comment.user_id : '',
-                size: 40,
-              ),
-              const SizedBox(width: 20),
-              // Title
-              Text(
-                comment.author.title,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ],
+          GestureDetector(
+            onTap: () => context.push(Uri(
+              path: pathProfile,
+              queryParameters: {'id': comment.user_id},
+            ).toString()),
+            child: Row(
+              children: [
+                // Avatar
+                AvatarImage(
+                  userId: comment.author.has_picture ? comment.user_id : '',
+                  size: 40,
+                ),
+                const SizedBox(width: 20),
+                // Title
+                Text(
+                  comment.author.title,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ],
+            ),
           ),
           // Body
           Padding(

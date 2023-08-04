@@ -16,14 +16,14 @@ import 'package:gravity/ui/widget/gradient_stack.dart';
 import 'package:gravity/ui/widget/avatar_positioned.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+class ProfileEditScreen extends StatefulWidget {
+  const ProfileEditScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<ProfileEditScreen> createState() => _ProfileEditScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _ProfileEditScreenState extends State<ProfileEditScreen> {
   String? _title;
   String? _description;
   String? _newImagePath;
@@ -160,7 +160,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (_newImagePath != null) {
         await GetIt.I<ImageRepository>()
             .putAvatar(
-              userId: GetIt.I<AuthRepository>().myId!,
+              userId: GetIt.I<AuthRepository>().myId,
               image: await File(_newImagePath!).readAsBytes(),
             )
             .firstWhere((e) => e.isFinished);

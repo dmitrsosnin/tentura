@@ -16,7 +16,7 @@ class AuthRepository {
     shouldRefresh: (response) => response.errors != null,
   );
 
-  String? get myId => FirebaseAuth.instance.currentUser?.uid;
+  String get myId => FirebaseAuth.instance.currentUser?.uid ?? '';
 
   bool get isAuthenticated => FirebaseAuth.instance.currentUser != null;
 
