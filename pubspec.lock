@@ -552,12 +552,11 @@ packages:
   force_directed_graphview:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "2f481dca30c8f1563eb64bc824a9127a6ce39b31"
-      url: "https://github.com/cupofme/force_directed_graphview.git"
-    source: git
-    version: "0.0.1"
+      name: force_directed_graphview
+      sha256: e3858160afe223fae240f46036de716cc45943c0b6dba7f56338382dfc73ecf0
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   fresh:
     dependency: transitive
     description:

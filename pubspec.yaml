@@ -2,7 +2,7 @@ name: gravity
 description: 'Gravity for a social ranking'
 publish_to: 'none'
 
-version: 0.1.6+1
+version: 0.1.7+1
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
@@ -30,6 +30,7 @@ dependencies:
   built_value: ^8.6.1
   ferry: ^0.14.2+1
 
+  force_directed_graphview: ^0.1.0
   cached_network_image: ^3.2.3
   image_picker: ^1.0.2
   flutter_map: ^5.0.0
@@ -43,9 +44,6 @@ dependencies:
   # sentry_logging: ^7.8.0
   # sentry_link: ^0.3.0
   # logging: ^1.2.0
-
-  force_directed_graphview:
-    git: "https://github.com/cupofme/force_directed_graphview.git"
 
 dependency_overrides:
   http: ^1.1.0

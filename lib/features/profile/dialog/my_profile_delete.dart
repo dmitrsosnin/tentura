@@ -1,5 +1,6 @@
 import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
+import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/features/profile/data/_g/profile_delete_by_user_id.req.gql.dart';
 
 import 'package:gravity/ui/ferry_utils.dart';
@@ -23,29 +24,28 @@ class MyProfileDeleteDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
+              final myId = GetIt.I<AuthRepository>().myId;
               final response = await GetIt.I<Client>()
-                  .request(GProfileDeleteByUserIdReq(
-                      (b) => b.vars..id = GetIt.I<AuthRepository>().myId))
+                  .request(GProfileDeleteByUserIdReq((b) => b.vars..id = myId))
                   .firstWhere((e) => e.dataSource != DataSource.Optimistic);
-              if (context.mounted) {
-                if (response.hasErrors) {
-                  final colors = Theme.of(context).colorScheme;
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                      (response.linkException ?? response.graphqlErrors)
-                          .toString(),
-                      style: TextStyle(
-                        color: colors.onError,
-                        backgroundColor: colors.error,
-                      ),
+              if (context.mounted && response.hasErrors) {
+                final colors = Theme.of(context).colorScheme;
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    (response.linkException ?? response.graphqlErrors)
+                        .toString(),
+                    style: TextStyle(
+                      color: colors.onError,
+                      backgroundColor: colors.error,
                     ),
-                  ));
-                  context.pop();
-                } else {
-                  // TBD: call .reauthenticateWithCredential() before delete
-                  await GetIt.I<AuthRepository>().deleteAccount();
-                  if (context.mounted) context.go(pathLogin);
-                }
+                  ),
+                ));
+                context.pop();
+              } else {
+                await GetIt.I<ImageRepository>().deleteProfile(userId: myId);
+                // TBD: call .reauthenticateWithCredential() before delete
+                await GetIt.I<AuthRepository>().deleteAccount();
+                if (context.mounted) context.go(pathLogin);
               }
             },
             child: const Text('Delete'),

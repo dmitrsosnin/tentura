@@ -46,4 +46,13 @@ class ImageRepository {
                 bytesTransferred: event.bytesTransferred,
                 isFinished: event.totalBytes == event.bytesTransferred,
               ));
+
+  Future<void> deleteBeacon({
+    required String userId,
+    required String beaconId,
+  }) =>
+      FirebaseStorage.instance.ref('$userId/$beaconId.jpg').delete();
+
+  Future<void> deleteProfile({required String userId}) =>
+      FirebaseStorage.instance.ref(userId).delete();
 }
