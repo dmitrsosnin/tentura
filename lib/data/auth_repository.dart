@@ -35,4 +35,7 @@ class AuthRepository {
       await FirebaseAuth.instance.currentUser?.getIdToken();
 
   Future<void> signOut() => FirebaseAuth.instance.signOut();
+
+  Future<void> deleteAccount() async =>
+      await FirebaseAuth.instance.currentUser?.delete();
 }
