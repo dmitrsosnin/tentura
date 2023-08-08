@@ -23,8 +23,8 @@
 //     author: const User(),
 //     title: '',
 //     description: '',
-//     createdAt: DateTime.now(),
-//     updatedAt: DateTime.now(),
+//     createdAt: DateTime.timestamp(),
+//     updatedAt: DateTime.timestamp(),
 //   );
 
 //   @override

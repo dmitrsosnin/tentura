@@ -1,0 +1,9 @@
+# import '/data/gql/beacon/_fragments.graphql'
+
+mutation BeaconHideById($beacon_id: String!, $hidden_until: timestamptz!) {
+  insert_beacon_hidden_one(object: {beacon_id: $beacon_id, hidden_until: $hidden_until}) {
+    beacon {
+      ...BeaconFields
+    }
+  }
+}

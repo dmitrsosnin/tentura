@@ -169,7 +169,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
   }
 
   Future<void> _onChooseDateRange() async {
-    final now = DateTime.now();
+    final now = DateTime.timestamp();
     _dateRange = await showDateRangePicker(
           context: context,
           firstDate: now,

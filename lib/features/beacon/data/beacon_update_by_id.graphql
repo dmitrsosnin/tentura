@@ -1,4 +1,3 @@
-# import '/data/gql/user/_fragments.graphql'
 # import '/data/gql/beacon/_fragments.graphql'
 
 mutation BeaconUpdateById($id: String!, $enabled: Boolean!) {
