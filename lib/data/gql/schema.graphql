@@ -34,6 +34,42 @@ type beacon {
   author: user!
 
   """An array relationship"""
+  beacon_hiddens(
+    """distinct select on columns"""
+    distinct_on: [beacon_hidden_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_hidden_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): [beacon_hidden!]!
+
+  """An aggregate relationship"""
+  beacon_hiddens_aggregate(
+    """distinct select on columns"""
+    distinct_on: [beacon_hidden_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_hidden_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): beacon_hidden_aggregate!
+
+  """An array relationship"""
   comments(
     """distinct select on columns"""
     distinct_on: [comment_select_column!]
@@ -74,6 +110,11 @@ type beacon {
   enabled: Boolean!
   has_picture: Boolean!
   id: String!
+
+  """
+  A computed field, executes function "beacon_get_is_hidden"
+  """
+  is_hidden: Boolean
 
   """
   A computed field, executes function "beacon_get_my_vote"
@@ -226,6 +267,8 @@ input beacon_bool_exp {
   _not: beacon_bool_exp
   _or: [beacon_bool_exp!]
   author: user_bool_exp
+  beacon_hiddens: beacon_hidden_bool_exp
+  beacon_hiddens_aggregate: beacon_hidden_aggregate_bool_exp
   comments: comment_bool_exp
   comments_aggregate: comment_aggregate_bool_exp
   comments_count: Int_comparison_exp
@@ -234,6 +277,7 @@ input beacon_bool_exp {
   enabled: Boolean_comparison_exp
   has_picture: Boolean_comparison_exp
   id: String_comparison_exp
+  is_hidden: Boolean_comparison_exp
   my_vote: Int_comparison_exp
   place: geography_comparison_exp
   timerange: tstzrange_comparison_exp
@@ -255,6 +299,232 @@ enum beacon_constraint {
 }
 
 """
+columns and relationships of "beacon_hidden"
+"""
+type beacon_hidden {
+  """An object relationship"""
+  beacon: beacon!
+  beacon_id: String!
+  hidden_until: timestamptz!
+
+  """An object relationship"""
+  user: user!
+  user_id: String!
+}
+
+"""
+aggregated selection of "beacon_hidden"
+"""
+type beacon_hidden_aggregate {
+  aggregate: beacon_hidden_aggregate_fields
+  nodes: [beacon_hidden!]!
+}
+
+input beacon_hidden_aggregate_bool_exp {
+  count: beacon_hidden_aggregate_bool_exp_count
+}
+
+input beacon_hidden_aggregate_bool_exp_count {
+  arguments: [beacon_hidden_select_column!]
+  distinct: Boolean
+  filter: beacon_hidden_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "beacon_hidden"
+"""
+type beacon_hidden_aggregate_fields {
+  count(columns: [beacon_hidden_select_column!], distinct: Boolean): Int!
+  max: beacon_hidden_max_fields
+  min: beacon_hidden_min_fields
+}
+
+"""
+order by aggregate values of table "beacon_hidden"
+"""
+input beacon_hidden_aggregate_order_by {
+  count: order_by
+  max: beacon_hidden_max_order_by
+  min: beacon_hidden_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "beacon_hidden"
+"""
+input beacon_hidden_arr_rel_insert_input {
+  data: [beacon_hidden_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: beacon_hidden_on_conflict
+}
+
+"""
+Boolean expression to filter rows from the table "beacon_hidden". All fields are combined with a logical 'AND'.
+"""
+input beacon_hidden_bool_exp {
+  _and: [beacon_hidden_bool_exp!]
+  _not: beacon_hidden_bool_exp
+  _or: [beacon_hidden_bool_exp!]
+  beacon: beacon_bool_exp
+  beacon_id: String_comparison_exp
+  hidden_until: timestamptz_comparison_exp
+  user: user_bool_exp
+  user_id: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "beacon_hidden"
+"""
+enum beacon_hidden_constraint {
+  """
+  unique or primary key constraint on columns "beacon_id", "user_id"
+  """
+  beacon_hidden_pkey
+}
+
+"""
+input type for inserting data into table "beacon_hidden"
+"""
+input beacon_hidden_insert_input {
+  beacon: beacon_obj_rel_insert_input
+  beacon_id: String
+  hidden_until: timestamptz
+  user: user_obj_rel_insert_input
+  user_id: String
+}
+
+"""aggregate max on columns"""
+type beacon_hidden_max_fields {
+  beacon_id: String
+  hidden_until: timestamptz
+  user_id: String
+}
+
+"""
+order by max() on columns of table "beacon_hidden"
+"""
+input beacon_hidden_max_order_by {
+  beacon_id: order_by
+  hidden_until: order_by
+  user_id: order_by
+}
+
+"""aggregate min on columns"""
+type beacon_hidden_min_fields {
+  beacon_id: String
+  hidden_until: timestamptz
+  user_id: String
+}
+
+"""
+order by min() on columns of table "beacon_hidden"
+"""
+input beacon_hidden_min_order_by {
+  beacon_id: order_by
+  hidden_until: order_by
+  user_id: order_by
+}
+
+"""
+response of any mutation on the table "beacon_hidden"
+"""
+type beacon_hidden_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [beacon_hidden!]!
+}
+
+"""
+on_conflict condition type for table "beacon_hidden"
+"""
+input beacon_hidden_on_conflict {
+  constraint: beacon_hidden_constraint!
+  update_columns: [beacon_hidden_update_column!]! = []
+  where: beacon_hidden_bool_exp
+}
+
+"""Ordering options when selecting data from "beacon_hidden"."""
+input beacon_hidden_order_by {
+  beacon: beacon_order_by
+  beacon_id: order_by
+  hidden_until: order_by
+  user: user_order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: beacon_hidden"""
+input beacon_hidden_pk_columns_input {
+  beacon_id: String!
+  user_id: String!
+}
+
+"""
+select columns of table "beacon_hidden"
+"""
+enum beacon_hidden_select_column {
+  """column name"""
+  beacon_id
+
+  """column name"""
+  hidden_until
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "beacon_hidden"
+"""
+input beacon_hidden_set_input {
+  beacon_id: String
+  hidden_until: timestamptz
+  user_id: String
+}
+
+"""
+Streaming cursor of the table "beacon_hidden"
+"""
+input beacon_hidden_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: beacon_hidden_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input beacon_hidden_stream_cursor_value_input {
+  beacon_id: String
+  hidden_until: timestamptz
+  user_id: String
+}
+
+"""
+update columns of table "beacon_hidden"
+"""
+enum beacon_hidden_update_column {
+  """column name"""
+  beacon_id
+
+  """column name"""
+  hidden_until
+
+  """column name"""
+  user_id
+}
+
+input beacon_hidden_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: beacon_hidden_set_input
+
+  """filter the rows which have to be updated"""
+  where: beacon_hidden_bool_exp!
+}
+
+"""
 input type for incrementing numeric columns in table "beacon"
 """
 input beacon_inc_input {
@@ -266,6 +536,7 @@ input type for inserting data into table "beacon"
 """
 input beacon_insert_input {
   author: user_obj_rel_insert_input
+  beacon_hiddens: beacon_hidden_arr_rel_insert_input
   comments: comment_arr_rel_insert_input
   comments_count: Int
   created_at: timestamptz
@@ -372,6 +643,7 @@ input beacon_on_conflict {
 """Ordering options when selecting data from "beacon"."""
 input beacon_order_by {
   author: user_order_by
+  beacon_hiddens_aggregate: beacon_hidden_aggregate_order_by
   comments_aggregate: comment_aggregate_order_by
   comments_count: order_by
   created_at: order_by
@@ -379,6 +651,7 @@ input beacon_order_by {
   enabled: order_by
   has_picture: order_by
   id: order_by
+  is_hidden: order_by
   my_vote: order_by
   place: order_by
   timerange: order_by
@@ -1213,6 +1486,19 @@ type mutation_root {
   delete_beacon_by_pk(id: String!): beacon
 
   """
+  delete data from the table: "beacon_hidden"
+  """
+  delete_beacon_hidden(
+    """filter the rows which have to be deleted"""
+    where: beacon_hidden_bool_exp!
+  ): beacon_hidden_mutation_response
+
+  """
+  delete single row from the table: "beacon_hidden"
+  """
+  delete_beacon_hidden_by_pk(beacon_id: String!, user_id: String!): beacon_hidden
+
+  """
   delete data from the table: "comment"
   """
   delete_comment(
@@ -1287,6 +1573,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: beacon_on_conflict
   ): beacon_mutation_response
+
+  """
+  insert data into the table: "beacon_hidden"
+  """
+  insert_beacon_hidden(
+    """the rows to be inserted"""
+    objects: [beacon_hidden_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: beacon_hidden_on_conflict
+  ): beacon_hidden_mutation_response
+
+  """
+  insert a single row into the table: "beacon_hidden"
+  """
+  insert_beacon_hidden_one(
+    """the row to be inserted"""
+    object: beacon_hidden_insert_input!
+
+    """upsert condition"""
+    on_conflict: beacon_hidden_on_conflict
+  ): beacon_hidden
 
   """
   insert a single row into the table: "beacon"
@@ -1434,6 +1742,34 @@ type mutation_root {
     _set: beacon_set_input
     pk_columns: beacon_pk_columns_input!
   ): beacon
+
+  """
+  update data of the table: "beacon_hidden"
+  """
+  update_beacon_hidden(
+    """sets the columns of the filtered rows to the given values"""
+    _set: beacon_hidden_set_input
+
+    """filter the rows which have to be updated"""
+    where: beacon_hidden_bool_exp!
+  ): beacon_hidden_mutation_response
+
+  """
+  update single row of the table: "beacon_hidden"
+  """
+  update_beacon_hidden_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: beacon_hidden_set_input
+    pk_columns: beacon_hidden_pk_columns_input!
+  ): beacon_hidden
+
+  """
+  update multiples rows of table: "beacon_hidden"
+  """
+  update_beacon_hidden_many(
+    """updates to execute, in order"""
+    updates: [beacon_hidden_updates!]!
+  ): [beacon_hidden_mutation_response]
 
   """
   update multiples rows of table: "beacon"
@@ -1680,6 +2016,49 @@ type query_root {
 
   """fetch data from the table: "beacon" using primary key columns"""
   beacon_by_pk(id: String!): beacon
+
+  """
+  fetch data from the table: "beacon_hidden"
+  """
+  beacon_hidden(
+    """distinct select on columns"""
+    distinct_on: [beacon_hidden_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_hidden_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): [beacon_hidden!]!
+
+  """
+  fetch aggregated fields from the table: "beacon_hidden"
+  """
+  beacon_hidden_aggregate(
+    """distinct select on columns"""
+    distinct_on: [beacon_hidden_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_hidden_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): beacon_hidden_aggregate!
+
+  """fetch data from the table: "beacon_hidden" using primary key columns"""
+  beacon_hidden_by_pk(beacon_id: String!, user_id: String!): beacon_hidden
 
   """
   fetch data from the table: "comment"
@@ -2011,6 +2390,63 @@ type subscription_root {
 
   """fetch data from the table: "beacon" using primary key columns"""
   beacon_by_pk(id: String!): beacon
+
+  """
+  fetch data from the table: "beacon_hidden"
+  """
+  beacon_hidden(
+    """distinct select on columns"""
+    distinct_on: [beacon_hidden_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_hidden_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): [beacon_hidden!]!
+
+  """
+  fetch aggregated fields from the table: "beacon_hidden"
+  """
+  beacon_hidden_aggregate(
+    """distinct select on columns"""
+    distinct_on: [beacon_hidden_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_hidden_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): beacon_hidden_aggregate!
+
+  """fetch data from the table: "beacon_hidden" using primary key columns"""
+  beacon_hidden_by_pk(beacon_id: String!, user_id: String!): beacon_hidden
+
+  """
+  fetch data from the table in a streaming manner: "beacon_hidden"
+  """
+  beacon_hidden_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [beacon_hidden_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): [beacon_hidden!]!
 
   """
   fetch data from the table in a streaming manner: "beacon"
@@ -2351,6 +2787,42 @@ columns and relationships of "user"
 """
 type user {
   """An array relationship"""
+  beacon_hiddens(
+    """distinct select on columns"""
+    distinct_on: [beacon_hidden_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_hidden_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): [beacon_hidden!]!
+
+  """An aggregate relationship"""
+  beacon_hiddens_aggregate(
+    """distinct select on columns"""
+    distinct_on: [beacon_hidden_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [beacon_hidden_order_by!]
+
+    """filter the rows returned"""
+    where: beacon_hidden_bool_exp
+  ): beacon_hidden_aggregate!
+
+  """An array relationship"""
   beacons(
     """distinct select on columns"""
     distinct_on: [beacon_select_column!]
@@ -2618,6 +3090,8 @@ input user_bool_exp {
   _and: [user_bool_exp!]
   _not: user_bool_exp
   _or: [user_bool_exp!]
+  beacon_hiddens: beacon_hidden_bool_exp
+  beacon_hiddens_aggregate: beacon_hidden_aggregate_bool_exp
   beacons: beacon_bool_exp
   beacons_aggregate: beacon_aggregate_bool_exp
   comments: comment_bool_exp
@@ -2653,6 +3127,7 @@ enum user_constraint {
 input type for inserting data into table "user"
 """
 input user_insert_input {
+  beacon_hiddens: beacon_hidden_arr_rel_insert_input
   beacons: beacon_arr_rel_insert_input
   comments: comment_arr_rel_insert_input
   created_at: timestamptz
@@ -2727,6 +3202,7 @@ input user_on_conflict {
 
 """Ordering options when selecting data from "user"."""
 input user_order_by {
+  beacon_hiddens_aggregate: beacon_hidden_aggregate_order_by
   beacons_aggregate: beacon_aggregate_order_by
   comments_aggregate: comment_aggregate_order_by
   created_at: order_by

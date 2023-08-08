@@ -6,6 +6,7 @@ fragment BeaconFields on beacon {
   description
   created_at
   updated_at
+  is_hidden
   enabled
   place
   timerange
