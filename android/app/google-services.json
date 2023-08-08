@@ -46,6 +46,14 @@
           }
         },
         {
+          "client_id": "388561553386-jsk9fki59uf7n8r4tlskv2loiaavpkkp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.intersubjective.gravity",
+            "certificate_hash": "f1c39d8373a64baff72dc032cd41e67dc605fb59"
+          }
+        },
+        {
           "client_id": "388561553386-lvlgqpm3ddjbkq94j4jusca2csjbsbbg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
