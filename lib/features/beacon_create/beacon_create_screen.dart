@@ -190,16 +190,17 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
         error: 'Title too short',
       );
     }
-    final response = await GetIt.I<Client>()
-        .request(GBeaconCreateReq(
-          (b) => b.vars
-            ..title = _titleController.text
-            ..description = _descriptionController.text
-            ..timerange = _dateRange
-            ..place = _coordinates
-            ..has_picture = _imageController.text.isNotEmpty,
-        ))
-        .firstWhere((e) => e.dataSource != DataSource.Optimistic);
+    final response = await doRequest(
+      context: context,
+      request: GBeaconCreateReq(
+        (b) => b.vars
+          ..title = _titleController.text
+          ..description = _descriptionController.text
+          ..timerange = _dateRange
+          ..place = _coordinates
+          ..has_picture = _imageController.text.isNotEmpty,
+      ),
+    );
     final beacon = response.data?.insert_beacon_one;
     if (beacon != null && _imagePath.isNotEmpty) {
       await GetIt.I<ImageRepository>()

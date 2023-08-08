@@ -40,14 +40,14 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
         ),
       );
 
-  Future<void> _updateVote([int? amount]) => GetIt.I<Client>()
-          .request(GBeaconVoteByIdReq(
-            (b) => b
-              ..vars.amount = _likeAmount
-              ..vars.beacon_id = widget.beacon.id,
-          ))
-          .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then(
+  Future<void> _updateVote([int? amount]) => doRequest(
+        context: context,
+        request: GBeaconVoteByIdReq(
+          (b) => b
+            ..vars.amount = _likeAmount
+            ..vars.beacon_id = widget.beacon.id,
+        ),
+      ).then(
         (response) {
           final amount = response.data?.insert_vote_beacon_one?.amount;
           if (amount != null) setState(() => _likeAmount = amount);

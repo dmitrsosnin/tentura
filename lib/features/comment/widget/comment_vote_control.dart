@@ -40,14 +40,14 @@ class _CommentVoteControlState extends State<CommentVoteControl> {
         ),
       );
 
-  Future<void> _updateVote([int? amount]) => GetIt.I<Client>()
-          .request(GCommentVoteByIdReq(
-            (b) => b
-              ..vars.amount = _likeAmount
-              ..vars.comment_id = widget.comment.id,
-          ))
-          .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then(
+  Future<void> _updateVote([int? amount]) => doRequest(
+        context: context,
+        request: GCommentVoteByIdReq(
+          (b) => b
+            ..vars.amount = _likeAmount
+            ..vars.comment_id = widget.comment.id,
+        ),
+      ).then(
         (response) {
           final amount = response.data?.insert_vote_comment_one?.amount;
           if (amount != null) setState(() => _likeAmount = amount);

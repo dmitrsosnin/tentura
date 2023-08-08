@@ -1,7 +1,6 @@
 import 'package:gravity/data/gql/comment/_g/comment_create.req.gql.dart';
 
 import 'package:gravity/ui/ferry_utils.dart';
-import 'package:gravity/ui/dialog/error_dialog.dart';
 
 class NewCommentInput extends StatefulWidget {
   final String beaconId;
@@ -38,26 +37,20 @@ class _NewCommentInputState extends State<NewCommentInput> {
             IconButton(
               icon: const Icon(Icons.send),
               onPressed: () async {
-                final response = await GetIt.I<Client>()
-                    .request(GCommentCreateReq(
-                      (b) => b
-                        ..vars.beacon_id = widget.beaconId
-                        ..vars.content = _textController.text,
-                    ))
-                    .firstWhere((e) => e.dataSource == DataSource.Link);
-                if (context.mounted) {
-                  if (response.hasErrors) {
-                    await ErrorDialog.show(
-                      context: context,
-                      error: response.linkException ?? response.graphqlErrors,
-                    );
-                  } else {
-                    _textController.clear();
-                    FocusScope.of(context).unfocus();
-                    GetIt.I<Client>()
-                        .requestController
-                        .add(widget.refreshRequest);
-                  }
+                final response = await doRequest(
+                  context: context,
+                  request: GCommentCreateReq(
+                    (b) => b
+                      ..vars.beacon_id = widget.beaconId
+                      ..vars.content = _textController.text,
+                  ),
+                );
+                if (context.mounted && response.hasNoErrors) {
+                  _textController.clear();
+                  FocusScope.of(context).unfocus();
+                  GetIt.I<Client>()
+                      .requestController
+                      .add(widget.refreshRequest);
                 }
               },
             ),

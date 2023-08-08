@@ -20,20 +20,14 @@ class LogInScreen extends StatelessWidget {
           ),
           AuthStateChangeAction<UserCreated>(
             (context, state) async {
-              final response = await GetIt.I<Client>()
-                  .request(GUserCreateReq(
-                    (b) => b..vars.title = state.credential.user?.displayName,
-                  ))
-                  .firstWhere((e) => e.dataSource == DataSource.Link);
-              if (context.mounted) {
-                if (response.hasErrors) {
-                  context.go(
-                    pathErrorUnknown,
-                    extra: response.linkException ?? response.graphqlErrors,
-                  );
-                } else {
-                  context.go(pathProfileEdit);
-                }
+              final response = await doRequest(
+                context: context,
+                request: GUserCreateReq(
+                  (b) => b..vars.title = state.credential.user?.displayName,
+                ),
+              );
+              if (context.mounted && response.hasNoErrors) {
+                context.go(pathProfileEdit);
               }
             },
           ),

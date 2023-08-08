@@ -156,11 +156,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         error: 'Name have to be at least 3 char long!',
       );
     }
+    final myId = GetIt.I<AuthRepository>().myId;
     try {
       if (_newImagePath != null) {
         await GetIt.I<ImageRepository>()
             .putAvatar(
-              userId: GetIt.I<AuthRepository>().myId,
+              userId: myId,
               image: await File(_newImagePath!).readAsBytes(),
             )
             .firstWhere((e) => e.isFinished);
@@ -168,21 +169,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     } catch (e) {
       await ErrorDialog.show(context: context, error: e);
     }
-    final response = await GetIt.I<Client>()
-        .request(GUserUpdateReq(
+    if (context.mounted) {
+      final response = await doRequest(
+        context: context,
+        request: GUserUpdateReq(
           (b) => b.vars
-            ..id = GetIt.I<AuthRepository>().myId
+            ..id = myId
             ..title = _title ?? profile.title
             ..description = _description ?? profile.description
             ..has_picture = _newImagePath != null || profile.has_picture,
-        ))
-        .firstWhere((e) => e.dataSource != DataSource.Optimistic);
-    if (response.hasErrors && mounted) {
-      await ErrorDialog.show(
-        context: context,
-        error: response.linkException ?? response.graphqlErrors,
+        ),
       );
+      if (context.mounted && response.hasNoErrors) context.pop();
     }
-    if (mounted) context.pop();
   }
 }

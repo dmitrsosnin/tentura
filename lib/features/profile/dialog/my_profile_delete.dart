@@ -25,21 +25,11 @@ class MyProfileDeleteDialog extends StatelessWidget {
           TextButton(
             onPressed: () async {
               final myId = GetIt.I<AuthRepository>().myId;
-              final response = await GetIt.I<Client>()
-                  .request(GProfileDeleteByUserIdReq((b) => b.vars..id = myId))
-                  .firstWhere((e) => e.dataSource != DataSource.Optimistic);
-              if (context.mounted && response.hasErrors) {
-                final colors = Theme.of(context).colorScheme;
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                    (response.linkException ?? response.graphqlErrors)
-                        .toString(),
-                    style: TextStyle(
-                      color: colors.onError,
-                      backgroundColor: colors.error,
-                    ),
-                  ),
-                ));
+              final response = await doRequest(
+                context: context,
+                request: GProfileDeleteByUserIdReq((b) => b.vars..id = myId),
+              );
+              if (response.hasErrors && context.mounted) {
                 context.pop();
               } else {
                 await GetIt.I<ImageRepository>().deleteProfile(userId: myId);

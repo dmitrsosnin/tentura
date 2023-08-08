@@ -34,6 +34,12 @@ class ProfileViewScreen extends StatelessWidget {
       builder: (context, response, error) {
         final profile = response?.data?.user_by_pk;
         final textTheme = Theme.of(context).textTheme;
+        final beacons = (isMine
+                ? response?.data?.user_by_pk?.beacons.toList()
+                : response?.data?.user_by_pk?.beacons
+                    .where((e) => e.enabled)
+                    .toList(growable: false)) ??
+            [];
         return Scaffold(
           floatingActionButton: isMine
               ? FloatingActionButton(
@@ -110,14 +116,14 @@ class ProfileViewScreen extends StatelessWidget {
                             ),
                           ),
                           // Beacons
-                          if (profile.beacons.isNotEmpty)
+                          if (beacons.isNotEmpty)
                             SliverList.separated(
-                              itemCount: profile.beacons.length,
+                              itemCount: beacons.length,
                               itemBuilder: (context, i) => Padding(
                                 padding: paddingH20,
                                 child: BeaconTile(
-                                  beacon: profile.beacons[i],
-                                  isMine: true,
+                                  beacon: beacons[i],
+                                  isMine: isMine,
                                 ),
                               ),
                               separatorBuilder: (_, __) => const Divider(
