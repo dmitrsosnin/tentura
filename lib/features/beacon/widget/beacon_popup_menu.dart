@@ -16,44 +16,44 @@ class BeaconPopupMenu extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => PopupMenuButton(
-        itemBuilder: (context) => isMine
-            ? [
-                PopupMenuItem<void>(
-                  child: const Text('Graph view'),
-                  onTap: () {},
+  Widget build(BuildContext context) => PopupMenuButton<void>(
+        itemBuilder: (context) => [
+          PopupMenuItem<void>(
+            child: const Text('Graph view'),
+            onTap: () {},
+          ),
+          const PopupMenuDivider(),
+          if (isMine) ...[
+            PopupMenuItem<void>(
+              child: beacon.enabled
+                  ? const Text('Disable beacon')
+                  : const Text('Enable beacon'),
+              onTap: () => doRequest(
+                context: context,
+                request: GBeaconUpdateByIdReq(
+                  (b) => b
+                    ..vars.id = beacon.id
+                    ..vars.enabled = !beacon.enabled,
                 ),
-                PopupMenuItem<void>(
-                  child: beacon.enabled
-                      ? const Text('Disable beacon')
-                      : const Text('Enable beacon'),
-                  onTap: () => doRequest(
-                    context: context,
-                    request: GBeaconUpdateByIdReq(
-                      (b) => b
-                        ..vars.id = beacon.id
-                        ..vars.enabled = !beacon.enabled,
-                    ),
-                  ),
-                ),
-                PopupMenuItem<void>(
-                  child: const Text('Delete beacon'),
-                  onTap: () => BeaconDeleteDialog.show(context, beacon: beacon),
-                ),
-                PopupMenuItem<void>(
-                  child: const Text('Share'),
-                  onTap: () {},
-                ),
-              ]
-            : [
-                PopupMenuItem<void>(
-                  child: const Text('Hide from My field'),
-                  onTap: () => BeaconHideDialog.show(context, beacon: beacon),
-                ),
-                PopupMenuItem<void>(
-                  child: const Text('Share'),
-                  onTap: () {},
-                ),
-              ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem<void>(
+              child: const Text('Delete beacon'),
+              onTap: () => BeaconDeleteDialog.show(context, beacon: beacon),
+            ),
+          ],
+          if (!isMine)
+            PopupMenuItem<void>(
+              enabled: beacon.is_hidden == false,
+              child: const Text('Hide from My field'),
+              onTap: () => BeaconHideDialog.show(context, beacon: beacon),
+            ),
+          const PopupMenuDivider(),
+          PopupMenuItem<void>(
+            child: const Text('Share'),
+            onTap: () {},
+          ),
+        ],
       );
 }

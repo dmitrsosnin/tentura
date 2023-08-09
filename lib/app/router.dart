@@ -28,18 +28,17 @@ const pathProfileEdit = '/profile/edit';
 const pathBeaconCreate = '/beacon/create';
 const pathBeaconDetails = '/beacon/details';
 
-const pathErrorUnknown = '/error_unknown';
-
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 
 final router = GoRouter(
-  debugLogDiagnostics: kDebugMode,
-  redirect: (BuildContext context, GoRouterState state) =>
-      GetIt.I<AuthRepository>().isAuthenticated ? null : pathLogin,
   initialLocation: pathLogin,
   navigatorKey: rootNavigatorKey,
+  debugLogDiagnostics: kDebugMode,
   observers: [SentryNavigatorObserver()],
+  errorBuilder: (context, state) => ErrorScreen(error: state.error),
+  redirect: (context, state) =>
+      GetIt.I<AuthRepository>().isAuthenticated ? null : pathLogin,
   routes: [
     GoRoute(
       path: pathLogin,
@@ -97,13 +96,5 @@ final router = GoRouter(
         ),
       ],
     ),
-    GoRoute(
-      path: pathErrorUnknown,
-      builder: (context, state) => ErrorScreen(error: state.extra),
-    ),
   ],
-  errorBuilder: (context, state) {
-    if (kDebugMode) print(state.error);
-    return const ErrorScreen();
-  },
 );

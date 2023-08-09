@@ -1,167 +1,74 @@
-// import 'dart:math';
-// import 'package:flutter/material.dart';
-// import 'package:equatable/equatable.dart';
-// import 'package:force_directed_graphview/force_directed_graphview.dart';
+import 'package:flutter/material.dart';
+import 'package:force_directed_graphview/force_directed_graphview.dart';
 
-// import 'package:gravity/entity/user.dart';
-// import 'package:gravity/entity/beacon.dart';
+import 'package:gravity/domain/entity/graph_node.dart';
 
-// import 'widget/graph_node_widget.dart';
+import 'widget/graph_node_widget.dart';
 
-// class GraphScreen extends StatefulWidget {
-//   const GraphScreen({super.key});
+class GraphScreen extends StatefulWidget {
+  final GraphNode rootNode;
+  final List<GraphNode> nodes;
 
-//   @override
-//   State<GraphScreen> createState() => _GraphScreenState();
-// }
+  const GraphScreen({
+    required this.rootNode,
+    required this.nodes,
+    super.key,
+  });
 
-// class _GraphScreenState extends State<GraphScreen> {
-//   final _controller = GraphController();
-//   final _random = Random();
-//   final _beacon = Beacon(
-//     id: '',
-//     author: const User(),
-//     title: '',
-//     description: '',
-//     createdAt: DateTime.timestamp(),
-//     updatedAt: DateTime.timestamp(),
-//   );
+  @override
+  State<GraphScreen> createState() => _GraphScreenState();
+}
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _controller.mutate((mutator) {
-//       const nodeCount = 50;
+class _GraphScreenState extends State<GraphScreen> {
+  final _controller = GraphController<Node<GraphNode>, Edge<Node<GraphNode>>>();
 
-//       for (var i = 0; i < nodeCount; i++) {
-//         final node = _random.nextBool()
-//             ? UserNode(
-//                 user: User(id: _random.nextInt(1024).toString()),
-//                 size: i + 20,
-//               )
-//             : BeaconNode(
-//                 beacon: _beacon,
-//                 size: i + 20,
-//               );
-//         mutator.addNode(node);
+  @override
+  void initState() {
+    super.initState();
+    _controller.mutate((mutator) {
+      final rootNode = Node(data: widget.rootNode, size: 80);
+      mutator.addNode(rootNode);
+      for (final n in widget.nodes) {
+        final node = Node(data: n, size: 40);
+        mutator
+          ..addNode(node)
+          ..addEdge(Edge(
+            source: rootNode,
+            destination: node,
+          ));
+      }
+    });
+  }
 
-//         for (final other in _controller.nodes) {
-//           if (other != node &&
-//               _random.nextInt(nodeCount + 40 - node.size.toInt()) == 0) {
-//             mutator.addEdge(Edge(node, other));
-//           }
-//         }
-//       }
-//     });
-//   }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
-//   @override
-//   void dispose() {
-//     _controller.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Graph view'),
-//           actions: [
-//             TextButton(
-//               onPressed: () => _controller.zoomBy(1),
-//               child: const Text('Reset'),
-//             ),
-//           ],
-//         ),
-//         backgroundColor: Colors.black12,
-//         body: GraphView(
-//           controller: _controller,
-//           maxScale: 3,
-//           minScale: 0.3,
-//           canvasSize: const GraphCanvasSize.fixed(Size.square(3000)),
-//           layoutAlgorithm: const FruchtermanReingoldAlgorithm(
-//             iterations: 500,
-//           ),
-//           nodeBuilder: (context, node) => GraphNodeWidget(
-//             node: node as GraphNode,
-//             onTap: () => _controller.jumpToNode(node),
-//           ),
-//           labelBuilder: (context, node) => switch (node) {
-//             final UserNode node => LabelConfiguration(
-//                 size: Size.square(node.size),
-//                 child: Align(
-//                   alignment: Alignment.topCenter,
-//                   child: Text(
-//                     node.user.title.isEmpty
-//                         ? 'Unnamed person'
-//                         : node.user.title,
-//                     textAlign: TextAlign.center,
-//                     style: TextStyle(fontSize: node.size / 5),
-//                   ),
-//                 ),
-//               ),
-//             _ => null,
-//           },
-//           edgePainter: (canvas, edge, sourcePosition, targetPosition) {
-//             canvas.drawLine(
-//               sourcePosition,
-//               targetPosition,
-//               Paint()
-//                 ..strokeWidth = edge.source.size / edge.target.size
-//                 ..color = Colors.black54,
-//             );
-//           },
-//         ),
-//       );
-// }
-
-// sealed class GraphNode extends Equatable implements Node {
-//   @override
-//   final double size;
-
-//   final bool isActive;
-
-//   const GraphNode({
-//     required this.size,
-//     this.isActive = false,
-//   });
-// }
-
-// class UserNode extends GraphNode {
-//   final User user;
-
-//   const UserNode({
-//     required this.user,
-//     required super.size,
-//     super.isActive,
-//   });
-
-//   @override
-//   List<Object?> get props => [
-//         isActive,
-//         size,
-//         user,
-//       ];
-
-//   @override
-//   User get data => user;
-// }
-
-// class BeaconNode extends GraphNode {
-//   final Beacon beacon;
-
-//   const BeaconNode({
-//     required this.beacon,
-//     required super.size,
-//     super.isActive,
-//   });
-
-//   @override
-//   List<Object?> get props => [
-//         isActive,
-//         size,
-//         beacon,
-//       ];
-
-//   @override
-//   Beacon get data => beacon;
-// }
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Graph view'),
+          actions: [
+            TextButton(
+              onPressed: () => _controller.zoomBy(1),
+              child: const Text('Reset'),
+            ),
+          ],
+        ),
+        body: GraphView<Node<GraphNode>, Edge<Node<GraphNode>>>(
+          controller: _controller,
+          canvasSize: const GraphCanvasSize.proportional(20),
+          layoutAlgorithm: const FruchtermanReingoldAlgorithm(),
+          nodeBuilder: (context, node) => GraphNodeWidget(
+            node: node,
+            onTap: () => _controller.jumpToNode(node),
+          ),
+          labelBuilder: BottomLabelBuilder(
+            builder: (context, node) => Text(node.data.title),
+            labelSize: const Size(100, 20),
+          ),
+        ),
+      );
+}
