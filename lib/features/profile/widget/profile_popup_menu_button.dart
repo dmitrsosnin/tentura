@@ -1,16 +1,17 @@
 import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
+import 'package:gravity/data/gql/user/user_utils.dart';
 
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/features/profile/dialog/my_profile_delete.dart';
 import 'package:gravity/features/profile/dialog/my_profile_logout.dart';
 
 class ProfilePopupMenuButton extends StatelessWidget {
-  final String userId;
+  final GUserFields user;
   final bool? isMine;
 
   const ProfilePopupMenuButton({
-    required this.userId,
+    required this.user,
     this.isMine,
     super.key,
   });
@@ -18,10 +19,10 @@ class ProfilePopupMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemGraphView = PopupMenuItem<void>(
-      onTap: () => context.push(pathProfileEdit),
+      onTap: () {},
       child: const Text('Graph view'),
     );
-    return isMine ?? userId == GetIt.I<AuthRepository>().myId
+    return isMine ?? user.id == GetIt.I<AuthRepository>().myId
         ? PopupMenuButton(
             itemBuilder: (context) => <PopupMenuEntry<void>>[
               // Graph view
@@ -51,13 +52,16 @@ class ProfilePopupMenuButton extends StatelessWidget {
               // Graph view
               itemGraphView,
               const PopupMenuDivider(),
-              const PopupMenuItem<void>(
-                child: Text('Add to my field'),
-              ),
-              const PopupMenuDivider(),
-              const PopupMenuItem<void>(
-                child: Text('Remove from my field'),
-              ),
+              if ((user.my_vote ?? 0) < 0)
+                PopupMenuItem<void>(
+                  onTap: () {},
+                  child: const Text('Remove my field'),
+                )
+              else
+                PopupMenuItem<void>(
+                  child: const Text('Add to my field'),
+                  onTap: () {},
+                ),
               const PopupMenuDivider(),
               const PopupMenuItem<void>(
                 child: Text('Show hidden Beacons'),

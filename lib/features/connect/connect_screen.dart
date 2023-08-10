@@ -3,7 +3,6 @@ import 'package:gravity/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
 
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
-import 'package:gravity/ui/widget/rating_button.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
 import 'package:gravity/features/beacon/widget/beacon_tile.dart';
 
@@ -20,11 +19,13 @@ class _ConnectScreenState extends State<ConnectScreen> {
   final _searchController = TextEditingController();
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          leading: const RatingButton(),
-          leadingWidth: RatingButton.width,
-        ),
         body: Padding(
           padding: paddingAll20,
           child: Flex(

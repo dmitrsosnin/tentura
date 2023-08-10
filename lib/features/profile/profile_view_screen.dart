@@ -5,7 +5,6 @@ import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/widget/rating_button.dart';
 import 'package:gravity/ui/widget/gradient_stack.dart';
 import 'package:gravity/ui/widget/avatar_positioned.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
@@ -66,12 +65,10 @@ class ProfileViewScreen extends StatelessWidget {
                           SliverAppBar(
                             actions: [
                               ProfilePopupMenuButton(
-                                userId: userId,
+                                user: profile,
                                 isMine: isMine,
                               ),
                             ],
-                            leadingWidth: isMine ? RatingButton.width : null,
-                            leading: isMine ? const RatingButton() : null,
                             floating: true,
                             expandedHeight: GradientStack.defaultHeight,
                             flexibleSpace: FlexibleSpaceBar(
