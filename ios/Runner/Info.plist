@@ -30,6 +30,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Gravity uses QR codes to create invites users can share with each other</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Gravity uses Photo Library to allow you attach photo to your profile and beacons</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Gravity uses geodata to locate volunteer projects near the user.</string>
 	<key>UILaunchStoryboardName</key>

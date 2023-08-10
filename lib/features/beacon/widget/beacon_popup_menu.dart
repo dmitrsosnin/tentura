@@ -2,6 +2,7 @@ import 'package:gravity/data/gql/beacon/_g/_fragments.data.gql.dart';
 import 'package:gravity/features/beacon/data/_g/beacon_update_by_id.req.gql.dart';
 
 import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/dialog/share_code_dialog.dart';
 import 'package:gravity/features/beacon/dialog/beacon_hide_dialog.dart';
 import 'package:gravity/features/beacon/dialog/beacon_delete_dialog.dart';
 
@@ -52,7 +53,13 @@ class BeaconPopupMenu extends StatelessWidget {
           const PopupMenuDivider(),
           PopupMenuItem<void>(
             child: const Text('Share'),
-            onTap: () {},
+            onTap: () => Future.delayed(
+              const Duration(milliseconds: 1),
+              () => showDialog<void>(
+                context: context,
+                builder: (context) => ShareCodeDialog(id: beacon.id),
+              ),
+            ),
           ),
         ],
       );

@@ -23,7 +23,12 @@ class ErrorScreen extends StatelessWidget {
           children: [
             Padding(
               padding: paddingAll20,
-              child: Text(error?.toString() ?? 'Something went wrong!'),
+              child: Text(
+                (error ?? GoRouterState.of(context).error).toString(),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
             ),
             FilledButton(
               onPressed: () => context.go(pathField),

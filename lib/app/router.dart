@@ -19,10 +19,13 @@ import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
 export 'package:go_router/go_router.dart';
 
 const pathLogin = '/login';
+const pathScanCode = '/scan';
+
 const pathField = '/field';
 const pathConnect = '/connect';
 const pathUpdates = '/updates';
 const pathProfile = '/profile';
+
 const pathProfileView = '/profile/view';
 const pathProfileEdit = '/profile/edit';
 const pathBeaconCreate = '/beacon/create';
@@ -36,7 +39,7 @@ final router = GoRouter(
   navigatorKey: rootNavigatorKey,
   debugLogDiagnostics: kDebugMode,
   observers: [SentryNavigatorObserver()],
-  errorBuilder: (context, state) => ErrorScreen(error: state.error),
+  errorBuilder: (context, state) => const ErrorScreen(),
   redirect: (context, state) =>
       GetIt.I<AuthRepository>().isAuthenticated ? null : pathLogin,
   routes: [
