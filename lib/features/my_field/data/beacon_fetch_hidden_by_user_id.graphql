@@ -1,0 +1,9 @@
+# import '/data/gql/beacon/_fragments.graphql'
+
+query BeaconFetchHiddenByUserId($user_id: String!) {
+  beacon_hidden(where: {user_id: {_eq: $user_id}}) {
+    beacon {
+      ...BeaconFields
+    }
+  }
+}
