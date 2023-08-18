@@ -167,7 +167,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             .firstWhere((e) => e.isFinished);
       }
     } catch (e) {
-      await ErrorDialog.show(context: context, error: e);
+      if (context.mounted) await ErrorDialog.show(context: context, error: e);
     }
     if (context.mounted) {
       final response = await doRequest(
