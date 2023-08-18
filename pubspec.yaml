@@ -2,7 +2,7 @@ name: gravity
 description: 'Gravity for a social ranking'
 publish_to: 'none'
 
-version: 0.1.8+1
+version: 0.1.9+1
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
@@ -11,16 +11,16 @@ dependencies:
   flutter:
     sdk: flutter
   url_strategy: ^0.2.0
-  go_router: ^10.0.0
+  go_router: ^10.1.0
   get_it: ^7.6.0
   intl: ^0.18.0
 
-  firebase_ui_oauth_google: 1.2.7
-  firebase_ui_oauth_apple: 1.2.7
-  firebase_storage: 11.2.5
-  firebase_ui_auth: 1.6.2
-  firebase_core: 2.15.0
-  firebase_auth: 4.7.2
+  firebase_ui_oauth_google: ^1.2.8
+  firebase_ui_oauth_apple: ^1.2.8
+  firebase_storage: ^11.2.6
+  firebase_ui_auth: ^1.6.3
+  firebase_core: ^2.15.1
+  firebase_auth: ^4.7.3
 
   ferry_hive_store: ^0.5.1
   ferry_flutter: ^0.8.1
@@ -30,14 +30,14 @@ dependencies:
   built_value: ^8.6.1
   ferry: ^0.14.2+1
 
-  force_directed_graphview: 0.1.0
+  force_directed_graphview: ^0.1.0
   cached_network_image: ^3.2.3
-  mobile_scanner: 3.3.0
+  mobile_scanner: ^3.4.1
   image_picker: ^1.0.2
   flutter_map: ^5.0.0
   qr_flutter: ^4.1.0
   share_plus: ^7.1.0
-  geolocator: ^9.0.2
+  geolocator: ^10.0.0
   geocoding: ^2.1.0
   latlong2: ^0.9.0
   # image: ^4.0.17
@@ -50,7 +50,7 @@ dependencies:
   # logging: ^1.2.0
 
 dependency_overrides:
-  http: ^1.1.0
+  # http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +63,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-
 
 sentry:
   upload_debug_symbols: true
