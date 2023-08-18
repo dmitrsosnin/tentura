@@ -19,7 +19,6 @@ import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
 export 'package:go_router/go_router.dart';
 
 const pathLogin = '/login';
-const pathScanCode = '/scan';
 
 const pathField = '/field';
 const pathConnect = '/connect';
@@ -28,8 +27,9 @@ const pathProfile = '/profile';
 
 const pathProfileView = '/profile/view';
 const pathProfileEdit = '/profile/edit';
+
+const pathBeaconView = '/beacon/view';
 const pathBeaconCreate = '/beacon/create';
-const pathBeaconDetails = '/beacon/details';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
@@ -65,7 +65,7 @@ final router = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
     ),
     GoRoute(
-      path: pathBeaconDetails,
+      path: pathBeaconView,
       parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const BeaconDetailsScreen(),
     ),

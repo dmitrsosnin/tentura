@@ -65,7 +65,7 @@ class BeaconTile extends StatelessWidget {
                   style: textTheme.headlineLarge,
                 ),
                 onTap: () => context.push(Uri(
-                  path: pathBeaconDetails,
+                  path: pathBeaconView,
                   queryParameters: {'id': beacon.id},
                 ).toString()),
               ),
@@ -81,7 +81,7 @@ class BeaconTile extends StatelessWidget {
         if (beacon.has_picture)
           GestureDetector(
             onTap: () => context.push(Uri(
-              path: pathBeaconDetails,
+              path: pathBeaconView,
               queryParameters: {'id': beacon.id},
             ).toString()),
             child: Padding(

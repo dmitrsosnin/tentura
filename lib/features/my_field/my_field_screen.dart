@@ -3,6 +3,7 @@ import 'package:gravity/ui/ferry_utils.dart';
 import 'widget/hidden_tab.dart';
 import 'widget/pinned_tab.dart';
 import 'widget/recommended_tab.dart';
+import 'widget/my_field_popup_menu_button.dart';
 
 class MyFieldScreen extends StatelessWidget {
   const MyFieldScreen({super.key});
@@ -13,24 +14,7 @@ class MyFieldScreen extends StatelessWidget {
         initialIndex: 1,
         child: Scaffold(
           appBar: AppBar(
-            actions: [
-              PopupMenuButton(
-                itemBuilder: (context) => <PopupMenuEntry<void>>[
-                  PopupMenuItem<void>(
-                    child: const Text('Input Code'),
-                    onTap: () {},
-                  ),
-                  PopupMenuItem<void>(
-                    child: const Text('Scan QR'),
-                    onTap: () {},
-                  ),
-                  PopupMenuItem<void>(
-                    child: const Text('Search'),
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ],
+            actions: const [MyFieldPopupMenuButton()],
             bottom: const TabBar(
               tabs: [
                 Text('Pinned'),

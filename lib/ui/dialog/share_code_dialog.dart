@@ -64,10 +64,19 @@ class ShareCodeDialog extends StatelessWidget {
                   child: const Text('Share Link'),
                   onPressed: () {
                     final box = context.findRenderObject() as RenderBox;
+                    late String path;
+                    if (id.length == idLength) {
+                      path = id.startsWith('B')
+                          ? pathBeaconView
+                          : 'notImplementedYet';
+                    } else {
+                      path = pathProfileView;
+                    }
+                    if (path.isEmpty) return;
                     Share.share(
                       Uri.https(
                         appLinkBase,
-                        pathScanCode,
+                        path,
                         {'id': id},
                       ).toString(),
                       sharePositionOrigin:

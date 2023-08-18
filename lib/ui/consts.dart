@@ -17,3 +17,7 @@ const appBarBottomLine = PreferredSize(
   preferredSize: Size(double.infinity, 1),
   child: Divider(),
 );
+
+const notImplementedSnackBar = SnackBar(
+  content: Text('Not implemented yet...'),
+);
