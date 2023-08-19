@@ -6,15 +6,6 @@ import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 
 class BeaconHideDialog extends StatefulWidget {
-  static Future<void> show(
-    BuildContext context, {
-    required GBeaconFields beacon,
-  }) =>
-      showDialog<void>(
-        context: context,
-        builder: (context) => BeaconHideDialog(beacon: beacon),
-      );
-
   final GBeaconFields beacon;
 
   const BeaconHideDialog({

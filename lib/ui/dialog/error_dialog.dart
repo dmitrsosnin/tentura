@@ -3,15 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gravity/app/router.dart';
 
 class ErrorDialog extends StatelessWidget {
-  static Future<void> show({
-    required BuildContext context,
-    Object? error,
-  }) =>
-      showDialog<void>(
-        context: context,
-        builder: (context) => ErrorDialog(error: error),
-      );
-
   final Object? error;
 
   const ErrorDialog({
@@ -20,7 +11,7 @@ class ErrorDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => AlertDialog.adaptive(
         title: const Text('Error'),
         content: Text(error.toString()),
         actions: [

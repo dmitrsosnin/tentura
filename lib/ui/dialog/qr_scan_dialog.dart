@@ -5,12 +5,8 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import 'package:gravity/ui/utils.dart';
 
+/// Returns String?
 class QRScanDialog extends StatefulWidget {
-  static Future<String?> show(BuildContext context) => showDialog(
-        context: context,
-        builder: (context) => const QRScanDialog(),
-      );
-
   const QRScanDialog({super.key});
 
   @override
@@ -18,6 +14,7 @@ class QRScanDialog extends StatefulWidget {
 }
 
 class _QRScanDialogState extends State<QRScanDialog> {
+  final _controller = MobileScannerController();
   bool _hasResult = false;
   late Rect _scanWindow;
 
@@ -39,13 +36,19 @@ class _QRScanDialogState extends State<QRScanDialog> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Dialog.fullscreen(
         child: Scaffold(
           appBar: AppBar(
             actions: [
               IconButton(
                 icon: const Icon(Icons.lightbulb_outline_rounded),
-                onPressed: () {},
+                onPressed: _controller.toggleTorch,
               ),
             ],
             backgroundColor: Colors.transparent,
@@ -55,6 +58,7 @@ class _QRScanDialogState extends State<QRScanDialog> {
           body: Stack(
             children: [
               MobileScanner(
+                controller: _controller,
                 scanWindow: _scanWindow,
                 onDetect: (BarcodeCapture captured) {
                   if (_hasResult || captured.barcodes.isEmpty) return;
@@ -67,13 +71,9 @@ class _QRScanDialogState extends State<QRScanDialog> {
               ),
               CustomPaint(painter: _ScannerOverlay(scanWindow: _scanWindow)),
               Positioned.fromRect(
-                rect: _scanWindow,
-                child: SizedBox(
-                  height: _scanWindow.height,
-                  width: _scanWindow.width,
-                  child: const SvgPicture(
-                    AssetBytesLoader('assets/images/frame.svg.vec'),
-                  ),
+                rect: _scanWindow.inflate(8),
+                child: const SvgPicture(
+                  AssetBytesLoader('assets/images/frame.svg.vec'),
                 ),
               ),
             ],

@@ -12,6 +12,7 @@ class MyFieldPopupMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PopupMenuButton(
         itemBuilder: (context) => <PopupMenuEntry<void>>[
+          // Input code
           PopupMenuItem<void>(
             child: const Text('Input Code'),
             onTap: () async {
@@ -24,10 +25,12 @@ class MyFieldPopupMenuButton extends StatelessWidget {
                       child: const Text('Close'),
                     ),
                   ],
-                  // title: const Text('Enter code'),
+                  title: const Text(
+                    'Enter code',
+                    textAlign: TextAlign.center,
+                  ),
                   contentPadding: paddingAll20,
                   content: TextField(
-                    decoration: const InputDecoration(hintText: 'Input a Code'),
                     maxLength: idLength,
                     onChanged: (value) {
                       if (value.length == idLength) {
@@ -44,7 +47,10 @@ class MyFieldPopupMenuButton extends StatelessWidget {
           PopupMenuItem<void>(
             child: const Text('Scan QR'),
             onTap: () async {
-              final code = await QRScanDialog.show(context);
+              final code = await showDialog<String?>(
+                context: context,
+                builder: (context) => const QRScanDialog(),
+              );
               if (context.mounted) _goWithCode(context, code);
             },
           ),
@@ -72,9 +78,22 @@ class MyFieldPopupMenuButton extends StatelessWidget {
           path: pathProfileView,
           queryParameters: {'id': code},
         ).toString());
-      } else if (code.startsWith('U')) {
+      } else if (code.startsWith('C')) {
         // TBD
         ScaffoldMessenger.of(context).showSnackBar(notImplementedSnackBar);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            'Wrong code!',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onErrorContainer,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          behavior: SnackBarBehavior.floating,
+          margin: paddingH20,
+          showCloseIcon: true,
+        ));
       }
     }
   }

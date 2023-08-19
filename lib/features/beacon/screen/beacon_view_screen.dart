@@ -17,10 +17,10 @@ import 'package:gravity/features/beacon/widget/beacon_vote_control.dart';
 import 'package:gravity/features/comment/widget/comments_expansion_tile.dart';
 import 'package:gravity/features/comment/widget/new_comment_input.dart';
 
-class BeaconDetailsScreen extends StatelessWidget {
+class BeaconViewScreen extends StatelessWidget {
   static const _requestId = 'FetchBeaconById';
 
-  const BeaconDetailsScreen({super.key});
+  const BeaconViewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

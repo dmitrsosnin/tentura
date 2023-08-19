@@ -151,9 +151,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       return context.pop();
     }
     if ((_title ?? profile.title).length < titleMinLength) {
-      return ErrorDialog.show(
+      return showAdaptiveDialog<void>(
         context: context,
-        error: 'Name have to be at least 3 char long!',
+        builder: (_) => const ErrorDialog(
+          error: 'Name have to be at least 3 char long!',
+        ),
       );
     }
     final myId = GetIt.I<AuthRepository>().myId;
@@ -167,7 +169,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             .firstWhere((e) => e.isFinished);
       }
     } catch (e) {
-      if (context.mounted) await ErrorDialog.show(context: context, error: e);
+      if (context.mounted) {
+        await showAdaptiveDialog<void>(
+          context: context,
+          builder: (_) => ErrorDialog(error: e),
+        );
+      }
     }
     if (context.mounted) {
       final response = await doRequest(

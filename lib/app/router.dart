@@ -13,8 +13,8 @@ import 'package:gravity/features/updates/updates_screen.dart';
 import 'package:gravity/features/my_field/my_field_screen.dart';
 import 'package:gravity/features/profile/profile_view_screen.dart';
 import 'package:gravity/features/profile/profile_edit_screen.dart';
-import 'package:gravity/features/beacon_create/beacon_create_screen.dart';
-import 'package:gravity/features/beacon_details/beacon_details_screen.dart';
+import 'package:gravity/features/beacon/screen/beacon_create_screen.dart';
+import 'package:gravity/features/beacon/screen/beacon_view_screen.dart';
 
 export 'package:go_router/go_router.dart';
 
@@ -67,7 +67,7 @@ final router = GoRouter(
     GoRoute(
       path: pathBeaconView,
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const BeaconDetailsScreen(),
+      builder: (context, state) => const BeaconViewScreen(),
     ),
     ShellRoute(
       navigatorKey: homeNavigatorKey,

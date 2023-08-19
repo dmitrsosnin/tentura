@@ -6,23 +6,26 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:gravity/app/router.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 
-class ChooseLocationDialog extends StatelessWidget {
-  static Future<LatLng?> show({
-    required BuildContext context,
-    LatLng? center,
-  }) =>
-      showDialog<LatLng>(
-        context: context,
-        builder: (context) => ChooseLocationDialog(center: center),
-      );
-
+class ChooseLocationDialog extends StatefulWidget {
   final LatLng? center;
-  final _mapController = MapController();
 
-  ChooseLocationDialog({
+  const ChooseLocationDialog({
     this.center,
     super.key,
   });
+
+  @override
+  State<ChooseLocationDialog> createState() => _ChooseLocationDialogState();
+}
+
+class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
+  final _mapController = MapController();
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -37,7 +40,7 @@ class ChooseLocationDialog extends StatelessWidget {
           options: MapOptions(
             zoom: 10,
             maxZoom: 12,
-            center: center,
+            center: widget.center,
             interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
             onTap: (tapPosition, point) => context.pop(point),
             onMapReady: () =>

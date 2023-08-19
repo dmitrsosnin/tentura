@@ -20,4 +20,7 @@ const appBarBottomLine = PreferredSize(
 
 const notImplementedSnackBar = SnackBar(
   content: Text('Not implemented yet...'),
+  behavior: SnackBarBehavior.floating,
+  margin: paddingH20,
+  showCloseIcon: true,
 );

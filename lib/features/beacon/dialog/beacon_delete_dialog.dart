@@ -7,15 +7,6 @@ import 'package:gravity/features/beacon/data/_g/beacon_delete_by_id.req.gql.dart
 import 'package:gravity/ui/ferry_utils.dart';
 
 class BeaconDeleteDialog extends StatelessWidget {
-  static Future<void> show(
-    BuildContext context, {
-    required GBeaconFields beacon,
-  }) =>
-      showDialog<void>(
-        context: context,
-        builder: (context) => BeaconDeleteDialog(beacon: beacon),
-      );
-
   final GBeaconFields beacon;
 
   const BeaconDeleteDialog({

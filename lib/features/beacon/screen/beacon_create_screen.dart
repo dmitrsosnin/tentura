@@ -153,9 +153,9 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
       );
 
   Future<void> _onChooseLocation() async {
-    final point = await ChooseLocationDialog.show(
+    final point = await showDialog<LatLng>(
       context: context,
-      center: _coordinates,
+      builder: (_) => ChooseLocationDialog(center: _coordinates),
     );
     if (point == null) return;
     _coordinates = point;
@@ -185,9 +185,9 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
 
   Future<void> _publish() async {
     if (_titleController.text.length < titleMinLength) {
-      return ErrorDialog.show(
+      return showDialog<void>(
         context: context,
-        error: 'Title too short',
+        builder: (context) => const ErrorDialog(error: 'Title too short'),
       );
     }
     final response = await doRequest(
@@ -213,11 +213,13 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
     }
     if (mounted) {
       beacon == null
-          ? ErrorDialog.show(
+          ? showDialog<void>(
               context: context,
-              error: response.linkException ??
-                  response.graphqlErrors ??
-                  'Something went wrong',
+              builder: (context) => ErrorDialog(
+                error: response.linkException ??
+                    response.graphqlErrors ??
+                    'Something went wrong',
+              ),
             )
           : context.pop(beacon);
     }
