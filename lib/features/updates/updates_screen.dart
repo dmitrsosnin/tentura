@@ -1,3 +1,4 @@
+import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 
 class UpdatesScreen extends StatelessWidget {
@@ -8,15 +9,19 @@ class UpdatesScreen extends StatelessWidget {
         appBar: AppBar(
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(notImplementedSnackBar);
+              },
               child: const Text('Mark all as read'),
             )
           ],
         ),
         body: Center(
-            child: Text(
-          'Nothing here yet',
-          style: Theme.of(context).textTheme.displaySmall,
-        )),
+          child: Text(
+            'Nothing here yet',
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+        ),
       );
 }

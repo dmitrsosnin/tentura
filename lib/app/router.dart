@@ -8,20 +8,18 @@ import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/ui/screens/error_screen.dart';
 import 'package:gravity/features/home/home_screen.dart';
 import 'package:gravity/features/auth/login_screen.dart';
-import 'package:gravity/features/connect/connect_screen.dart';
 import 'package:gravity/features/updates/updates_screen.dart';
 import 'package:gravity/features/my_field/my_field_screen.dart';
 import 'package:gravity/features/profile/profile_view_screen.dart';
 import 'package:gravity/features/profile/profile_edit_screen.dart';
-import 'package:gravity/features/beacon/screen/beacon_create_screen.dart';
 import 'package:gravity/features/beacon/screen/beacon_view_screen.dart';
+import 'package:gravity/features/beacon/screen/beacon_create_screen.dart';
 
 export 'package:go_router/go_router.dart';
 
 const pathLogin = '/login';
 
 const pathField = '/field';
-const pathConnect = '/connect';
 const pathUpdates = '/updates';
 const pathProfile = '/profile';
 
@@ -81,11 +79,6 @@ final router = GoRouter(
           path: pathField,
           parentNavigatorKey: homeNavigatorKey,
           builder: (context, state) => const MyFieldScreen(),
-        ),
-        GoRoute(
-          path: pathConnect,
-          parentNavigatorKey: homeNavigatorKey,
-          builder: (context, state) => const ConnectScreen(),
         ),
         GoRoute(
           path: pathUpdates,

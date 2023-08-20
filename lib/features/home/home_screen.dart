@@ -7,7 +7,6 @@ import 'package:gravity/ui/widget/colors_drawer.dart';
 class HomeScreen extends StatefulWidget {
   static const routes = [
     pathField,
-    pathConnect,
     pathUpdates,
     pathProfileView,
   ];
@@ -42,10 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
             NavigationDestination(
               icon: Icon(Icons.home_outlined),
               label: 'My field',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.share_outlined),
-              label: 'Connect',
             ),
             NavigationDestination(
               icon: Icon(Icons.notifications_none_outlined),

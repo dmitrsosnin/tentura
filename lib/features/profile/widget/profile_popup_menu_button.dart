@@ -2,6 +2,7 @@ import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/user/user_utils.dart';
 
+import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/features/profile/dialog/my_profile_delete.dart';
 import 'package:gravity/features/profile/dialog/my_profile_logout.dart';
@@ -19,7 +20,9 @@ class ProfilePopupMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemGraphView = PopupMenuItem<void>(
-      onTap: () {},
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(notImplementedSnackBar);
+      },
       child: const Text('Graph view'),
     );
     return isMine ?? user.id == GetIt.I<AuthRepository>().myId
@@ -54,17 +57,27 @@ class ProfilePopupMenuButton extends StatelessWidget {
               const PopupMenuDivider(),
               if ((user.my_vote ?? 0) < 0)
                 PopupMenuItem<void>(
-                  onTap: () {},
+                  onTap: () {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(notImplementedSnackBar);
+                  },
                   child: const Text('Remove my field'),
                 )
               else
                 PopupMenuItem<void>(
                   child: const Text('Add to my field'),
-                  onTap: () {},
+                  onTap: () {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(notImplementedSnackBar);
+                  },
                 ),
               const PopupMenuDivider(),
-              const PopupMenuItem<void>(
-                child: Text('Show hidden Beacons'),
+              PopupMenuItem<void>(
+                child: const Text('Show hidden Beacons'),
+                onTap: () {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(notImplementedSnackBar);
+                },
               ),
             ],
           );
