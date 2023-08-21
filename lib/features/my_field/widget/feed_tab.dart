@@ -5,10 +5,10 @@ import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/features/beacon/widget/beacon_tile.dart';
 
-class RecommendedTab extends StatelessWidget {
+class FeedTab extends StatelessWidget {
   static const _requestId = 'FetchMyField';
 
-  const RecommendedTab({super.key});
+  const FeedTab({super.key});
 
   @override
   Widget build(BuildContext context) => Operation(

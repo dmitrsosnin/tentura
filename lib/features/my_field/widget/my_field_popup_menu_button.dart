@@ -55,13 +55,13 @@ class MyFieldPopupMenuButton extends StatelessWidget {
             },
           ),
           // Full Text Search?
-          PopupMenuItem<void>(
-            child: const Text('Search'),
-            onTap: () {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(notImplementedSnackBar);
-            },
-          ),
+          // PopupMenuItem<void>(
+          //   child: const Text('Search'),
+          //   onTap: () {
+          //     ScaffoldMessenger.of(context)
+          //         .showSnackBar(notImplementedSnackBar);
+          //   },
+          // ),
         ],
       );
 
