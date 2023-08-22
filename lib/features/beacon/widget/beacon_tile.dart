@@ -10,8 +10,6 @@ import 'package:gravity/ui/widget/beacon_image.dart';
 import 'package:gravity/features/beacon/widget/beacon_popup_menu.dart';
 import 'package:gravity/features/beacon/widget/beacon_vote_control.dart';
 
-import 'beacon_pin_button.dart';
-
 class BeaconTile extends StatelessWidget {
   final GBeaconFields beacon;
   final bool isMine;
@@ -133,8 +131,6 @@ class BeaconTile extends StatelessWidget {
                 'Comments: ${beacon.comments_count}',
                 style: textTheme.bodyLarge,
               ),
-              // Pinned
-              if (!isMine) BeaconPinButton(beacon: beacon),
               // Like\Dislike
               if (!isMine) BeaconVoteControl(beacon: beacon),
             ],

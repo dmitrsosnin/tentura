@@ -6,7 +6,6 @@ import 'package:gravity/features/beacon/data/_g/beacon_update_by_id.req.gql.dart
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/dialog/share_code_dialog.dart';
-import 'package:gravity/features/beacon/dialog/beacon_hide_dialog.dart';
 import 'package:gravity/features/beacon/dialog/beacon_delete_dialog.dart';
 
 class BeaconPopupMenu extends StatelessWidget {
@@ -27,8 +26,8 @@ class BeaconPopupMenu extends StatelessWidget {
             onTap: () => ScaffoldMessenger.of(context)
                 .showSnackBar(notImplementedSnackBar),
           ),
-          const PopupMenuDivider(),
           if (isMine) ...[
+            const PopupMenuDivider(),
             PopupMenuItem<void>(
               child: beacon.enabled
                   ? const Text('Disable beacon')
@@ -51,15 +50,6 @@ class BeaconPopupMenu extends StatelessWidget {
               ),
             ),
           ],
-          if (!isMine)
-            PopupMenuItem<void>(
-              enabled: beacon.is_hidden == false,
-              child: const Text('Hide from My field'),
-              onTap: () => showDialog<void>(
-                context: context,
-                builder: (context) => BeaconHideDialog(beacon: beacon),
-              ),
-            ),
           const PopupMenuDivider(),
           PopupMenuItem<void>(
             child: const Text('Share'),

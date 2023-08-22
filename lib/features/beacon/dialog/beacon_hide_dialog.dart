@@ -68,17 +68,14 @@ class _BeaconHideDialogState extends State<BeaconHideDialog> {
         ),
         actions: [
           TextButton(
-            onPressed: () async {
-              await doRequest(
-                context: context,
-                request: GBeaconHideByIdReq(
-                  (b) => b
-                    ..vars.beacon_id = widget.beacon.id
-                    ..vars.hidden_until = DateTime.timestamp().add(_hideUntil),
-                ),
-              );
-              if (context.mounted) context.pop();
-            },
+            onPressed: () => doRequest(
+              context: context,
+              request: GBeaconHideByIdReq(
+                (b) => b
+                  ..vars.beacon_id = widget.beacon.id
+                  ..vars.hidden_until = DateTime.timestamp().add(_hideUntil),
+              ),
+            ).then((r) => context.mounted ? context.pop(r.hasNoErrors) : null),
             child: const Text('Apply'),
           ),
           TextButton(
