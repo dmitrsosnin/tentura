@@ -77,7 +77,7 @@ class _QRScanDialogState extends State<QRScanDialog> {
               ),
               CustomPaint(painter: _ScannerOverlay(scanWindow: _scanWindow)),
               Positioned.fromRect(
-                rect: _scanWindow.inflate(8),
+                rect: _scanWindow.inflate(4),
                 child: const SvgPicture(
                   AssetBytesLoader('assets/images/frame.svg.vec'),
                 ),

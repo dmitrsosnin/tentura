@@ -1,23 +1,53 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+
+import 'package:gravity/consts.dart';
+import 'package:gravity/app/router.dart';
+
+import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/dialog/qr_scan_dialog.dart';
 
 import 'widget/feed_tab.dart';
 import 'widget/hidden_tab.dart';
 import 'widget/pinned_tab.dart';
-import 'widget/my_field_popup_menu_button.dart';
+import 'dialog/input_code_dialog.dart';
 
 enum FeedFilter { feed, pinned, hidden }
 
-class MyFieldScreen extends StatelessWidget {
+class MyFieldScreen extends StatefulWidget {
   const MyFieldScreen({super.key});
+
+  @override
+  State<MyFieldScreen> createState() => _MyFieldScreenState();
+}
+
+class _MyFieldScreenState extends State<MyFieldScreen> {
+  final _key = GlobalKey<ExpandableFabState>();
+
+  @override
+  void dispose() {
+    _key.currentState?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
         length: 3,
         initialIndex: 1,
         child: Scaffold(
-          appBar: AppBar(
-            actions: const [MyFieldPopupMenuButton()],
-            bottom: const TabBar(
+          body: const SafeArea(
+            child: TabBarView(
+              children: [
+                HiddenTab(),
+                FeedTab(),
+                PinnedTab(),
+              ],
+            ),
+          ),
+          bottomNavigationBar: const Padding(
+            padding: paddingV20,
+            child: TabBar(
               tabs: [
                 Text('Hidden'),
                 Text('Feed'),
@@ -25,13 +55,81 @@ class MyFieldScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: const TabBarView(
+          floatingActionButtonLocation: ExpandableFab.location,
+          floatingActionButton: ExpandableFab(
+            key: _key,
             children: [
-              HiddenTab(),
-              FeedTab(),
-              PinnedTab(),
+              FloatingActionButton(
+                heroTag: null,
+                tooltip: 'Search',
+                child: const Icon(Icons.search_outlined),
+                onPressed: () {
+                  _key.currentState?.toggle();
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(notImplementedSnackBar);
+                },
+              ),
+              FloatingActionButton(
+                heroTag: null,
+                tooltip: 'Input Code',
+                child: const Icon(Icons.input_outlined),
+                onPressed: () async {
+                  _key.currentState?.toggle();
+                  final code = await showDialog<String?>(
+                    context: context,
+                    builder: (context) => const InputCodeDialog(),
+                  );
+                  if (context.mounted) _goWithCode(context, code);
+                },
+              ),
+              FloatingActionButton(
+                heroTag: null,
+                tooltip: 'Scan QR',
+                child: const Icon(Icons.qr_code_scanner_outlined),
+                onPressed: () async {
+                  _key.currentState?.toggle();
+                  final code = await showDialog<String?>(
+                    context: context,
+                    builder: (context) => const QRScanDialog(),
+                  );
+                  if (context.mounted) _goWithCode(context, code);
+                },
+              ),
             ],
           ),
         ),
       );
+
+  void _goWithCode(BuildContext context, String? code) {
+    if (code != null && code.length == idLength) {
+      if (kDebugMode) print(code);
+      if (code.startsWith('B')) {
+        context.push(Uri(
+          path: pathBeaconView,
+          queryParameters: {'id': code},
+        ).toString());
+      } else if (code.startsWith('U')) {
+        context.push(Uri(
+          path: pathProfileView,
+          queryParameters: {'id': code},
+        ).toString());
+      } else if (code.startsWith('C')) {
+        // TBD
+        ScaffoldMessenger.of(context).showSnackBar(notImplementedSnackBar);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            'Wrong code!',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onErrorContainer,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          behavior: SnackBarBehavior.floating,
+          margin: paddingH20,
+          showCloseIcon: true,
+        ));
+      }
+    }
+  }
 }
