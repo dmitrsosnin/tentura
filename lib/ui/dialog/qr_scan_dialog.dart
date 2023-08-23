@@ -15,6 +15,7 @@ class QRScanDialog extends StatefulWidget {
 
 class _QRScanDialogState extends State<QRScanDialog> {
   final _controller = MobileScannerController();
+  bool _flashlight = false;
   bool _hasResult = false;
   late Rect _scanWindow;
 
@@ -47,8 +48,13 @@ class _QRScanDialogState extends State<QRScanDialog> {
           appBar: AppBar(
             actions: [
               IconButton(
-                icon: const Icon(Icons.lightbulb_outline_rounded),
-                onPressed: _controller.toggleTorch,
+                icon: _flashlight
+                    ? const Icon(Icons.flashlight_off_outlined)
+                    : const Icon(Icons.flashlight_on_outlined),
+                onPressed: () => setState(() {
+                  _flashlight = !_flashlight;
+                  _controller.toggleTorch();
+                }),
               ),
             ],
             backgroundColor: Colors.transparent,

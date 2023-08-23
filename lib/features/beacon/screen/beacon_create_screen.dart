@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'package:gravity/consts.dart';
@@ -10,6 +9,7 @@ import 'package:gravity/data/gql/beacon/_g/beacon_create.req.gql.dart';
 import 'package:gravity/ui/dialog/choose_location_dialog.dart';
 import 'package:gravity/ui/dialog/error_dialog.dart';
 import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils.dart';
 
 class BeaconCreateScreen extends StatefulWidget {
   const BeaconCreateScreen({super.key});
@@ -19,8 +19,6 @@ class BeaconCreateScreen extends StatefulWidget {
 }
 
 class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
-  static final _dF = DateFormat.yMd();
-
   final _titleController = TextEditingController();
   final _imageController = TextEditingController();
   final _locationController = TextEditingController();
@@ -179,7 +177,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
         _dateRange;
     if (_dateRange != null) {
       _dateRangeController.text =
-          '${_dF.format(_dateRange!.start)} - ${_dF.format(_dateRange!.end)}';
+          '${fYMD(_dateRange!.start)} - ${fYMD(_dateRange!.end)}';
     }
   }
 

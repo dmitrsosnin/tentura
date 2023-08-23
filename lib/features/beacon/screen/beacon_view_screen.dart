@@ -5,6 +5,7 @@ import 'package:gravity/data/geolocation_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
 
+import 'package:gravity/ui/utils.dart';
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/screens/error_screen.dart';
@@ -12,10 +13,9 @@ import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
 
-import 'package:gravity/features/beacon/widget/beacon_popup_menu.dart';
-import 'package:gravity/features/beacon/widget/beacon_vote_control.dart';
-import 'package:gravity/features/comment/widget/comments_expansion_tile.dart';
+import 'package:gravity/features/beacon/widget/beacon_control_row.dart';
 import 'package:gravity/features/comment/widget/new_comment_input.dart';
+import 'package:gravity/features/comment/widget/comments_expansion_tile.dart';
 
 class BeaconViewScreen extends StatelessWidget {
   static const _requestId = 'FetchBeaconById';
@@ -25,21 +25,23 @@ class BeaconViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final beaconId = GoRouterState.of(context).uri.queryParameters['id'];
+    final queryParameters = GoRouterState.of(context).uri.queryParameters;
+    final beaconId = queryParameters['id'];
     if (beaconId == null || beaconId.isEmpty) {
       return const ErrorScreen(
         title: 'Beacon',
         error: 'Beacon identifier is wrong!',
       );
     }
+    final client = GetIt.I<Client>();
     final refreshRequest = GBeaconFetchByIdReq(
       (b) => b
-        ..requestId = _requestId + beaconId
         ..fetchPolicy = FetchPolicy.NetworkOnly
+        ..requestId = _requestId + beaconId
         ..vars.id = beaconId,
     );
     return Operation(
-      client: GetIt.I<Client>(),
+      client: client,
       operationRequest: GBeaconFetchByIdReq(
         (b) => b
           ..requestId = _requestId + beaconId
@@ -57,22 +59,13 @@ class BeaconViewScreen extends StatelessWidget {
         }
         final isMine = beacon.author.id == GetIt.I<AuthRepository>().myId;
         return Scaffold(
-          appBar: AppBar(
-            actions: [
-              BeaconPopupMenu(
-                beacon: beacon,
-                isMine: isMine,
-              ),
-            ],
-            title: const Text('Beacon'),
-          ),
+          appBar: AppBar(title: const Text('Beacon')),
           bottomSheet: NewCommentInput(
             beaconId: beaconId,
             refreshRequest: refreshRequest,
           ),
           body: RefreshIndicator.adaptive(
-            onRefresh: () async =>
-                GetIt.I<Client>().requestController.add(refreshRequest),
+            onRefresh: () async => client.requestController.add(refreshRequest),
             child: ListView(
               padding: paddingAll20,
               children: [
@@ -123,7 +116,7 @@ class BeaconViewScreen extends StatelessWidget {
                   ),
                 // Date
                 Text(
-                  beacon.created_at.toString(),
+                  fYMD(beacon.created_at),
                   style: textTheme.bodyLarge,
                 ),
                 // Place
@@ -140,22 +133,18 @@ class BeaconViewScreen extends StatelessWidget {
                     ),
                   ),
                 // Buttons Row
-                if (!isMine)
-                  Container(
-                    alignment: Alignment.centerRight,
-                    padding: paddingV8,
-                    child: BeaconVoteControl(
-                      key: ObjectKey(beacon),
-                      beacon: beacon,
-                    ),
-                  ),
+                Padding(
+                  padding: paddingV8,
+                  child: BeaconControlRow(beacon: beacon, isMine: isMine),
+                ),
                 // Comments
                 if (beacon.comments_count > 0)
                   Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 64),
                     child: CommentsExpansionTile(
                       key: ObjectKey(beacon),
-                      beacon: beacon,
+                      isExpanded: queryParameters['expanded'] == 'true',
+                      beaconId: beacon.id,
                     ),
                   ),
               ],

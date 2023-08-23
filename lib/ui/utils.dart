@@ -1,4 +1,10 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
+
+final _fYMD = DateFormat.yMd();
+
+String fYMD(DateTime? dateTime) =>
+    dateTime == null ? '' : _fYMD.format(dateTime);
 
 sealed class ScreenSize {
   static ScreenSize get(Size size) => switch (size.height) {
