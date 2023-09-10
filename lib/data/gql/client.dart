@@ -6,7 +6,9 @@ import 'package:ferry_hive_store/ferry_hive_store.dart';
 Future<Client> getGQLClient(Link authLink) async {
   await Hive.initFlutter();
   return Client(
-    cache: Cache(store: HiveStore(await Hive.openBox('graphql'))),
+    cache: Cache(
+      store: HiveStore(await Hive.openBox('graphql')),
+    ),
     // defaultFetchPolicies: {
     //   OperationType.query: FetchPolicy.CacheAndNetwork,
     // },
