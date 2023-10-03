@@ -1,12 +1,10 @@
 import 'package:get_it/get_it.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-import 'package:gravity/firebase_options.dart';
 
 import 'package:gravity/data/gql/client.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/geolocation_repository.dart';
+import 'package:gravity/data/service/preference_service.dart';
 
 class DI {
   static bool _isInited = false;
@@ -18,10 +16,7 @@ class DI {
 
   Future<DI> init() async {
     if (_isInited) return this;
-
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    GetIt.I.registerSingleton(await PreferencesService().init());
 
     GetIt.I.registerSingleton(ImageRepository());
     GetIt.I.registerSingleton(await GeolocationRepository().init());
