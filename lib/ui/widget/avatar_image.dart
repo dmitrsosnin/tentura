@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:gravity/consts.dart';
+import 'package:gravity/data/image_repository.dart';
 
 class AvatarImage extends StatelessWidget {
   static const _placeholderPath = 'assets/images/avatar-placeholder.jpg';
-  static const _suffix = '%2Favatar$firebaseStrorageUrlSuffix';
 
   final String userId;
   final BoxFit boxFit;
@@ -32,7 +31,7 @@ class AvatarImage extends StatelessWidget {
                 height: size,
                 width: size,
                 fit: boxFit,
-                imageUrl: firebaseStrorageBaseUrl + userId + _suffix,
+                imageUrl: '${ImageRepository.baseUrl}$userId/avatar.jpg',
                 placeholder: (context, url) => Image.asset(
                   _placeholderPath,
                   height: size,

@@ -3,6 +3,7 @@ import 'package:latlong2/latlong.dart';
 
 import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
+import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 import 'package:gravity/data/gql/beacon/_g/beacon_create.req.gql.dart';
@@ -201,13 +202,13 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
     );
     final beacon = response.data?.insert_beacon_one;
     if (beacon != null && _imagePath.isNotEmpty) {
-      await GetIt.I<ImageRepository>()
-          .putBeacon(
-            userId: beacon.author.id,
-            beaconId: beacon.id,
-            image: await File(_imagePath).readAsBytes(),
-          )
-          .firstWhere((e) => e.isFinished);
+      await GetIt.I<ImageRepository>().putBeacon(
+        userId: beacon.author.id,
+        beaconId: beacon.id,
+        authToken:
+            (await GetIt.I<AuthRepository>().freshLink.token)?.accessToken,
+        image: await File(_imagePath).readAsBytes(),
+      );
     }
     if (mounted) {
       beacon == null

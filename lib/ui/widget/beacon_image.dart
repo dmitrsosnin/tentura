@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:gravity/consts.dart';
+import 'package:gravity/data/image_repository.dart';
 
 class BeaconImage extends StatelessWidget {
   static const _placeholderPath = 'assets/images/image-placeholder.jpg';
@@ -33,8 +33,7 @@ class BeaconImage extends StatelessWidget {
           useOldImageOnUrlChange: true,
           height: height,
           width: width,
-          imageUrl:
-              '$firebaseStrorageBaseUrl$authorId%2F$beaconId$firebaseStrorageUrlSuffix',
+          imageUrl: '${ImageRepository.baseUrl}$authorId/$beaconId.jpg',
           placeholder: (context, url) => Image.asset(
             _placeholderPath,
             height: height,

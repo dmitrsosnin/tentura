@@ -158,15 +158,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         ),
       );
     }
-    final myId = GetIt.I<AuthRepository>().myId;
+    final authRepository = GetIt.I<AuthRepository>();
     try {
       if (_newImagePath != null) {
-        await GetIt.I<ImageRepository>()
-            .putAvatar(
-              userId: myId,
-              image: await File(_newImagePath!).readAsBytes(),
-            )
-            .firstWhere((e) => e.isFinished);
+        await GetIt.I<ImageRepository>().putAvatar(
+          userId: authRepository.myId,
+          authToken: (await authRepository.freshLink.token)?.accessToken,
+          image: await File(_newImagePath!).readAsBytes(),
+        );
       }
     } catch (e) {
       if (context.mounted) {
@@ -181,7 +180,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         context: context,
         request: GUserUpdateReq(
           (b) => b.vars
-            ..id = myId
+            ..id = authRepository.myId
             ..title = _title ?? profile.title
             ..description = _description ?? profile.description
             ..has_picture = _newImagePath != null || profile.has_picture,

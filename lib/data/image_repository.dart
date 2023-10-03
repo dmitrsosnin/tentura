@@ -1,14 +1,11 @@
+import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
-typedef UploadProgress = ({
-  bool isFinished,
-  int totalBytes,
-  int bytesTransferred,
-});
+import 'package:gravity/consts.dart';
 
 class ImageRepository {
+  static const baseUrl = 'https://$appLinkBase/images/';
   Future<({String path, String name})?> pickImage() async {
     final xFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -18,41 +15,55 @@ class ImageRepository {
     return xFile == null ? null : (path: xFile.path, name: xFile.name);
   }
 
-  Stream<UploadProgress> putAvatar({
+  Future<void> putAvatar({
     required String userId,
     required Uint8List image,
+    String? authToken,
   }) =>
-      FirebaseStorage.instance
-          .ref('$userId/avatar.jpg')
-          .putData(image)
-          .snapshotEvents
-          .map((event) => (
-                totalBytes: event.totalBytes,
-                bytesTransferred: event.bytesTransferred,
-                isFinished: event.totalBytes == event.bytesTransferred,
-              ));
+      http.put(
+        Uri.https(
+          appLinkBase,
+          '/images/$userId/avatar.jpg',
+        ),
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'Authorization': 'Bearer $authToken',
+        },
+        body: image,
+      );
 
-  Stream<UploadProgress> putBeacon({
+  Future<void> putBeacon({
     required String userId,
     required String beaconId,
     required Uint8List image,
+    String? authToken,
   }) =>
-      FirebaseStorage.instance
-          .ref('$userId/$beaconId.jpg')
-          .putData(image)
-          .snapshotEvents
-          .map((event) => (
-                totalBytes: event.totalBytes,
-                bytesTransferred: event.bytesTransferred,
-                isFinished: event.totalBytes == event.bytesTransferred,
-              ));
+      http.put(
+        Uri.https(
+          appLinkBase,
+          '/images/$userId/$beaconId.jpg',
+        ),
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'Authorization': 'Bearer $authToken',
+        },
+        body: image,
+      );
 
   Future<void> deleteBeacon({
     required String userId,
     required String beaconId,
+    String? authToken,
   }) =>
-      FirebaseStorage.instance.ref('$userId/$beaconId.jpg').delete();
+      http.delete(
+        Uri.https(
+          appLinkBase,
+          '/images/$userId/$beaconId.jpg',
+        ),
+        headers: {
+          'Authorization': 'Bearer $authToken',
+        },
+      );
 
-  Future<void> deleteProfile({required String userId}) =>
-      FirebaseStorage.instance.ref(userId).delete();
+  Future<void> deleteProfile({required String userId}) async {}
 }

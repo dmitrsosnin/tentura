@@ -17,7 +17,7 @@ class LogInScreen extends StatelessWidget {
                 onPressed: () async {
                   final authRepository = GetIt.I<AuthRepository>();
                   if (await authRepository.register() && context.mounted) {
-                    context.go(pathProfileEdit);
+                    context.go(pathProfile);
                   }
                 },
               ),
