@@ -18,26 +18,25 @@ class AvatarImage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => ClipRRect(
-        borderRadius: BorderRadius.circular(size / 2),
-        child: userId.isEmpty
-            ? Image.asset(
-                _placeholderPath,
-                height: size,
-                width: size,
-                fit: boxFit,
-              )
-            : CachedNetworkImage(
-                height: size,
-                width: size,
-                fit: boxFit,
-                imageUrl: '${ImageRepository.baseUrl}$userId/avatar.jpg',
-                placeholder: (context, url) => Image.asset(
-                  _placeholderPath,
-                  height: size,
-                  width: size,
-                  fit: boxFit,
-                ),
-              ),
-      );
+  Widget build(BuildContext context) {
+    final placeholder = Image.asset(
+      _placeholderPath,
+      height: size,
+      width: size,
+      fit: boxFit,
+    );
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(size / 2),
+      child: userId.isEmpty
+          ? placeholder
+          : CachedNetworkImage(
+              height: size,
+              width: size,
+              fit: boxFit,
+              placeholder: (context, url) => placeholder,
+              errorWidget: (context, url, error) => placeholder,
+              imageUrl: '${ImageRepository.baseUrl}$userId/avatar.jpg',
+            ),
+    );
+  }
 }

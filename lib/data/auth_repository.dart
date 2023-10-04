@@ -12,85 +12,69 @@ typedef JWT = ({String subject, String accessToken, int expiresIn});
 
 class AuthRepository {
   static const _jwtHeader = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.';
-
-  final preferences = GetIt.I<PreferencesService>();
+  static const _emptyJWT = (subject: '', accessToken: '', expiresIn: 0);
 
   late final freshLink = FreshLink.oAuth2(
     tokenStorage: InMemoryTokenStorage(),
     tokenHeader: (token) => {
       'Authorization': 'Bearer ${token?.accessToken}',
     },
-    refreshToken: (token, client) async {
-      _jwt = await _fetchAuthToken('login');
-      return _jwt == null
-          ? null
-          : OAuth2Token(
-              accessToken: _jwt!.accessToken,
-              expiresIn: _jwt!.expiresIn,
-            );
-    },
+    refreshToken: (_, __) => _fetchAuthToken('login').then(
+      (jwt) => OAuth2Token(
+        accessToken: jwt.accessToken,
+        expiresIn: jwt.expiresIn,
+      ),
+    ),
     shouldRefresh: (response) => response.errors != null,
   );
 
+  final _preferences = GetIt.I<PreferencesService>();
+
   late final ed.KeyPair _keyPair;
 
-  JWT? _jwt;
+  JWT _jwt = _emptyJWT;
 
-  String get myId => _jwt?.subject ?? '';
+  String get myId => _jwt.subject;
 
-  bool get isAuthenticated => _jwt != null;
+  bool get isAuthenticated => _jwt != _emptyJWT;
 
   Future<AuthRepository> init() async {
-    final seed = await preferences.get<Uint8List>(PreferencesKeys.keySeed);
-
+    final seed = await _preferences.get<Uint8List>(PreferencesKeys.keySeed);
     if (seed == null) {
       _keyPair = ed.generateKey();
       await register();
     } else {
       final privateKey = ed.newKeyFromSeed(seed);
       _keyPair = ed.KeyPair(privateKey, ed.public(privateKey));
-      _jwt = await _fetchAuthToken('login');
+      await _fetchAuthToken('login');
     }
-
-    if (_jwt != null) {
-      await freshLink.setToken(OAuth2Token(
-        accessToken: _jwt!.accessToken,
-        expiresIn: _jwt!.expiresIn,
-      ));
-    }
-
     return this;
   }
 
-  Future<bool> register() async {
-    _jwt = await _fetchAuthToken('register');
-    if (_jwt != null) {
-      await preferences.set(
-        PreferencesKeys.keySeed,
-        ed.seed(_keyPair.privateKey),
-      );
-      await freshLink.setToken(OAuth2Token(
-        accessToken: _jwt!.accessToken,
-        expiresIn: _jwt!.expiresIn,
-      ));
-    }
-    return isAuthenticated;
+  Future<void> dispose() async {
+    await freshLink.dispose();
   }
 
-  Future<bool> signIn() async {
-    _jwt = await _fetchAuthToken('login');
-    await freshLink.setToken(OAuth2Token(
-      accessToken: _jwt!.accessToken,
-      expiresIn: _jwt!.expiresIn,
-    ));
-    return isAuthenticated;
+  Future<void> register() async {
+    await _fetchAuthToken('register');
+    await _preferences.set(
+      PreferencesKeys.keySeed,
+      ed.seed(_keyPair.privateKey),
+    );
   }
 
-  Future<void> signOut() async {}
+  Future<void> signIn() => _fetchAuthToken('login');
 
-  Future<void> deleteAccount() async {}
+  Future<void> signOut() async {
+    _jwt = _emptyJWT;
+    await freshLink.clearToken();
+  }
 
-  Future<JWT?> _fetchAuthToken(String intent) async {
+  Future<void> deleteAccount() async {
+    await signOut();
+  }
+
+  Future<JWT> _fetchAuthToken(String intent) async {
     final now = DateTime.timestamp().millisecondsSinceEpoch ~/ 1000;
     final body = base64UrlEncode(utf8.encode(jsonEncode({
       'pk': base64UrlEncode(_keyPair.publicKey.bytes).replaceAll('=', ''),
@@ -108,13 +92,18 @@ class AuthRepository {
       },
     );
     if (response.statusCode == 200) {
-      final jwt = jsonDecode(response.body) as Map;
-      return (
-        subject: jwt['subject'] as String,
-        accessToken: jwt['access_token'] as String,
-        expiresIn: jwt['expires_in'] as int,
+      final body = jsonDecode(response.body) as Map;
+      _jwt = (
+        subject: body['subject'] as String,
+        accessToken: body['access_token'] as String,
+        expiresIn: body['expires_in'] as int,
       );
+      await freshLink.setToken(OAuth2Token(
+        accessToken: _jwt.accessToken,
+        expiresIn: _jwt.expiresIn,
+      ));
+      return _jwt;
     }
-    return null;
+    throw Exception('AuthRepository: ${response.reasonPhrase}');
   }
 }

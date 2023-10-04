@@ -22,23 +22,21 @@ class BeaconImage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => beaconId.isEmpty || authorId.isEmpty
-      ? Image.asset(
-          _placeholderPath,
-          height: height,
-          width: width,
-          fit: boxFit,
-        )
-      : CachedNetworkImage(
-          useOldImageOnUrlChange: true,
-          height: height,
-          width: width,
-          imageUrl: '${ImageRepository.baseUrl}$authorId/$beaconId.jpg',
-          placeholder: (context, url) => Image.asset(
-            _placeholderPath,
+  Widget build(BuildContext context) {
+    final placeholder = Image.asset(
+      _placeholderPath,
+      height: height,
+      width: width,
+      fit: boxFit,
+    );
+    return beaconId.isEmpty || authorId.isEmpty
+        ? placeholder
+        : CachedNetworkImage(
             height: height,
             width: width,
-            fit: boxFit,
-          ),
-        );
+            placeholder: (context, url) => placeholder,
+            errorWidget: (context, url, error) => placeholder,
+            imageUrl: '${ImageRepository.baseUrl}$authorId/$beaconId.jpg',
+          );
+  }
 }

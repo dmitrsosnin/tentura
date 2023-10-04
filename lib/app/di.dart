@@ -17,14 +17,16 @@ class DI {
   Future<DI> init() async {
     if (_isInited) return this;
     GetIt.I.registerSingleton(await PreferencesService().init());
-
-    GetIt.I.registerSingleton(ImageRepository());
     GetIt.I.registerSingleton(await GeolocationRepository().init());
 
     final authRepository = await AuthRepository().init();
-    GetIt.I.registerSingleton(authRepository);
+    GetIt.I.registerSingleton(
+      authRepository,
+      dispose: (i) async => i.dispose(),
+    );
 
     GetIt.I.registerSingleton(await getGQLClient(authRepository.freshLink));
+    GetIt.I.registerSingleton(ImageRepository());
 
     _isInited = true;
     return this;

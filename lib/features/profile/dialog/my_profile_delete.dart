@@ -1,6 +1,5 @@
 import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/features/profile/data/_g/profile_delete_by_user_id.req.gql.dart';
 
 import 'package:gravity/ui/ferry_utils.dart';
@@ -32,8 +31,6 @@ class MyProfileDeleteDialog extends StatelessWidget {
               if (response.hasErrors && context.mounted) {
                 context.pop();
               } else {
-                await GetIt.I<ImageRepository>().deleteProfile(userId: myId);
-                // TBD: call .reauthenticateWithCredential() before delete
                 await GetIt.I<AuthRepository>().deleteAccount();
                 if (context.mounted) context.go(pathLogin);
               }

@@ -64,6 +64,4 @@ class ImageRepository {
           'Authorization': 'Bearer $authToken',
         },
       );
-
-  Future<void> deleteProfile({required String userId}) async {}
 }

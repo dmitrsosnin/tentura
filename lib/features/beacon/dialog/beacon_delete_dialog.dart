@@ -24,13 +24,11 @@ class BeaconDeleteDialog extends StatelessWidget {
                 context: context,
                 request: GBeaconDeleteByIdReq((b) => b.vars..id = beacon.id),
               );
-              if (response.hasNoErrors) {
-                if (beacon.has_picture) {
-                  await GetIt.I<ImageRepository>().deleteBeacon(
-                    userId: GetIt.I<AuthRepository>().myId,
-                    beaconId: beacon.id,
-                  );
-                }
+              if (response.hasNoErrors && beacon.has_picture) {
+                await GetIt.I<ImageRepository>().deleteBeacon(
+                  userId: GetIt.I<AuthRepository>().myId,
+                  beaconId: beacon.id,
+                );
               }
               if (context.mounted) context.pop();
             },

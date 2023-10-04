@@ -16,8 +16,11 @@ class LogInScreen extends StatelessWidget {
                 child: const Text('Register'),
                 onPressed: () async {
                   final authRepository = GetIt.I<AuthRepository>();
-                  if (await authRepository.register() && context.mounted) {
-                    context.go(pathProfile);
+                  try {
+                    await authRepository.register();
+                    if (context.mounted) context.go(pathProfile);
+                  } catch (e) {
+                    rethrow;
                   }
                 },
               ),
@@ -25,8 +28,11 @@ class LogInScreen extends StatelessWidget {
                 child: const Text('Sign In'),
                 onPressed: () async {
                   final authRepository = GetIt.I<AuthRepository>();
-                  if (await authRepository.signIn() && context.mounted) {
-                    context.go(pathField);
+                  try {
+                    await authRepository.signIn();
+                    if (context.mounted) context.go(pathField);
+                  } catch (e) {
+                    rethrow;
                   }
                 },
               ),
