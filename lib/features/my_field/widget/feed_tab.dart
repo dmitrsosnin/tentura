@@ -1,4 +1,5 @@
 import 'package:gravity/data/auth_repository.dart';
+import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_pin_by_id.req.gql.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_fetch_my_field.req.gql.dart';
 
@@ -19,29 +20,30 @@ class FeedTab extends StatelessWidget {
     final myId = GetIt.I<AuthRepository>().myId;
     return Operation(
       client: client,
-      operationRequest: GBeaconFetchMyFieldReq(
+      operationRequest: GBeaconFetchInMyFieldReq(
         (b) => b
           ..requestId = _requestId
-          ..vars.user_id = myId,
+          ..vars.ego = myId,
       ),
       builder: (context, response, error) =>
           showLoaderOrErrorOr(response, error) ??
           RefreshIndicator.adaptive(
             onRefresh: () async =>
-                client.requestController.add(GBeaconFetchMyFieldReq(
+                client.requestController.add(GBeaconFetchInMyFieldReq(
               (b) => b
                 ..fetchPolicy = FetchPolicy.NetworkOnly
                 ..requestId = _requestId
-                ..vars.user_id = myId,
+                ..vars.ego = myId,
             )),
-            child: response?.data?.beacon.isEmpty ?? false
+            child: response?.data?.mt?.scores.isEmpty ?? false
                 ? const EmptyListScrollView()
                 : ListView.separated(
                     padding: paddingAll20,
-                    itemCount: response!.data!.beacon.length,
+                    itemCount: response!.data!.mt!.scores.length,
                     separatorBuilder: (_, __) => const Divider(),
                     itemBuilder: (context, i) {
-                      final beacon = response.data!.beacon[i];
+                      final beacon =
+                          response.data!.mt!.scores[i].beacon as GBeaconFields;
                       return Dismissible(
                         key: ValueKey(beacon),
                         background: const Align(
