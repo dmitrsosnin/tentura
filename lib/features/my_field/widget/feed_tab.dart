@@ -44,6 +44,8 @@ class FeedTab extends StatelessWidget {
                     itemBuilder: (context, i) {
                       final beacon =
                           response.data!.mt!.scores[i].beacon as GBeaconFields;
+                      // TBD: remove that ugly hack when able filter in request
+                      if (beacon.author.id == myId) return const Offstage();
                       return Dismissible(
                         key: ValueKey(beacon),
                         background: const Align(
