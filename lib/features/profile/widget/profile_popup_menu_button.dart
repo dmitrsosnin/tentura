@@ -2,6 +2,7 @@ import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/user/user_utils.dart';
+import 'package:gravity/features/profile/data/_g/user_vote_by_id.req.gql.dart';
 
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
@@ -77,21 +78,29 @@ class ProfilePopupMenuButton extends StatelessWidget {
               // Graph view
               itemGraphView,
               const PopupMenuDivider(),
-              if ((user.my_vote ?? 0) < 0)
+              if ((user.my_vote ?? 0) <= 0)
                 PopupMenuItem<void>(
-                  onTap: () {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(notImplementedSnackBar);
-                  },
-                  child: const Text('Remove my field'),
+                  onTap: () async => doRequest(
+                    context: context,
+                    request: GUserVoteByIdReq(
+                      (b) => b
+                        ..vars.object = user.id
+                        ..vars.amount = 1,
+                    ),
+                  ),
+                  child: const Text('Add to my field'),
                 )
               else
                 PopupMenuItem<void>(
-                  child: const Text('Add to my field'),
-                  onTap: () {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(notImplementedSnackBar);
-                  },
+                  child: const Text('Remove my field'),
+                  onTap: () async => doRequest(
+                    context: context,
+                    request: GUserVoteByIdReq(
+                      (b) => b
+                        ..vars.object = user.id
+                        ..vars.amount = -1,
+                    ),
+                  ),
                 ),
               const PopupMenuDivider(),
               PopupMenuItem<void>(
