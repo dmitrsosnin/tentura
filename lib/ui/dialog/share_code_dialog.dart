@@ -18,6 +18,7 @@ class ShareCodeDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog.adaptive(
+      alignment: Alignment.center,
       actionsAlignment: MainAxisAlignment.spaceBetween,
       titlePadding: paddingAll20,
       contentPadding: paddingAll20,
