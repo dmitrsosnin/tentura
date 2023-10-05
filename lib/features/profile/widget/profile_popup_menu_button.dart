@@ -98,7 +98,7 @@ class ProfilePopupMenuButton extends StatelessWidget {
                     request: GUserVoteByIdReq(
                       (b) => b
                         ..vars.object = user.id
-                        ..vars.amount = -1,
+                        ..vars.amount = 0,
                     ),
                   ),
                 ),

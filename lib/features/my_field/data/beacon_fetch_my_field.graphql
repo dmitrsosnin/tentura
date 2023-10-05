@@ -1,7 +1,7 @@
 # import '/data/gql/beacon/_fragments.graphql'
 
-query BeaconFetchMyField($user_id: String!, $limit: Int = 10) {
-  beacon(where: {user_id: {_neq: $user_id}, enabled: {_eq: true}, is_hidden: {_eq: false}, is_pinned: {_eq: false}, my_vote: {_gte: 0}}, limit: $limit) {
+query BeaconFetchMyField($user_id: String!) {
+  beacon(where: {user_id: {_neq: $user_id}, enabled: {_eq: true}, is_hidden: {_eq: false}, is_pinned: {_eq: false}, my_vote: {_gt: 0}}) {
     ...BeaconFields
   }
 }
