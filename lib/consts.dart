@@ -3,4 +3,4 @@ const titleMinLength = 3;
 const titleMaxLength = 32;
 const descriptionLength = 2048;
 
-const appLinkBase = 'hasura.gravity.intersubjective.space';
+const appLinkBase = 'gravity.intersubjective.space';
