@@ -58,12 +58,12 @@ final router = GoRouter(
     GoRoute(
       path: pathProfileEdit,
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const GraphScreen(),
+      builder: (context, state) => const ProfileEditScreen(),
     ),
     GoRoute(
       path: pathGraph,
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const ProfileEditScreen(),
+      builder: (context, state) => const GraphScreen(),
     ),
     GoRoute(
       path: pathBeaconCreate,
