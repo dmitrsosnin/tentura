@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_strategy/url_strategy.dart';
 
 import 'di.dart';
 import 'router.dart';
@@ -15,7 +14,6 @@ class App extends StatelessWidget {
 
   Future<App> init() async {
     WidgetsFlutterBinding.ensureInitialized();
-    setPathUrlStrategy();
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
