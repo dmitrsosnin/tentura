@@ -1621,145 +1621,6 @@ type Edge {
   weight: Float!
 }
 
-"""
-columns and relationships of "edges"
-"""
-type edges {
-  amount: Int
-  dst: String
-  src: String
-}
-
-"""
-aggregated selection of "edges"
-"""
-type edges_aggregate {
-  aggregate: edges_aggregate_fields
-  nodes: [edges!]!
-}
-
-"""
-aggregate fields of "edges"
-"""
-type edges_aggregate_fields {
-  avg: edges_avg_fields
-  count(columns: [edges_select_column!], distinct: Boolean): Int!
-  max: edges_max_fields
-  min: edges_min_fields
-  stddev: edges_stddev_fields
-  stddev_pop: edges_stddev_pop_fields
-  stddev_samp: edges_stddev_samp_fields
-  sum: edges_sum_fields
-  var_pop: edges_var_pop_fields
-  var_samp: edges_var_samp_fields
-  variance: edges_variance_fields
-}
-
-"""aggregate avg on columns"""
-type edges_avg_fields {
-  amount: Float
-}
-
-"""
-Boolean expression to filter rows from the table "edges". All fields are combined with a logical 'AND'.
-"""
-input edges_bool_exp {
-  _and: [edges_bool_exp!]
-  _not: edges_bool_exp
-  _or: [edges_bool_exp!]
-  amount: Int_comparison_exp
-  dst: String_comparison_exp
-  src: String_comparison_exp
-}
-
-"""aggregate max on columns"""
-type edges_max_fields {
-  amount: Int
-  dst: String
-  src: String
-}
-
-"""aggregate min on columns"""
-type edges_min_fields {
-  amount: Int
-  dst: String
-  src: String
-}
-
-"""Ordering options when selecting data from "edges"."""
-input edges_order_by {
-  amount: order_by
-  dst: order_by
-  src: order_by
-}
-
-"""
-select columns of table "edges"
-"""
-enum edges_select_column {
-  """column name"""
-  amount
-
-  """column name"""
-  dst
-
-  """column name"""
-  src
-}
-
-"""aggregate stddev on columns"""
-type edges_stddev_fields {
-  amount: Float
-}
-
-"""aggregate stddev_pop on columns"""
-type edges_stddev_pop_fields {
-  amount: Float
-}
-
-"""aggregate stddev_samp on columns"""
-type edges_stddev_samp_fields {
-  amount: Float
-}
-
-"""
-Streaming cursor of the table "edges"
-"""
-input edges_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: edges_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input edges_stream_cursor_value_input {
-  amount: Int
-  dst: String
-  src: String
-}
-
-"""aggregate sum on columns"""
-type edges_sum_fields {
-  amount: Int
-}
-
-"""aggregate var_pop on columns"""
-type edges_var_pop_fields {
-  amount: Float
-}
-
-"""aggregate var_samp on columns"""
-type edges_var_samp_fields {
-  amount: Float
-}
-
-"""aggregate variance on columns"""
-type edges_variance_fields {
-  amount: Float
-}
-
 type Features {
   bbox: [Float]
   geometry: Geometry
@@ -2422,9 +2283,11 @@ input NodeInput {
 
 type NodeScore {
   beacon: beacon
+  comment: comment
   ego: String!
   node: String!
   score: Float!
+  user: user
 }
 
 input NodeScoreWhereInput {
@@ -2639,46 +2502,6 @@ type query_root {
 
   """fetch data from the table: "comment" using primary key columns"""
   comment_by_pk(id: String!): comment
-
-  """
-  fetch data from the table: "edges"
-  """
-  edges(
-    """distinct select on columns"""
-    distinct_on: [edges_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [edges_order_by!]
-
-    """filter the rows returned"""
-    where: edges_bool_exp
-  ): [edges!]!
-
-  """
-  fetch aggregated fields from the table: "edges"
-  """
-  edges_aggregate(
-    """distinct select on columns"""
-    distinct_on: [edges_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [edges_order_by!]
-
-    """filter the rows returned"""
-    where: edges_bool_exp
-  ): edges_aggregate!
   getPlaceName(lat: Float!, long: Float!): ReverseGeocodingOutput
   mt: mtQuery
 
@@ -3160,60 +2983,6 @@ type subscription_root {
     """filter the rows returned"""
     where: comment_bool_exp
   ): [comment!]!
-
-  """
-  fetch data from the table: "edges"
-  """
-  edges(
-    """distinct select on columns"""
-    distinct_on: [edges_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [edges_order_by!]
-
-    """filter the rows returned"""
-    where: edges_bool_exp
-  ): [edges!]!
-
-  """
-  fetch aggregated fields from the table: "edges"
-  """
-  edges_aggregate(
-    """distinct select on columns"""
-    distinct_on: [edges_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [edges_order_by!]
-
-    """filter the rows returned"""
-    where: edges_bool_exp
-  ): edges_aggregate!
-
-  """
-  fetch data from the table in a streaming manner: "edges"
-  """
-  edges_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [edges_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: edges_bool_exp
-  ): [edges!]!
 
   """
   fetch data from the table: "user"

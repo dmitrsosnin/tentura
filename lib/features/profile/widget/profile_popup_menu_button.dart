@@ -23,9 +23,10 @@ class ProfilePopupMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemGraphView = PopupMenuItem<void>(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(notImplementedSnackBar);
-      },
+      onTap: () => context.push(Uri(
+        path: pathGraph,
+        queryParameters: {'ego': user.id},
+      ).toString()),
       child: const Text('Graph view'),
     );
     final itemShare = PopupMenuItem<void>(

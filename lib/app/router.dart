@@ -8,6 +8,7 @@ import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/ui/screens/error_screen.dart';
 import 'package:gravity/features/home/home_screen.dart';
 import 'package:gravity/features/auth/login_screen.dart';
+import 'package:gravity/features/graph/graph_screen.dart';
 import 'package:gravity/features/updates/updates_screen.dart';
 import 'package:gravity/features/my_field/my_field_screen.dart';
 import 'package:gravity/features/profile/profile_view_screen.dart';
@@ -22,6 +23,8 @@ const pathLogin = '/login';
 const pathField = '/field';
 const pathUpdates = '/updates';
 const pathProfile = '/profile';
+
+const pathGraph = '/graph';
 
 const pathProfileView = '/profile/view';
 const pathProfileEdit = '/profile/edit';
@@ -54,6 +57,11 @@ final router = GoRouter(
     ),
     GoRoute(
       path: pathProfileEdit,
+      parentNavigatorKey: rootNavigatorKey,
+      builder: (context, state) => const GraphScreen(),
+    ),
+    GoRoute(
+      path: pathGraph,
       parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const ProfileEditScreen(),
     ),

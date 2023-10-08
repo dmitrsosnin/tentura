@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
+import 'package:gravity/data/gql/comment/_g/_fragments.data.gql.dart';
 
 import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
-import 'package:gravity/domain/entity/graph_node.dart';
 
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
@@ -27,7 +27,7 @@ class GraphNodeWidget extends StatelessWidget {
     super.key,
   });
 
-  final Node<GraphNode> node;
+  final Node<Object> node;
   final VoidCallback? onTap;
 
   @override
@@ -48,6 +48,12 @@ class GraphNodeWidget extends StatelessWidget {
                 authorId: node.data.author.id,
                 beaconId: node.data.imageId,
               ),
+            ),
+          final Node<GCommentFields> node => Container(
+              alignment: Alignment.center,
+              width: node.size,
+              foregroundDecoration: _decorationDefault,
+              child: const Text('C'),
             ),
           _ => Container(
               width: node.size,
