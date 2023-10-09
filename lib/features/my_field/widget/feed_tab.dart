@@ -1,7 +1,7 @@
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_pin_by_id.req.gql.dart';
-import 'package:gravity/features/my_field/data/_g/beacon_fetch_my_field.req.gql.dart';
+import 'package:gravity/features/my_field/data/_g/beacon_fetch_in_my_field.req.gql.dart';
 
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
@@ -35,15 +35,15 @@ class FeedTab extends StatelessWidget {
                 ..requestId = _requestId
                 ..vars.ego = myId,
             )),
-            child: response?.data?.mt?.scores.isEmpty ?? false
+            child: response?.data?.scores.isEmpty ?? false
                 ? const EmptyListScrollView()
                 : ListView.separated(
                     padding: paddingAll20,
-                    itemCount: response!.data!.mt!.scores.length,
+                    itemCount: response!.data!.scores.length,
                     separatorBuilder: (_, __) => const Divider(),
                     itemBuilder: (context, i) {
                       final beacon =
-                          response.data!.mt!.scores[i].beacon as GBeaconFields;
+                          response.data!.scores[i].beacon as GBeaconFields;
                       // TBD: remove that ugly hack when able filter in request
                       if (beacon.author.id == myId) return const Offstage();
                       return Dismissible(

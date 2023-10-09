@@ -1719,6 +1719,13 @@ input geometry_comparison_exp {
   _st_within: geometry
 }
 
+type GravityGraph {
+  beacons: [NodeScore]!
+  comments: [NodeScore]!
+  edges: [Edge]!
+  users: [NodeScore]!
+}
+
 """
 Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
 """
@@ -1732,17 +1739,6 @@ input Int_comparison_exp {
   _lte: Int
   _neq: Int
   _nin: [Int!]
-}
-
-type mtMutation {
-  putEdge(dest: String!, src: String!, weight: Float!): Edge!
-}
-
-type mtQuery {
-  edge(dest: String!, src: String!): Edge
-  edges(src: String!): [Edge!]!
-  score(ego: String!, node: String!): NodeScore!
-  scores(ego: String!, limit: Int = null, where: NodeScoreWhereInput = null): [NodeScore!]!
 }
 
 """mutation root"""
@@ -2026,7 +2022,7 @@ type mutation_root {
     """upsert condition"""
     on_conflict: vote_user_on_conflict
   ): vote_user
-  mt: mtMutation
+  putEdge(dest: String!, src: String!, weight: Float!): Edge!
 
   """
   update data of the table: "beacon"
@@ -2502,8 +2498,12 @@ type query_root {
 
   """fetch data from the table: "comment" using primary key columns"""
   comment_by_pk(id: String!): comment
+  edge(dest: String!, src: String!): Edge
+  edges(src: String!): [Edge!]!
   getPlaceName(lat: Float!, long: Float!): ReverseGeocodingOutput
-  mt: mtQuery
+  gravityGraph(ego: String!): GravityGraph!
+  score(ego: String!, node: String!): NodeScore!
+  scores(ego: String!, limit: Int = null, where: NodeScoreWhereInput = null): [NodeScore!]!
 
   """
   fetch data from the table: "user"

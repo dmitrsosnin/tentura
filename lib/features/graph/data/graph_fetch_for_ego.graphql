@@ -1,19 +1,29 @@
-# import '/data/gql/comment/_fragments.graphql'
-# import '/data/gql/beacon/_fragments.graphql'
-# import '/data/gql/user/_fragments.graphql'
-
 query GraphFetchForEgo($ego: String!) {
-  mt {
-    scores(ego: $ego, where: {score: {gt: 0}}) {
-      comment {
-        ...CommentFields
-      }
-      beacon {
-        ...BeaconFields
-      }
+  gravityGraph(ego: $ego) {
+    edges {
+      src
+      dest
+    }
+    users {
       user {
-        ...UserFields
+        id
+        title
+        has_picture
       }
+      score
+    }
+    beacons {
+      beacon {
+        id
+        user_id
+        title
+        enabled
+      }
+      score
+    }
+    comments {
+      node
+      score
     }
   }
 }
