@@ -26,7 +26,7 @@ class _GraphScreenState extends State<GraphScreen> {
   @override
   void initState() {
     super.initState();
-    _prepareGraph();
+    Future.delayed(const Duration(milliseconds: 1), _prepareGraph);
   }
 
   @override
@@ -70,28 +70,32 @@ class _GraphScreenState extends State<GraphScreen> {
 
   Future<void> _prepareGraph() async {
     final response = await GetIt.I<Client>()
-        .request(GGraphFetchForEgoReq(
-          (b) => _ego,
-        ))
+        .request(GGraphFetchForEgoReq((b) => b.vars.ego = _ego))
         .firstWhere((e) => e.data != null);
 
     final rootNode = Node<GUserFieldsData>(
-      data: GUserFieldsData((b) => b.id = _ego),
+      data: GUserFieldsData(
+        (b) => b
+          ..id = _ego
+          ..title = 'Me'
+          ..description = ''
+          ..has_picture = false,
+      ),
       size: 80,
     );
 
     final nodes = <Node<Object>>[];
 
-    _controller
-      ..mutate((mutator) {
-        for (final n in nodes) {
-          mutator.addEdge(Edge(
-            source: rootNode,
-            destination: Node(data: n, size: 40),
-          ));
-        }
-      })
-      ..jumpToNode(rootNode);
+    _controller.mutate((mutator) {
+      mutator.addNode(rootNode);
+      for (final n in nodes) {
+        mutator.addEdge(Edge(
+          source: rootNode,
+          destination: Node(data: n, size: 40),
+        ));
+      }
+    });
+    // _controller.jumpToNode(rootNode);
     setState(() => _isLoading = false);
   }
 }
