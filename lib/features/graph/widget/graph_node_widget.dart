@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:force_directed_graphview/force_directed_graphview.dart';
-import 'package:gravity/data/gql/comment/_g/_fragments.data.gql.dart';
 
-import 'package:gravity/data/gql/user/user_utils.dart';
-import 'package:gravity/data/gql/beacon/beacon_utils.dart';
+import 'package:gravity/features/graph/domain/entity/node_details.dart';
 
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
@@ -22,44 +19,46 @@ class GraphNodeWidget extends StatelessWidget {
   );
 
   const GraphNodeWidget({
-    required this.node,
+    required this.nodeDetails,
+    this.size = 40,
     this.onTap,
     super.key,
   });
 
-  final Node<Object> node;
+  final NodeDetails nodeDetails;
   final VoidCallback? onTap;
+  final double size;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: switch (node) {
-          final Node<GUserFields> node => Container(
-              foregroundDecoration: _decorationUser,
-              child: AvatarImage(
-                size: node.size,
-                userId: node.data.imageId,
-              ),
-            ),
-          final Node<GBeaconFields> node => Container(
-              width: node.size,
-              foregroundDecoration: _decorationBeacon,
-              child: BeaconImage(
-                authorId: node.data.author.id,
-                beaconId: node.data.imageId,
-              ),
-            ),
-          final Node<GCommentFields> node => Container(
-              alignment: Alignment.center,
-              width: node.size,
-              foregroundDecoration: _decorationDefault,
-              child: const Text('C'),
-            ),
-          _ => Container(
-              width: node.size,
-              height: node.size,
-              foregroundDecoration: _decorationDefault,
-            ),
-        },
-      );
+  Widget build(BuildContext context) {
+    final widget = switch (nodeDetails) {
+      final UserNode user => Container(
+          foregroundDecoration: _decorationUser,
+          child: AvatarImage(
+            size: size,
+            userId: user.hasImage ? user.id : '',
+          ),
+        ),
+      final BeaconNode beacon => Container(
+          width: size,
+          foregroundDecoration: _decorationBeacon,
+          child: BeaconImage(
+            authorId: beacon.userId,
+            beaconId: beacon.hasImage ? beacon.id : '',
+          ),
+        ),
+      final CommentNode _ => Container(
+          alignment: Alignment.center,
+          width: size,
+          foregroundDecoration: _decorationDefault,
+          child: const Text('C'),
+        ),
+    };
+    return onTap == null
+        ? widget
+        : GestureDetector(
+            onTap: onTap,
+            child: widget,
+          );
+  }
 }

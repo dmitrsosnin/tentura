@@ -18,6 +18,7 @@ query GraphFetchForEgo($ego: String!) {
         user_id
         title
         enabled
+        has_picture
       }
       score
     }
