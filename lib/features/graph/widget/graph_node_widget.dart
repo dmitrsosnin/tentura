@@ -6,24 +6,10 @@ import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 
 class GraphNodeWidget extends StatelessWidget {
-  // static final _decorationUser = BoxDecoration(
-  //   border: Border.all(color: Colors.deepPurple, width: 3),
-  //   shape: BoxShape.circle,
-  // );
-
-  // static final _decorationBeacon = BoxDecoration(
-  //   border: Border.all(color: Colors.purple, width: 2),
-  // );
-
-  // static final _decorationDefault = BoxDecoration(
-  //   border: Border.all(color: Colors.grey),
-  //   shape: BoxShape.circle,
-  // );
-
   GraphNodeWidget({
     required this.nodeDetails,
     this.onTap,
-  }) : super(key: Key(nodeDetails.id));
+  }) : super(key: ValueKey(nodeDetails));
 
   final NodeDetails nodeDetails;
   final VoidCallback? onTap;
