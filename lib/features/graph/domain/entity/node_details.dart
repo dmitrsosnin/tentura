@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
 
 @immutable
-sealed class NodeDetails {
+sealed class NodeDetails extends Equatable {
   const NodeDetails({
     String? id,
     String? label,
@@ -16,6 +17,9 @@ sealed class NodeDetails {
   final String label;
   final double score;
   final bool hasImage;
+
+  @override
+  List<Object> get props => [id, label, score, hasImage];
 }
 
 class UserNode extends NodeDetails {
@@ -25,14 +29,6 @@ class UserNode extends NodeDetails {
     super.score,
     super.hasImage,
   });
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserNode && runtimeType == other.runtimeType && id == other.id;
 }
 
 class BeaconNode extends NodeDetails {
@@ -45,14 +41,6 @@ class BeaconNode extends NodeDetails {
   }) : userId = userId ?? '';
 
   final String userId;
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BeaconNode && runtimeType == other.runtimeType && id == other.id;
 }
 
 class CommentNode extends NodeDetails {
@@ -60,14 +48,4 @@ class CommentNode extends NodeDetails {
     super.id,
     super.score,
   });
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CommentNode &&
-          runtimeType == other.runtimeType &&
-          id == other.id;
 }

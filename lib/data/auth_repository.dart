@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:fresh_graphql/fresh_graphql.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 
+import 'package:gravity/consts.dart';
 import 'package:gravity/data/service/preference_service.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 
@@ -86,7 +87,7 @@ class AuthRepository {
       Uint8List.fromList(utf8.encode(_jwtHeader + body)),
     )).replaceAll('=', '');
     final response = await http.post(
-      Uri.https('hasura.gravity.intersubjective.space', 'user/$intent'),
+      Uri.https(appLinkBase, 'user/$intent'),
       headers: {
         'Authorization': 'Bearer $_jwtHeader$body.$signature',
       },

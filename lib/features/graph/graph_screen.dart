@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:gravity/app/router.dart';
@@ -16,20 +17,14 @@ class GraphScreen extends StatefulWidget {
 }
 
 class _GraphScreenState extends State<GraphScreen> {
+  static const _requestId = 'FetchGraph';
+
   final _controller =
-      GraphController<Node<NodeDetails>, Edge<Node<NodeDetails>>>();
+      GraphController<Node<NodeDetails>, EdgeBase<Node<NodeDetails>>>();
 
   late final _ego = GoRouterState.of(context).uri.queryParameters['ego'] ?? '';
 
-  late final Node<NodeDetails> rootNode;
-
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 10), _prepareGraph);
-  }
+  Node<NodeDetails>? _egoNode;
 
   @override
   void dispose() {
@@ -43,77 +38,112 @@ class _GraphScreenState extends State<GraphScreen> {
           title: const Text('Graph view'),
           actions: [
             TextButton(
-              onPressed: () => _controller
-                ..zoomBy(1)
-                ..jumpToNode(rootNode),
-              child: const Text('Reset'),
+              onPressed: () async => GetIt.I<Client>().requestController.add(
+                    GGraphFetchForEgoReq((b) => b
+                      ..fetchPolicy = FetchPolicy.NetworkOnly
+                      ..requestId = _requestId + _ego
+                      ..vars.ego = _ego),
+                  ),
+              child: const Text('Refresh'),
+            ),
+            TextButton(
+              onPressed: _reset,
+              child: const Text('Center'),
             ),
           ],
         ),
-        body: _isLoading
-            ? const CircularProgressIndicator.adaptive()
-            : GraphView<Node<NodeDetails>, Edge<Node<NodeDetails>>>(
-                controller: _controller,
-                canvasSize: const GraphCanvasSize.proportional(50),
-                layoutAlgorithm: const FruchtermanReingoldAlgorithm(),
-                nodeBuilder: (context, node) => GraphNodeWidget(
-                  nodeDetails: node.data,
-                  // onTap: () => _controller.jumpToNode(node),
-                ),
-                labelBuilder: BottomLabelBuilder(
-                  labelSize: const Size(100, 20),
-                  builder: (context, node) => switch (node) {
-                    final Node<UserNode> n => Text(n.data.label),
-                    final Node<BeaconNode> n => Text(n.data.label),
-                    final Node<CommentNode> n => Text(n.data.id),
-                    _ => const Offstage(),
-                  },
-                ),
+        body: Operation(
+          client: GetIt.I<Client>(),
+          operationRequest: GGraphFetchForEgoReq(
+            (b) => b
+              ..requestId = _requestId + _ego
+              ..vars.ego = _ego,
+          ),
+          builder: (context, response, error) =>
+              showLoaderOrErrorOr(response, error) ??
+              Builder(
+                builder: (context) {
+                  _prepareGraph(response!.data!.gravityGraph);
+                  return GraphView<Node<NodeDetails>,
+                      EdgeBase<Node<NodeDetails>>>(
+                    controller: _controller,
+                    canvasSize: const GraphCanvasSize.fixed(Size.square(5000)),
+                    layoutAlgorithm: const FruchtermanReingoldAlgorithm(
+                      iterations: 50,
+                      showIterations: true,
+                    ),
+                    edgePainter: const CustomEdgePainter(),
+                    loaderBuilder: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    labelBuilder: BottomLabelBuilder(
+                      labelSize: const Size(100, 20),
+                      builder: (context, node) => switch (node) {
+                        final Node<UserNode> n => Text(n.data.label),
+                        final Node<BeaconNode> n => Text(n.data.label),
+                        final Node<CommentNode> n => Text(n.data.id),
+                        _ => const Offstage(),
+                      },
+                    ),
+                    nodeBuilder: (context, node) => GraphNodeWidget(
+                      nodeDetails: node.data,
+                      size: node.size,
+                      // onTap: () => _controller.jumpToNode(node),
+                    ),
+                  );
+                },
               ),
+        ),
       );
 
-  Future<void> _prepareGraph() async {
-    final response = await GetIt.I<Client>()
-        .request(GGraphFetchForEgoReq((b) => b.vars.ego = _ego))
-        .firstWhere((e) => e.dataSource != DataSource.Optimistic);
-
-    final gravityGraph = response.data?.gravityGraph;
-
-    if (_ego.isEmpty || gravityGraph == null || response.hasErrors) {
-      setState(() => _isLoading = false);
-      // TBD: show error
-      return;
-    }
-
-    rootNode = Node<NodeDetails>(
-      data: _buildNode(gravityGraph, _ego),
-      size: 80,
-    );
-    _controller
-      ..mutate((mutator) {
-        mutator.addNode(rootNode);
-        for (final edge in gravityGraph.edges) {
-          if (edge == null) continue;
-          final src = Node(data: _buildNode(gravityGraph, edge.src), size: 40);
-          final dst = Node(data: _buildNode(gravityGraph, edge.dest), size: 40);
-          if (!_controller.nodes.contains(src)) mutator.addNode(src);
-          if (!_controller.nodes.contains(dst)) mutator.addNode(dst);
-          mutator.addEdge(Edge.simple(src, dst));
-        }
-      })
-      ..jumpToNode(rootNode);
-
-    setState(() => _isLoading = false);
+  void _reset() {
+    if (_egoNode != null) _controller.jumpToNode(_egoNode!);
   }
 
-  NodeDetails _buildNode(
-    GGraphFetchForEgoData_gravityGraph gravityGraph,
+  void _prepareGraph(GGraphFetchForEgoData_gravityGraph graph) {
+    if (_ego.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text('No data or got error'),
+        backgroundColor: Theme.of(context).colorScheme.errorContainer,
+      ));
+      return;
+    }
+    _egoNode = Node<NodeDetails>(
+      data: _buildNodeDetails(graph, _ego),
+      pinned: true,
+      size: 80,
+    );
+    _controller.mutate((mutator) {
+      if (kDebugMode) print('Fetched edges: ${graph.edges.length}');
+      if (kDebugMode) print('Has nodes: ${mutator.controller.nodes.length}');
+      if (!mutator.controller.nodes.contains(_egoNode)) {
+        mutator.addNode(_egoNode!);
+      }
+      for (final e in graph.edges) {
+        if (e == null) continue;
+        final src = Node(data: _buildNodeDetails(graph, e.src), size: 40);
+        final dst = Node(data: _buildNodeDetails(graph, e.dest), size: 40);
+        final edge = Edge.simple(src, dst);
+        if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
+        if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
+        if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
+      }
+      if (kDebugMode) {
+        print('Nodes: ${mutator.controller.nodes.length}'
+            ', Edges: ${mutator.controller.edges.length}');
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 250), _reset);
+  }
+
+  NodeDetails _buildNodeDetails(
+    GGraphFetchForEgoData_gravityGraph graph,
     String node,
   ) =>
       switch (switch (_ego.substring(0, 1)) {
-        'U' => gravityGraph.users.firstWhere((e) => e?.user?.id == _ego),
-        'B' => gravityGraph.beacons.firstWhere((e) => e?.beacon?.id == _ego),
-        'C' => gravityGraph.comments.firstWhere((e) => e?.node == _ego),
+        'U' => graph.users.firstWhere((e) => e?.user?.id == _ego),
+        'B' => graph.beacons.firstWhere((e) => e?.beacon?.id == _ego),
+        'C' => graph.comments.firstWhere((e) => e?.node == _ego),
         _ => throw Exception('Wrong id type'),
       }) {
         final GGraphFetchForEgoData_gravityGraph_users n => UserNode(
@@ -135,4 +165,25 @@ class _GraphScreenState extends State<GraphScreen> {
           ),
         _ => throw Exception('Wrong fetched data type'),
       };
+}
+
+class CustomEdgePainter
+    implements EdgePainter<Node<NodeDetails>, Edge<Node<NodeDetails>>> {
+  const CustomEdgePainter();
+
+  @override
+  void paint(
+    Canvas canvas,
+    Edge<NodeBase> edge,
+    Offset sourcePosition,
+    Offset destinationPosition,
+  ) {
+    canvas.drawLine(
+      sourcePosition,
+      destinationPosition,
+      Paint()
+        ..color = Colors.amber
+        ..strokeWidth = 2,
+    );
+  }
 }

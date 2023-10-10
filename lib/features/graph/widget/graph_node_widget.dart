@@ -6,24 +6,25 @@ import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 
 class GraphNodeWidget extends StatelessWidget {
-  static final _decorationUser = BoxDecoration(
-    border: Border.all(color: Colors.deepPurple, width: 3),
-  );
+  // static final _decorationUser = BoxDecoration(
+  //   border: Border.all(color: Colors.deepPurple, width: 3),
+  //   shape: BoxShape.circle,
+  // );
 
-  static final _decorationBeacon = BoxDecoration(
-    border: Border.all(color: Colors.purple, width: 2),
-  );
+  // static final _decorationBeacon = BoxDecoration(
+  //   border: Border.all(color: Colors.purple, width: 2),
+  // );
 
-  static final _decorationDefault = BoxDecoration(
-    border: Border.all(color: Colors.grey),
-  );
+  // static final _decorationDefault = BoxDecoration(
+  //   border: Border.all(color: Colors.grey),
+  //   shape: BoxShape.circle,
+  // );
 
-  const GraphNodeWidget({
+  GraphNodeWidget({
     required this.nodeDetails,
     this.size = 40,
     this.onTap,
-    super.key,
-  });
+  }) : super(key: Key(nodeDetails.id));
 
   final NodeDetails nodeDetails;
   final VoidCallback? onTap;
@@ -31,29 +32,26 @@ class GraphNodeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final widget = switch (nodeDetails) {
-      final UserNode user => Container(
-          foregroundDecoration: _decorationUser,
-          child: AvatarImage(
+    final widget = SizedBox.square(
+      dimension: size,
+      child: switch (nodeDetails) {
+        final UserNode user => AvatarImage(
             size: size,
             userId: user.hasImage ? user.id : '',
           ),
-        ),
-      final BeaconNode beacon => Container(
-          width: size,
-          foregroundDecoration: _decorationBeacon,
-          child: BeaconImage(
+        final BeaconNode beacon => BeaconImage(
             authorId: beacon.userId,
             beaconId: beacon.hasImage ? beacon.id : '',
           ),
-        ),
-      final CommentNode _ => Container(
-          alignment: Alignment.center,
-          width: size,
-          foregroundDecoration: _decorationDefault,
-          child: const Text('C'),
-        ),
-    };
+        final CommentNode _ => DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              shape: BoxShape.circle,
+            ),
+            child: const Text('C'),
+          ),
+      },
+    );
     return onTap == null
         ? widget
         : GestureDetector(
