@@ -1,51 +1,58 @@
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
+import 'package:force_directed_graphview/force_directed_graphview.dart'
+    show NodeBase;
 
 @immutable
-sealed class NodeDetails extends Equatable {
+sealed class NodeDetails extends NodeBase with EquatableMixin {
   const NodeDetails({
     String? id,
     String? label,
-    double? score,
     bool? hasImage,
+    super.size = 40,
+    super.pinned,
   })  : id = id ?? '',
         label = label ?? '',
-        score = score ?? 0,
         hasImage = hasImage ?? false;
 
   final String id;
   final String label;
-  final double score;
   final bool hasImage;
 
   @override
-  List<Object> get props => [id, label, score, hasImage];
+  List<Object> get props => [id, label, size, hasImage];
 }
 
-class UserNode extends NodeDetails {
+final class UserNode extends NodeDetails {
   const UserNode({
     super.id,
     super.label,
-    super.score,
+    super.size,
     super.hasImage,
+    super.pinned,
   });
 }
 
-class BeaconNode extends NodeDetails {
+final class BeaconNode extends NodeDetails {
   const BeaconNode({
     String? userId,
     super.id,
     super.label,
-    super.score,
+    super.size,
     super.hasImage,
+    super.pinned,
   }) : userId = userId ?? '';
 
   final String userId;
 }
 
-class CommentNode extends NodeDetails {
+final class CommentNode extends NodeDetails {
   const CommentNode({
     super.id,
-    super.score,
+    super.size,
+    super.pinned,
   });
+
+  @override
+  String get label => id;
 }

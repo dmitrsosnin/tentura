@@ -22,21 +22,19 @@ class GraphNodeWidget extends StatelessWidget {
 
   GraphNodeWidget({
     required this.nodeDetails,
-    this.size = 40,
     this.onTap,
   }) : super(key: Key(nodeDetails.id));
 
   final NodeDetails nodeDetails;
   final VoidCallback? onTap;
-  final double size;
 
   @override
   Widget build(BuildContext context) {
     final widget = SizedBox.square(
-      dimension: size,
+      dimension: nodeDetails.size,
       child: switch (nodeDetails) {
         final UserNode user => AvatarImage(
-            size: size,
+            size: nodeDetails.size,
             userId: user.hasImage ? user.id : '',
           ),
         final BeaconNode beacon => BeaconImage(

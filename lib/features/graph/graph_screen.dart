@@ -19,12 +19,11 @@ class GraphScreen extends StatefulWidget {
 class _GraphScreenState extends State<GraphScreen> {
   static const _requestId = 'FetchGraph';
 
-  final _controller =
-      GraphController<Node<NodeDetails>, EdgeBase<Node<NodeDetails>>>();
+  final _controller = GraphController<NodeDetails, EdgeBase<NodeDetails>>();
 
   late final _ego = GoRouterState.of(context).uri.queryParameters['ego'] ?? '';
 
-  Node<NodeDetails>? _egoNode;
+  NodeDetails? _egoNode;
 
   @override
   void dispose() {
@@ -47,7 +46,7 @@ class _GraphScreenState extends State<GraphScreen> {
               child: const Text('Refresh'),
             ),
             TextButton(
-              onPressed: _reset,
+              onPressed: () => _controller.jumpToNode(_egoNode!),
               child: const Text('Center'),
             ),
           ],
@@ -64,41 +63,32 @@ class _GraphScreenState extends State<GraphScreen> {
               Builder(
                 builder: (context) {
                   _prepareGraph(response!.data!.gravityGraph);
-                  return GraphView<Node<NodeDetails>,
-                      EdgeBase<Node<NodeDetails>>>(
+                  return GraphView<NodeDetails, EdgeBase<NodeDetails>>(
                     controller: _controller,
                     canvasSize: const GraphCanvasSize.fixed(Size.square(5000)),
-                    layoutAlgorithm: const FruchtermanReingoldAlgorithm(
-                      iterations: 50,
-                      showIterations: true,
-                    ),
-                    edgePainter: const CustomEdgePainter(),
+                    layoutAlgorithm: const FruchtermanReingoldAlgorithm(),
+                    edgePainter:
+                        const LineEdgePainter(color: Colors.amberAccent),
                     loaderBuilder: (context) => const Center(
                       child: CircularProgressIndicator(),
                     ),
                     labelBuilder: BottomLabelBuilder(
                       labelSize: const Size(100, 20),
-                      builder: (context, node) => switch (node) {
-                        final Node<UserNode> n => Text(n.data.label),
-                        final Node<BeaconNode> n => Text(n.data.label),
-                        final Node<CommentNode> n => Text(n.data.id),
-                        _ => const Offstage(),
-                      },
+                      builder: (context, node) => Text(
+                        node.label,
+                        overflow: TextOverflow.visible,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     nodeBuilder: (context, node) => GraphNodeWidget(
-                      nodeDetails: node.data,
-                      size: node.size,
-                      // onTap: () => _controller.jumpToNode(node),
+                      nodeDetails: node,
+                      onTap: () => _controller.jumpToNode(node),
                     ),
                   );
                 },
               ),
         ),
       );
-
-  void _reset() {
-    if (_egoNode != null) _controller.jumpToNode(_egoNode!);
-  }
 
   void _prepareGraph(GGraphFetchForEgoData_gravityGraph graph) {
     if (_ego.isEmpty) {
@@ -108,8 +98,9 @@ class _GraphScreenState extends State<GraphScreen> {
       ));
       return;
     }
-    _egoNode = Node<NodeDetails>(
-      data: _buildNodeDetails(graph, _ego),
+    _egoNode = _buildNodeDetails(
+      graph: graph,
+      node: _ego,
       pinned: true,
       size: 80,
     );
@@ -121,8 +112,8 @@ class _GraphScreenState extends State<GraphScreen> {
       }
       for (final e in graph.edges) {
         if (e == null) continue;
-        final src = Node(data: _buildNodeDetails(graph, e.src), size: 40);
-        final dst = Node(data: _buildNodeDetails(graph, e.dest), size: 40);
+        final src = _buildNodeDetails(graph: graph, node: e.src);
+        final dst = _buildNodeDetails(graph: graph, node: e.dest);
         final edge = Edge.simple(src, dst);
         if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
         if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
@@ -133,13 +124,18 @@ class _GraphScreenState extends State<GraphScreen> {
             ', Edges: ${mutator.controller.edges.length}');
       }
     });
-    Future.delayed(const Duration(milliseconds: 250), _reset);
+    Future.delayed(
+      const Duration(milliseconds: 250),
+      () => _controller.jumpToNode(_egoNode!),
+    );
   }
 
-  NodeDetails _buildNodeDetails(
-    GGraphFetchForEgoData_gravityGraph graph,
-    String node,
-  ) =>
+  NodeDetails _buildNodeDetails({
+    required GGraphFetchForEgoData_gravityGraph graph,
+    required String node,
+    double size = 40,
+    bool pinned = false,
+  }) =>
       switch (switch (_ego.substring(0, 1)) {
         'U' => graph.users.firstWhere((e) => e?.user?.id == _ego),
         'B' => graph.beacons.firstWhere((e) => e?.beacon?.id == _ego),
@@ -150,40 +146,22 @@ class _GraphScreenState extends State<GraphScreen> {
             id: n.user?.id,
             label: n.user?.title,
             hasImage: n.user?.has_picture,
-            score: n.score,
+            pinned: pinned,
+            size: size,
           ),
         final GGraphFetchForEgoData_gravityGraph_beacons n => BeaconNode(
             id: n.beacon?.id,
             userId: n.beacon?.user_id,
             hasImage: n.beacon?.has_picture,
             label: n.beacon?.title,
-            score: n.score,
+            pinned: pinned,
+            size: size,
           ),
         final GGraphFetchForEgoData_gravityGraph_comments n => CommentNode(
             id: n.node,
-            score: n.score,
+            pinned: pinned,
+            size: size,
           ),
         _ => throw Exception('Wrong fetched data type'),
       };
-}
-
-class CustomEdgePainter
-    implements EdgePainter<Node<NodeDetails>, Edge<Node<NodeDetails>>> {
-  const CustomEdgePainter();
-
-  @override
-  void paint(
-    Canvas canvas,
-    Edge<NodeBase> edge,
-    Offset sourcePosition,
-    Offset destinationPosition,
-  ) {
-    canvas.drawLine(
-      sourcePosition,
-      destinationPosition,
-      Paint()
-        ..color = Colors.amber
-        ..strokeWidth = 2,
-    );
-  }
 }
