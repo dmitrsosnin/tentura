@@ -62,11 +62,16 @@ class _GraphScreenState extends State<GraphScreen> {
               showLoaderOrErrorOr(response, error) ??
               Builder(
                 builder: (context) {
-                  _prepareGraph(response!.data!.gravityGraph);
+                  _prepareGraph(response!.data!.gravityGraph, _controller);
                   return GraphView<NodeDetails, EdgeBase<NodeDetails>>(
                     controller: _controller,
-                    canvasSize: const GraphCanvasSize.fixed(Size.square(5000)),
-                    layoutAlgorithm: const FruchtermanReingoldAlgorithm(),
+                    minScale: 0.2,
+                    maxScale: 3,
+                    canvasSize: const GraphCanvasSize.proportional(200),
+                    layoutAlgorithm: const FruchtermanReingoldAlgorithm(
+                      iterations: 200,
+                      showIterations: true,
+                    ),
                     edgePainter:
                         const LineEdgePainter(color: Colors.amberAccent),
                     loaderBuilder: (context) => const Center(
@@ -90,7 +95,10 @@ class _GraphScreenState extends State<GraphScreen> {
         ),
       );
 
-  void _prepareGraph(GGraphFetchForEgoData_gravityGraph graph) {
+  void _prepareGraph(
+    GGraphFetchForEgoData_gravityGraph graph,
+    GraphController<NodeDetails, EdgeBase<NodeDetails>> controller,
+  ) {
     if (_ego.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('No data or got error'),
@@ -104,7 +112,7 @@ class _GraphScreenState extends State<GraphScreen> {
       pinned: true,
       size: 80,
     );
-    _controller.mutate((mutator) {
+    controller.mutate((mutator) {
       if (kDebugMode) print('Fetched edges: ${graph.edges.length}');
       if (kDebugMode) print('Has nodes: ${mutator.controller.nodes.length}');
       if (!mutator.controller.nodes.contains(_egoNode)) {
@@ -126,7 +134,7 @@ class _GraphScreenState extends State<GraphScreen> {
     });
     Future.delayed(
       const Duration(milliseconds: 250),
-      () => _controller.jumpToNode(_egoNode!),
+      () => controller.jumpToNode(_egoNode!),
     );
   }
 
@@ -136,10 +144,10 @@ class _GraphScreenState extends State<GraphScreen> {
     double size = 40,
     bool pinned = false,
   }) =>
-      switch (switch (_ego.substring(0, 1)) {
-        'U' => graph.users.firstWhere((e) => e?.user?.id == _ego),
-        'B' => graph.beacons.firstWhere((e) => e?.beacon?.id == _ego),
-        'C' => graph.comments.firstWhere((e) => e?.node == _ego),
+      switch (switch (node.substring(0, 1)) {
+        'U' => graph.users.firstWhere((e) => e?.user?.id == node),
+        'B' => graph.beacons.firstWhere((e) => e?.beacon?.id == node),
+        'C' => graph.comments.firstWhere((e) => e?.node == node),
         _ => throw Exception('Wrong id type'),
       }) {
         final GGraphFetchForEgoData_gravityGraph_users n => UserNode(
@@ -160,7 +168,7 @@ class _GraphScreenState extends State<GraphScreen> {
         final GGraphFetchForEgoData_gravityGraph_comments n => CommentNode(
             id: n.node,
             pinned: pinned,
-            size: size,
+            size: size / 2,
           ),
         _ => throw Exception('Wrong fetched data type'),
       };

@@ -30,9 +30,9 @@ class GraphNodeWidget extends StatelessWidget {
         final CommentNode _ => DecoratedBox(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
+              color: Colors.grey,
               shape: BoxShape.circle,
             ),
-            child: const Text('C'),
           ),
       },
     );
