@@ -20,7 +20,7 @@ sealed class NodeDetails extends NodeBase with EquatableMixin {
   final bool hasImage;
 
   @override
-  List<Object> get props => [id, label, size, hasImage, pinned];
+  List<Object> get props => [id, label, size, hasImage];
 }
 
 final class UserNode extends NodeDetails {

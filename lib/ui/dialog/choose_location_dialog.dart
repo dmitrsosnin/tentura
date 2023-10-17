@@ -38,16 +38,18 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
         body: FlutterMap(
           mapController: _mapController,
           options: MapOptions(
-            zoom: 10,
+            initialZoom: widget.center == null ? 4 : 10,
             maxZoom: 12,
-            center: widget.center,
-            interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+            initialCenter: widget.center ?? const LatLng(0, 0),
+            interactionOptions: const InteractionOptions(
+              flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+            ),
             onTap: (tapPosition, point) => context.pop(point),
             onMapReady: () =>
                 GetIt.I<GeolocationRepository>().getMyCoords().then(
               (value) {
                 if (value == null) return;
-                _mapController.move(value, _mapController.zoom);
+                _mapController.move(value, _mapController.camera.zoom);
               },
             ),
           ),
