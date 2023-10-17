@@ -17,8 +17,6 @@ class GraphScreen extends StatefulWidget {
 }
 
 class _GraphScreenState extends State<GraphScreen> {
-  static const _requestId = 'FetchGraph';
-
   final _controller = GraphController<NodeDetails, EdgeBase<NodeDetails>>();
 
   late final _ego = GoRouterState.of(context).uri.queryParameters['ego'] ?? '';
@@ -37,15 +35,6 @@ class _GraphScreenState extends State<GraphScreen> {
           title: const Text('Graph view'),
           actions: [
             TextButton(
-              onPressed: () async => GetIt.I<Client>().requestController.add(
-                    GGraphFetchForEgoReq((b) => b
-                      ..fetchPolicy = FetchPolicy.NetworkOnly
-                      ..requestId = _requestId + _ego
-                      ..vars.ego = _ego),
-                  ),
-              child: const Text('Refresh'),
-            ),
-            TextButton(
               onPressed: () => _controller.jumpToNode(_egoNode!),
               child: const Text('Center'),
             ),
@@ -55,7 +44,7 @@ class _GraphScreenState extends State<GraphScreen> {
           client: GetIt.I<Client>(),
           operationRequest: GGraphFetchForEgoReq(
             (b) => b
-              ..requestId = _requestId + _ego
+              ..fetchPolicy = FetchPolicy.NetworkOnly
               ..vars.ego = _ego,
           ),
           builder: (context, response, error) =>
@@ -72,8 +61,8 @@ class _GraphScreenState extends State<GraphScreen> {
                       iterations: 200,
                       showIterations: true,
                     ),
-                    edgePainter:
-                        const LineEdgePainter(color: Colors.amberAccent),
+                    edgePainter: const _CustomEdgePainter(),
+                    // const LineEdgePainter(color: Colors.amberAccent),
                     loaderBuilder: (context) => const Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -122,7 +111,13 @@ class _GraphScreenState extends State<GraphScreen> {
         if (e == null) continue;
         final src = _buildNodeDetails(graph: graph, node: e.src);
         final dst = _buildNodeDetails(graph: graph, node: e.dest);
-        final edge = Edge.simple(src, dst);
+        final edge = Edge(
+          source: src,
+          destination: dst,
+          data: (src == _egoNode || dst == _egoNode)
+              ? Colors.amberAccent
+              : Colors.cyanAccent,
+        );
         if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
         if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
         if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
@@ -172,4 +167,25 @@ class _GraphScreenState extends State<GraphScreen> {
           ),
         _ => throw Exception('Wrong fetched data type'),
       };
+}
+
+class _CustomEdgePainter
+    implements EdgePainter<NodeDetails, Edge<NodeDetails>> {
+  const _CustomEdgePainter();
+
+  @override
+  void paint(
+    Canvas canvas,
+    Edge edge,
+    Offset sourcePosition,
+    Offset destinationPosition,
+  ) {
+    canvas.drawLine(
+      sourcePosition,
+      destinationPosition,
+      Paint()
+        ..color = (edge.data as Color?) ?? Colors.amberAccent
+        ..strokeWidth = 2,
+    );
+  }
 }
