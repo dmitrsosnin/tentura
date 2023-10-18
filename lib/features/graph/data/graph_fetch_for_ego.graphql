@@ -1,8 +1,9 @@
-query GraphFetchForEgo($ego: String!) {
-  gravityGraph(ego: $ego) {
+query GraphFetchForEgo($ego: String!, $focus: String) {
+  gravityGraph(ego: $ego, focus: $focus) {
     edges {
       src
       dest
+      weight
     }
     users {
       user {

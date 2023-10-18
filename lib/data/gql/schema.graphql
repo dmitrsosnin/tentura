@@ -68,7 +68,7 @@ type beacon {
     """filter the rows returned"""
     where: beacon_hidden_bool_exp
   ): beacon_hidden_aggregate!
-  beacon_in_my_field(limit: Int = null, where: NodeScoreWhereInput = null): [NodeScore!]!
+  beacon_in_my_field(limit: Int, where: NodeScoreWhereInput): [NodeScore!]!
 
   """An array relationship"""
   beacon_pinneds(
@@ -2274,7 +2274,7 @@ type mutation_root {
 }
 
 input NodeInput {
-  like: String = null
+  like: String
 }
 
 type NodeScore {
@@ -2287,8 +2287,8 @@ type NodeScore {
 }
 
 input NodeScoreWhereInput {
-  node: NodeInput = null
-  score: ScoreInput = null
+  node: NodeInput
+  score: ScoreInput
 }
 
 """column ordering options"""
@@ -2501,9 +2501,9 @@ type query_root {
   edge(dest: String!, src: String!): Edge
   edges(src: String!): [Edge!]!
   getPlaceName(lat: Float!, long: Float!): ReverseGeocodingOutput
-  gravityGraph(ego: String!): GravityGraph!
+  gravityGraph(ego: String!, focus: String, minAbsScore: Float, positiveOnly: Boolean, recurseDepth: Int): GravityGraph!
   score(ego: String!, node: String!): NodeScore!
-  scores(ego: String!, limit: Int = null, where: NodeScoreWhereInput = null): [NodeScore!]!
+  scores(ego: String!, limit: Int, where: NodeScoreWhereInput): [NodeScore!]!
 
   """
   fetch data from the table: "user"
@@ -2685,10 +2685,10 @@ type ReverseGeocodingOutput {
 }
 
 input ScoreInput {
-  gt: Float = null
-  gte: Float = null
-  lt: Float = null
-  lte: Float = null
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
 }
 
 input st_d_within_geography_input {

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:gravity/app/router.dart';
@@ -51,7 +50,7 @@ class _GraphScreenState extends State<GraphScreen> {
               showLoaderOrErrorOr(response, error) ??
               Builder(
                 builder: (context) {
-                  _prepareGraph(response!.data!.gravityGraph, _controller);
+                  _updateGraph(response!.data!.gravityGraph);
                   return GraphView<NodeDetails, EdgeBase<NodeDetails>>(
                     controller: _controller,
                     minScale: 0.2,
@@ -62,7 +61,6 @@ class _GraphScreenState extends State<GraphScreen> {
                       showIterations: true,
                     ),
                     edgePainter: const _CustomEdgePainter(),
-                    // const LineEdgePainter(color: Colors.amberAccent),
                     loaderBuilder: (context) => const Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -76,7 +74,20 @@ class _GraphScreenState extends State<GraphScreen> {
                     ),
                     nodeBuilder: (context, node) => GraphNodeWidget(
                       nodeDetails: node,
-                      onTap: () => _controller.jumpToNode(node),
+                      onTap: () async {
+                        _controller.jumpToNode(node);
+                        final focusResult = await GetIt.I<Client>()
+                            .request(GGraphFetchForEgoReq(
+                              (b) => b
+                                ..fetchPolicy = FetchPolicy.NetworkOnly
+                                ..vars.ego = _ego
+                                ..vars.focus = node.id,
+                            ))
+                            .firstWhere((e) => e.dataSource == DataSource.Link);
+                        if (focusResult.data?.gravityGraph != null) {
+                          _updateGraph(focusResult.data!.gravityGraph);
+                        }
+                      },
                     ),
                   );
                 },
@@ -84,10 +95,7 @@ class _GraphScreenState extends State<GraphScreen> {
         ),
       );
 
-  void _prepareGraph(
-    GGraphFetchForEgoData_gravityGraph graph,
-    GraphController<NodeDetails, EdgeBase<NodeDetails>> controller,
-  ) {
+  void _updateGraph(GGraphFetchForEgoData_gravityGraph graph) {
     if (_ego.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('No data or got error'),
@@ -101,9 +109,7 @@ class _GraphScreenState extends State<GraphScreen> {
       pinned: true,
       size: 80,
     );
-    controller.mutate((mutator) {
-      if (kDebugMode) print('Fetched edges: ${graph.edges.length}');
-      if (kDebugMode) print('Has nodes: ${mutator.controller.nodes.length}');
+    _controller.mutate((mutator) {
       if (!mutator.controller.nodes.contains(_egoNode)) {
         mutator.addNode(_egoNode!);
       }
@@ -114,22 +120,20 @@ class _GraphScreenState extends State<GraphScreen> {
         final edge = Edge(
           source: src,
           destination: dst,
-          data: (src == _egoNode || dst == _egoNode)
-              ? Colors.amberAccent
-              : Colors.cyanAccent,
+          data: e.weight < 0
+              ? Colors.redAccent
+              : (src == _egoNode || dst == _egoNode)
+                  ? Colors.amberAccent
+                  : Colors.cyanAccent,
         );
         if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
         if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
         if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
       }
-      if (kDebugMode) {
-        print('Nodes: ${mutator.controller.nodes.length}'
-            ', Edges: ${mutator.controller.edges.length}');
-      }
     });
     Future.delayed(
       const Duration(milliseconds: 250),
-      () => controller.jumpToNode(_egoNode!),
+      () => _controller.jumpToNode(_egoNode!),
     );
   }
 
