@@ -1,3 +1,4 @@
+import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/user/user_utils.dart';
@@ -8,6 +9,7 @@ import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/gradient_stack.dart';
 import 'package:gravity/ui/widget/avatar_positioned.dart';
 import 'package:gravity/ui/widget/error_center_text.dart';
+import 'package:gravity/ui/dialog/share_code_dialog.dart';
 import 'package:gravity/features/beacon/widget/beacon_tile.dart';
 
 import 'data/_g/profile_fetch_by_user_id.req.gql.dart';
@@ -64,6 +66,30 @@ class ProfileViewScreen extends StatelessWidget {
                           // Header
                           SliverAppBar(
                             actions: [
+                              // Graph View
+                              IconButton(
+                                icon: const Icon(Icons.hub_outlined),
+                                onPressed: () => context.push(Uri(
+                                  path: pathGraph,
+                                  queryParameters: {'ego': userId},
+                                ).toString()),
+                              ),
+                              // Share
+                              IconButton(
+                                icon: const Icon(Icons.share_outlined),
+                                onPressed: () => showDialog<void>(
+                                  context: context,
+                                  builder: (context) => ShareCodeDialog(
+                                    id: userId,
+                                    link: Uri.https(
+                                      appLinkBase,
+                                      pathBeaconView,
+                                      {'id': userId},
+                                    ).toString(),
+                                  ),
+                                ),
+                              ),
+                              // More
                               ProfilePopupMenuButton(
                                 user: profile,
                                 isMine: isMine,

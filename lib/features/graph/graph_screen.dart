@@ -46,52 +46,50 @@ class _GraphScreenState extends State<GraphScreen> {
               ..fetchPolicy = FetchPolicy.NetworkOnly
               ..vars.ego = _ego,
           ),
-          builder: (context, response, error) =>
-              showLoaderOrErrorOr(response, error) ??
-              Builder(
-                builder: (context) {
-                  _updateGraph(response!.data!.gravityGraph);
-                  return GraphView<NodeDetails, EdgeBase<NodeDetails>>(
-                    controller: _controller,
-                    minScale: 0.2,
-                    maxScale: 3,
-                    canvasSize: const GraphCanvasSize.proportional(200),
-                    layoutAlgorithm: const FruchtermanReingoldAlgorithm(
-                      iterations: 200,
-                      showIterations: true,
-                    ),
-                    edgePainter: const _CustomEdgePainter(),
-                    loaderBuilder: (context) => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    labelBuilder: BottomLabelBuilder(
-                      labelSize: const Size(100, 20),
-                      builder: (context, node) => Text(
-                        node.label,
-                        overflow: TextOverflow.visible,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    nodeBuilder: (context, node) => GraphNodeWidget(
-                      nodeDetails: node,
-                      onTap: () async {
-                        _controller.jumpToNode(node);
-                        final focusResult = await GetIt.I<Client>()
-                            .request(GGraphFetchForEgoReq(
-                              (b) => b
-                                ..fetchPolicy = FetchPolicy.NetworkOnly
-                                ..vars.ego = _ego
-                                ..vars.focus = node.id,
-                            ))
-                            .firstWhere((e) => e.dataSource == DataSource.Link);
-                        if (focusResult.data?.gravityGraph != null) {
-                          _updateGraph(focusResult.data!.gravityGraph);
-                        }
-                      },
-                    ),
-                  );
+          builder: (context, response, error) {
+            final w = showLoaderOrErrorOr(response, error);
+            if (w != null) return w;
+            _updateGraph(response!.data!.gravityGraph);
+            return GraphView<NodeDetails, EdgeBase<NodeDetails>>(
+              controller: _controller,
+              minScale: 0.2,
+              maxScale: 3,
+              canvasSize: const GraphCanvasSize.proportional(200),
+              layoutAlgorithm: const FruchtermanReingoldAlgorithm(
+                iterations: 200,
+                showIterations: true,
+              ),
+              edgePainter: const _CustomEdgePainter(),
+              loaderBuilder: (context) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              labelBuilder: BottomLabelBuilder(
+                labelSize: const Size(100, 20),
+                builder: (context, node) => Text(
+                  node.label,
+                  overflow: TextOverflow.visible,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              nodeBuilder: (context, node) => GraphNodeWidget(
+                nodeDetails: node,
+                onTap: () async {
+                  _controller.jumpToNode(node);
+                  final focusResult = await GetIt.I<Client>()
+                      .request(GGraphFetchForEgoReq(
+                        (b) => b
+                          ..fetchPolicy = FetchPolicy.NetworkOnly
+                          ..vars.ego = _ego
+                          ..vars.focus = node.id,
+                      ))
+                      .firstWhere((e) => e.dataSource == DataSource.Link);
+                  if (focusResult.data?.gravityGraph != null) {
+                    _updateGraph(focusResult.data!.gravityGraph);
+                  }
                 },
               ),
+            );
+          },
         ),
       );
 

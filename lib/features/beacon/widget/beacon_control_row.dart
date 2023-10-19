@@ -4,7 +4,6 @@ import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 
-import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/dialog/share_code_dialog.dart';
 import 'package:gravity/features/beacon/widget/beacon_vote_control.dart';
 
@@ -39,8 +38,10 @@ class BeaconControlRow extends StatelessWidget {
           // Graph View
           IconButton(
             icon: const Icon(Icons.hub_outlined),
-            onPressed: () => ScaffoldMessenger.of(context)
-                .showSnackBar(notImplementedSnackBar),
+            onPressed: () => context.push(Uri(
+              path: pathGraph,
+              queryParameters: {'ego': beacon.id},
+            ).toString()),
           ),
           // Share
           IconButton(

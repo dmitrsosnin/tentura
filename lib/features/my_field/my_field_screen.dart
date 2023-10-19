@@ -45,15 +45,16 @@ class _MyFieldScreenState extends State<MyFieldScreen> {
               ],
             ),
           ),
-          bottomNavigationBar: const Padding(
-            padding: paddingV20,
-            child: TabBar(
-              tabs: [
-                Text('Hidden'),
-                Text('Feed'),
-                Text('Pinned'),
-              ],
-            ),
+          bottomNavigationBar: TabBar(
+            dividerColor: Colors.transparent,
+            labelStyle: Theme.of(context).textTheme.headlineSmall,
+            unselectedLabelStyle: Theme.of(context).textTheme.labelLarge,
+            labelPadding: const EdgeInsetsDirectional.only(top: 16, bottom: 8),
+            tabs: const [
+              Text('Hidden'),
+              Text('Feed'),
+              Text('Pinned'),
+            ],
           ),
           floatingActionButtonLocation: ExpandableFab.location,
           floatingActionButton: ExpandableFab(
