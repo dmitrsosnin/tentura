@@ -8,6 +8,8 @@ import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/dialog/qr_scan_dialog.dart';
 
+import 'package:gravity/features/my_field/bloc/my_field_cubit.dart';
+
 import 'widget/feed_tab.dart';
 import 'widget/hidden_tab.dart';
 import 'widget/pinned_tab.dart';
@@ -32,71 +34,75 @@ class _MyFieldScreenState extends State<MyFieldScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => DefaultTabController(
-        length: 3,
-        initialIndex: 1,
-        child: Scaffold(
-          body: const SafeArea(
-            child: TabBarView(
-              children: [
-                HiddenTab(),
-                FeedTab(),
-                PinnedTab(),
+  Widget build(BuildContext context) => BlocProvider(
+        create: (context) => MyFieldCubit(),
+        child: DefaultTabController(
+          length: 3,
+          initialIndex: 1,
+          child: Scaffold(
+            body: const SafeArea(
+              child: TabBarView(
+                children: [
+                  HiddenTab(),
+                  FeedTab(),
+                  PinnedTab(),
+                ],
+              ),
+            ),
+            bottomNavigationBar: TabBar(
+              dividerColor: Colors.transparent,
+              labelStyle: Theme.of(context).textTheme.headlineSmall,
+              unselectedLabelStyle: Theme.of(context).textTheme.labelLarge,
+              labelPadding:
+                  const EdgeInsetsDirectional.only(top: 16, bottom: 8),
+              tabs: const [
+                Text('Hidden'),
+                Text('Feed'),
+                Text('Pinned'),
               ],
             ),
-          ),
-          bottomNavigationBar: TabBar(
-            dividerColor: Colors.transparent,
-            labelStyle: Theme.of(context).textTheme.headlineSmall,
-            unselectedLabelStyle: Theme.of(context).textTheme.labelLarge,
-            labelPadding: const EdgeInsetsDirectional.only(top: 16, bottom: 8),
-            tabs: const [
-              Text('Hidden'),
-              Text('Feed'),
-              Text('Pinned'),
-            ],
-          ),
-          floatingActionButtonLocation: ExpandableFab.location,
-          floatingActionButton: ExpandableFab(
-            key: _key,
-            children: [
-              FloatingActionButton(
-                heroTag: null,
-                tooltip: 'Search',
-                child: const Icon(Icons.search_outlined),
-                onPressed: () {
-                  _key.currentState?.toggle();
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(notImplementedSnackBar);
-                },
-              ),
-              FloatingActionButton(
-                heroTag: null,
-                tooltip: 'Input Code',
-                child: const Icon(Icons.input_outlined),
-                onPressed: () async {
-                  _key.currentState?.toggle();
-                  final code = await showDialog<String?>(
-                    context: context,
-                    builder: (context) => const InputCodeDialog(),
-                  );
-                  if (context.mounted) _goWithCode(context, code);
-                },
-              ),
-              FloatingActionButton(
-                heroTag: null,
-                tooltip: 'Scan QR',
-                child: const Icon(Icons.qr_code_scanner_outlined),
-                onPressed: () async {
-                  _key.currentState?.toggle();
-                  final code = await showDialog<String?>(
-                    context: context,
-                    builder: (context) => const QRScanDialog(),
-                  );
-                  if (context.mounted) _goWithCode(context, code);
-                },
-              ),
-            ],
+            floatingActionButtonLocation: ExpandableFab.location,
+            floatingActionButton: ExpandableFab(
+              key: _key,
+              children: [
+                FloatingActionButton(
+                  heroTag: null,
+                  tooltip: 'Search',
+                  child: const Icon(Icons.search_outlined),
+                  onPressed: () {
+                    _key.currentState?.toggle();
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(notImplementedSnackBar);
+                  },
+                ),
+                FloatingActionButton(
+                  heroTag: null,
+                  tooltip: 'Input Code',
+                  child: const Icon(Icons.input_outlined),
+                  onPressed: () async {
+                    _key.currentState?.toggle();
+                    final code = await showDialog<String?>(
+                      context: context,
+                      builder: (context) => const InputCodeDialog(),
+                    );
+                    if (context.mounted) _goWithCode(context, code);
+                  },
+                ),
+                FloatingActionButton(
+                  heroTag: null,
+                  tooltip: 'Scan QR',
+                  child: const Icon(Icons.qr_code_scanner_outlined),
+                  onPressed: () async {
+                    _key.currentState?.toggle();
+                    final code = await showDialog<String?>(
+                      context: context,
+                      builder: (context) => const QRScanDialog(),
+                    );
+                    if (context.mounted) _goWithCode(context, code);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       );

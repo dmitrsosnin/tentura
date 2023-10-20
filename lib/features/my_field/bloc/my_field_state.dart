@@ -1,10 +1,10 @@
 part of 'my_field_cubit.dart';
 
-enum FetchStatus { initial, loading, success, failure }
+enum FetchStatus { isEmpty, isLoading, hasData, hasError }
 
 final class MyFieldState extends Equatable {
   const MyFieldState({
-    this.status = FetchStatus.initial,
+    this.status = FetchStatus.isEmpty,
     this.beacons = const <GBeaconFields>[],
     this.hasReachedMax = false,
   });
@@ -12,6 +12,11 @@ final class MyFieldState extends Equatable {
   final FetchStatus status;
   final List<GBeaconFields> beacons;
   final bool hasReachedMax;
+
+  bool get isLoading => status == FetchStatus.isLoading;
+  bool get isSuccess => status == FetchStatus.hasData;
+  bool get hasError => status == FetchStatus.hasError;
+  bool get isEmpty => beacons.isEmpty;
 
   MyFieldState copyWith({
     FetchStatus? status,
@@ -25,18 +30,10 @@ final class MyFieldState extends Equatable {
       );
 
   @override
-  String toString() => jsonEncode({
-        'MyFieldState': {
-          'status': status,
-          'items': beacons.length,
-          'hasReachedMax': hasReachedMax,
-        },
-      });
-
-  @override
   List<Object> get props => [
         status,
         beacons,
+        beacons.length,
         hasReachedMax,
       ];
 }

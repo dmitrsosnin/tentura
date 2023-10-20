@@ -1,17 +1,15 @@
 import 'package:gravity/app/router.dart';
-import 'package:gravity/data/gql/beacon/beacon_utils.dart';
-import 'package:gravity/features/beacon/data/_g/beacon_hide_by_id.req.gql.dart';
-import 'package:gravity/ui/consts.dart';
 
+import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 
 class BeaconHideDialog extends StatefulWidget {
-  final GBeaconFields beacon;
+  static Future<Duration?> show(BuildContext context) => showDialog<Duration?>(
+        context: context,
+        builder: (context) => const BeaconHideDialog(),
+      );
 
-  const BeaconHideDialog({
-    required this.beacon,
-    super.key,
-  });
+  const BeaconHideDialog({super.key});
 
   @override
   State<BeaconHideDialog> createState() => _BeaconHideDialogState();
@@ -68,14 +66,7 @@ class _BeaconHideDialogState extends State<BeaconHideDialog> {
         ),
         actions: [
           TextButton(
-            onPressed: () => doRequest(
-              context: context,
-              request: GBeaconHideByIdReq(
-                (b) => b
-                  ..vars.beacon_id = widget.beacon.id
-                  ..vars.hidden_until = DateTime.timestamp().add(_hideUntil),
-              ),
-            ).then((r) => context.mounted ? context.pop(r.hasNoErrors) : null),
+            onPressed: () => context.pop(_hideUntil),
             child: const Text('Apply'),
           ),
           TextButton(
