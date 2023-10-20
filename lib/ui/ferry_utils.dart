@@ -20,11 +20,11 @@ Widget? showLoaderOrErrorOr(
   OperationResponse<Object, Object>? response,
   Object? error,
 ) =>
-    response?.data != null
-        ? null
-        : (response?.loading ?? false)
+    response == null || response.hasErrors
+        ? ErrorCenterText(response: response, error: error)
+        : response.loading
             ? const Center(child: CircularProgressIndicator.adaptive())
-            : ErrorCenterText(response: response, error: error);
+            : null;
 
 /// Do request and show SnackBar with error message if response hasError and context is provided
 Future<OperationResponse<TData, TVars>> doRequest<TData, TVars>({

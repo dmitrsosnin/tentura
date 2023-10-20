@@ -93,10 +93,12 @@ class _GraphScreenState extends State<GraphScreen> {
 
   void _updateGraph(GGraphFetchForEgoData_gravityGraph? graph) {
     if (_ego.isEmpty || graph == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('No data or got error'),
-        backgroundColor: Theme.of(context).colorScheme.errorContainer,
-      ));
+      Future.microtask(
+        () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('No data or got error'),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        )),
+      );
       return;
     }
     _egoNode = _buildNodeDetails(
