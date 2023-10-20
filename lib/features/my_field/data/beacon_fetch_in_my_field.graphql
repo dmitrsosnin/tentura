@@ -1,7 +1,12 @@
 # import '/data/gql/beacon/_fragments.graphql'
 
 query BeaconFetchInMyField($ego: String!) {
-  scores(ego: $ego, where: {score: {gt: 0}, node: {like: "B"}}) {
+  scores(ego: $ego, where: {score: {gt: 0}, node: {like: "B"}}, hidePersonal: true) {
+    beacon {
+      ...BeaconFields
+    }
+  }
+  globalScores(ego: $ego, where: {score: {gt: 0}, node: {like: "B"}}, hidePersonal: true) {
     beacon {
       ...BeaconFields
     }

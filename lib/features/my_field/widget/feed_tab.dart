@@ -18,6 +18,11 @@ class FeedTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final client = GetIt.I<Client>();
     final myId = GetIt.I<AuthRepository>().myId;
+    final dividerDecoration = BoxDecoration(
+      border: Border(
+        bottom: BorderSide(color: Theme.of(context).colorScheme.inversePrimary),
+      ),
+    );
     return Operation(
       client: client,
       operationRequest: GBeaconFetchInMyFieldReq(
@@ -35,43 +40,49 @@ class FeedTab extends StatelessWidget {
                 ..requestId = _requestId
                 ..vars.ego = myId,
             )),
-            child: response?.data?.scores.isEmpty ?? false
+            child: response?.data?.scores?.isEmpty ?? false
                 ? const EmptyListScrollView()
-                : ListView.separated(
+                : ListView.builder(
                     padding: paddingAll20,
-                    itemCount: response!.data!.scores.length,
-                    separatorBuilder: (_, __) => const Divider(),
+                    itemCount: response!.data!.scores!.length,
                     itemBuilder: (context, i) {
                       final beacon =
-                          response.data!.scores[i].beacon as GBeaconFields;
+                          response.data!.scores![i].beacon as GBeaconFields;
                       // TBD: remove that ugly hack when able filter in request
-                      if (beacon.author.id == myId) return const Offstage();
-                      return Dismissible(
-                        key: ValueKey(beacon),
-                        background: const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text('Move to Pinned'),
-                        ),
-                        secondaryBackground: const Align(
-                          alignment: Alignment.centerRight,
-                          child: Text('Move to Hidden'),
-                        ),
-                        child: BeaconTile(beacon: beacon),
-                        confirmDismiss: (direction) => switch (direction) {
-                          DismissDirection.startToEnd => doRequest(
-                              context: context,
-                              request: GBeaconPinByIdReq(
-                                (b) => b..vars.beacon_id = beacon.id,
+                      if (beacon.author.id == myId ||
+                          beacon.enabled == false ||
+                          (beacon.is_hidden ?? false) ||
+                          (beacon.is_pinned ?? false)) return const Offstage();
+                      return Container(
+                        decoration: dividerDecoration,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Dismissible(
+                          key: ValueKey(beacon),
+                          background: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Move to Pinned'),
+                          ),
+                          secondaryBackground: const Align(
+                            alignment: Alignment.centerRight,
+                            child: Text('Move to Hidden'),
+                          ),
+                          child: BeaconTile(beacon: beacon),
+                          confirmDismiss: (direction) => switch (direction) {
+                            DismissDirection.startToEnd => doRequest(
+                                context: context,
+                                request: GBeaconPinByIdReq(
+                                  (b) => b..vars.beacon_id = beacon.id,
+                                ),
+                              ).then((value) => value.hasNoErrors),
+                            DismissDirection.endToStart => showDialog<bool?>(
+                                context: context,
+                                builder: (context) => BeaconHideDialog(
+                                  beacon: beacon,
+                                ),
                               ),
-                            ).then((value) => value.hasNoErrors),
-                          DismissDirection.endToStart => showDialog<bool?>(
-                              context: context,
-                              builder: (context) => BeaconHideDialog(
-                                beacon: beacon,
-                              ),
-                            ),
-                          _ => Future.value(false),
-                        },
+                            _ => Future.value(false),
+                          },
+                        ),
                       );
                     },
                   ),

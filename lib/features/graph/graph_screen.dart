@@ -49,7 +49,7 @@ class _GraphScreenState extends State<GraphScreen> {
           builder: (context, response, error) {
             final w = showLoaderOrErrorOr(response, error);
             if (w != null) return w;
-            _updateGraph(response!.data!.gravityGraph);
+            _updateGraph(response?.data?.gravityGraph);
             return GraphView<NodeDetails, EdgeBase<NodeDetails>>(
               controller: _controller,
               minScale: 0.2,
@@ -83,9 +83,7 @@ class _GraphScreenState extends State<GraphScreen> {
                           ..vars.focus = node.id,
                       ))
                       .firstWhere((e) => e.dataSource == DataSource.Link);
-                  if (focusResult.data?.gravityGraph != null) {
-                    _updateGraph(focusResult.data!.gravityGraph);
-                  }
+                  _updateGraph(focusResult.data?.gravityGraph);
                 },
               ),
             );
@@ -93,8 +91,8 @@ class _GraphScreenState extends State<GraphScreen> {
         ),
       );
 
-  void _updateGraph(GGraphFetchForEgoData_gravityGraph graph) {
-    if (_ego.isEmpty) {
+  void _updateGraph(GGraphFetchForEgoData_gravityGraph? graph) {
+    if (_ego.isEmpty || graph == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('No data or got error'),
         backgroundColor: Theme.of(context).colorScheme.errorContainer,
