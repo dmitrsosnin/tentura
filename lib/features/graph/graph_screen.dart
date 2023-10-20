@@ -1,6 +1,7 @@
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:gravity/app/router.dart';
+import 'package:gravity/features/graph/domain/entity/edge_details.dart';
 import 'package:gravity/features/graph/domain/entity/node_details.dart';
 import 'package:gravity/features/graph/data/_g/graph_fetch_for_ego.data.gql.dart';
 import 'package:gravity/features/graph/data/_g/graph_fetch_for_ego.req.gql.dart';
@@ -16,7 +17,7 @@ class GraphScreen extends StatefulWidget {
 }
 
 class _GraphScreenState extends State<GraphScreen> {
-  final _controller = GraphController<NodeDetails, EdgeBase<NodeDetails>>();
+  final _controller = GraphController<NodeDetails, EdgeDetails<NodeDetails>>();
 
   late final _ego = GoRouterState.of(context).uri.queryParameters['ego'] ?? '';
 
@@ -50,7 +51,7 @@ class _GraphScreenState extends State<GraphScreen> {
             final w = showLoaderOrErrorOr(response, error);
             if (w != null) return w;
             _updateGraph(response?.data?.gravityGraph);
-            return GraphView<NodeDetails, EdgeBase<NodeDetails>>(
+            return GraphView<NodeDetails, EdgeDetails<NodeDetails>>(
               controller: _controller,
               minScale: 0.2,
               maxScale: 3,
@@ -115,18 +116,21 @@ class _GraphScreenState extends State<GraphScreen> {
         if (e == null) continue;
         final src = _buildNodeDetails(graph: graph, node: e.src);
         final dst = _buildNodeDetails(graph: graph, node: e.dest);
-        final edge = Edge(
+        final edge = EdgeDetails<NodeDetails>(
           source: src,
           destination: dst,
-          data: e.weight < 0
+          strokeWidth: (src == _egoNode || dst == _egoNode) ? 4 : 2,
+          color: e.weight < 0
               ? Colors.redAccent
-              : (src == _egoNode || dst == _egoNode)
+              : src == _egoNode || dst == _egoNode
                   ? Colors.amberAccent
                   : Colors.cyanAccent,
         );
-        if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
-        if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
-        if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
+        if (!mutator.controller.edges.contains(edge)) {
+          if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
+          if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
+          mutator.addEdge(edge);
+        }
       }
     });
     Future.delayed(
@@ -172,13 +176,13 @@ class _GraphScreenState extends State<GraphScreen> {
 }
 
 class _CustomEdgePainter
-    implements EdgePainter<NodeDetails, Edge<NodeDetails>> {
+    implements EdgePainter<NodeDetails, EdgeDetails<NodeDetails>> {
   const _CustomEdgePainter();
 
   @override
   void paint(
     Canvas canvas,
-    Edge edge,
+    EdgeDetails edge,
     Offset sourcePosition,
     Offset destinationPosition,
   ) {
@@ -186,8 +190,8 @@ class _CustomEdgePainter
       sourcePosition,
       destinationPosition,
       Paint()
-        ..color = (edge.data as Color?) ?? Colors.amberAccent
-        ..strokeWidth = 2,
+        ..color = edge.color
+        ..strokeWidth = edge.strokeWidth,
     );
   }
 }

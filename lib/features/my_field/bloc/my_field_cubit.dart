@@ -23,7 +23,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
         .request(GBeaconFetchInMyFieldReq(
           (b) => b
             ..requestId = _requestId
-            ..fetchPolicy = FetchPolicy.CacheFirst
+            ..fetchPolicy = FetchPolicy.NoCache
             ..vars.ego = GetIt.I<AuthRepository>().myId,
         ))
         .listen(_onData, cancelOnError: false);
@@ -43,7 +43,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
     GetIt.I<Client>().requestController.add(GBeaconFetchInMyFieldReq(
           (b) => b
             ..requestId = _requestId
-            ..fetchPolicy = FetchPolicy.NetworkOnly
+            ..fetchPolicy = FetchPolicy.NoCache
             ..vars.ego = GetIt.I<AuthRepository>().myId,
         ));
   }
@@ -91,8 +91,8 @@ class MyFieldCubit extends Cubit<MyFieldState> {
       final myField = <GBeaconFields>[];
       final myId = GetIt.I<AuthRepository>().myId;
       final fetched = [
-        if (response.data!.scores != null)
-          ...response.data!.scores!
+        if (response.data != null)
+          ...response.data!.scores
               .map<GBeaconFields>((e) => e.beacon as GBeaconFields),
         ...response.data!.globalScores
             .map<GBeaconFields>((e) => e.beacon as GBeaconFields),
@@ -102,6 +102,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
         if (beacon.enabled == false) continue;
         if (beacon.is_hidden ?? false) continue;
         if (beacon.is_pinned ?? false) continue;
+        if ((beacon.my_vote ?? 0) < 0) continue;
         if (beacon.author.id == myId) continue;
         if (beaconIds.add(beacon.id)) myField.add(beacon);
       }

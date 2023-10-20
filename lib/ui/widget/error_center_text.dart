@@ -12,7 +12,9 @@ class ErrorCenterText extends StatelessWidget {
   final OperationResponse<dynamic, dynamic>? response;
 
   @override
-  Widget build(BuildContext context) => Center(
+  Widget build(BuildContext context) => Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(20),
         child: Text(
           error != null
               ? error.toString()

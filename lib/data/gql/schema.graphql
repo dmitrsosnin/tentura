@@ -68,7 +68,7 @@ type beacon {
     """filter the rows returned"""
     where: beacon_hidden_bool_exp
   ): beacon_hidden_aggregate!
-  beacon_in_my_field(hidePersonal: Boolean, limit: Int, where: NodeScoreWhereInput): [NodeScore!]
+  beacon_in_my_field(hidePersonal: Boolean, limit: Int, where: NodeScoreWhereInput): [NodeScore!]!
 
   """An array relationship"""
   beacon_pinneds(
@@ -2501,10 +2501,10 @@ type query_root {
   edge(dest: String!, src: String!): Edge
   edges(src: String!): [Edge!]!
   getPlaceName(lat: Float!, long: Float!): ReverseGeocodingOutput
-  globalScores(ego: String!, hidePersonal: Boolean, limit: Int, useCache: Int, where: NodeScoreWhereInput): [NodeScore!]!
-  gravityGraph(ego: String!, focus: String, minAbsScore: Float, positiveOnly: Boolean, recurseDepth: Int): GravityGraph
-  score(ego: String!, node: String!): NodeScore!
-  scores(ego: String!, hidePersonal: Boolean, limit: Int, where: NodeScoreWhereInput): [NodeScore!]
+  globalScores(ego: String!, hidePersonal: Boolean, limit: Int, useCache: Boolean, where: NodeScoreWhereInput): [NodeScore!]!
+  gravityGraph(ego: String!, focus: String, minAbsScore: Float, positiveOnly: Boolean, recurseDepth: Int): GravityGraph!
+  score(ego: String!, node: String!): NodeScore
+  scores(ego: String!, hidePersonal: Boolean, limit: Int, where: NodeScoreWhereInput): [NodeScore!]!
 
   """
   fetch data from the table: "user"
