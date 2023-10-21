@@ -2,7 +2,7 @@ name: gravity
 description: 'Gravity for a social ranking'
 publish_to: 'none'
 
-version: 0.3.5+0
+version: 0.3.6+0
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -30,7 +30,7 @@ dependencies:
   ferry: ^0.14.2
   http: ^1.1.0
 
-  force_directed_graphview: ^0.1.0
+  force_directed_graphview: ^0.1.1
   flutter_expandable_fab: ^2.0.0
   cached_network_image: ^3.3.0
   vector_graphics: ^1.1.9

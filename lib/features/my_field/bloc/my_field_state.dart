@@ -1,7 +1,5 @@
 part of 'my_field_cubit.dart';
 
-enum FetchStatus { isEmpty, isLoading, hasData, hasError }
-
 final class MyFieldState extends Equatable {
   const MyFieldState({
     this.status = FetchStatus.isEmpty,

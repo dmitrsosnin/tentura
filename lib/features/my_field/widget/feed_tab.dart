@@ -1,3 +1,4 @@
+import 'package:gravity/data/utils.dart';
 import 'package:gravity/ui/consts.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 import 'package:gravity/ui/widget/empty_list_scroll_view.dart';
@@ -19,9 +20,11 @@ class FeedTab extends StatelessWidget {
       builder: (context, state) => RefreshIndicator.adaptive(
         onRefresh: context.read<MyFieldCubit>().fetch,
         child: switch (state.status) {
-          FetchStatus.isEmpty => const EmptyListScrollView(),
-          FetchStatus.isLoading => const CircularProgressIndicator.adaptive(),
           FetchStatus.hasError => const Center(child: Text('Error')),
+          FetchStatus.isEmpty => const EmptyListScrollView(),
+          FetchStatus.isLoading => const Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
           FetchStatus.hasData => ListView.builder(
               padding: paddingAll20,
               itemCount: state.beacons.length,

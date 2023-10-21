@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:gravity/data/utils.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/features/beacon/data/_g/beacon_hide_by_id.req.gql.dart';
@@ -15,10 +16,13 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'my_field_state.dart';
 
+typedef _Response
+    = OperationResponse<GBeaconFetchInMyFieldData, GBeaconFetchInMyFieldVars>;
+
 class MyFieldCubit extends Cubit<MyFieldState> {
   static const _requestId = 'FetchMyField';
 
-  MyFieldCubit() : super(const MyFieldState()) {
+  MyFieldCubit() : super(const MyFieldState(status: FetchStatus.isLoading)) {
     _subscription = GetIt.I<Client>()
         .request(GBeaconFetchInMyFieldReq(
           (b) => b
@@ -29,9 +33,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
         .listen(_onData, cancelOnError: false);
   }
 
-  late final StreamSubscription<
-      OperationResponse<GBeaconFetchInMyFieldData,
-          GBeaconFetchInMyFieldVars>> _subscription;
+  late final StreamSubscription<_Response> _subscription;
 
   @override
   Future<void> close() async {
@@ -79,9 +81,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
               },
             );
 
-  void _onData(
-      OperationResponse<GBeaconFetchInMyFieldData, GBeaconFetchInMyFieldVars>
-          response) {
+  void _onData(_Response response) {
     if (response.loading) {
       emit(state.copyWith(status: FetchStatus.isLoading));
     } else if (response.hasErrors) {

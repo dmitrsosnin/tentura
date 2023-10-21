@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/features/graph/domain/entity/node_details.dart';
+import 'package:gravity/features/graph/entity/node_details.dart';
 
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
