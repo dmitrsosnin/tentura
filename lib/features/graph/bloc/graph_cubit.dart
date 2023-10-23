@@ -116,9 +116,12 @@ class GraphCubit extends Cubit<GraphState> {
           jumpToEgo,
         );
       }
+      final missedIds = <String>[];
       for (final e in graph.edges) {
         final src = _buildNodeDetails(node: e!.src);
+        if (src == null) missedIds.add(e.src);
         final dst = _buildNodeDetails(node: e.dest);
+        if (dst == null) missedIds.add(e.dest);
         if (src == null || dst == null) continue;
         final edge = EdgeDetails<NodeDetails>(
           source: src,
@@ -134,6 +137,7 @@ class GraphCubit extends Cubit<GraphState> {
         if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
         if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
       }
+      if (missedIds.isNotEmpty) emit(state.copyWith(error: missedIds));
     });
   }
 
