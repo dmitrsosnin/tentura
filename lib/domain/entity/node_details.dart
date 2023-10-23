@@ -6,14 +6,12 @@ import 'package:force_directed_graphview/force_directed_graphview.dart'
 @immutable
 sealed class NodeDetails extends NodeBase with EquatableMixin {
   const NodeDetails({
-    String? id,
-    String? label,
-    bool? hasImage,
+    required this.id,
+    this.label = '',
+    this.hasImage = false,
     super.size = 40,
     super.pinned,
-  })  : id = id ?? '',
-        label = label ?? '',
-        hasImage = hasImage ?? false;
+  });
 
   final String id;
   final String label;
@@ -22,6 +20,8 @@ sealed class NodeDetails extends NodeBase with EquatableMixin {
   @override
   List<Object> get props => [id];
 
+  String get userId;
+
   NodeDetails copyWith({
     bool? pinned,
   });
@@ -29,12 +29,15 @@ sealed class NodeDetails extends NodeBase with EquatableMixin {
 
 final class UserNode extends NodeDetails {
   const UserNode({
-    super.id,
+    required super.id,
     super.label,
     super.size,
     super.hasImage,
     super.pinned,
   });
+
+  @override
+  String get userId => id;
 
   @override
   NodeDetails copyWith({
@@ -51,14 +54,15 @@ final class UserNode extends NodeDetails {
 
 final class BeaconNode extends NodeDetails {
   const BeaconNode({
-    String? userId,
-    super.id,
+    required this.userId,
+    required super.id,
     super.label,
     super.size,
     super.hasImage,
     super.pinned,
-  }) : userId = userId ?? '';
+  });
 
+  @override
   final String userId;
 
   @override
@@ -77,10 +81,17 @@ final class BeaconNode extends NodeDetails {
 
 final class CommentNode extends NodeDetails {
   const CommentNode({
-    super.id,
+    required this.userId,
+    required this.beaconId,
+    required super.id,
     super.size,
     super.pinned,
   });
+
+  @override
+  final String userId;
+
+  final String beaconId;
 
   @override
   String get label => id;
@@ -92,6 +103,8 @@ final class CommentNode extends NodeDetails {
       CommentNode(
         id: id,
         size: size,
+        userId: userId,
+        beaconId: beaconId,
         pinned: pinned ?? this.pinned,
       );
 }

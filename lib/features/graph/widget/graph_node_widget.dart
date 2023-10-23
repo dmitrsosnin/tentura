@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/features/graph/entity/node_details.dart';
-
+import 'package:gravity/domain/entity/node_details.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 
@@ -9,10 +8,12 @@ class GraphNodeWidget extends StatelessWidget {
   GraphNodeWidget({
     required this.nodeDetails,
     this.onTap,
+    this.onDoubleTap,
   }) : super(key: ValueKey(nodeDetails));
 
   final NodeDetails nodeDetails;
   final VoidCallback? onTap;
+  final VoidCallback? onDoubleTap;
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +28,22 @@ class GraphNodeWidget extends StatelessWidget {
             authorId: beacon.userId,
             beaconId: beacon.hasImage ? beacon.id : '',
           ),
-        final CommentNode _ => DecoratedBox(
+        final CommentNode _ => Container(
+            alignment: Alignment.center,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
-              color: Colors.grey,
+              color: Theme.of(context).canvasColor,
               shape: BoxShape.circle,
             ),
+            child: const Text('C'),
           ),
       },
     );
-    return onTap == null
+    return onTap == null && onDoubleTap == null
         ? widget
         : GestureDetector(
             onTap: onTap,
+            onDoubleTap: onDoubleTap,
             child: widget,
           );
   }

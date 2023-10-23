@@ -1,9 +1,10 @@
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
+import 'package:gravity/app/router.dart';
 import 'package:gravity/data/utils.dart';
 import 'package:gravity/features/graph/bloc/graph_cubit.dart';
-import 'package:gravity/features/graph/entity/edge_details.dart';
-import 'package:gravity/features/graph/entity/node_details.dart';
+import 'package:gravity/domain/entity/edge_details.dart';
+import 'package:gravity/domain/entity/node_details.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 
 import 'graph_node_widget.dart';
@@ -29,7 +30,7 @@ class GraphBody extends StatelessWidget {
               ),
               edgePainter: const _CustomEdgePainter(),
               loaderBuilder: (context) => const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator.adaptive(),
               ),
               labelBuilder: BottomLabelBuilder(
                 labelSize: const Size(100, 20),
@@ -50,6 +51,29 @@ class GraphBody extends StatelessWidget {
               nodeBuilder: (context, node) => GraphNodeWidget(
                 nodeDetails: node,
                 onTap: () => context.read<GraphCubit>().setFocus(node),
+                onDoubleTap: () => context.push(switch (node) {
+                  final UserNode node => Uri(
+                      path: pathProfile,
+                      queryParameters: {
+                        'id': node.id,
+                      },
+                    ),
+                  final BeaconNode node => Uri(
+                      path: pathBeaconView,
+                      queryParameters: {
+                        'id': node.id,
+                        'expanded': 'false',
+                      },
+                    ),
+                  final CommentNode node => Uri(
+                      path: pathBeaconView,
+                      queryParameters: {
+                        'id': node.beaconId,
+                        'expanded': 'true',
+                      },
+                    ),
+                }
+                    .toString()),
               ),
             ),
         },

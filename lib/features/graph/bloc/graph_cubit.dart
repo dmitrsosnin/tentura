@@ -5,8 +5,8 @@ import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:gravity/data/utils.dart';
 import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/features/graph/entity/edge_details.dart';
-import 'package:gravity/features/graph/entity/node_details.dart';
+import 'package:gravity/domain/entity/edge_details.dart';
+import 'package:gravity/domain/entity/node_details.dart';
 import 'package:gravity/features/graph/data/_g/graph_fetch.req.gql.dart';
 import 'package:gravity/features/graph/data/_g/graph_fetch.var.gql.dart';
 import 'package:gravity/features/graph/data/_g/graph_fetch.data.gql.dart';
@@ -48,8 +48,8 @@ class GraphCubit extends Cubit<GraphState> {
 
   final _myId = GetIt.I<AuthRepository>().myId;
   final _users = <String, GGraphFetchData_gravityGraph_users_user>{};
-  final _comments = <String, GGraphFetchData_gravityGraph_comments>{};
   final _beacons = <String, GGraphFetchData_gravityGraph_beacons_beacon>{};
+  final _comments = <String, GGraphFetchData_gravityGraph_comments_comment>{};
 
   NodeDetails? _egoNode;
 
@@ -63,12 +63,6 @@ class GraphCubit extends Cubit<GraphState> {
   void jumpToEgo() => graphController.jumpToNode(_egoNode!);
 
   void setFocus(NodeDetails node) {
-    // graphController.mutate((mutator) {
-    //   mutator
-    //     ..removeNode(node)
-    //     ..addNode(node.copyWith(pinned: true))
-    //     ..controller.jumpToNode(node);
-    // });
     graphController.jumpToNode(node);
     GetIt.I<Client>().requestController.add(GGraphFetchReq(
           (b) => b
@@ -92,7 +86,7 @@ class GraphCubit extends Cubit<GraphState> {
         _beacons.putIfAbsent(e!.beacon!.id, () => e.beacon!);
       }
       for (final e in graph.comments) {
-        _comments.putIfAbsent(e!.node, () => e);
+        _comments.putIfAbsent(e!.comment!.id, () => e.comment!);
       }
       emit(state.copyWith(status: FetchStatus.hasData));
     }
@@ -106,7 +100,6 @@ class GraphCubit extends Cubit<GraphState> {
             UserNode(
               id: _myId,
               label: 'Me',
-              hasImage: false,
               pinned: true,
               size: 80,
             );
@@ -167,10 +160,12 @@ class GraphCubit extends Cubit<GraphState> {
             pinned: pinned,
             size: size,
           ),
-        final GGraphFetchData_gravityGraph_comments n => CommentNode(
-            id: n.node,
+        final GGraphFetchData_gravityGraph_comments_comment n => CommentNode(
+            id: n.id,
+            userId: n.user_id,
+            beaconId: n.beacon_id,
             pinned: pinned,
-            size: size / 2,
+            size: size,
           ),
         _ => null,
       };

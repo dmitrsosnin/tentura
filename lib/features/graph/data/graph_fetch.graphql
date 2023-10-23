@@ -24,7 +24,11 @@ query GraphFetch($focus: String, $positiveOnly: Boolean) {
       score
     }
     comments {
-      node
+      comment {
+        id
+        beacon_id
+        user_id
+      }
       score
     }
   }
