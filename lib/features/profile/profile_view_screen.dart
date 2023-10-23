@@ -71,7 +71,7 @@ class ProfileViewScreen extends StatelessWidget {
                                 icon: const Icon(Icons.hub_outlined),
                                 onPressed: () => context.push(Uri(
                                   path: pathGraph,
-                                  queryParameters: {'ego': userId},
+                                  queryParameters: {'focus': userId},
                                 ).toString()),
                               ),
                               // Share

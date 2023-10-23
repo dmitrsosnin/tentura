@@ -1,0 +1,14 @@
+# import '/data/gql/beacon/_fragments.graphql'
+
+query BeaconFetchMyField() {
+  scores(where: {score: {gt: 0}, node: {like: "B"}}, hidePersonal: true) {
+    beacon {
+      ...BeaconFields
+    }
+  }
+  globalScores(where: {score: {gt: 0}, node: {like: "B"}}, hidePersonal: true) {
+    beacon {
+      ...BeaconFields
+    }
+  }
+}

@@ -21,6 +21,10 @@ sealed class NodeDetails extends NodeBase with EquatableMixin {
 
   @override
   List<Object> get props => [id];
+
+  NodeDetails copyWith({
+    bool? pinned,
+  });
 }
 
 final class UserNode extends NodeDetails {
@@ -31,6 +35,18 @@ final class UserNode extends NodeDetails {
     super.hasImage,
     super.pinned,
   });
+
+  @override
+  NodeDetails copyWith({
+    bool? pinned,
+  }) =>
+      UserNode(
+        id: id,
+        size: size,
+        label: label,
+        hasImage: hasImage,
+        pinned: pinned ?? this.pinned,
+      );
 }
 
 final class BeaconNode extends NodeDetails {
@@ -44,6 +60,19 @@ final class BeaconNode extends NodeDetails {
   }) : userId = userId ?? '';
 
   final String userId;
+
+  @override
+  BeaconNode copyWith({
+    bool? pinned,
+  }) =>
+      BeaconNode(
+        id: id,
+        size: size,
+        label: label,
+        userId: userId,
+        hasImage: hasImage,
+        pinned: pinned ?? this.pinned,
+      );
 }
 
 final class CommentNode extends NodeDetails {
@@ -55,4 +84,14 @@ final class CommentNode extends NodeDetails {
 
   @override
   String get label => id;
+
+  @override
+  CommentNode copyWith({
+    bool? pinned,
+  }) =>
+      CommentNode(
+        id: id,
+        size: size,
+        pinned: pinned ?? this.pinned,
+      );
 }

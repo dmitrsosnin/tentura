@@ -27,7 +27,10 @@ class BeaconControlRow extends StatelessWidget {
           TextButton.icon(
             onPressed: () => context.push(Uri(
               path: pathBeaconView,
-              queryParameters: {'id': beacon.id, 'expanded': 'true'},
+              queryParameters: {
+                'id': beacon.id,
+                'expanded': 'true',
+              },
             ).toString()),
             icon: const Icon(Icons.comment_outlined),
             label: Text(
@@ -40,7 +43,7 @@ class BeaconControlRow extends StatelessWidget {
             icon: const Icon(Icons.hub_outlined),
             onPressed: () => context.push(Uri(
               path: pathGraph,
-              queryParameters: {'ego': beacon.id},
+              queryParameters: {'focus': beacon.id},
             ).toString()),
           ),
           // Share

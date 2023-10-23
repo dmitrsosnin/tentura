@@ -1,5 +1,5 @@
-query GraphFetchForEgo($ego: String!, $focus: String) {
-  gravityGraph(ego: $ego, focus: $focus) {
+query GraphFetch($focus: String, $positiveOnly: Boolean) {
+  gravityGraph(focus: $focus, positiveOnly: $positiveOnly) {
     edges {
       src
       dest

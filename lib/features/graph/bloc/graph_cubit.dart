@@ -4,31 +4,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:gravity/data/utils.dart';
+import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/features/graph/entity/edge_details.dart';
 import 'package:gravity/features/graph/entity/node_details.dart';
-import 'package:gravity/features/graph/data/_g/graph_fetch_for_ego.req.gql.dart';
-import 'package:gravity/features/graph/data/_g/graph_fetch_for_ego.var.gql.dart';
-import 'package:gravity/features/graph/data/_g/graph_fetch_for_ego.data.gql.dart';
+import 'package:gravity/features/graph/data/_g/graph_fetch.req.gql.dart';
+import 'package:gravity/features/graph/data/_g/graph_fetch.var.gql.dart';
+import 'package:gravity/features/graph/data/_g/graph_fetch.data.gql.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'graph_state.dart';
 
-typedef _Response
-    = OperationResponse<GGraphFetchForEgoData, GGraphFetchForEgoVars>;
+typedef _Response = OperationResponse<GGraphFetchData, GGraphFetchVars>;
 
 class GraphCubit extends Cubit<GraphState> {
   static const _requestId = 'FetchGraph';
 
-  GraphCubit({required this.ego})
-      : super(const GraphState(status: FetchStatus.isLoading)) {
+  GraphCubit({required String focus})
+      : super(GraphState(
+          focus: focus,
+          status: FetchStatus.isLoading,
+        )) {
     _subscription = GetIt.I<Client>()
-        .request(GGraphFetchForEgoReq(
+        .request(GGraphFetchReq(
           (b) => b
             ..requestId = _requestId
             ..fetchPolicy = FetchPolicy.NoCache
-            ..vars.ego = ego,
+            ..vars.positiveOnly = false
+            ..vars.focus = focus.isEmpty ? null : focus,
         ))
         .listen(
           _onData,
@@ -37,15 +41,15 @@ class GraphCubit extends Cubit<GraphState> {
         );
   }
 
-  final String ego;
-
-  final users = <String, GGraphFetchForEgoData_gravityGraph_users_user>{};
-  final beacons = <String, GGraphFetchForEgoData_gravityGraph_beacons_beacon>{};
-  final comments = <String, GGraphFetchForEgoData_gravityGraph_comments>{};
   final graphController =
       GraphController<NodeDetails, EdgeDetails<NodeDetails>>();
 
   late final StreamSubscription<_Response> _subscription;
+
+  final _myId = GetIt.I<AuthRepository>().myId;
+  final _users = <String, GGraphFetchData_gravityGraph_users_user>{};
+  final _comments = <String, GGraphFetchData_gravityGraph_comments>{};
+  final _beacons = <String, GGraphFetchData_gravityGraph_beacons_beacon>{};
 
   NodeDetails? _egoNode;
 
@@ -56,63 +60,66 @@ class GraphCubit extends Cubit<GraphState> {
     return super.close();
   }
 
-  void jumpToCenter() => graphController.jumpToNode(_egoNode!);
+  void jumpToEgo() => graphController.jumpToNode(_egoNode!);
 
   void setFocus(NodeDetails node) {
-    // graphController.jumpToNode(node);
-    GetIt.I<Client>().requestController.add(GGraphFetchForEgoReq(
+    // graphController.mutate((mutator) {
+    //   mutator
+    //     ..removeNode(node)
+    //     ..addNode(node.copyWith(pinned: true))
+    //     ..controller.jumpToNode(node);
+    // });
+    graphController.jumpToNode(node);
+    GetIt.I<Client>().requestController.add(GGraphFetchReq(
           (b) => b
             ..fetchPolicy = FetchPolicy.NoCache
             ..requestId = _requestId
-            ..vars.ego = ego
-            ..vars.focus = node.id,
+            ..vars.focus = node.id
+            ..vars.positiveOnly = false,
         ));
   }
 
   void _onData(_Response response) {
     final graph = response.data?.gravityGraph;
-    if (ego.isEmpty) {
-      emit(state.copyWith(error: 'Ego was not set'));
-      return;
-    } else if (graph == null) {
+    if (graph == null) {
       emit(state.copyWith(error: 'No data or got error'));
       return;
     } else {
-      if (graph.users.isNotEmpty) {
-        for (final e in graph.users) {
-          if (e?.user != null) {
-            users.putIfAbsent(e!.user!.id, () => e.user!);
-          }
-        }
+      for (final e in graph.users) {
+        _users.putIfAbsent(e!.user!.id, () => e.user!);
       }
-      if (graph.beacons.isNotEmpty) {
-        for (final e in graph.beacons) {
-          if (e?.beacon != null) {
-            beacons.putIfAbsent(e!.beacon!.id, () => e.beacon!);
-          }
-        }
+      for (final e in graph.beacons) {
+        _beacons.putIfAbsent(e!.beacon!.id, () => e.beacon!);
       }
-      if (graph.comments.isNotEmpty) {
-        for (final e in graph.comments) {
-          if (e != null) comments.putIfAbsent(e.node, () => e);
-        }
+      for (final e in graph.comments) {
+        _comments.putIfAbsent(e!.node, () => e);
       }
       emit(state.copyWith(status: FetchStatus.hasData));
     }
     graphController.mutate((mutator) {
       if (_egoNode == null) {
-        _egoNode ??= _buildNodeDetails(
-          node: ego,
-          pinned: true,
-          size: 80,
-        );
+        _egoNode = _buildNodeDetails(
+              node: _myId,
+              pinned: true,
+              size: 80,
+            ) ??
+            UserNode(
+              id: _myId,
+              label: 'Me',
+              hasImage: false,
+              pinned: true,
+              size: 80,
+            );
         mutator.addNode(_egoNode!);
-        Future.microtask(() => graphController.jumpToNode(_egoNode!));
+        Future.delayed(
+          const Duration(milliseconds: 250),
+          jumpToEgo,
+        );
       }
       for (final e in graph.edges) {
-        if (e == null) continue;
-        final src = _buildNodeDetails(node: e.src);
+        final src = _buildNodeDetails(node: e!.src);
         final dst = _buildNodeDetails(node: e.dest);
+        if (src == null || dst == null) continue;
         final edge = EdgeDetails<NodeDetails>(
           source: src,
           destination: dst,
@@ -123,34 +130,32 @@ class GraphCubit extends Cubit<GraphState> {
                   ? Colors.amberAccent
                   : Colors.cyanAccent,
         );
-        if (!mutator.controller.edges.contains(edge)) {
-          if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
-          if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
-          mutator.addEdge(edge);
-        }
+        if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
+        if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
+        if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
       }
     });
   }
 
-  NodeDetails _buildNodeDetails({
+  NodeDetails? _buildNodeDetails({
     required String node,
     double size = 40,
     bool pinned = false,
   }) =>
       switch (switch (node.substring(0, 1)) {
-        'U' => users[node],
-        'B' => beacons[node],
-        'C' => comments[node],
+        'U' => _users[node],
+        'B' => _beacons[node],
+        'C' => _comments[node],
         _ => throw Exception('Wrong id type'),
       }) {
-        final GGraphFetchForEgoData_gravityGraph_users_user n => UserNode(
+        final GGraphFetchData_gravityGraph_users_user n => UserNode(
             id: n.id,
             label: n.title,
             hasImage: n.has_picture,
             pinned: pinned,
             size: size,
           ),
-        final GGraphFetchForEgoData_gravityGraph_beacons_beacon n => BeaconNode(
+        final GGraphFetchData_gravityGraph_beacons_beacon n => BeaconNode(
             id: n.id,
             userId: n.user_id,
             hasImage: n.has_picture,
@@ -158,11 +163,11 @@ class GraphCubit extends Cubit<GraphState> {
             pinned: pinned,
             size: size,
           ),
-        final GGraphFetchForEgoData_gravityGraph_comments n => CommentNode(
+        final GGraphFetchData_gravityGraph_comments n => CommentNode(
             id: n.node,
             pinned: pinned,
             size: size / 2,
           ),
-        _ => throw Exception('Object not found: $node'),
+        _ => null,
       };
 }

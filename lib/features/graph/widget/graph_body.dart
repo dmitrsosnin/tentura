@@ -4,7 +4,6 @@ import 'package:gravity/data/utils.dart';
 import 'package:gravity/features/graph/bloc/graph_cubit.dart';
 import 'package:gravity/features/graph/entity/edge_details.dart';
 import 'package:gravity/features/graph/entity/node_details.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 
 import 'graph_node_widget.dart';
@@ -16,13 +15,10 @@ class GraphBody extends StatelessWidget {
   Widget build(BuildContext context) => BlocConsumer<GraphCubit, GraphState>(
         buildWhen: (p, c) => p.status != c.status,
         builder: (context, state) => switch (state.status) {
-          FetchStatus.isEmpty => Container(),
           FetchStatus.isLoading => const Center(
               child: CircularProgressIndicator.adaptive(),
             ),
-          FetchStatus.hasError => ErrorCenterText(error: state.error),
-          FetchStatus.hasData =>
-            GraphView<NodeDetails, EdgeDetails<NodeDetails>>(
+          _ => GraphView<NodeDetails, EdgeDetails<NodeDetails>>(
               controller: context.read<GraphCubit>().graphController,
               minScale: 0.1,
               maxScale: 3,
@@ -37,11 +33,19 @@ class GraphBody extends StatelessWidget {
               ),
               labelBuilder: BottomLabelBuilder(
                 labelSize: const Size(100, 20),
-                builder: (context, node) => Text(
-                  node.label,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.visible,
-                ),
+                builder: (context, node) => switch (node) {
+                  final UserNode node => Text(
+                      node.label,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.visible,
+                    ),
+                  final BeaconNode node => Text(
+                      node.label,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  _ => const Offstage(),
+                },
               ),
               nodeBuilder: (context, node) => GraphNodeWidget(
                 nodeDetails: node,

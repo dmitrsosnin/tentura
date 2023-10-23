@@ -7,9 +7,9 @@ import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/features/beacon/data/_g/beacon_hide_by_id.req.gql.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_pin_by_id.req.gql.dart';
-import 'package:gravity/features/my_field/data/_g/beacon_fetch_in_my_field.req.gql.dart';
-import 'package:gravity/features/my_field/data/_g/beacon_fetch_in_my_field.var.gql.dart';
-import 'package:gravity/features/my_field/data/_g/beacon_fetch_in_my_field.data.gql.dart';
+import 'package:gravity/features/my_field/data/_g/beacon_fetch_my_field.req.gql.dart';
+import 'package:gravity/features/my_field/data/_g/beacon_fetch_my_field.var.gql.dart';
+import 'package:gravity/features/my_field/data/_g/beacon_fetch_my_field.data.gql.dart';
 import 'package:gravity/ui/ferry_utils.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,19 +17,16 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'my_field_state.dart';
 
 typedef _Response
-    = OperationResponse<GBeaconFetchInMyFieldData, GBeaconFetchInMyFieldVars>;
+    = OperationResponse<GBeaconFetchMyFieldData, GBeaconFetchMyFieldVars>;
 
 class MyFieldCubit extends Cubit<MyFieldState> {
   static const _requestId = 'FetchMyField';
 
   MyFieldCubit() : super(const MyFieldState(status: FetchStatus.isLoading)) {
     _subscription = GetIt.I<Client>()
-        .request(GBeaconFetchInMyFieldReq(
-          (b) => b
-            ..requestId = _requestId
-            ..fetchPolicy = FetchPolicy.NoCache
-            ..vars.ego = GetIt.I<AuthRepository>().myId,
-        ))
+        .request(GBeaconFetchMyFieldReq((b) => b
+          ..requestId = _requestId
+          ..fetchPolicy = FetchPolicy.NoCache))
         .listen(_onData, cancelOnError: false);
   }
 
@@ -42,12 +39,9 @@ class MyFieldCubit extends Cubit<MyFieldState> {
   }
 
   Future<void> fetch() async {
-    GetIt.I<Client>().requestController.add(GBeaconFetchInMyFieldReq(
-          (b) => b
-            ..requestId = _requestId
-            ..fetchPolicy = FetchPolicy.NoCache
-            ..vars.ego = GetIt.I<AuthRepository>().myId,
-        ));
+    GetIt.I<Client>().requestController.add(GBeaconFetchMyFieldReq((b) => b
+      ..requestId = _requestId
+      ..fetchPolicy = FetchPolicy.NoCache));
   }
 
   Future<bool?> pinBeacon(String beaconId) async => doRequest(
