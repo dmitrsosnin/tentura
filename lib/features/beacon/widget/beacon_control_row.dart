@@ -41,10 +41,12 @@ class BeaconControlRow extends StatelessWidget {
           // Graph View
           IconButton(
             icon: const Icon(Icons.hub_outlined),
-            onPressed: () => context.push(Uri(
-              path: pathGraph,
-              queryParameters: {'focus': beacon.id},
-            ).toString()),
+            onPressed: (beacon.my_vote ?? -1) < 0
+                ? null
+                : () => context.push(Uri(
+                      path: pathGraph,
+                      queryParameters: {'focus': beacon.id},
+                    ).toString()),
           ),
           // Share
           IconButton(
