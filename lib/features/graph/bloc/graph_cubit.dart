@@ -63,6 +63,7 @@ class GraphCubit extends Cubit<GraphState> {
   void jumpToEgo() => graphController.jumpToNode(_egoNode!);
 
   void setFocus(NodeDetails node) {
+    if (node == _egoNode) return jumpToEgo();
     graphController
       ..setPinned(node, true)
       ..jumpToNode(node);
