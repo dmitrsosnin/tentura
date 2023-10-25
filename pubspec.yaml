@@ -14,7 +14,7 @@ dependencies:
   path_provider: ^2.1.1
   url_strategy: ^0.2.0
   flutter_bloc: ^8.1.3
-  go_router: ^11.1.4
+  go_router: ^12.0.0
   equatable: ^2.0.5
   get_it: ^7.6.4
   intl: ^0.18.1
@@ -30,14 +30,14 @@ dependencies:
   ferry: ^0.14.2
   http: ^1.1.0
 
-  force_directed_graphview: ^0.1.1
+  force_directed_graphview: ^0.2.0
   flutter_expandable_fab: ^2.0.0
   cached_network_image: ^3.3.0
   vector_graphics: ^1.1.9
-  mobile_scanner: ^3.4.1
+  mobile_scanner: 3.4.1
   image_picker: ^1.0.4
   geolocator: ^10.1.0
-  flutter_map: ^6.0.0
+  flutter_map: ^6.0.1
   flutter_svg: ^2.0.7
   qr_flutter: ^4.1.0
   share_plus: ^7.2.1
@@ -45,7 +45,7 @@ dependencies:
   latlong2: ^0.9.0
   # image: ^4.0.17
 
-  sentry_flutter: ^7.10.1
+  sentry_flutter: 7.10.1
   sentry_dart_plugin: ^1.6.0
   # logging_appenders: ^1.1.0
   # sentry_logging: ^7.8.0

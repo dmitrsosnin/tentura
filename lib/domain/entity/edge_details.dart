@@ -18,4 +18,18 @@ final class EdgeDetails<N extends NodeBase> extends EdgeBase<N>
 
   @override
   List<Object> get props => [source, destination];
+
+  @override
+  EdgeDetails<N> replaceNode({
+    N? source,
+    N? destination,
+    double? strokeWidth,
+    Color? color,
+  }) =>
+      EdgeDetails(
+        source: source ?? this.source,
+        destination: destination ?? this.destination,
+        strokeWidth: strokeWidth ?? this.strokeWidth,
+        color: color ?? this.color,
+      );
 }

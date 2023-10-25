@@ -63,7 +63,9 @@ class GraphCubit extends Cubit<GraphState> {
   void jumpToEgo() => graphController.jumpToNode(_egoNode!);
 
   void setFocus(NodeDetails node) {
-    graphController.jumpToNode(node);
+    graphController
+      ..setPinned(node, true)
+      ..jumpToNode(node);
     GetIt.I<Client>().requestController.add(GGraphFetchReq(
           (b) => b
             ..fetchPolicy = FetchPolicy.NoCache

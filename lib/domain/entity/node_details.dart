@@ -40,7 +40,7 @@ final class UserNode extends NodeDetails {
   String get userId => id;
 
   @override
-  NodeDetails copyWith({
+  UserNode copyWith({
     bool? pinned,
   }) =>
       UserNode(
@@ -50,6 +50,9 @@ final class UserNode extends NodeDetails {
         hasImage: hasImage,
         pinned: pinned ?? this.pinned,
       );
+
+  @override
+  UserNode copyWithPinned(bool pinned) => copyWith(pinned: pinned);
 }
 
 final class BeaconNode extends NodeDetails {
@@ -77,6 +80,9 @@ final class BeaconNode extends NodeDetails {
         hasImage: hasImage,
         pinned: pinned ?? this.pinned,
       );
+
+  @override
+  BeaconNode copyWithPinned(bool pinned) => copyWith(pinned: pinned);
 }
 
 final class CommentNode extends NodeDetails {
@@ -107,4 +113,7 @@ final class CommentNode extends NodeDetails {
         beaconId: beaconId,
         pinned: pinned ?? this.pinned,
       );
+
+  @override
+  CommentNode copyWithPinned(bool pinned) => copyWith(pinned: pinned);
 }
