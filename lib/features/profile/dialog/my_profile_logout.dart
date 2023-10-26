@@ -2,7 +2,7 @@ import 'package:gravity/app/router.dart';
 
 import 'package:gravity/data/auth_repository.dart';
 
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 
 class MyProfileLogoutDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showDialog<void>(

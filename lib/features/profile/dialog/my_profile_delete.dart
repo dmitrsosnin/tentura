@@ -2,7 +2,7 @@ import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/features/profile/data/_g/profile_delete_by_user_id.req.gql.dart';
 
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 
 class MyProfileDeleteDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showDialog<void>(

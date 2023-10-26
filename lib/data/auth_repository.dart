@@ -7,7 +7,7 @@ import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 
 import 'package:gravity/consts.dart';
 import 'package:gravity/data/service/preference_service.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 
 typedef JWT = ({String subject, String accessToken, int expiresIn});
 

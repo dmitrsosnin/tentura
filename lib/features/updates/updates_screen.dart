@@ -1,5 +1,5 @@
-import 'package:gravity/ui/consts.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 
 class UpdatesScreen extends StatelessWidget {
   const UpdatesScreen({super.key});

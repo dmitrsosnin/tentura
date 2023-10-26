@@ -1489,6 +1489,14 @@ type mutation_root {
   ): [vote_user_mutation_response]
 }
 
+type MutualScore {
+  ego: String!
+  egoScore: Float!
+  node: String!
+  nodeScore: Float!
+  user: user
+}
+
 input NodeInput {
   like: String
 }
@@ -1623,7 +1631,7 @@ type query_root {
   edge(dest: String!, src: String!): Edge
   edges(src: String!): [Edge!]!
   globalScores(hidePersonal: Boolean, limit: Int, useCache: Boolean, where: NodeScoreWhereInput): [NodeScore!]!
-  gravityGraph(focus: String, minAbsScore: Float, positiveOnly: Boolean, recurseDepth: Int): GravityGraph!
+  gravityGraph(focus: String, positiveOnly: Boolean): GravityGraph!
   score(ego: String!, node: String!): NodeScore
   scores(hidePersonal: Boolean, limit: Int, where: NodeScoreWhereInput): [NodeScore!]!
 
@@ -1649,6 +1657,7 @@ type query_root {
 
   """fetch data from the table: "user" using primary key columns"""
   user_by_pk(id: String!): user
+  usersStats: [MutualScore!]!
 
   """
   fetch data from the table: "vote_beacon"

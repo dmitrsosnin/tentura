@@ -1,18 +1,17 @@
 part of 'graph_cubit.dart';
 
-final class GraphState extends Equatable {
+final class GraphState extends StateBase {
   const GraphState({
     required this.focus,
     this.positiveOnly = true,
-    this.status = FetchStatus.isEmpty,
-    this.error,
+    super.status = FetchStatus.isEmpty,
+    super.error,
   });
 
   final String focus;
   final bool positiveOnly;
-  final FetchStatus status;
-  final Object? error;
 
+  @override
   GraphState copyWith({
     String? focus,
     bool? positiveOnly,

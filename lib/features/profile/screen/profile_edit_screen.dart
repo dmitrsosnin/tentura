@@ -9,7 +9,7 @@ import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/gql/user/_g/user_update.req.gql.dart';
 import 'package:gravity/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
 
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/dialog/error_dialog.dart';
 import 'package:gravity/ui/widget/gradient_stack.dart';

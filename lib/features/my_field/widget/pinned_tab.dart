@@ -2,8 +2,8 @@ import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_unpin_by_id.req.gql.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_fetch_pinned_by_user_id.req.gql.dart';
 
-import 'package:gravity/ui/consts.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 import 'package:gravity/ui/widget/empty_list_scroll_view.dart';
 import 'package:gravity/features/beacon/widget/beacon_tile.dart';
 

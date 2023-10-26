@@ -1,28 +1,26 @@
 part of 'my_field_cubit.dart';
 
-final class MyFieldState extends Equatable {
+final class MyFieldState extends StateBase {
   const MyFieldState({
-    this.status = FetchStatus.isEmpty,
     this.beacons = const <GBeaconFields>[],
     this.hasReachedMax = false,
+    super.status = FetchStatus.isEmpty,
+    super.error,
   });
 
-  final FetchStatus status;
   final List<GBeaconFields> beacons;
   final bool hasReachedMax;
 
-  bool get isLoading => status == FetchStatus.isLoading;
-  bool get isSuccess => status == FetchStatus.hasData;
-  bool get hasError => status == FetchStatus.hasError;
-  bool get isEmpty => beacons.isEmpty;
-
+  @override
   MyFieldState copyWith({
     FetchStatus? status,
+    Object? error,
     List<GBeaconFields>? beacons,
     bool? hasReachedMax,
   }) =>
       MyFieldState(
-        status: status ?? this.status,
+        status: status ?? (error == null ? this.status : FetchStatus.hasError),
+        error: error ?? this.error,
         beacons: beacons ?? this.beacons,
         hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       );

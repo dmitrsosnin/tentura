@@ -3,9 +3,9 @@ import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/data/geolocation_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 
-import 'package:gravity/ui/utils.dart';
-import 'package:gravity/ui/consts.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ui_utils.dart';
+import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/beacon_image.dart';
 

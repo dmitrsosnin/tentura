@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:gravity/data/utils.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/features/beacon/data/_g/beacon_hide_by_id.req.gql.dart';
@@ -10,7 +7,8 @@ import 'package:gravity/features/my_field/data/_g/beacon_pin_by_id.req.gql.dart'
 import 'package:gravity/features/my_field/data/_g/beacon_fetch_my_field.req.gql.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_fetch_my_field.var.gql.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_fetch_my_field.data.gql.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:gravity/ui/utils/state_base.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gravity/consts.dart';
-import 'package:gravity/ui/consts.dart';
+import 'package:gravity/ui/utils/ui_consts.dart';
 
 class InputCodeDialog extends StatelessWidget {
   const InputCodeDialog({super.key});

@@ -1,6 +1,6 @@
 import 'package:gravity/data/gql/comment/_g/comment_create.req.gql.dart';
 
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 
 class NewCommentInput extends StatefulWidget {
   final String beaconId;

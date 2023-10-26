@@ -1,6 +1,6 @@
-import 'package:gravity/data/utils.dart';
-import 'package:gravity/ui/consts.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:gravity/ui/utils/state_base.dart';
 import 'package:gravity/ui/widget/empty_list_scroll_view.dart';
 import 'package:gravity/features/beacon/widget/beacon_tile.dart';
 import 'package:gravity/features/my_field/bloc/my_field_cubit.dart';

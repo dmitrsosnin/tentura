@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import 'package:gravity/ui/utils.dart';
+import 'package:gravity/ui/utils/ui_utils.dart';
 
 /// Returns String?
 class QRScanDialog extends StatefulWidget {

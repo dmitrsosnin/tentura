@@ -8,11 +8,11 @@ import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/ui/screens/error_screen.dart';
 import 'package:gravity/features/home/home_screen.dart';
 import 'package:gravity/features/auth/login_screen.dart';
-import 'package:gravity/features/graph/graph_screen.dart';
+import 'package:gravity/features/graph/screen/graph_screen.dart';
 import 'package:gravity/features/updates/updates_screen.dart';
-import 'package:gravity/features/my_field/my_field_screen.dart';
-import 'package:gravity/features/profile/profile_view_screen.dart';
-import 'package:gravity/features/profile/profile_edit_screen.dart';
+import 'package:gravity/features/my_field/screen/my_field_screen.dart';
+import 'package:gravity/features/profile/screen/profile_view_screen.dart';
+import 'package:gravity/features/profile/screen/profile_edit_screen.dart';
 import 'package:gravity/features/beacon/screen/beacon_view_screen.dart';
 import 'package:gravity/features/beacon/screen/beacon_create_screen.dart';
 

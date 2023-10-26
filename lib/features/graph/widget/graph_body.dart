@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:gravity/app/router.dart';
-import 'package:gravity/data/utils.dart';
 import 'package:gravity/features/graph/bloc/graph_cubit.dart';
 import 'package:gravity/domain/entity/edge_details.dart';
 import 'package:gravity/domain/entity/node_details.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/state_base.dart';
 
 import 'graph_node_widget.dart';
 
@@ -73,7 +73,7 @@ class GraphBody extends StatelessWidget {
               ),
             ),
         },
-        listenWhen: (p, c) => c.status == FetchStatus.hasError,
+        listenWhen: (p, c) => c.hasError,
         listener: (context, state) {
           final error = state.error ?? 'Undescribed error';
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

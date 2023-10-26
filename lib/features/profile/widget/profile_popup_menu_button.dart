@@ -4,8 +4,8 @@ import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/user/user_utils.dart';
 import 'package:gravity/features/profile/data/_g/user_vote_by_id.req.gql.dart';
 
-import 'package:gravity/ui/consts.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 // import 'package:gravity/ui/dialog/share_code_dialog.dart';
 // import 'package:gravity/features/profile/dialog/my_profile_delete.dart';
 // import 'package:gravity/features/profile/dialog/my_profile_logout.dart';

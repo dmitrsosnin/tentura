@@ -2,7 +2,7 @@ import 'package:ferry/ferry.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import 'widget/error_center_text.dart';
+import '../widget/error_center_text.dart';
 
 export 'package:ferry/ferry.dart';
 export 'package:get_it/get_it.dart';

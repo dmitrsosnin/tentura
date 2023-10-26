@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:gravity/app/router.dart';
-import 'package:gravity/data/utils.dart';
 import 'package:gravity/features/graph/bloc/graph_cubit.dart';
 
-import 'widget/graph_body.dart';
+import '../widget/graph_body.dart';
 
 class GraphScreen extends StatelessWidget {
   const GraphScreen({super.key});
@@ -41,7 +40,7 @@ class GraphScreen extends StatelessWidget {
             child: BlocBuilder<GraphCubit, GraphState>(
               buildWhen: (p, c) => p.status != c.status,
               builder: (context, state) => Offstage(
-                offstage: state.status != FetchStatus.isLoading,
+                offstage: !state.isLoading,
                 child: const LinearProgressIndicator(),
               ),
             ),

@@ -1,0 +1,14 @@
+# import '/data/gql/user/_fragments.graphql'
+
+query UsersStats($id: String!) {
+  user_by_pk(id: $id) {
+    ...UserFields
+  }
+  usersStats {
+    egoScore
+    nodeScore
+    user {
+      ...UserFields
+    }
+  }
+}

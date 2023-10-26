@@ -1,16 +1,14 @@
 import 'dart:async';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
-import 'package:gravity/data/utils.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/domain/entity/edge_details.dart';
 import 'package:gravity/domain/entity/node_details.dart';
 import 'package:gravity/features/graph/data/_g/graph_fetch.req.gql.dart';
 import 'package:gravity/features/graph/data/_g/graph_fetch.var.gql.dart';
 import 'package:gravity/features/graph/data/_g/graph_fetch.data.gql.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:gravity/ui/utils/state_base.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 

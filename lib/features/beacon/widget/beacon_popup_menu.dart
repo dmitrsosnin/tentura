@@ -1,7 +1,7 @@
 import 'package:gravity/data/gql/beacon/_g/_fragments.data.gql.dart';
 import 'package:gravity/features/beacon/data/_g/beacon_update_by_id.req.gql.dart';
 
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 import 'package:gravity/features/beacon/dialog/beacon_delete_dialog.dart';
 
 class BeaconPopupMenu extends StatelessWidget {

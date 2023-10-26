@@ -4,16 +4,16 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
 
-import 'package:gravity/ui/consts.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 import 'package:gravity/ui/dialog/qr_scan_dialog.dart';
 
 import 'package:gravity/features/my_field/bloc/my_field_cubit.dart';
 
-import 'widget/feed_tab.dart';
-import 'widget/hidden_tab.dart';
-import 'widget/pinned_tab.dart';
-import 'dialog/input_code_dialog.dart';
+import '../widget/feed_tab.dart';
+import '../widget/hidden_tab.dart';
+import '../widget/pinned_tab.dart';
+import '../dialog/input_code_dialog.dart';
 
 enum FeedFilter { feed, pinned, hidden }
 

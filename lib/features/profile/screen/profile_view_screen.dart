@@ -3,8 +3,8 @@ import 'package:gravity/app/router.dart';
 import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/user/user_utils.dart';
 
-import 'package:gravity/ui/consts.dart';
-import 'package:gravity/ui/ferry_utils.dart';
+import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:gravity/ui/utils/ferry_utils.dart';
 import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/widget/gradient_stack.dart';
 import 'package:gravity/ui/widget/avatar_positioned.dart';
@@ -12,8 +12,8 @@ import 'package:gravity/ui/widget/error_center_text.dart';
 import 'package:gravity/ui/dialog/share_code_dialog.dart';
 import 'package:gravity/features/beacon/widget/beacon_tile.dart';
 
-import 'data/_g/profile_fetch_by_user_id.req.gql.dart';
-import 'widget/profile_popup_menu_button.dart';
+import '../data/_g/profile_fetch_by_user_id.req.gql.dart';
+import '../widget/profile_popup_menu_button.dart';
 
 class ProfileViewScreen extends StatelessWidget {
   static const _requestId = 'FetchProfile';
