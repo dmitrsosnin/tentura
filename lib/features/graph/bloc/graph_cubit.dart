@@ -21,18 +21,14 @@ typedef _Response = OperationResponse<GGraphFetchData, GGraphFetchVars>;
 class GraphCubit extends Cubit<GraphState> {
   static const _requestId = 'FetchGraph';
 
-  GraphCubit({required String focus})
-      : super(GraphState(
-          focus: focus,
-          status: FetchStatus.isLoading,
-        )) {
+  GraphCubit({required String focus}) : super(GraphState(focus: focus)) {
     _subscription = GetIt.I<Client>()
         .request(GGraphFetchReq(
           (b) => b
             ..requestId = _requestId
             ..fetchPolicy = FetchPolicy.NoCache
-            ..vars.positiveOnly = false
-            ..vars.focus = focus.isEmpty ? null : focus,
+            ..vars.positiveOnly = state.positiveOnly
+            ..vars.focus = focus,
         ))
         .listen(
           _onData,
@@ -52,6 +48,7 @@ class GraphCubit extends Cubit<GraphState> {
   final _comments = <String, GGraphFetchData_gravityGraph_comments_comment>{};
 
   NodeDetails? _egoNode;
+  NodeDetails? _focusNode;
 
   @override
   Future<void> close() async {
@@ -60,27 +57,42 @@ class GraphCubit extends Cubit<GraphState> {
     return super.close();
   }
 
+  void togglePositiveOnly() {
+    _egoNode = null;
+    graphController.clear();
+    emit(state.copyWith(
+      focus: '',
+      status: FetchStatus.isLoading,
+      positiveOnly: !state.positiveOnly,
+    ));
+    _fetch(state.focus);
+  }
+
   void jumpToEgo() => graphController.jumpToNode(_egoNode!);
 
   void setFocus(NodeDetails node) {
     if (node == _egoNode) return jumpToEgo();
+    _focusNode = node;
+    emit(state.copyWith(focus: node.id));
     graphController
       ..setPinned(node, true)
       ..jumpToNode(node);
-    GetIt.I<Client>().requestController.add(GGraphFetchReq(
-          (b) => b
-            ..fetchPolicy = FetchPolicy.NoCache
-            ..requestId = _requestId
-            ..vars.focus = node.id
-            ..vars.positiveOnly = false,
-        ));
+    _fetch(node.id);
   }
+
+  void _fetch(String focus) =>
+      GetIt.I<Client>().requestController.add(GGraphFetchReq(
+            (b) => b
+              ..fetchPolicy = FetchPolicy.NoCache
+              ..requestId = _requestId
+              ..vars.focus = focus
+              ..vars.positiveOnly = state.positiveOnly,
+          ));
 
   void _onData(_Response response) {
     final graph = response.data?.gravityGraph;
     if (graph == null) {
-      emit(state.copyWith(error: 'No data or got error'));
-      return;
+      return emit(state.copyWith(error: 'No data or got error'));
     } else {
       for (final e in graph.users) {
         _users.putIfAbsent(e!.user!.id, () => e.user!);
@@ -91,7 +103,6 @@ class GraphCubit extends Cubit<GraphState> {
       for (final e in graph.comments) {
         _comments.putIfAbsent(e!.comment!.id, () => e.comment!);
       }
-      emit(state.copyWith(status: FetchStatus.hasData));
     }
     graphController.mutate((mutator) {
       if (_egoNode == null) {
@@ -107,13 +118,10 @@ class GraphCubit extends Cubit<GraphState> {
               size: 80,
             );
         mutator.addNode(_egoNode!);
-        Future.delayed(
-          const Duration(milliseconds: 250),
-          jumpToEgo,
-        );
       }
       final missedIds = <String>[];
       for (final e in graph.edges) {
+        if (state.positiveOnly && e!.weight < 0) continue;
         final src = _buildNodeDetails(node: e!.src);
         if (src == null) missedIds.add(e.src);
         final dst = _buildNodeDetails(node: e.dest);
@@ -134,7 +142,16 @@ class GraphCubit extends Cubit<GraphState> {
         if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
       }
       if (missedIds.isNotEmpty) emit(state.copyWith(error: missedIds));
+      emit(state.copyWith(
+        status: mutator.controller.edges.isEmpty
+            ? FetchStatus.isEmpty
+            : FetchStatus.hasData,
+      ));
     });
+    Future.delayed(
+      const Duration(microseconds: 500),
+      () => graphController.jumpToNode(_focusNode ?? _egoNode!),
+    );
   }
 
   NodeDetails? _buildNodeDetails({

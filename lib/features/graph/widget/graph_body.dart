@@ -14,24 +14,20 @@ class GraphBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocConsumer<GraphCubit, GraphState>(
-        buildWhen: (p, c) => p.status != c.status,
+        buildWhen: (p, c) =>
+            p.status != c.status || p.positiveOnly != c.positiveOnly,
         builder: (context, state) => switch (state.status) {
-          FetchStatus.isLoading => const Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
+          FetchStatus.isEmpty || FetchStatus.isLoading => Container(),
           _ => GraphView<NodeDetails, EdgeDetails<NodeDetails>>(
               controller: context.read<GraphCubit>().graphController,
               minScale: 0.1,
-              maxScale: 3,
               canvasSize: const GraphCanvasSize.proportional(200),
               layoutAlgorithm: const FruchtermanReingoldAlgorithm(
                 iterations: 200,
                 showIterations: true,
               ),
+              loaderBuilder: (context) => Container(),
               edgePainter: const _CustomEdgePainter(),
-              loaderBuilder: (context) => const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
               labelBuilder: BottomLabelBuilder(
                 labelSize: const Size(100, 20),
                 builder: (context, node) => switch (node) {
@@ -98,13 +94,12 @@ class _CustomEdgePainter
     EdgeDetails edge,
     Offset sourcePosition,
     Offset destinationPosition,
-  ) {
-    canvas.drawLine(
-      sourcePosition,
-      destinationPosition,
-      Paint()
-        ..color = edge.color
-        ..strokeWidth = edge.strokeWidth,
-    );
-  }
+  ) =>
+      canvas.drawLine(
+        sourcePosition,
+        destinationPosition,
+        Paint()
+          ..color = edge.color
+          ..strokeWidth = edge.strokeWidth,
+      );
 }

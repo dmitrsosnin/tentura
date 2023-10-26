@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:gravity/app/router.dart';
+import 'package:gravity/data/utils.dart';
 import 'package:gravity/features/graph/bloc/graph_cubit.dart';
 
 import 'widget/graph_body.dart';
-import 'widget/jump_to_ego_button.dart';
 
 class GraphScreen extends StatelessWidget {
   const GraphScreen({super.key});
@@ -16,10 +16,37 @@ class GraphScreen extends StatelessWidget {
       create: (context) => GraphCubit(focus: focus),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Graph view'),
-          actions: const [
-            JumpToEgoButton(),
+          actions: [
+            BlocBuilder<GraphCubit, GraphState>(
+              buildWhen: (p, c) => p.positiveOnly != c.positiveOnly,
+              builder: (context, state) => PopupMenuButton(
+                itemBuilder: (context) => <PopupMenuEntry<void>>[
+                  PopupMenuItem<void>(
+                    onTap: context.read<GraphCubit>().jumpToEgo,
+                    child: const Text('Go to Ego'),
+                  ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem<void>(
+                    onTap: context.read<GraphCubit>().togglePositiveOnly,
+                    child: state.positiveOnly
+                        ? const Text('Show negative')
+                        : const Text('Hide negative'),
+                  ),
+                ],
+              ),
+            )
           ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(4),
+            child: BlocBuilder<GraphCubit, GraphState>(
+              buildWhen: (p, c) => p.status != c.status,
+              builder: (context, state) => Offstage(
+                offstage: state.status != FetchStatus.isLoading,
+                child: const LinearProgressIndicator(),
+              ),
+            ),
+          ),
+          title: const Text('Graph view'),
         ),
         body: const GraphBody(),
       ),
