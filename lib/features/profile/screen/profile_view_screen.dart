@@ -83,7 +83,7 @@ class ProfileViewScreen extends StatelessWidget {
                                     id: userId,
                                     link: Uri.https(
                                       appLinkBase,
-                                      pathProfileView,
+                                      pathHomeProfile,
                                       {'id': userId},
                                     ).toString(),
                                   ),

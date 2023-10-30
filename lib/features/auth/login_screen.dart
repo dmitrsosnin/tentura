@@ -30,7 +30,7 @@ class LogInScreen extends StatelessWidget {
                   final authRepository = GetIt.I<AuthRepository>();
                   try {
                     await authRepository.signIn();
-                    if (context.mounted) context.go(pathField);
+                    if (context.mounted) context.go(pathHomeField);
                   } catch (e) {
                     rethrow;
                   }

@@ -117,7 +117,7 @@ class _MyFieldScreenState extends State<MyFieldScreen> {
         ).toString());
       } else if (code.startsWith('U')) {
         context.push(Uri(
-          path: pathProfileView,
+          path: pathHomeProfile,
           queryParameters: {'id': code},
         ).toString());
       } else if (code.startsWith('C')) {

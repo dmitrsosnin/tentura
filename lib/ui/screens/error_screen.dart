@@ -31,7 +31,7 @@ class ErrorScreen extends StatelessWidget {
               ),
             ),
             FilledButton(
-              onPressed: () => context.go(pathField),
+              onPressed: () => context.go(pathHomeField),
               child: const Text('Go to Home'),
             ),
           ],

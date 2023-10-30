@@ -6,9 +6,9 @@ import 'package:gravity/ui/widget/colors_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routes = [
-    pathField,
-    pathUpdates,
-    pathProfileView,
+    pathHomeField,
+    pathHomeUpdates,
+    pathHomeProfile,
   ];
 
   final int index;
