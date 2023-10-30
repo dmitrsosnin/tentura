@@ -1,7 +1,7 @@
 import 'package:gravity/app/router.dart';
 import 'package:gravity/features/rating/bloc/rating_cubit.dart';
 import 'package:gravity/features/rating/widget/rating_list_tile.dart';
-import 'package:gravity/ui/widget/avatar_image.dart';
+// import 'package:gravity/ui/widget/avatar_image.dart';
 import 'package:gravity/ui/utils/ferry_utils.dart';
 import 'package:gravity/ui/utils/ui_consts.dart';
 
@@ -77,7 +77,7 @@ class RatingScreen extends StatelessWidget {
           ),
           body: BlocBuilder<RatingCubit, RatingState>(
             builder: (context, state) {
-              final myAvatar = AvatarImage(userId: state.myId, size: 40);
+              // final myAvatar = AvatarImage(userId: state.myId, size: 40);
               return ListView.separated(
                 padding: paddingH20,
                 itemCount: state.items.length,
@@ -90,7 +90,7 @@ class RatingScreen extends StatelessWidget {
                       queryParameters: {'id': item.user?.id},
                     ).toString()),
                     child: RatingListTile(
-                      myAvatar: myAvatar,
+                      // myAvatar: myAvatar,
                       egoScore: item.egoScore,
                       userScore: item.nodeScore,
                       user: item.user!,

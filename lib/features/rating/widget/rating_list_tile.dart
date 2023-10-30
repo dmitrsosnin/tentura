@@ -6,21 +6,23 @@ import 'package:gravity/ui/utils/ui_consts.dart';
 
 class RatingListTile extends StatelessWidget {
   RatingListTile({
-    required this.myAvatar,
     required this.user,
     required this.egoScore,
     required this.userScore,
     this.height = 40,
+    this.ratio = 2.5,
+    this.myAvatar,
     super.key,
   });
 
-  final Widget myAvatar;
+  final Widget? myAvatar;
+  final double ratio;
   final double height;
   final double egoScore;
   final double userScore;
   final GUserFields user;
 
-  late final _barbellSize = Size(height * 2.5, height);
+  late final _barbellSize = Size(height * ratio, height);
 
   @override
   Widget build(BuildContext context) => Row(
@@ -41,10 +43,11 @@ class RatingListTile extends StatelessWidget {
               painter: _CustomBarbellPainter(userScore, egoScore),
             ),
           ),
-          Padding(
-            padding: paddingAll8,
-            child: myAvatar,
-          ),
+          if (myAvatar != null)
+            Padding(
+              padding: paddingAll8,
+              child: myAvatar,
+            ),
         ],
       );
 }
@@ -61,7 +64,8 @@ class _CustomBarbellPainter extends CustomPainter {
     final quarterHeight = halfHeight / 2;
     final leftOffset = Offset(halfHeight, halfHeight);
     final rightOffset = Offset(size.width - halfHeight, halfHeight);
-    final maxRadius = halfHeight - quarterHeight;
+    // final maxRadius = halfHeight - quarterHeight;
+    final maxRadius = halfHeight;
     final minRadius = quarterHeight / 2;
     final leftColor = _calcColor(leftWeight);
     final rightColor = _calcColor(rightWeight);
