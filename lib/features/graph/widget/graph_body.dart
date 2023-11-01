@@ -26,7 +26,6 @@ class GraphBody extends StatelessWidget {
                 iterations: 200,
                 showIterations: true,
               ),
-              loaderBuilder: (context) => Container(),
               edgePainter: const _CustomEdgePainter(),
               labelBuilder: BottomLabelBuilder(
                 labelSize: const Size(100, 20),
