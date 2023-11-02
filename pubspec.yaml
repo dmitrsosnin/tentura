@@ -45,7 +45,7 @@ dependencies:
   latlong2: ^0.9.0
   # image: ^4.0.17
 
-  sentry_flutter: 7.10.1
+  sentry_flutter: ^7.12.0
   sentry_dart_plugin: ^1.6.0
   # logging_appenders: ^1.1.0
   # sentry_logging: ^7.8.0
