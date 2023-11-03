@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:gravity/data/auth_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/features/beacon/data/_g/beacon_hide_by_id.req.gql.dart';
 import 'package:gravity/features/my_field/data/_g/beacon_pin_by_id.req.gql.dart';
@@ -25,7 +24,10 @@ class MyFieldCubit extends Cubit<MyFieldState> {
         .request(GBeaconFetchMyFieldReq((b) => b
           ..requestId = _requestId
           ..fetchPolicy = FetchPolicy.NoCache))
-        .listen(_onData, cancelOnError: false);
+        .listen(
+          _onData,
+          cancelOnError: false,
+        );
   }
 
   late final StreamSubscription<_Response> _subscription;
@@ -48,7 +50,9 @@ class MyFieldCubit extends Cubit<MyFieldState> {
         (value) {
           if (value.hasNoErrors) {
             state.beacons.removeWhere((e) => e.id == beaconId);
-            emit(state.copyWith(status: FetchStatus.hasData));
+            emit(state.copyWith(
+              status: FetchStatus.hasData,
+            ));
           }
           return value.hasNoErrors;
         },
@@ -67,7 +71,9 @@ class MyFieldCubit extends Cubit<MyFieldState> {
               (value) {
                 if (value.hasNoErrors) {
                   state.beacons.removeWhere((e) => e.id == beaconId);
-                  emit(state.copyWith(status: FetchStatus.hasData));
+                  emit(state.copyWith(
+                    status: FetchStatus.hasData,
+                  ));
                 }
                 return value.hasNoErrors;
               },
@@ -75,30 +81,26 @@ class MyFieldCubit extends Cubit<MyFieldState> {
 
   void _onData(_Response response) {
     if (response.loading) {
-      emit(state.copyWith(status: FetchStatus.isLoading));
+      emit(state.copyWith(
+        status: FetchStatus.isLoading,
+      ));
     } else if (response.hasErrors) {
-      emit(state.copyWith(status: FetchStatus.hasError));
-    } else {
-      final beaconIds = <String>{};
-      final myField = <GBeaconFields>[];
-      final myId = GetIt.I<AuthRepository>().myId;
-      final fetched = [
-        if (response.data != null)
-          ...response.data!.scores
-              .map<GBeaconFields>((e) => e.beacon as GBeaconFields),
-        ...response.data!.globalScores
-            .map<GBeaconFields>((e) => e.beacon as GBeaconFields),
-      ];
-      for (final beacon in fetched) {
-        // TBD: remove that ugly hack when able filter in request
-        if (beacon.enabled == false) continue;
-        if (beacon.is_hidden ?? false) continue;
-        if (beacon.is_pinned ?? false) continue;
-        if ((beacon.my_vote ?? 0) < 0) continue;
-        if (beacon.author.id == myId) continue;
-        if (beaconIds.add(beacon.id)) myField.add(beacon);
-      }
-      emit(state.copyWith(beacons: myField, status: FetchStatus.hasData));
+      emit(state.copyWith(
+        status: FetchStatus.hasError,
+      ));
+    } else if (response.data != null) {
+      emit(state.copyWith(
+        status: FetchStatus.hasData,
+        beacons: response.data!.scores
+            .map<GBeaconFields>((e) => e.beacon as GBeaconFields)
+            // TBD: remove that ugly hack when able filter in request
+            .where((e) =>
+                e.enabled &&
+                !(e.is_hidden ?? false) &&
+                !(e.is_pinned ?? false) &&
+                (e.my_vote ?? 0) >= 0)
+            .toList(),
+      ));
     }
   }
 }

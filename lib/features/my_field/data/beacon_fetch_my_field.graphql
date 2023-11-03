@@ -6,9 +6,4 @@ query BeaconFetchMyField {
       ...BeaconFields
     }
   }
-  globalScores(where: {score: {gt: 0}, node: {like: "B"}}, hidePersonal: true) {
-    beacon {
-      ...BeaconFields
-    }
-  }
 }

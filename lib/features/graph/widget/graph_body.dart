@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
+import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
 import 'package:gravity/features/graph/bloc/graph_cubit.dart';
 import 'package:gravity/domain/entity/edge_details.dart';
@@ -45,7 +46,9 @@ class GraphBody extends StatelessWidget {
               ),
               nodeBuilder: (context, node) => GraphNodeWidget(
                 nodeDetails: node,
-                onTap: () => context.read<GraphCubit>().setFocus(node),
+                onTap: node.id == zeroNodeId
+                    ? null
+                    : () => context.read<GraphCubit>().setFocus(node),
                 onDoubleTap: () => context.push(switch (node) {
                   final UserNode node => Uri(
                       path: pathProfile,
