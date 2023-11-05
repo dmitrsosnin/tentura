@@ -27,10 +27,9 @@ class RatingCubit extends Cubit<RatingState> {
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
 
-  late final StreamSubscription<_Response> _subscription;
+  final _request = GUsersRatingReq();
 
-  late final _request =
-      GUsersRatingReq((b) => b..fetchPolicy = FetchPolicy.NoCache);
+  late final StreamSubscription<_Response> _subscription;
 
   List<GUsersRatingData_usersStats> _items = [];
 

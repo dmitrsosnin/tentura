@@ -36,7 +36,6 @@ class BeaconViewScreen extends StatelessWidget {
     final client = GetIt.I<Client>();
     final refreshRequest = GBeaconFetchByIdReq(
       (b) => b
-        ..fetchPolicy = FetchPolicy.NetworkOnly
         ..requestId = _requestId + beaconId
         ..vars.id = beaconId,
     );

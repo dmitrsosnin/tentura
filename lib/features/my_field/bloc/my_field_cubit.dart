@@ -17,18 +17,14 @@ typedef _Response
     = OperationResponse<GBeaconFetchMyFieldData, GBeaconFetchMyFieldVars>;
 
 class MyFieldCubit extends Cubit<MyFieldState> {
-  static const _requestId = 'FetchMyField';
-
   MyFieldCubit() : super(const MyFieldState(status: FetchStatus.isLoading)) {
-    _subscription = GetIt.I<Client>()
-        .request(GBeaconFetchMyFieldReq((b) => b
-          ..requestId = _requestId
-          ..fetchPolicy = FetchPolicy.NoCache))
-        .listen(
+    _subscription = GetIt.I<Client>().request(_request).listen(
           _onData,
           cancelOnError: false,
         );
   }
+
+  final _request = GBeaconFetchMyFieldReq();
 
   late final StreamSubscription<_Response> _subscription;
 
@@ -39,9 +35,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
   }
 
   Future<void> fetch() async {
-    GetIt.I<Client>().requestController.add(GBeaconFetchMyFieldReq((b) => b
-      ..requestId = _requestId
-      ..fetchPolicy = FetchPolicy.NoCache));
+    GetIt.I<Client>().requestController.add(_request);
   }
 
   Future<bool?> pinBeacon(String beaconId) async => doRequest(

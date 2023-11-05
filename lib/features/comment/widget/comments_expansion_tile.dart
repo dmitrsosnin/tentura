@@ -19,9 +19,7 @@ class CommentsExpansionTile extends StatelessWidget {
   Widget build(BuildContext context) => Operation(
         client: GetIt.I<Client>(),
         operationRequest: GCommentFetchByBeaconIdReq(
-          (b) => b
-            ..fetchPolicy = FetchPolicy.CacheAndNetwork
-            ..vars.beacon_id = beaconId,
+          (b) => b..vars.beacon_id = beaconId,
         ),
         builder: (context, response, error) => ExpansionTile(
           initiallyExpanded: isExpanded,

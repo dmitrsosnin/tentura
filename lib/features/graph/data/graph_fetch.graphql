@@ -1,5 +1,5 @@
-query GraphFetch($focus: String, $positiveOnly: Boolean) {
-  gravityGraph(focus: $focus, positiveOnly: $positiveOnly) {
+query GraphFetch($focus: String, $positiveOnly: Boolean, $limit: Int = 3) {
+  gravityGraph(focus: $focus, positiveOnly: $positiveOnly, limit: $limit) {
     edges {
       src
       dest

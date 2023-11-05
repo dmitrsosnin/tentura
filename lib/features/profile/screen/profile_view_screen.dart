@@ -55,7 +55,6 @@ class ProfileViewScreen extends StatelessWidget {
                       GProfileFetchByUserIdReq(
                         (b) => b
                           ..requestId = _requestId + userId
-                          ..fetchPolicy = FetchPolicy.NetworkOnly
                           ..vars.user_id = userId,
                       ),
                     ),

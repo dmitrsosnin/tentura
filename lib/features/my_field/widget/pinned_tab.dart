@@ -29,7 +29,6 @@ class PinnedTab extends StatelessWidget {
             onRefresh: () async =>
                 client.requestController.add(GBeaconFetchPinnedByUserIdReq(
               (b) => b
-                ..fetchPolicy = FetchPolicy.NetworkOnly
                 ..requestId = _requestId
                 ..vars.user_id = myId,
             )),

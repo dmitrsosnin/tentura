@@ -29,7 +29,6 @@ class HiddenTab extends StatelessWidget {
             onRefresh: () async =>
                 client.requestController.add(GBeaconFetchHiddenByUserIdReq(
               (b) => b
-                ..fetchPolicy = FetchPolicy.NetworkOnly
                 ..requestId = _requestId
                 ..vars.user_id = myId,
             )),

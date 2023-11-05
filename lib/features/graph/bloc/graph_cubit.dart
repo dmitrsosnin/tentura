@@ -20,12 +20,13 @@ class GraphCubit extends Cubit<GraphState> {
   static const _requestId = 'FetchGraph';
 
   GraphCubit({required String focus}) : super(GraphState(focus: focus)) {
+    _fetchLimits = {focus: 10};
     _subscription = GetIt.I<Client>()
         .request(GGraphFetchReq(
           (b) => b
             ..requestId = _requestId
-            ..fetchPolicy = FetchPolicy.NoCache
             ..vars.positiveOnly = state.positiveOnly
+            ..vars.limit = _fetchLimits[focus]
             ..vars.focus = focus,
         ))
         .listen(
@@ -39,6 +40,14 @@ class GraphCubit extends Cubit<GraphState> {
       GraphController<NodeDetails, EdgeDetails<NodeDetails>>();
 
   late final StreamSubscription<_Response> _subscription;
+  late final Map<String, int> _fetchLimits;
+
+  late final _defaultEgo = UserNode(
+    id: _myId,
+    label: 'Me',
+    pinned: true,
+    size: 80,
+  );
 
   final _myId = GetIt.I<AuthRepository>().myId;
   final _users = <String, GGraphFetchData_gravityGraph_users_user>{};
@@ -55,6 +64,8 @@ class GraphCubit extends Cubit<GraphState> {
     return super.close();
   }
 
+  void jumpToEgo() => graphController.jumpToNode(_egoNode!);
+
   void togglePositiveOnly() {
     _egoNode = null;
     graphController.clear();
@@ -66,10 +77,7 @@ class GraphCubit extends Cubit<GraphState> {
     _fetch(state.focus);
   }
 
-  void jumpToEgo() => graphController.jumpToNode(_egoNode!);
-
   void setFocus(NodeDetails node) {
-    if (node == _egoNode) return jumpToEgo();
     _focusNode = node;
     emit(state.copyWith(focus: node.id));
     graphController
@@ -78,19 +86,24 @@ class GraphCubit extends Cubit<GraphState> {
     _fetch(node.id);
   }
 
-  void _fetch(String focus) =>
-      GetIt.I<Client>().requestController.add(GGraphFetchReq(
-            (b) => b
-              ..fetchPolicy = FetchPolicy.NoCache
-              ..requestId = _requestId
-              ..vars.focus = focus
-              ..vars.positiveOnly = state.positiveOnly,
-          ));
+  void _fetch(String focus) {
+    final limit = (_fetchLimits[focus] ?? 0) + 3;
+    _fetchLimits[focus] = limit;
+    GetIt.I<Client>().requestController.add(GGraphFetchReq(
+          (b) => b
+            ..requestId = _requestId
+            ..vars.focus = focus
+            ..vars.limit = limit
+            ..vars.positiveOnly = state.positiveOnly,
+        ));
+  }
 
   void _onData(_Response response) {
     final graph = response.data?.gravityGraph;
     if (graph == null) {
-      return emit(state.copyWith(error: 'No data or got error'));
+      return emit(
+        state.copyWith(error: 'No data or got error'),
+      );
     } else {
       for (final e in graph.users) {
         _users.putIfAbsent(e!.user!.id, () => e.user!);
@@ -109,12 +122,7 @@ class GraphCubit extends Cubit<GraphState> {
               pinned: true,
               size: 80,
             ) ??
-            UserNode(
-              id: _myId,
-              label: 'Me',
-              pinned: true,
-              size: 80,
-            );
+            _defaultEgo;
         mutator.addNode(_egoNode!);
       }
       final missedIds = <String>[];
@@ -147,7 +155,7 @@ class GraphCubit extends Cubit<GraphState> {
       ));
     });
     Future.delayed(
-      const Duration(microseconds: 500),
+      const Duration(microseconds: 1000),
       () => graphController.jumpToNode(_focusNode ?? _egoNode!),
     );
   }
