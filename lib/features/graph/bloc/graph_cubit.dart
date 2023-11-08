@@ -54,8 +54,8 @@ class GraphCubit extends Cubit<GraphState> {
   final _beacons = <String, GGraphFetchData_gravityGraph_beacons_beacon>{};
   final _comments = <String, GGraphFetchData_gravityGraph_comments_comment>{};
 
-  NodeDetails? _egoNode;
-  NodeDetails? _focusNode;
+  late NodeDetails _egoNode = _defaultEgo;
+  late NodeDetails _focusNode = _defaultEgo;
 
   @override
   Future<void> close() async {
@@ -64,10 +64,9 @@ class GraphCubit extends Cubit<GraphState> {
     return super.close();
   }
 
-  void jumpToEgo() => graphController.jumpToNode(_egoNode!);
+  void jumpToEgo() => graphController.jumpToNode(_egoNode);
 
   void togglePositiveOnly() {
-    _egoNode = null;
     graphController.clear();
     emit(state.copyWith(
       focus: '',
@@ -119,14 +118,14 @@ class GraphCubit extends Cubit<GraphState> {
       }
     }
     graphController.mutate((mutator) {
-      if (_egoNode == null) {
-        _egoNode = _buildNodeDetails(
-              node: _myId,
-              pinned: true,
-              size: 80,
-            ) ??
-            _defaultEgo;
-        mutator.addNode(_egoNode!);
+      _egoNode = _buildNodeDetails(
+            node: _myId,
+            pinned: true,
+            size: 80,
+          ) ??
+          _defaultEgo;
+      if (!mutator.controller.nodes.contains(_egoNode)) {
+        mutator.addNode(_egoNode);
       }
       final missedIds = <String>[];
       for (final e in graph.edges) {
@@ -159,7 +158,7 @@ class GraphCubit extends Cubit<GraphState> {
     });
     Future.delayed(
       const Duration(microseconds: 1000),
-      () => graphController.jumpToNode(_focusNode ?? _egoNode!),
+      () => graphController.jumpToNode(_focusNode),
     );
   }
 
