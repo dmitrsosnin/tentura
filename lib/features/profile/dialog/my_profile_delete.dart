@@ -31,7 +31,7 @@ class MyProfileDeleteDialog extends StatelessWidget {
               if (response.hasErrors && context.mounted) {
                 context.pop();
               } else {
-                await GetIt.I<AuthRepository>().deleteAccount();
+                await GetIt.I<AuthRepository>().deleteAccount(myId);
                 if (context.mounted) context.go(pathLogin);
               }
             },

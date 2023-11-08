@@ -5,10 +5,7 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-enum PreferencesKeys {
-  keySeed,
-  keyLastStart,
-}
+import 'package:gravity/consts.dart';
 
 class PreferencesService {
   static const _iOptions = IOSOptions(
@@ -32,13 +29,13 @@ class PreferencesService {
     pathAppDir = (await getApplicationDocumentsDirectory()).path;
     final flagFile = File('$pathAppDir/flags.txt');
     final hasFlag = flagFile.existsSync();
-    final lastStart = await get<int>(PreferencesKeys.keyLastStart);
+    final lastStart = await get<int>(PreferencesKeys.kLastStart);
 
     // Error while reading SharedPreferences
     if (hasFlag && lastStart == null) exit(1);
 
     await set<int>(
-      PreferencesKeys.keyLastStart,
+      PreferencesKeys.kLastStart,
       DateTime.timestamp().millisecondsSinceEpoch,
     );
     if (!hasFlag) await flagFile.create(recursive: true);
@@ -75,6 +72,8 @@ class PreferencesService {
           ),
         _ => throw const ValueFormatException(),
       };
+
+  Future<void> delete(PreferencesKeys key) => _storage.delete(key: key.name);
 }
 
 class ValueFormatException extends FormatException {

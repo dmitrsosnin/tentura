@@ -49,7 +49,7 @@ class GraphBody extends StatelessWidget {
                 onTap: () => context.read<GraphCubit>().setFocus(node),
                 onDoubleTap: () => context.push(switch (node) {
                   final UserNode node => Uri(
-                      path: pathProfile,
+                      path: pathProfileView,
                       queryParameters: {
                         'id': node.id,
                       },

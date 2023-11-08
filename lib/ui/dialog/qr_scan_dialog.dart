@@ -5,8 +5,12 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import 'package:gravity/ui/utils/ui_utils.dart';
 
-/// Returns String?
 class QRScanDialog extends StatefulWidget {
+  static Future<String?> show(BuildContext context) => showDialog<String>(
+        context: context,
+        builder: (context) => const QRScanDialog(),
+      );
+
   const QRScanDialog({super.key});
 
   @override

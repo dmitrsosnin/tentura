@@ -23,7 +23,7 @@ class CommentCard extends StatelessWidget {
           const Divider(),
           GestureDetector(
             onTap: () => context.push(Uri(
-              path: pathProfile,
+              path: pathProfileView,
               queryParameters: {'id': comment.user_id},
             ).toString()),
             child: Row(

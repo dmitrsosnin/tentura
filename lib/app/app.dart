@@ -12,7 +12,7 @@ class App extends StatelessWidget {
 
   final DI di;
 
-  Future<App> init() async {
+  Future<App> _init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -22,12 +22,25 @@ class App extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-        title: 'Gravity',
-        routerConfig: router,
-        color: const Color(0x00B77EFF),
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.light(useMaterial3: true),
-        darkTheme: ThemeData.dark(useMaterial3: true),
-      );
+  Widget build(BuildContext context) => FutureBuilder(
+      future: _init(),
+      builder: (context, snapshot) {
+        return snapshot.data == null
+            ? MaterialApp(
+                title: 'Gravity',
+                color: const Color(0x00B77EFF),
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData.light(useMaterial3: true),
+                darkTheme: ThemeData.dark(useMaterial3: true),
+                home: const Center(child: CircularProgressIndicator.adaptive()),
+              )
+            : MaterialApp.router(
+                title: 'Gravity',
+                routerConfig: router,
+                color: const Color(0x00B77EFF),
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData.light(useMaterial3: true),
+                darkTheme: ThemeData.dark(useMaterial3: true),
+              );
+      });
 }

@@ -92,10 +92,7 @@ class _MyFieldScreenState extends State<MyFieldScreen> {
                   child: const Icon(Icons.qr_code_scanner_outlined),
                   onPressed: () async {
                     _key.currentState?.toggle();
-                    final code = await showDialog<String?>(
-                      context: context,
-                      builder: (context) => const QRScanDialog(),
-                    );
+                    final code = await QRScanDialog.show(context);
                     if (context.mounted) _goWithCode(context, code);
                   },
                 ),

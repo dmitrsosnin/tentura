@@ -1,42 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:gravity/app/router.dart';
-import 'package:gravity/ui/widget/colors_drawer.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const routes = [
+class HomeScreen extends StatelessWidget {
+  static const _routes = [
     pathHomeField,
     pathHomeUpdates,
     pathHomeProfile,
   ];
 
-  final int index;
-  final Widget child;
-
-  HomeScreen({
+  const HomeScreen({
     required this.child,
-    String? path,
     super.key,
-  }) : index = routes.indexOf(path ?? '');
+  });
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  late int _tabIndex = widget.index > 0 ? widget.index : 0;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        drawer: kDebugMode ? const ColorsDrawer() : null,
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: NavigationBar(
-          selectedIndex: _tabIndex,
-          onDestinationSelected: (i) {
-            setState(() => _tabIndex = i);
-            context.go(HomeScreen.routes[i]);
-          },
+          selectedIndex: _routes.indexOf(GoRouterState.of(context).uri.path),
+          onDestinationSelected: (i) => context.go(_routes[i]),
           destinations: const [
             NavigationDestination(
               icon: Icon(Icons.home_outlined),
@@ -52,6 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: widget.child,
+        body: child,
       );
 }

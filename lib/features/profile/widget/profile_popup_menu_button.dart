@@ -18,7 +18,8 @@ class ProfilePopupMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isMine ?? user.id == GetIt.I<AuthRepository>().myId
+    final authRepo = GetIt.I<AuthRepository>();
+    return isMine ?? user.id == authRepo.myId
         ? PopupMenuButton(
             itemBuilder: (context) => <PopupMenuEntry<void>>[
               PopupMenuItem<void>(
@@ -29,6 +30,14 @@ class ProfilePopupMenuButton extends StatelessWidget {
               PopupMenuItem<void>(
                 onTap: () => context.push(pathProfileEdit),
                 child: const Text('Edit profile'),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<void>(
+                onTap: () async {
+                  await authRepo.signOut();
+                  if (context.mounted) context.go(pathLogin);
+                },
+                child: const Text('Logout'),
               ),
             ],
           )
@@ -48,7 +57,7 @@ class ProfilePopupMenuButton extends StatelessWidget {
                 )
               else
                 PopupMenuItem<void>(
-                  child: const Text('Remove my field'),
+                  child: const Text('Remove from my field'),
                   onTap: () async => doRequest(
                     context: context,
                     request: GUserVoteByIdReq(

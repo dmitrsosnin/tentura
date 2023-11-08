@@ -86,7 +86,7 @@ class RatingScreen extends StatelessWidget {
                   final item = state.items[i];
                   return GestureDetector(
                     onDoubleTap: () => context.push(Uri(
-                      path: pathProfile,
+                      path: pathProfileView,
                       queryParameters: {'id': item.user?.id},
                     ).toString()),
                     child: RatingListTile(

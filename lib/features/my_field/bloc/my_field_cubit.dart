@@ -86,6 +86,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
       emit(state.copyWith(
         status: FetchStatus.hasData,
         beacons: response.data!.scores
+            .where((e) => e.beacon != null)
             .map<GBeaconFields>((e) => e.beacon as GBeaconFields)
             // TBD: remove that ugly hack when able filter in request
             .where((e) =>

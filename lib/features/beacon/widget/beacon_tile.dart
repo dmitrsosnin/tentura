@@ -30,7 +30,7 @@ class BeaconTile extends StatelessWidget {
         if (!isMine)
           GestureDetector(
             onTap: () => context.push(Uri(
-              path: pathProfile,
+              path: pathProfileView,
               queryParameters: {'id': beacon.author.id},
             ).toString()),
             child: Row(

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:gravity/consts.dart';
 import 'package:gravity/app/router.dart';
 
@@ -46,9 +45,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             appBar: AppBar(
               actions: [
                 // Save Button
-                IconButton.outlined(
-                  icon: const Icon(Icons.save),
-                  onPressed: () => _onSavePressed(profile),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: IconButton.outlined(
+                    icon: const Icon(Icons.save),
+                    onPressed: () => _onSavePressed(profile),
+                  ),
                 ),
               ],
               backgroundColor: Colors.transparent,
@@ -186,7 +188,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             ..has_picture = _newImagePath != null || profile.has_picture,
         ),
       );
-      if (context.mounted && response.hasNoErrors) context.pop();
+      if (context.mounted && response.hasNoErrors) {
+        context.canPop() ? context.pop() : context.go(pathHomeProfile);
+      }
     }
   }
 }

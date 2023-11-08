@@ -106,13 +106,16 @@ class GraphCubit extends Cubit<GraphState> {
       );
     } else {
       for (final e in graph.users) {
-        _users.putIfAbsent(e!.user!.id, () => e.user!);
+        final user = e?.user;
+        if (user != null) _users.putIfAbsent(user.id, () => user);
       }
       for (final e in graph.beacons) {
-        _beacons.putIfAbsent(e!.beacon!.id, () => e.beacon!);
+        final beacon = e?.beacon;
+        if (beacon != null) _beacons.putIfAbsent(beacon.id, () => beacon);
       }
       for (final e in graph.comments) {
-        _comments.putIfAbsent(e!.comment!.id, () => e.comment!);
+        final comment = e?.comment;
+        if (comment != null) _comments.putIfAbsent(comment.id, () => comment);
       }
     }
     graphController.mutate((mutator) {

@@ -23,12 +23,12 @@ const pathLogin = '/login';
 
 const pathHomeField = '/field';
 const pathHomeUpdates = '/updates';
-const pathProfile = '/profile';
+const pathHomeProfile = '/profile';
 
 const pathGraph = '/graph';
 const pathRating = '/rating';
 
-const pathHomeProfile = '/profile/view';
+const pathProfileView = '/profile/view';
 const pathProfileEdit = '/profile/edit';
 
 const pathBeaconView = '/beacon/view';
@@ -51,9 +51,10 @@ final router = GoRouter(
       redirect: (context, state) =>
           GetIt.I<AuthRepository>().isAuthenticated ? pathHomeField : null,
       builder: (context, state) => const LogInScreen(),
+      parentNavigatorKey: rootNavigatorKey,
     ),
     GoRoute(
-      path: pathProfile,
+      path: pathProfileView,
       parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const ProfileViewScreen(),
     ),
@@ -85,10 +86,7 @@ final router = GoRouter(
     ShellRoute(
       navigatorKey: homeNavigatorKey,
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state, child) => HomeScreen(
-        path: state.path,
-        child: child,
-      ),
+      builder: (context, state, child) => HomeScreen(child: child),
       routes: [
         GoRoute(
           path: pathHomeField,
