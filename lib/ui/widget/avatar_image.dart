@@ -33,9 +33,10 @@ class AvatarImage extends StatelessWidget {
               height: size,
               width: size,
               fit: boxFit,
+              filterQuality: FilterQuality.high,
               placeholder: (context, url) => placeholder,
               errorWidget: (context, url, error) => placeholder,
-              imageUrl: '${ImageRepository.baseUrl}$userId/avatar.jpg',
+              imageUrl: ImageRepository.getAvatarUrl(userId),
             ),
     );
   }

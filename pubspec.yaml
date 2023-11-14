@@ -2,7 +2,7 @@ name: gravity
 description: 'Gravity for a social ranking'
 publish_to: 'none'
 
-version: 0.4.2+0
+version: 0.4.4+0
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^2.1.1
+  # path_provider: ^2.1.1
   url_strategy: ^0.2.0
   flutter_bloc: ^8.1.3
   go_router: ^12.1.0
@@ -19,8 +19,6 @@ dependencies:
   get_it: ^7.6.4
   intl: ^0.18.1
 
-  flutter_secure_storage: ^9.0.0
-  ed25519_edwards: ^0.3.1
   ferry_flutter: ^0.8.1
   fresh_graphql: ^0.6.0
   gql_http_link: ^1.0.1
@@ -49,6 +47,11 @@ dependencies:
   # sentry_logging: ^7.8.0
   # sentry_link: ^0.3.0
   # logging: ^1.2.0
+
+  preferences_repository:
+    path: packages/preferences_repository
+  authentication_repository:
+    path: packages/authentication_repository
 
 dependency_overrides:
 

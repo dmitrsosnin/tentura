@@ -1,6 +1,4 @@
 import 'package:gravity/app/router.dart';
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/image_repository.dart';
 import 'package:gravity/data/gql/beacon/beacon_utils.dart';
 import 'package:gravity/features/beacon/data/_g/beacon_delete_by_id.req.gql.dart';
 
@@ -24,13 +22,14 @@ class BeaconDeleteDialog extends StatelessWidget {
                 context: context,
                 request: GBeaconDeleteByIdReq((b) => b.vars..id = beacon.id),
               );
-              if (response.hasNoErrors && beacon.has_picture) {
-                await GetIt.I<ImageRepository>().deleteBeacon(
-                  userId: GetIt.I<AuthRepository>().myId,
-                  beaconId: beacon.id,
-                );
+              if (context.mounted) {
+                if (response.hasErrors) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Error has occurred'),
+                  ));
+                }
+                context.pop();
               }
-              if (context.mounted) context.pop();
             },
             child: const Text('Delete'),
           ),

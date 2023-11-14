@@ -49,6 +49,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  authentication_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/authentication_repository"
+      relative: true
+    source: path
+    version: "0.0.1+0"
   bloc:
     dependency: transitive
     description:
@@ -234,7 +241,7 @@ packages:
     source: hosted
     version: "2.3.2"
   ed25519_edwards:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: ed25519_edwards
       sha256: "6ce0112d131327ec6d42beede1e5dfd526069b18ad45dcf654f15074ad9276cd"
@@ -407,7 +414,7 @@ packages:
     source: hosted
     version: "2.0.17"
   flutter_secure_storage:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_secure_storage
       sha256: ffdbb60130e4665d2af814a0267c481bcf522c41ae2e43caf69fa0146876d685
@@ -945,7 +952,7 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       sha256: a1aa8aaa2542a6bc57e381f132af822420216c80d4781f7aa085ca3229208aaa
@@ -1040,6 +1047,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  preferences_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/preferences_repository"
+      relative: true
+    source: path
+    version: "0.0.1+0"
   process:
     dependency: transitive
     description:

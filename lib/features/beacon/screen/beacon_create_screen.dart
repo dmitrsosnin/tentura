@@ -206,7 +206,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
         userId: beacon.author.id,
         beaconId: beacon.id,
         authToken:
-            (await GetIt.I<AuthRepository>().freshLink.token)?.accessToken,
+            (await GetIt.I<AuthRepository>().freshLink.token)!.accessToken,
         image: await File(_imagePath).readAsBytes(),
       );
     }

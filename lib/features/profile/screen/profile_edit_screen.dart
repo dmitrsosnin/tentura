@@ -165,7 +165,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       if (_newImagePath != null) {
         await GetIt.I<ImageRepository>().putAvatar(
           userId: authRepository.myId,
-          authToken: (await authRepository.freshLink.token)?.accessToken,
+          authToken: (await authRepository.freshLink.token)!.accessToken,
           image: await File(_newImagePath!).readAsBytes(),
         );
       }

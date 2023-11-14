@@ -34,9 +34,10 @@ class BeaconImage extends StatelessWidget {
         : CachedNetworkImage(
             height: height,
             width: width,
+            filterQuality: FilterQuality.high,
             placeholder: (context, url) => placeholder,
             errorWidget: (context, url, error) => placeholder,
-            imageUrl: '${ImageRepository.baseUrl}$authorId/$beaconId.jpg',
+            imageUrl: ImageRepository.getBeaconUrl(authorId, beaconId),
           );
   }
 }
