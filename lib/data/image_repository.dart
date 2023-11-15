@@ -6,10 +6,10 @@ class ImageRepository {
   static String appLinkBase = '';
 
   static String getAvatarUrl(String userId) =>
-      'https://$appLinkBase/$userId/avatar.jpg';
+      'https://$appLinkBase/images/$userId/avatar.jpg';
 
   static String getBeaconUrl(String userId, String beaconId) =>
-      'https://$appLinkBase/$userId/$beaconId.jpg';
+      'https://$appLinkBase/images/$userId/$beaconId.jpg';
 
   ImageRepository({required String appLinkBase}) {
     appLinkBase = appLinkBase;

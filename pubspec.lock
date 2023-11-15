@@ -92,10 +92,10 @@ packages:
     dependency: transitive
     description:
       name: build_daemon
-      sha256: "5f02d73eb2ba16483e693f80bee4f088563a820e47d1027d4cdfe62b5bb43e65"
+      sha256: "0343061a33da9c5810b2d6cee51945127d8f4c060b7fbdd9d54917f0a3feaaa1"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   build_resolvers:
     dependency: transitive
     description:
@@ -268,42 +268,42 @@ packages:
     dependency: "direct main"
     description:
       name: ferry
-      sha256: "712f94fb2a4b996e05db2afd4d26f0eb2c7c1f6b40af43dc49f5e418b34916a5"
+      sha256: b96c1c74d2f3b0c2c151be0a0e1cb21dab0c5d6801bc11c229db0b97f70c6f10
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.2+1"
+    version: "0.15.0+1"
   ferry_cache:
     dependency: transitive
     description:
       name: ferry_cache
-      sha256: "6d0afa3d2451d1c57c7894254c60cb683c8a8be5598a2ba97c48837f1deb3254"
+      sha256: e02cc8bb9079be24e7ecfbf48ba03f423668784cc788634232349fa8678f4b59
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1+2"
+    version: "0.8.0"
   ferry_exec:
     dependency: transitive
     description:
       name: ferry_exec
-      sha256: "2da33c4b4396d9874af5af37cc72692dbcd2194310871c77381f08b5327cec9d"
+      sha256: dfa916794065e65f35842b716026fe6ed930dc41d3ad49496204f0ef7da55c2d
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.1"
+    version: "0.5.0"
   ferry_flutter:
     dependency: "direct main"
     description:
       name: ferry_flutter
-      sha256: "57c0f441bda868107dfdd7c18491286bbb3b3e5cf6c668f175bde7379b62a537"
+      sha256: "84ee796c5a80921fec750a99558bd6b6f7dfcbdf2869adae2bc3e14c7dfbc86e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.1"
+    version: "0.9.0"
   ferry_generator:
     dependency: "direct dev"
     description:
       name: ferry_generator
-      sha256: dc744553cb9f969c9a784246b3a238f72b4058dce829cb3b4bd6fcf2713cf12f
+      sha256: "50ad933562e3807f0259d8d9402e576dae9a333b49ba7b8a218ceea2de8460ec"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.1"
+    version: "0.8.2"
   ferry_store:
     dependency: transitive
     description:
@@ -483,10 +483,10 @@ packages:
     dependency: "direct main"
     description:
       name: force_directed_graphview
-      sha256: e3c1275516c1f33328dcb206a1fd5c4bf6bed53f4ea7488bedd58fe91f0a4490
+      sha256: e2579cf0b317c137195faeebfbbdcde2607eb2fe7ffc0efddd50edc11294938f
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.1"
+    version: "0.4.2"
   fresh:
     dependency: transitive
     description:
@@ -531,10 +531,10 @@ packages:
     dependency: transitive
     description:
       name: geocoding_ios
-      sha256: c85495ce8fb34e4fbd2dd8fc5f79263d622d9f88c4af948c965daf6b27a7f3a1
+      sha256: "8f79e380abb640ef4d88baee8bb65390058c802601158d0813dc990b36b189d2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   geocoding_platform_interface:
     dependency: transitive
     description:
@@ -571,10 +571,10 @@ packages:
     dependency: transitive
     description:
       name: geolocator_platform_interface
-      sha256: b7aca62aa05d7e610c396a53a1936ff87fce2f735d76e93fde9269c341c46a25
+      sha256: "6c8d494d6948757c56720b778af742f6973f31fca1f702a7539b8917e4a2468a"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "4.2.0"
   geolocator_web:
     dependency: transitive
     description:
@@ -619,50 +619,50 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "5098760d7478aabfe682a462bf121d61bc5dbe5df5aac8dad733564a0aee33bc"
+      sha256: c247a4f76071c3b97bb5ae8912968870d5565644801c5e09f3bc961b4d874895
       url: "https://pub.dev"
     source: hosted
-    version: "12.1.0"
+    version: "12.1.1"
   gql:
     dependency: transitive
     description:
       name: gql
-      sha256: b05d544d709d276c0cced82d630518e92139b426b20d1b11e973e123d07fbf52
+      sha256: "994e0c530b5ca9fce716945031b90c7925eb00bd37624c43ad4cb51883f383b3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.0+1"
   gql_code_builder:
     dependency: transitive
     description:
       name: gql_code_builder
-      sha256: "6e386a85f5d91daae82915337f566a43dfeb0a0df38caa372387fbc07d31b8c1"
+      sha256: "673324fdb3241dcac63f02c78c9b883fd363604c26154420836a2b243ef776d0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.2"
+    version: "0.8.0"
   gql_exec:
     dependency: transitive
     description:
       name: gql_exec
-      sha256: "50bcdb389e25411dce84cca8af50d9277492fc55d6358fa2ec2039e58b8fe22d"
+      sha256: "957db95ba37028001f76c1904e18b848f57cfef878e572ce77c6d898fafecf8f"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.0+1"
   gql_http_link:
     dependency: "direct main"
     description:
       name: gql_http_link
-      sha256: "0789d397d46ce274942fcc73e18a080cd2584296dadc33d8ae53d0666d7fe981"
+      sha256: "1f922eed1b7078fdbfd602187663026f9f659fe9a9499e2207b5d5e01617f658"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.1+1"
   gql_link:
     dependency: transitive
     description:
       name: gql_link
-      sha256: c09b7a5797bdb9acb946083072d223c16658fd7b3ac4ff91b9d5a83c30ee8cf2
+      sha256: "4aa288a1e67c899b0d746a2209e949fd0dc87e56d9b759a5cdc46a7069722cf3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.0+1"
   graphs:
     dependency: transitive
     description:
@@ -899,10 +899,10 @@ packages:
     dependency: transitive
     description:
       name: normalize
-      sha256: "8a60e37de5b608eeaf9b839273370c71ebba445e9f73b08eee7725e0d92dbc43"
+      sha256: "07c294801f8c4bd4e71f4595bc864af80caa373a5cf2e8120849c78a232a44b9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.2+1"
+    version: "0.9.0"
   octo_image:
     dependency: transitive
     description:
@@ -1074,10 +1074,10 @@ packages:
     dependency: transitive
     description:
       name: provider
-      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
+      sha256: "9a96a0a19b594dbc5bf0f1f27d2bc67d5f95957359b461cd9feb44ed6ae75096"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.5"
+    version: "6.1.1"
   pub_semver:
     dependency: transitive
     description:
@@ -1130,10 +1130,10 @@ packages:
     dependency: "direct main"
     description:
       name: sentry_dart_plugin
-      sha256: "80f3c22b2e930823c1835a3a4c87468e908ebc555807d367d7e818267548cae3"
+      sha256: fb46695c054b23ba631b16227c3e602ce31d1d5ccade9583d5184a7a74f7a2be
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.2"
+    version: "1.6.3"
   sentry_flutter:
     dependency: "direct main"
     description:
@@ -1215,10 +1215,10 @@ packages:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: "1b92f368f44b0dee2425bb861cfa17b6f6cf3961f762ff6f941d20b33355660a"
+      sha256: "8ed044102f3135add97be8653662052838859f5400075ef227f8ad72ae320803"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.5.0+1"
   stack_trace:
     dependency: transitive
     description:
@@ -1351,10 +1351,10 @@ packages:
     dependency: transitive
     description:
       name: uuid
-      sha256: b715b8d3858b6fa9f68f87d20d98830283628014750c2b09b6f516c1da4af2a7
+      sha256: df5a4d8f22ee4ccd77f8839ac7cb274ebc11ef9adcce8b92be14b797fe889921
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.1"
   vector_graphics:
     dependency: "direct main"
     description:

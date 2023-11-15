@@ -17,6 +17,7 @@ class DI {
 
   Future<DI> init() async {
     if (_isInited) return this;
+    ImageRepository.appLinkBase = appLinkBase;
     GetIt.I.registerSingleton(
       await PreferencesRepository().init(),
     );
