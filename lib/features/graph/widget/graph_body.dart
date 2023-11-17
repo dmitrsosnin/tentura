@@ -22,10 +22,11 @@ class GraphBody extends StatelessWidget {
               controller: context.read<GraphCubit>().graphController,
               maxScale: 3,
               minScale: 0.1,
-              // canvasSize: const GraphCanvasSize.proportional(300),
               canvasSize: const GraphCanvasSize.fixed(Size(4096, 4096)),
               layoutAlgorithm: const FruchtermanReingoldAlgorithm(
-                // iterations: 200,
+                iterations: 1500,
+                temperature: 500,
+                optimalDistance: 100,
                 showIterations: true,
               ),
               edgePainter: const _CustomEdgePainter(),
