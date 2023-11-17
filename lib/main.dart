@@ -6,6 +6,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'app/app.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
 
   const sentryUrl = String.fromEnvironment('SENTRY_URL');
