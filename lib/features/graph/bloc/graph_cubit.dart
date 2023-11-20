@@ -156,10 +156,6 @@ class GraphCubit extends Cubit<GraphState> {
             : FetchStatus.hasData,
       ));
     });
-    Future.delayed(
-      const Duration(microseconds: 1000),
-      () => graphController.jumpToNode(_focusNode),
-    );
   }
 
   NodeDetails? _buildNodeDetails({
