@@ -4,7 +4,7 @@ const titleMaxLength = 32;
 const descriptionLength = 2048;
 
 const zeroNodeId = 'U000000000000';
-const appLinkBase = 'tentura.intersubjective.space';
+const appLinkBase = String.fromEnvironment('APP_LINK_BASE');
 
 // Shared preferences keys
 const keyAccounts = 'kAccounts';

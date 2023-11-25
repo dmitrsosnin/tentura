@@ -55,7 +55,6 @@ class GraphCubit extends Cubit<GraphState> {
   final _comments = <String, GGraphFetchData_gravityGraph_comments_comment>{};
 
   late NodeDetails _egoNode = _defaultEgo;
-  late NodeDetails _focusNode = _defaultEgo;
 
   @override
   Future<void> close() async {
@@ -77,7 +76,6 @@ class GraphCubit extends Cubit<GraphState> {
   }
 
   void setFocus(NodeDetails node) {
-    _focusNode = node;
     emit(state.copyWith(focus: node.id));
     graphController
       ..setPinned(node, true)
