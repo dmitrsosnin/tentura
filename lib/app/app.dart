@@ -27,7 +27,7 @@ class App extends StatelessWidget {
       builder: (context, snapshot) {
         return snapshot.data == null
             ? MaterialApp(
-                title: 'Gravity',
+                title: 'Tentura',
                 color: const Color(0x00B77EFF),
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData.light(useMaterial3: true),
@@ -35,7 +35,7 @@ class App extends StatelessWidget {
                 home: const Center(child: CircularProgressIndicator.adaptive()),
               )
             : MaterialApp.router(
-                title: 'Gravity',
+                title: 'Tentura',
                 routerConfig: router,
                 color: const Color(0x00B77EFF),
                 debugShowCheckedModeBanner: false,
