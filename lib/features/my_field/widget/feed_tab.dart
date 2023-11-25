@@ -1,10 +1,10 @@
-import 'package:gravity/ui/utils/ui_consts.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/utils/state_base.dart';
-import 'package:gravity/ui/widget/empty_list_scroll_view.dart';
-import 'package:gravity/features/beacon/widget/beacon_tile.dart';
-import 'package:gravity/features/my_field/bloc/my_field_cubit.dart';
-import 'package:gravity/features/beacon/dialog/beacon_hide_dialog.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/state_base.dart';
+import 'package:tentura/ui/widget/empty_list_scroll_view.dart';
+import 'package:tentura/features/beacon/widget/beacon_tile.dart';
+import 'package:tentura/features/my_field/bloc/my_field_cubit.dart';
+import 'package:tentura/features/beacon/dialog/beacon_hide_dialog.dart';
 
 class FeedTab extends StatelessWidget {
   const FeedTab({super.key});

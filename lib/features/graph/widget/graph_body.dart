@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
-import 'package:gravity/app/router.dart';
-import 'package:gravity/features/graph/bloc/graph_cubit.dart';
-import 'package:gravity/domain/entity/edge_details.dart';
-import 'package:gravity/domain/entity/node_details.dart';
-import 'package:gravity/ui/utils/state_base.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/features/graph/bloc/graph_cubit.dart';
+import 'package:tentura/domain/entity/edge_details.dart';
+import 'package:tentura/domain/entity/node_details.dart';
+import 'package:tentura/ui/utils/state_base.dart';
 
 import 'graph_node_widget.dart';
 

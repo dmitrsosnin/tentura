@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
 
 class AccountSeedDialog extends StatelessWidget {
   static Future<bool?> show(

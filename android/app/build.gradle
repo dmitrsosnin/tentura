@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.intersubjective.gravity"
+    namespace "com.intersubjective.tentura"
     compileSdk 33
     ndkVersion flutter.ndkVersion
 

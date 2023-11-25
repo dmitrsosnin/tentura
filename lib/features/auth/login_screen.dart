@@ -1,14 +1,14 @@
 import 'package:flutter/services.dart';
 
-import 'package:gravity/app/router.dart';
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/ui/dialog/qr_scan_dialog.dart';
-import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
 
-import 'package:gravity/features/auth/dialog/account_seed_dialog.dart';
-import 'package:gravity/features/auth/dialog/account_remove_dialog.dart';
+import 'package:tentura/features/auth/dialog/account_seed_dialog.dart';
+import 'package:tentura/features/auth/dialog/account_remove_dialog.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});

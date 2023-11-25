@@ -1,8 +1,8 @@
-import 'package:gravity/app/router.dart';
-import 'package:gravity/data/gql/beacon/beacon_utils.dart';
-import 'package:gravity/features/beacon/data/_g/beacon_delete_by_id.req.gql.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/data/gql/beacon/beacon_utils.dart';
+import 'package:tentura/features/beacon/data/_g/beacon_delete_by_id.req.gql.dart';
 
-import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
 
 class BeaconDeleteDialog extends StatelessWidget {
   final GBeaconFields beacon;

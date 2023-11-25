@@ -1,19 +1,19 @@
 import 'dart:io';
-import 'package:gravity/consts.dart';
-import 'package:gravity/app/router.dart';
+import 'package:tentura/consts.dart';
+import 'package:tentura/app/router.dart';
 
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/image_repository.dart';
-import 'package:gravity/data/gql/user/user_utils.dart';
-import 'package:gravity/data/gql/user/_g/user_update.req.gql.dart';
-import 'package:gravity/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/data/image_repository.dart';
+import 'package:tentura/data/gql/user/user_utils.dart';
+import 'package:tentura/data/gql/user/_g/user_update.req.gql.dart';
+import 'package:tentura/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
 
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/dialog/error_dialog.dart';
-import 'package:gravity/ui/widget/gradient_stack.dart';
-import 'package:gravity/ui/widget/avatar_positioned.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/dialog/error_dialog.dart';
+import 'package:tentura/ui/widget/gradient_stack.dart';
+import 'package:tentura/ui/widget/avatar_positioned.dart';
+import 'package:tentura/ui/widget/error_center_text.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({super.key});

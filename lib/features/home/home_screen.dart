@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/app/router.dart';
+import 'package:tentura/app/router.dart';
 
 class HomeScreen extends StatelessWidget {
   static const _routes = [

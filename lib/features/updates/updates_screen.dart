@@ -1,5 +1,5 @@
-import 'package:gravity/ui/utils/ui_consts.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
 
 class UpdatesScreen extends StatelessWidget {
   const UpdatesScreen({super.key});

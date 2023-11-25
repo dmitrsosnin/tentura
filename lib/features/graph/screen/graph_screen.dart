@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/app/router.dart';
-import 'package:gravity/features/graph/bloc/graph_cubit.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/features/graph/bloc/graph_cubit.dart';
 
 import '../widget/graph_body.dart';
 

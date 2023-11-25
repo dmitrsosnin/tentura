@@ -1,9 +1,9 @@
-import 'package:gravity/app/router.dart';
-import 'package:gravity/features/rating/bloc/rating_cubit.dart';
-import 'package:gravity/features/rating/widget/rating_list_tile.dart';
-// import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/features/rating/bloc/rating_cubit.dart';
+import 'package:tentura/features/rating/widget/rating_list_tile.dart';
+// import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
 
 class RatingScreen extends StatelessWidget {
   const RatingScreen({super.key});

@@ -4,18 +4,18 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/ui/screens/error_screen.dart';
-import 'package:gravity/features/home/home_screen.dart';
-import 'package:gravity/features/auth/login_screen.dart';
-import 'package:gravity/features/updates/updates_screen.dart';
-import 'package:gravity/features/graph/screen/graph_screen.dart';
-import 'package:gravity/features/rating/screen/rating_screen.dart';
-import 'package:gravity/features/my_field/screen/my_field_screen.dart';
-import 'package:gravity/features/profile/screen/profile_view_screen.dart';
-import 'package:gravity/features/profile/screen/profile_edit_screen.dart';
-import 'package:gravity/features/beacon/screen/beacon_create_screen.dart';
-import 'package:gravity/features/beacon/screen/beacon_view_screen.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/ui/screens/error_screen.dart';
+import 'package:tentura/features/home/home_screen.dart';
+import 'package:tentura/features/auth/login_screen.dart';
+import 'package:tentura/features/updates/updates_screen.dart';
+import 'package:tentura/features/graph/screen/graph_screen.dart';
+import 'package:tentura/features/rating/screen/rating_screen.dart';
+import 'package:tentura/features/my_field/screen/my_field_screen.dart';
+import 'package:tentura/features/profile/screen/profile_view_screen.dart';
+import 'package:tentura/features/profile/screen/profile_edit_screen.dart';
+import 'package:tentura/features/beacon/screen/beacon_create_screen.dart';
+import 'package:tentura/features/beacon/screen/beacon_view_screen.dart';
 
 export 'package:go_router/go_router.dart';
 

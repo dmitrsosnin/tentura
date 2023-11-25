@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
 
 class ShareCodeDialog extends StatelessWidget {
   final String id;

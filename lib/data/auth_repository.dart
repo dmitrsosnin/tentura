@@ -4,8 +4,8 @@ import 'package:fresh_graphql/fresh_graphql.dart';
 import 'package:preferences_repository/preferences_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 
-import 'package:gravity/consts.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:tentura/consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
 
 class AuthRepository {
   late final freshLink = FreshLink.oAuth2(

@@ -5,7 +5,7 @@ targets:
       ferry_generator|graphql_builder:
         enabled: true
         options:
-          schema: gravity|lib/data/gql/schema.graphql
+          schema: tentura|lib/data/gql/schema.graphql
           global_enum_fallbacks: true
           output_dir: "_g"
           when_extensions:
@@ -27,7 +27,7 @@ targets:
       ferry_generator|serializer_builder:
         enabled: true
         options:
-          schema: gravity|lib/data/gql/schema.graphql
+          schema: tentura|lib/data/gql/schema.graphql
           output_dir: "_g"
 
           type_overrides:
@@ -43,11 +43,11 @@ targets:
               import: "package:latlong2/latlong.dart"
 
           custom_serializers:
-            - import: "package:gravity/data/gql/timestamptz_serializer.dart"
+            - import: "package:tentura/data/gql/timestamptz_serializer.dart"
               name: TimestamptzSerializer
 
-            - import: "package:gravity/data/gql/tstzrange_serializer.dart"
+            - import: "package:tentura/data/gql/tstzrange_serializer.dart"
               name: TstzrangeSerializer
 
-            - import: "package:gravity/data/gql/geography_serializer.dart"
+            - import: "package:tentura/data/gql/geography_serializer.dart"
               name: GeographySerializer

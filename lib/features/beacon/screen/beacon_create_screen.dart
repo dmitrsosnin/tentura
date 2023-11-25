@@ -1,16 +1,16 @@
 import 'dart:io';
 import 'package:latlong2/latlong.dart';
 
-import 'package:gravity/consts.dart';
-import 'package:gravity/app/router.dart';
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/image_repository.dart';
-import 'package:gravity/data/geolocation_repository.dart';
-import 'package:gravity/data/gql/beacon/_g/beacon_create.req.gql.dart';
-import 'package:gravity/ui/dialog/choose_location_dialog.dart';
-import 'package:gravity/ui/dialog/error_dialog.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/utils/ui_utils.dart';
+import 'package:tentura/consts.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/data/image_repository.dart';
+import 'package:tentura/data/geolocation_repository.dart';
+import 'package:tentura/data/gql/beacon/_g/beacon_create.req.gql.dart';
+import 'package:tentura/ui/dialog/choose_location_dialog.dart';
+import 'package:tentura/ui/dialog/error_dialog.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 class BeaconCreateScreen extends StatefulWidget {
   const BeaconCreateScreen({super.key});

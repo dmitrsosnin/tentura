@@ -1,7 +1,7 @@
-import 'package:gravity/app/router.dart';
+import 'package:tentura/app/router.dart';
 
-import 'package:gravity/ui/utils/ui_consts.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
 
 class BeaconHideDialog extends StatefulWidget {
   static Future<Duration?> show(BuildContext context) => showDialog<Duration?>(

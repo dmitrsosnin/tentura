@@ -1,7 +1,7 @@
-import 'package:gravity/data/gql/comment/_g/comment_fetch_by_beacon_id.req.gql.dart';
+import 'package:tentura/data/gql/comment/_g/comment_fetch_by_beacon_id.req.gql.dart';
 
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/widget/error_center_text.dart';
 
 import 'comment_card.dart';
 

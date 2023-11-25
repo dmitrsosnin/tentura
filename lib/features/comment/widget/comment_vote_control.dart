@@ -1,7 +1,7 @@
-import 'package:gravity/data/gql/comment/_g/_fragments.data.gql.dart';
-import 'package:gravity/data/gql/comment/_g/comment_vote_by_id.req.gql.dart';
+import 'package:tentura/data/gql/comment/_g/_fragments.data.gql.dart';
+import 'package:tentura/data/gql/comment/_g/comment_vote_by_id.req.gql.dart';
 
-import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
 
 class CommentVoteControl extends StatefulWidget {
   final GCommentFields comment;

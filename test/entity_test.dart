@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
-import 'package:gravity/domain/entity/node_details.dart';
+import 'package:tentura/domain/entity/node_details.dart';
 
 void main() {
   const userNode1 = UserNode(

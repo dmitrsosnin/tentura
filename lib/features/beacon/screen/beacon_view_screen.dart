@@ -1,21 +1,21 @@
-import 'package:gravity/app/router.dart';
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/gql/user/user_utils.dart';
-import 'package:gravity/data/geolocation_repository.dart';
-import 'package:gravity/data/gql/beacon/beacon_utils.dart';
-import 'package:gravity/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/data/gql/user/user_utils.dart';
+import 'package:tentura/data/geolocation_repository.dart';
+import 'package:tentura/data/gql/beacon/beacon_utils.dart';
+import 'package:tentura/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
 
-import 'package:gravity/ui/utils/ui_utils.dart';
-import 'package:gravity/ui/utils/ui_consts.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/screens/error_screen.dart';
-import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/widget/beacon_image.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/screens/error_screen.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/widget/beacon_image.dart';
+import 'package:tentura/ui/widget/error_center_text.dart';
 
-import 'package:gravity/features/beacon/widget/beacon_control_row.dart';
-import 'package:gravity/features/comment/widget/new_comment_input.dart';
-import 'package:gravity/features/comment/widget/comments_expansion_tile.dart';
+import 'package:tentura/features/beacon/widget/beacon_control_row.dart';
+import 'package:tentura/features/comment/widget/new_comment_input.dart';
+import 'package:tentura/features/comment/widget/comments_expansion_tile.dart';
 
 class BeaconViewScreen extends StatelessWidget {
   static const _requestId = 'FetchBeaconById';

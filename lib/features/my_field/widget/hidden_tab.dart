@@ -1,11 +1,11 @@
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/features/beacon/data/_g/beacon_unhide_by_id.req.gql.dart';
-import 'package:gravity/features/my_field/data/_g/beacon_fetch_hidden_by_user_id.req.gql.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/features/beacon/data/_g/beacon_unhide_by_id.req.gql.dart';
+import 'package:tentura/features/my_field/data/_g/beacon_fetch_hidden_by_user_id.req.gql.dart';
 
-import 'package:gravity/ui/utils/ui_consts.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/widget/empty_list_scroll_view.dart';
-import 'package:gravity/features/beacon/widget/beacon_tile.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/widget/empty_list_scroll_view.dart';
+import 'package:tentura/features/beacon/widget/beacon_tile.dart';
 
 class HiddenTab extends StatelessWidget {
   static const _requestId = 'BeaconFetchHidden';

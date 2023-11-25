@@ -1,11 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:preferences_repository/preferences_repository.dart';
 
-import 'package:gravity/consts.dart';
-import 'package:gravity/data/gql/client.dart';
-import 'package:gravity/data/image_repository.dart';
-import 'package:gravity/data/geolocation_repository.dart';
-import 'package:gravity/data/auth_repository.dart';
+import 'package:tentura/consts.dart';
+import 'package:tentura/data/gql/client.dart';
+import 'package:tentura/data/image_repository.dart';
+import 'package:tentura/data/geolocation_repository.dart';
+import 'package:tentura/data/auth_repository.dart';
 
 class DI {
   static bool _isInited = false;

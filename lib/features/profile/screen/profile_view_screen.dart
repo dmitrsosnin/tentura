@@ -1,16 +1,16 @@
-import 'package:gravity/consts.dart';
-import 'package:gravity/app/router.dart';
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/gql/user/user_utils.dart';
+import 'package:tentura/consts.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/data/gql/user/user_utils.dart';
 
-import 'package:gravity/ui/utils/ui_consts.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
-import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/widget/gradient_stack.dart';
-import 'package:gravity/ui/widget/avatar_positioned.dart';
-import 'package:gravity/ui/widget/error_center_text.dart';
-import 'package:gravity/ui/dialog/share_code_dialog.dart';
-import 'package:gravity/features/beacon/widget/beacon_tile.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/widget/gradient_stack.dart';
+import 'package:tentura/ui/widget/avatar_positioned.dart';
+import 'package:tentura/ui/widget/error_center_text.dart';
+import 'package:tentura/ui/dialog/share_code_dialog.dart';
+import 'package:tentura/features/beacon/widget/beacon_tile.dart';
 
 import '../data/_g/profile_fetch_by_user_id.req.gql.dart';
 import '../widget/profile_popup_menu_button.dart';

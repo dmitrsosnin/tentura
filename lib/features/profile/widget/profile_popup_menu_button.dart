@@ -1,10 +1,10 @@
-import 'package:gravity/app/router.dart';
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/data/gql/user/user_utils.dart';
-import 'package:gravity/features/profile/data/_g/user_vote_by_id.req.gql.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/data/gql/user/user_utils.dart';
+import 'package:tentura/features/profile/data/_g/user_vote_by_id.req.gql.dart';
 
-import 'package:gravity/ui/utils/ui_consts.dart';
-import 'package:gravity/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
 
 class ProfilePopupMenuButton extends StatelessWidget {
   const ProfilePopupMenuButton({

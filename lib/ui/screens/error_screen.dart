@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/app/router.dart';
-import 'package:gravity/ui/utils/ui_consts.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String? title;

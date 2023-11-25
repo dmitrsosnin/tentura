@@ -3,11 +3,11 @@ import 'package:ferry/ferry.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import 'package:gravity/data/auth_repository.dart';
-import 'package:gravity/features/rating/data/_g/fetch_users_rating.data.gql.dart';
-import 'package:gravity/features/rating/data/_g/fetch_users_rating.req.gql.dart';
-import 'package:gravity/features/rating/data/_g/fetch_users_rating.var.gql.dart';
-import 'package:gravity/ui/utils/state_base.dart';
+import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/features/rating/data/_g/fetch_users_rating.data.gql.dart';
+import 'package:tentura/features/rating/data/_g/fetch_users_rating.req.gql.dart';
+import 'package:tentura/features/rating/data/_g/fetch_users_rating.var.gql.dart';
+import 'package:tentura/ui/utils/state_base.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 

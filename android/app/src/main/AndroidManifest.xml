@@ -31,9 +31,9 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="gravity.intersubjective.space" />
-                <data android:scheme="http" android:host="gravity.intersubjective.space" />
-                <data android:scheme="https" android:host="gravity.intersubjective.space" />
+                <data android:host="tentura.intersubjective.space" />
+                <data android:scheme="http" android:host="tentura.intersubjective.space" />
+                <data android:scheme="https" android:host="tentura.intersubjective.space" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

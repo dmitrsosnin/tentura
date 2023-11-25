@@ -1,4 +1,4 @@
-package com.intersubjective.gravity
+package com.intersubjective.tentura
 
 import io.flutter.embedding.android.FlutterActivity
 

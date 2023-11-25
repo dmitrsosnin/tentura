@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-import 'package:gravity/app/router.dart';
-import 'package:gravity/data/geolocation_repository.dart';
+import 'package:tentura/app/router.dart';
+import 'package:tentura/data/geolocation_repository.dart';
 
 class ChooseLocationDialog extends StatefulWidget {
   final LatLng? center;
@@ -56,7 +56,7 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
           children: [
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'gravity.intersubjective.space',
+              userAgentPackageName: 'tentura.intersubjective.space',
             ),
           ],
         ),

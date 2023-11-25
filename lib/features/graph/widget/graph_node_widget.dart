@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:gravity/domain/entity/node_details.dart';
-import 'package:gravity/ui/widget/avatar_image.dart';
-import 'package:gravity/ui/widget/beacon_image.dart';
+import 'package:tentura/domain/entity/node_details.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/widget/beacon_image.dart';
 
 class GraphNodeWidget extends StatelessWidget {
   GraphNodeWidget({
