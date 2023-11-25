@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
@@ -79,13 +77,7 @@ class _QRScanDialogState extends State<QRScanDialog> {
                   }
                 },
               ),
-              CustomPaint(painter: _ScannerOverlay(scanWindow: _scanWindow)),
-              Positioned.fromRect(
-                rect: _scanWindow.inflate(4),
-                child: const SvgPicture(
-                  AssetBytesLoader('assets/images/frame.svg.vec'),
-                ),
-              ),
+              CustomPaint(painter: _ScannerOverlay(frame: _scanWindow)),
             ],
           ),
         ),
@@ -93,23 +85,56 @@ class _QRScanDialogState extends State<QRScanDialog> {
 }
 
 class _ScannerOverlay extends CustomPainter {
-  final Rect scanWindow;
+  _ScannerOverlay({required this.frame});
 
-  const _ScannerOverlay({required this.scanWindow});
+  final Rect frame;
+
+  final _framePaint = Paint()
+    ..color = Colors.white
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 8;
+
+  final _maskPaint = Paint()
+    ..color = Colors.deepPurple.withOpacity(0.5)
+    ..style = PaintingStyle.fill
+    ..blendMode = BlendMode.dstOut;
+
+  late final _maskPath = Path.combine(
+    PathOperation.difference,
+    Path()..addRect(Rect.largest),
+    Path()..addRect(frame),
+  );
+
+  late final _frameSize = frame.height / 5;
+
+  late final _leftTop = Offset(frame.left, frame.top);
+  late final _leftTopH = Offset(frame.left + _frameSize, frame.top);
+  late final _leftTopV = Offset(frame.left, frame.top + _frameSize);
+
+  late final _rightTop = Offset(frame.right, frame.top);
+  late final _rightTopH = Offset(frame.right - _frameSize, frame.top);
+  late final _rightTopV = Offset(frame.right, frame.top + _frameSize);
+
+  late final _leftBottom = Offset(frame.left, frame.bottom);
+  late final _leftBottomH = Offset(frame.left + _frameSize, frame.bottom);
+  late final _leftBottomV = Offset(frame.left, frame.bottom - _frameSize);
+
+  late final _rightBottom = Offset(frame.right, frame.bottom);
+  late final _rightBottomH = Offset(frame.right - _frameSize, frame.bottom);
+  late final _rightBottomV = Offset(frame.right, frame.bottom - _frameSize);
 
   @override
-  bool shouldRepaint(covariant CustomPainter _) => false;
+  bool shouldRepaint(_) => false;
 
   @override
-  void paint(Canvas canvas, Size size) => canvas.drawPath(
-        Path.combine(
-          PathOperation.difference,
-          Path()..addRect(Rect.largest),
-          Path()..addRect(scanWindow),
-        ),
-        Paint()
-          ..color = Colors.black.withOpacity(0.5)
-          ..style = PaintingStyle.fill
-          ..blendMode = BlendMode.dstOut,
-      );
+  void paint(Canvas canvas, Size size) => canvas
+    ..drawPath(_maskPath, _maskPaint)
+    ..drawLine(_leftTop, _leftTopH, _framePaint)
+    ..drawLine(_leftTop, _leftTopV, _framePaint)
+    ..drawLine(_rightTop, _rightTopH, _framePaint)
+    ..drawLine(_rightTop, _rightTopV, _framePaint)
+    ..drawLine(_leftBottom, _leftBottomH, _framePaint)
+    ..drawLine(_leftBottom, _leftBottomV, _framePaint)
+    ..drawLine(_rightBottom, _rightBottomH, _framePaint)
+    ..drawLine(_rightBottom, _rightBottomV, _framePaint);
 }

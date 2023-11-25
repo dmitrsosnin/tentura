@@ -57,6 +57,7 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   very_good_analysis: ^5.1.0
   ferry_generator: ^0.8.2
   build_runner: ^2.4.6
@@ -71,3 +72,9 @@ sentry:
   upload_source_maps: true
   upload_sources: true
   ignore_missing: true
+
+flutter_launcher_icons:
+  image_path: "assets/images/logo1024.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true

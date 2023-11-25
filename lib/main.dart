@@ -8,22 +8,10 @@ import 'app/app.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
-
-  const sentryUrl = String.fromEnvironment('SENTRY_URL');
-  if (sentryUrl.isEmpty) {
-    // FlutterError.onError = (details) {
-    //   FlutterError.presentError(details);
-    // };
-    // PlatformDispatcher.instance.onError = (error, stack) {
-    //   return true;
-    // };
-    runApp(const App());
-  } else {
-    await SentryFlutter.init(
-      (options) => options
-        ..dsn = sentryUrl
-        ..tracesSampleRate = 1.0,
-      appRunner: () => runApp(const App()),
-    );
-  }
+  await SentryFlutter.init(
+    (options) => options
+      ..dsn = const String.fromEnvironment('SENTRY_URL')
+      ..tracesSampleRate = 1.0,
+    appRunner: () => runApp(const App()),
+  );
 }
