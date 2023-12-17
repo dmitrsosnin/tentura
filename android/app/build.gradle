@@ -76,6 +76,19 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    flavorDimensions "backend"
+
+    productFlavors {
+        prod{
+            dimension "backend"
+        }
+        stage{
+            dimension "backend"
+            applicationIdSuffix ".stage"
+            versionNameSuffix "-stage"
+        }
+    }
+
 }
 
 flutter {
