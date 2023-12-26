@@ -19,8 +19,8 @@ typedef _Response = OperationResponse<GGraphFetchData, GGraphFetchVars>;
 class GraphCubit extends Cubit<GraphState> {
   static const _requestId = 'FetchGraph';
 
-  GraphCubit({required String focus}) : super(GraphState(focus: focus)) {
-    _fetchLimits = {focus: 10};
+  GraphCubit({String? focus}) : super(GraphState(focus: focus ?? '')) {
+    _fetchLimits = {super.state.focus: 10};
     _subscription = GetIt.I<Client>()
         .request(GGraphFetchReq(
           (b) => b
