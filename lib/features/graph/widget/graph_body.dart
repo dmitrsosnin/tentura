@@ -9,15 +9,13 @@ import 'package:tentura/domain/entity/node_details.dart';
 import 'package:tentura/features/graph/bloc/graph_cubit.dart';
 import 'package:tentura/features/graph/widget/graph_node_widget.dart';
 
-enum EdgePainterStyle { colored, animated }
-
 class GraphBody extends StatefulWidget {
   const GraphBody({
     required this.controller,
-    this.labeled = true,
+    this.isLabeled = true,
+    this.isAnimated = true,
     this.labelSize = const Size(100, 20),
     this.scaleRange = const Offset(0.1, 3),
-    this.edgePainterStyle = EdgePainterStyle.animated,
     this.animationDuration = const Duration(seconds: 2),
     this.canvasSize = const GraphCanvasSize.fixed(Size(4096, 4096)),
     this.layoutAlgorithm = const FruchtermanReingoldAlgorithm(
@@ -29,12 +27,12 @@ class GraphBody extends StatefulWidget {
     super.key,
   });
 
-  final bool labeled;
   final Size labelSize;
+  final bool isLabeled;
+  final bool isAnimated;
   final Offset scaleRange;
   final Duration animationDuration;
   final GraphCanvasSize canvasSize;
-  final EdgePainterStyle edgePainterStyle;
   final GraphLayoutAlgorithm layoutAlgorithm;
   final GraphController<NodeDetails, EdgeDetails<NodeDetails>> controller;
 
@@ -44,24 +42,20 @@ class GraphBody extends StatefulWidget {
 
 class GraphBodyState extends State<GraphBody>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
+  late final _animationController = AnimationController(
+    duration: widget.animationDuration,
+    vsync: this,
+  );
 
   @override
   void initState() {
     super.initState();
-    if (widget.edgePainterStyle == EdgePainterStyle.animated) {
-      _animationController = AnimationController(
-        duration: widget.animationDuration,
-        vsync: this,
-      )..repeat();
-    }
+    if (widget.isAnimated) _animationController.repeat();
   }
 
   @override
   void dispose() {
-    if (widget.edgePainterStyle == EdgePainterStyle.animated) {
-      _animationController.dispose();
-    }
+    if (widget.isAnimated) _animationController.dispose();
     super.dispose();
   }
 
@@ -73,14 +67,13 @@ class GraphBodyState extends State<GraphBody>
         minScale: widget.scaleRange.dx,
         maxScale: widget.scaleRange.dy,
         layoutAlgorithm: widget.layoutAlgorithm,
-        edgePainter: widget.edgePainterStyle == EdgePainterStyle.animated
-            ? _AnimatedHighlightedEdgePainter(
-                animation: _animationController,
-                highlightRadius: 0.15,
-                highlightColor: Colors.transparent,
-              )
-            : const _ColoredEdgePainter(),
-        labelBuilder: widget.labeled
+        edgePainter: _AnimatedHighlightedEdgePainter(
+          animation: _animationController,
+          highlightColor: Colors.transparent,
+          highlightRadius: 0.15,
+          isAnimated: widget.isAnimated,
+        ),
+        labelBuilder: widget.isLabeled
             ? BottomLabelBuilder(
                 labelSize: widget.labelSize,
                 builder: (context, node) => switch (node) {
@@ -128,37 +121,19 @@ class GraphBodyState extends State<GraphBody>
       );
 }
 
-class _ColoredEdgePainter
-    implements EdgePainter<NodeDetails, EdgeDetails<NodeDetails>> {
-  const _ColoredEdgePainter();
-
-  @override
-  void paint(
-    Canvas canvas,
-    EdgeDetails edge,
-    Offset sourcePosition,
-    Offset destinationPosition,
-  ) =>
-      canvas.drawLine(
-        sourcePosition,
-        destinationPosition,
-        Paint()
-          ..color = edge.color
-          ..strokeWidth = edge.strokeWidth,
-      );
-}
-
 class _AnimatedHighlightedEdgePainter
     implements AnimatedEdgePainter<NodeDetails, EdgeDetails<NodeDetails>> {
   const _AnimatedHighlightedEdgePainter({
     required this.animation,
     required this.highlightColor,
     required this.highlightRadius,
+    this.isAnimated = true,
   });
 
   @override
   final Animation<double> animation;
 
+  final bool isAnimated;
   final Color highlightColor;
   final double highlightRadius;
 
@@ -169,6 +144,15 @@ class _AnimatedHighlightedEdgePainter
     Offset src,
     Offset dst,
   ) {
+    if (!isAnimated) {
+      return canvas.drawLine(
+        src,
+        dst,
+        Paint()
+          ..color = edge.color
+          ..strokeWidth = edge.strokeWidth,
+      );
+    }
     // Replacement for speed up calculateInOutReynolds() calculation with defaults
     final highlightCenter = (1 / (pow(1 / animation.value - 1, 2) + 1)) *
             (1 + highlightRadius * 2) -

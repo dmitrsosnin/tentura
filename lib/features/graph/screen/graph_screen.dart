@@ -47,6 +47,7 @@ class GraphScreen extends StatelessWidget {
               FetchStatus.isEmpty || FetchStatus.isLoading => Container(),
               _ => GraphBody(
                   controller: context.read<GraphCubit>().graphController,
+                  isAnimated: state.isAnimated,
                 ),
             },
           ),
