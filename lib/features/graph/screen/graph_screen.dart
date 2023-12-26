@@ -10,46 +10,46 @@ class GraphScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => GraphCubit(
+        create: (_) => GraphCubit(
           focus: GoRouterState.of(context).uri.queryParameters['focus'],
         ),
+        lazy: false,
         child: BlocConsumer<GraphCubit, GraphState>(
-          builder: (context, state) {
-            final graphCubit = context.read<GraphCubit>();
-            return Scaffold(
-              appBar: AppBar(
-                actions: [
-                  PopupMenuButton(
-                    itemBuilder: (context) => <PopupMenuEntry<void>>[
-                      PopupMenuItem<void>(
-                        onTap: graphCubit.jumpToEgo,
-                        child: const Text('Go to Ego'),
-                      ),
-                      const PopupMenuDivider(),
-                      PopupMenuItem<void>(
-                        onTap: graphCubit.togglePositiveOnly,
-                        child: state.positiveOnly
-                            ? const Text('Show negative')
-                            : const Text('Hide negative'),
-                      ),
-                    ],
-                  ),
-                ],
-                bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(4),
-                  child: Offstage(
-                    offstage: !state.isLoading,
-                    child: const LinearProgressIndicator(),
-                  ),
+          builder: (context, state) => Scaffold(
+            appBar: AppBar(
+              actions: [
+                PopupMenuButton(
+                  itemBuilder: (context) => <PopupMenuEntry<void>>[
+                    PopupMenuItem<void>(
+                      onTap: context.read<GraphCubit>().jumpToEgo,
+                      child: const Text('Go to Ego'),
+                    ),
+                    const PopupMenuDivider(),
+                    PopupMenuItem<void>(
+                      onTap: context.read<GraphCubit>().togglePositiveOnly,
+                      child: state.positiveOnly
+                          ? const Text('Show negative')
+                          : const Text('Hide negative'),
+                    ),
+                  ],
                 ),
-                title: const Text('Graph view'),
+              ],
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(4),
+                child: Offstage(
+                  offstage: !state.isLoading,
+                  child: const LinearProgressIndicator(),
+                ),
               ),
-              body: switch (state.status) {
-                FetchStatus.isEmpty || FetchStatus.isLoading => Container(),
-                _ => GraphBody(controller: graphCubit.graphController),
-              },
-            );
-          },
+              title: const Text('Graph view'),
+            ),
+            body: switch (state.status) {
+              FetchStatus.isEmpty || FetchStatus.isLoading => Container(),
+              _ => GraphBody(
+                  controller: context.read<GraphCubit>().graphController,
+                ),
+            },
+          ),
           buildWhen: (p, c) =>
               p.status != c.status || p.positiveOnly != c.positiveOnly,
           listener: (context, state) {
