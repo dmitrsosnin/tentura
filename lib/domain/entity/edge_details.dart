@@ -9,7 +9,7 @@ final class EdgeDetails<N extends NodeBase> extends EdgeBase<N>
   const EdgeDetails({
     required super.source,
     required super.destination,
-    this.color = Colors.cyanAccent,
+    required this.color,
     this.strokeWidth = 2,
   });
 

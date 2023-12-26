@@ -76,11 +76,13 @@ class GraphBodyState extends State<GraphBody>
         edgePainter: widget.edgePainterStyle == EdgePainterStyle.animated
             ? _AnimatedHighlightedEdgePainter(
                 animation: _animationController,
+                highlightRadius: 0.15,
+                highlightColor: Colors.transparent,
               )
             : const _ColoredEdgePainter(),
         labelBuilder: widget.labeled
             ? BottomLabelBuilder(
-                labelSize: const Size(100, 20),
+                labelSize: widget.labelSize,
                 builder: (context, node) => switch (node) {
                   final UserNode node => Text(
                       node.label,
@@ -146,26 +148,27 @@ class _ColoredEdgePainter
       );
 }
 
-class _AnimatedHighlightedEdgePainter<N extends NodeBase, E extends EdgeBase<N>>
-    implements AnimatedEdgePainter<N, E> {
+class _AnimatedHighlightedEdgePainter
+    implements AnimatedEdgePainter<NodeDetails, EdgeDetails<NodeDetails>> {
   const _AnimatedHighlightedEdgePainter({
     required this.animation,
-    this.thickness = 4.0,
-    this.color = Colors.grey,
-    this.highlightColor = Colors.black,
-    this.highlightRadius = 0.15,
+    required this.highlightColor,
+    required this.highlightRadius,
   });
 
   @override
   final Animation<double> animation;
 
-  final Color color;
   final Color highlightColor;
   final double highlightRadius;
-  final double thickness;
 
   @override
-  void paint(Canvas canvas, E edge, Offset src, Offset dst) {
+  void paint(
+    Canvas canvas,
+    EdgeDetails<NodeDetails> edge,
+    Offset src,
+    Offset dst,
+  ) {
     // Replacement for speed up calculateInOutReynolds() calculation with defaults
     final highlightCenter = (1 / (pow(1 / animation.value - 1, 2) + 1)) *
             (1 + highlightRadius * 2) -
@@ -176,12 +179,12 @@ class _AnimatedHighlightedEdgePainter<N extends NodeBase, E extends EdgeBase<N>>
       src,
       dst,
       Paint()
-        ..strokeWidth = thickness
+        ..strokeWidth = edge.strokeWidth
         ..style = PaintingStyle.stroke
         ..shader = LinearGradient(
           begin: _getNormalizedAlignment(src, minPoint, maxPoint),
           end: _getNormalizedAlignment(dst, minPoint, maxPoint),
-          colors: [color, highlightColor, color],
+          colors: [edge.color, highlightColor, edge.color],
           stops: [
             (highlightCenter - highlightRadius).clamp(0, 1),
             highlightCenter.clamp(0, 1),

@@ -136,7 +136,7 @@ class GraphCubit extends Cubit<GraphState> {
         final edge = EdgeDetails<NodeDetails>(
           source: src,
           destination: dst,
-          strokeWidth: (src == _egoNode || dst == _egoNode) ? 4 : 2,
+          strokeWidth: (src == _egoNode || dst == _egoNode) ? 6 : 4,
           color: e.weight < 0
               ? Colors.redAccent
               : src == _egoNode || dst == _egoNode
