@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:tentura/app/router.dart';
-import 'package:tentura/domain/entity/edge_details.dart';
-import 'package:tentura/domain/entity/node_details.dart';
 
-import 'package:tentura/features/graph/bloc/graph_cubit.dart';
+import 'package:tentura/features/graph/domain/entity/edge_details.dart';
+import 'package:tentura/features/graph/domain/entity/node_details.dart';
 import 'package:tentura/features/graph/widget/graph_node_widget.dart';
+import 'package:tentura/features/graph/bloc/graph_cubit.dart';
 
 class GraphBody extends StatefulWidget {
   const GraphBody({

@@ -2,13 +2,14 @@ import 'dart:async';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:tentura/data/auth_repository.dart';
-import 'package:tentura/domain/entity/edge_details.dart';
-import 'package:tentura/domain/entity/node_details.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/ui/utils/state_base.dart';
+
+import 'package:tentura/features/graph/domain/entity/edge_details.dart';
+import 'package:tentura/features/graph/domain/entity/node_details.dart';
 import 'package:tentura/features/graph/data/_g/graph_fetch.req.gql.dart';
 import 'package:tentura/features/graph/data/_g/graph_fetch.var.gql.dart';
 import 'package:tentura/features/graph/data/_g/graph_fetch.data.gql.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/ui/utils/state_base.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
