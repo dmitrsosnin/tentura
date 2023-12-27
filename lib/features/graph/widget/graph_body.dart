@@ -68,7 +68,10 @@ class GraphBodyState extends State<GraphBody>
         maxScale: widget.scaleRange.dy,
         layoutAlgorithm: widget.layoutAlgorithm,
         edgePainter: _AnimatedHighlightedEdgePainter(
-          animation: _animationController,
+          animation: CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeInOutCirc,
+          ),
           highlightColor: Theme.of(context).canvasColor,
           highlightRadius: 0.15,
           isAnimated: widget.isAnimated,
@@ -153,10 +156,6 @@ class _AnimatedHighlightedEdgePainter
           ..strokeWidth = edge.strokeWidth,
       );
     }
-    // Replacement for speed up calculateInOutReynolds() calculation with defaults
-    final highlightCenter = (1 / (pow(1 / animation.value - 1, 2) + 1)) *
-            (1 + highlightRadius * 2) -
-        highlightRadius;
     final minPoint = Offset(min(src.dx, dst.dx), min(src.dy, dst.dy));
     final maxPoint = Offset(max(src.dx, dst.dx), max(src.dy, dst.dy));
     canvas.drawLine(
@@ -170,9 +169,9 @@ class _AnimatedHighlightedEdgePainter
           end: _getNormalizedAlignment(dst, minPoint, maxPoint),
           colors: [edge.color, highlightColor, edge.color],
           stops: [
-            (highlightCenter - highlightRadius).clamp(0, 1),
-            highlightCenter.clamp(0, 1),
-            (highlightCenter + highlightRadius).clamp(0, 1),
+            (animation.value - highlightRadius).clamp(0, 1),
+            animation.value.clamp(0, 1),
+            (animation.value + highlightRadius).clamp(0, 1),
           ],
         ).createShader(Rect.fromPoints(src, dst)),
     );
@@ -190,21 +189,3 @@ class _AnimatedHighlightedEdgePainter
         2 * ((point.dy - minPoint.dy) / (maxPoint.dy - minPoint.dy)) - 1,
       );
 }
-
-/// An animation easing function that adapts linear animation to human perception.
-///
-/// This function is based on the work of Maverick Reynolds, "A New Family of Easing Functions".
-/// The function idea is derived from slightly modifying the logistic equation
-/// to "ramp up" at the end: dR/dt = kR(1-R) / t(1-t)
-///
-/// The `calculateInOutReynolds` function takes in three parameters:
-/// * [value] which is the current value of the animation. It should be a value between 0 and 1.
-/// * [skewFactor] which is used to skew the speed-up towards the start or the end. If it's less than 1,
-/// speed-up is towards the start, if it's more than 1, speed-up is towards the end.
-/// * [velocity] which is the degree of speeding-up in the middle (non-linearity).
-double calculateInOutReynolds(
-  double value, [
-  double skewFactor = 1,
-  double velocity = 2,
-]) =>
-    1 / (1 + skewFactor * pow(1 / value - 1, velocity));
