@@ -146,34 +146,31 @@ class _AnimatedHighlightedEdgePainter
     EdgeDetails<NodeDetails> edge,
     Offset src,
     Offset dst,
-  ) {
-    if (!isAnimated) {
-      return canvas.drawLine(
-        src,
-        dst,
-        Paint()
-          ..color = edge.color
-          ..strokeWidth = edge.strokeWidth,
-      );
-    }
-    final rect = Rect.fromPoints(src, dst);
-    canvas.drawLine(
-      src,
-      dst,
-      Paint()
-        ..strokeWidth = edge.strokeWidth
-        ..shader = ui.Gradient.linear(
-          src,
-          dst,
-          [edge.color, highlightColor, edge.color],
-          [0, highlightRadius, highlightRadius * 2],
-          TileMode.clamp,
-          Matrix4.translationValues(
-            rect.center.dx - animation.value * rect.center.dx,
-            rect.center.dy - animation.value * rect.center.dy,
-            0,
-          ).storage,
-        ),
-    );
-  }
+  ) =>
+      isAnimated
+          ? canvas.drawLine(
+              src,
+              dst,
+              Paint()
+                ..strokeWidth = edge.strokeWidth
+                ..shader = ui.Gradient.linear(
+                  src,
+                  dst,
+                  [edge.color, highlightColor, edge.color],
+                  [0, highlightRadius, highlightRadius * 2],
+                  TileMode.clamp,
+                  Matrix4.translationValues(
+                    (dst.dx - src.dx) * animation.value,
+                    (dst.dy - src.dy) * animation.value,
+                    0,
+                  ).storage,
+                ),
+            )
+          : canvas.drawLine(
+              src,
+              dst,
+              Paint()
+                ..color = edge.color
+                ..strokeWidth = edge.strokeWidth,
+            );
 }
