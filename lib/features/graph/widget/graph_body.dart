@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
@@ -8,6 +9,30 @@ import 'package:tentura/features/graph/domain/entity/edge_details.dart';
 import 'package:tentura/features/graph/domain/entity/node_details.dart';
 import 'package:tentura/features/graph/widget/graph_node_widget.dart';
 import 'package:tentura/features/graph/bloc/graph_cubit.dart';
+
+class EaseInOutReynolds extends Curve {
+  /// An animation easing function that adapts linear animation to human perception.
+  ///
+  /// This function is based on the work of Maverick Reynolds, "A New Family of Easing Functions".
+  /// The function idea is derived from slightly modifying the logistic equation
+  /// to "ramp up" at the end: dR/dt = kR(1-R) / t(1-t)
+  ///
+  /// The `calculateInOutReynolds` function takes in three parameters:
+  /// * [t] which is the current value of the animation. It should be a value between 0 and 1.
+  /// * [skewFactor] which is used to skew the speed-up towards the start or the end. If it's less than 1,
+  /// speed-up is towards the start, if it's more than 1, speed-up is towards the end.
+  /// * [nonlinearity] which is the degree of speeding-up in the middle (non-linearity).
+
+  final double skewFactor;
+  final double nonlinearity;
+
+  const EaseInOutReynolds({this.skewFactor = 1, this.nonlinearity = 2});
+
+  @override
+  double transformInternal(double t) {
+    return 1 / (1 + skewFactor * pow(1 / t - 1, nonlinearity));
+  }
+}
 
 class GraphBody extends StatefulWidget {
   const GraphBody({
@@ -70,7 +95,7 @@ class GraphBodyState extends State<GraphBody>
         edgePainter: _AnimatedHighlightedEdgePainter(
           animation: CurvedAnimation(
             parent: _animationController,
-            curve: Curves.easeInOutCirc,
+            curve: const EaseInOutReynolds(),
           ),
           highlightColor: Theme.of(context).canvasColor,
           highlightRadius: 0.15,
@@ -157,11 +182,15 @@ class _AnimatedHighlightedEdgePainter
                   src,
                   dst,
                   [edge.color, highlightColor, edge.color],
-                  [0, highlightRadius, highlightRadius * 2],
+                  [0, highlightRadius, 2 * highlightRadius],
                   TileMode.clamp,
                   Matrix4.translationValues(
-                    (dst.dx - src.dx) * animation.value,
-                    (dst.dy - src.dy) * animation.value,
+                    (dst.dx - src.dx) *
+                        ((animation.value * (1 + highlightRadius * 2) -
+                            highlightRadius * 2)),
+                    (dst.dy - src.dy) *
+                        ((animation.value * (1 + highlightRadius * 2) -
+                            highlightRadius * 2)),
                     0,
                   ).storage,
                 ),
