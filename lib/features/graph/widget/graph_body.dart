@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
@@ -156,36 +156,24 @@ class _AnimatedHighlightedEdgePainter
           ..strokeWidth = edge.strokeWidth,
       );
     }
-    final minPoint = Offset(min(src.dx, dst.dx), min(src.dy, dst.dy));
-    final maxPoint = Offset(max(src.dx, dst.dx), max(src.dy, dst.dy));
+    final rect = Rect.fromPoints(src, dst);
     canvas.drawLine(
       src,
       dst,
       Paint()
         ..strokeWidth = edge.strokeWidth
-        ..style = PaintingStyle.stroke
-        ..shader = LinearGradient(
-          begin: _getNormalizedAlignment(src, minPoint, maxPoint),
-          end: _getNormalizedAlignment(dst, minPoint, maxPoint),
-          colors: [edge.color, highlightColor, edge.color],
-          stops: [
-            (animation.value - highlightRadius).clamp(0, 1),
-            animation.value.clamp(0, 1),
-            (animation.value + highlightRadius).clamp(0, 1),
-          ],
-        ).createShader(Rect.fromPoints(src, dst)),
+        ..shader = ui.Gradient.linear(
+          src,
+          dst,
+          [edge.color, highlightColor, edge.color],
+          [0, highlightRadius, highlightRadius * 2],
+          TileMode.clamp,
+          Matrix4.translationValues(
+            rect.center.dx - animation.value * rect.center.dx,
+            rect.center.dy - animation.value * rect.center.dy,
+            0,
+          ).storage,
+        ),
     );
   }
-
-  /// Normalize and convert to Alignment
-  /// Considering that Alignment(0,0) is the center of the canvas
-  Alignment _getNormalizedAlignment(
-    Offset point,
-    Offset minPoint,
-    Offset maxPoint,
-  ) =>
-      Alignment(
-        2 * ((point.dx - minPoint.dx) / (maxPoint.dx - minPoint.dx)) - 1,
-        2 * ((point.dy - minPoint.dy) / (maxPoint.dy - minPoint.dy)) - 1,
-      );
 }
