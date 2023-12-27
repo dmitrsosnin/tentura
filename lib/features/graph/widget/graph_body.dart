@@ -69,7 +69,7 @@ class GraphBodyState extends State<GraphBody>
         layoutAlgorithm: widget.layoutAlgorithm,
         edgePainter: _AnimatedHighlightedEdgePainter(
           animation: _animationController,
-          highlightColor: Colors.transparent,
+          highlightColor: Theme.of(context).canvasColor,
           highlightRadius: 0.15,
           isAnimated: widget.isAnimated,
         ),
