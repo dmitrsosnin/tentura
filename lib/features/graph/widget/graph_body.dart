@@ -190,6 +190,7 @@ class EaseInOutReynolds extends Curve {
   /// to "ramp up" at the end: dR/dt = kR(1-R) / t(1-t)
   ///
   /// The `calculateInOutReynolds` function takes in three parameters:
+  // ignore: comment_references
   /// * [t] which is the current value of the animation. It should be a value between 0 and 1.
   /// * [skewFactor] which is used to skew the speed-up towards the start or the end. If it's less than 1,
   /// speed-up is towards the start, if it's more than 1, speed-up is towards the end.
