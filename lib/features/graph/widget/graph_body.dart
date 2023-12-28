@@ -141,41 +141,45 @@ class _AnimatedHighlightedEdgePainter
   final Color highlightColor;
   final double highlightRadius;
 
-  Paint _getPaintForAnimatedMode(
-          EdgeDetails<NodeDetails> edge, Offset src, Offset dst) =>
-      Paint()
-        ..shader = ui.Gradient.linear(
-          src,
-          dst,
-          [edge.color, highlightColor, edge.color],
-          [0, highlightRadius, 2 * highlightRadius],
-          TileMode.clamp,
-          Matrix4.translationValues(
-            (dst.dx - src.dx) * animationShifted,
-            (dst.dy - src.dy) * animationShifted,
-            0,
-          ).storage,
-        );
-
-  /// Shifts animation "back" by the width of the highlight, to prevent
-  /// it from popping unexpectedly out of nowhere at the beginning of the edge
-  double get animationShifted =>
-      animation.value * (1 + highlightRadius * 2) - highlightRadius * 2;
-
   @override
   void paint(
     Canvas canvas,
     EdgeDetails<NodeDetails> edge,
     Offset src,
     Offset dst,
-  ) =>
+  ) {
+    if (isAnimated) {
+      /// Shifts animation "back" by the width of the highlight, to prevent
+      /// it from popping unexpectedly out of nowhere at the beginning of the edge
+      final animationShifted =
+          animation.value * (1 + highlightRadius * 2) - highlightRadius * 2;
       canvas.drawLine(
-          src,
-          dst,
-          isAnimated
-              ? _getPaintForAnimatedMode(edge, src, dst)
-              : (Paint()..color = edge.color)
-            ..strokeWidth = edge.strokeWidth);
+        src,
+        dst,
+        Paint()
+          ..shader = ui.Gradient.linear(
+            src,
+            dst,
+            [edge.color, highlightColor, edge.color],
+            [0, highlightRadius, 2 * highlightRadius],
+            TileMode.clamp,
+            Matrix4.translationValues(
+              (dst.dx - src.dx) * animationShifted,
+              (dst.dy - src.dy) * animationShifted,
+              0,
+            ).storage,
+          ),
+      );
+    } else {
+      canvas.drawLine(
+        src,
+        dst,
+        Paint()
+          ..color = edge.color
+          ..strokeWidth = edge.strokeWidth,
+      );
+    }
+  }
 }
 
 class EaseInOutReynolds extends Curve {
