@@ -10,30 +10,6 @@ import 'package:tentura/features/graph/domain/entity/node_details.dart';
 import 'package:tentura/features/graph/widget/graph_node_widget.dart';
 import 'package:tentura/features/graph/bloc/graph_cubit.dart';
 
-class EaseInOutReynolds extends Curve {
-  /// An animation easing function that adapts linear animation to human perception.
-  ///
-  /// This function is based on the work of Maverick Reynolds, "A New Family of Easing Functions".
-  /// The function idea is derived from slightly modifying the logistic equation
-  /// to "ramp up" at the end: dR/dt = kR(1-R) / t(1-t)
-  ///
-  /// The `calculateInOutReynolds` function takes in three parameters:
-  /// * [t] which is the current value of the animation. It should be a value between 0 and 1.
-  /// * [skewFactor] which is used to skew the speed-up towards the start or the end. If it's less than 1,
-  /// speed-up is towards the start, if it's more than 1, speed-up is towards the end.
-  /// * [nonlinearity] which is the degree of speeding-up in the middle (non-linearity).
-
-  final double skewFactor;
-  final double nonlinearity;
-
-  const EaseInOutReynolds({this.skewFactor = 1, this.nonlinearity = 2});
-
-  @override
-  double transformInternal(double t) {
-    return 1 / (1 + skewFactor * pow(1 / t - 1, nonlinearity));
-  }
-}
-
 class GraphBody extends StatefulWidget {
   const GraphBody({
     required this.controller,
@@ -165,6 +141,27 @@ class _AnimatedHighlightedEdgePainter
   final Color highlightColor;
   final double highlightRadius;
 
+  Paint _getPaintForAnimatedMode(
+          EdgeDetails<NodeDetails> edge, Offset src, Offset dst) =>
+      Paint()
+        ..shader = ui.Gradient.linear(
+          src,
+          dst,
+          [edge.color, highlightColor, edge.color],
+          [0, highlightRadius, 2 * highlightRadius],
+          TileMode.clamp,
+          Matrix4.translationValues(
+            (dst.dx - src.dx) * animationShifted,
+            (dst.dy - src.dy) * animationShifted,
+            0,
+          ).storage,
+        );
+
+  /// Shifts animation "back" by the width of the highlight, to prevent
+  /// it from popping unexpectedly out of nowhere at the beginning of the edge
+  double get animationShifted =>
+      animation.value * (1 + highlightRadius * 2) - highlightRadius * 2;
+
   @override
   void paint(
     Canvas canvas,
@@ -172,34 +169,34 @@ class _AnimatedHighlightedEdgePainter
     Offset src,
     Offset dst,
   ) =>
-      isAnimated
-          ? canvas.drawLine(
-              src,
-              dst,
-              Paint()
-                ..strokeWidth = edge.strokeWidth
-                ..shader = ui.Gradient.linear(
-                  src,
-                  dst,
-                  [edge.color, highlightColor, edge.color],
-                  [0, highlightRadius, 2 * highlightRadius],
-                  TileMode.clamp,
-                  Matrix4.translationValues(
-                    (dst.dx - src.dx) *
-                        ((animation.value * (1 + highlightRadius * 2) -
-                            highlightRadius * 2)),
-                    (dst.dy - src.dy) *
-                        ((animation.value * (1 + highlightRadius * 2) -
-                            highlightRadius * 2)),
-                    0,
-                  ).storage,
-                ),
-            )
-          : canvas.drawLine(
-              src,
-              dst,
-              Paint()
-                ..color = edge.color
-                ..strokeWidth = edge.strokeWidth,
-            );
+      canvas.drawLine(
+          src,
+          dst,
+          isAnimated
+              ? _getPaintForAnimatedMode(edge, src, dst)
+              : (Paint()..color = edge.color)
+            ..strokeWidth = edge.strokeWidth);
+}
+
+class EaseInOutReynolds extends Curve {
+  /// An animation easing function that adapts linear animation to human perception.
+  ///
+  /// This function is based on the work of Maverick Reynolds, "A New Family of Easing Functions".
+  /// The function idea is derived from slightly modifying the logistic equation
+  /// to "ramp up" at the end: dR/dt = kR(1-R) / t(1-t)
+  ///
+  /// The `calculateInOutReynolds` function takes in three parameters:
+  /// * [t] which is the current value of the animation. It should be a value between 0 and 1.
+  /// * [skewFactor] which is used to skew the speed-up towards the start or the end. If it's less than 1,
+  /// speed-up is towards the start, if it's more than 1, speed-up is towards the end.
+  /// * [nonlinearity] which is the degree of speeding-up in the middle (non-linearity).
+
+  final double skewFactor;
+  final double nonlinearity;
+
+  const EaseInOutReynolds({this.skewFactor = 1, this.nonlinearity = 2});
+
+  @override
+  double transformInternal(double t) =>
+      1 / (1 + skewFactor * pow(1 / t - 1, nonlinearity));
 }
