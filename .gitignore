@@ -49,3 +49,5 @@ firebase.json
 
 # Ferry generated
 **_g/
+pubspec.lock
+packages/*/pubspec.lock

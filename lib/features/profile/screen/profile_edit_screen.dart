@@ -170,14 +170,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         );
       }
     } catch (e) {
-      if (context.mounted) {
+      if (mounted) {
         await showAdaptiveDialog<void>(
           context: context,
           builder: (_) => ErrorDialog(error: e),
         );
       }
     }
-    if (context.mounted) {
+    if (mounted) {
       final response = await doRequest(
         context: context,
         request: GUserUpdateReq(
@@ -188,7 +188,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             ..has_picture = _newImagePath != null || profile.has_picture,
         ),
       );
-      if (context.mounted && response.hasNoErrors) {
+      if (mounted && response.hasNoErrors) {
         context.canPop() ? context.pop() : context.go(pathHomeProfile);
       }
     }
