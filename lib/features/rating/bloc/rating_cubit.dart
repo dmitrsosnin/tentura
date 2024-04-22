@@ -3,33 +3,35 @@ import 'package:ferry/ferry.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
+
 import 'package:tentura/features/rating/data/_g/fetch_users_rating.data.gql.dart';
 import 'package:tentura/features/rating/data/_g/fetch_users_rating.req.gql.dart';
 import 'package:tentura/features/rating/data/_g/fetch_users_rating.var.gql.dart';
-import 'package:tentura/ui/utils/state_base.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'rating_state.dart';
 
-typedef _Response = OperationResponse<GUsersRatingData, GUsersRatingVars>;
-
 class RatingCubit extends Cubit<RatingState> {
-  RatingCubit() : super(RatingState(myId: GetIt.I<AuthRepository>().myId)) {
-    _subscription = GetIt.I<Client>().request(_request).listen(
-          _onData,
-          cancelOnError: false,
-          onError: (Object? e) => emit(state.copyWith(error: e)),
-        );
+  RatingCubit({
+    required this.myId,
+  }) : super(const RatingState()) {
+    _subscription.resume();
   }
+
+  final String myId;
 
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
 
   final _request = GUsersRatingReq();
 
-  late final StreamSubscription<_Response> _subscription;
+  late final _subscription = GetIt.I<Client>().request(_request).listen(
+        _onData,
+        cancelOnError: false,
+        onError: (Object? e) => emit(state.copyWith(error: e)),
+      );
 
   List<GUsersRatingData_usersStats> _items = [];
 
@@ -59,14 +61,16 @@ class RatingCubit extends Cubit<RatingState> {
 
   void clearSearchFilter() {
     searchController.clear();
-    emit(state.copyWith(searchFilter: '', items: _items));
+    emit(state.copyWith(
+      searchFilter: '',
+      items: _items,
+    ));
   }
 
-  void _onData(_Response response) {
+  void _onData(OperationResponse<GUsersRatingData, GUsersRatingVars> response) {
     if (response.data == null) return;
-    _items = response.data!.usersStats
-        .where((e) => e.user?.id != state.myId)
-        .toList();
+    _items =
+        response.data!.usersStats.where((e) => e.user?.id != myId).toList();
     emit(state.copyWith(
       status: FetchStatus.hasData,
       items: _items,

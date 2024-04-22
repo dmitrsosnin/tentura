@@ -2,17 +2,19 @@ import 'package:http/http.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:tentura/consts.dart';
+
 class ImageRepository {
-  static String appLinkBase = '';
+  static String _appLinkBase = appLinkBase;
 
   static String getAvatarUrl(String userId) =>
-      'https://$appLinkBase/images/$userId/avatar.jpg';
+      'https://$_appLinkBase/images/$userId/avatar.jpg';
 
   static String getBeaconUrl(String userId, String beaconId) =>
-      'https://$appLinkBase/images/$userId/$beaconId.jpg';
+      'https://$_appLinkBase/images/$userId/$beaconId.jpg';
 
-  ImageRepository({required String appLinkBase}) {
-    appLinkBase = appLinkBase;
+  ImageRepository({String? appLinkBase}) {
+    if (appLinkBase != null) _appLinkBase = appLinkBase;
   }
 
   Future<({String path, String name})?> pickImage() async {
@@ -30,7 +32,7 @@ class ImageRepository {
     required String authToken,
   }) =>
       put(
-        Uri.https(appLinkBase, '/images/$userId/avatar.jpg'),
+        Uri.https(_appLinkBase, '/images/$userId/avatar.jpg'),
         headers: {
           'Content-Type': 'image/jpeg',
           'Authorization': 'Bearer $authToken',
@@ -45,7 +47,7 @@ class ImageRepository {
     required String authToken,
   }) =>
       put(
-        Uri.https(appLinkBase, '/images/$userId/$beaconId.jpg'),
+        Uri.https(_appLinkBase, '/images/$userId/$beaconId.jpg'),
         headers: {
           'Content-Type': 'image/jpeg',
           'Authorization': 'Bearer $authToken',

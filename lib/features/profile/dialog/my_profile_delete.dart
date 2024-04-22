@@ -1,8 +1,9 @@
-import 'package:tentura/app/router.dart';
-import 'package:tentura/data/auth_repository.dart';
-import 'package:tentura/features/profile/data/_g/profile_delete_by_user_id.req.gql.dart';
-
+import 'package:tentura/ui/route.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
+
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+
+import '../data/_g/profile_delete_by_user_id.req.gql.dart';
 
 class MyProfileDeleteDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showDialog<void>(
@@ -23,7 +24,8 @@ class MyProfileDeleteDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              final myId = GetIt.I<AuthRepository>().myId;
+              final authCubit = GetIt.I<AuthCubit>();
+              final myId = authCubit.state.currentAccount;
               final response = await doRequest(
                 context: context,
                 request: GProfileDeleteByUserIdReq((b) => b.vars..id = myId),
@@ -31,7 +33,7 @@ class MyProfileDeleteDialog extends StatelessWidget {
               if (response.hasErrors && context.mounted) {
                 context.pop();
               } else {
-                await GetIt.I<AuthRepository>().deleteAccount(myId);
+                await authCubit.deleteAccount(myId);
                 if (context.mounted) context.go(pathLogin);
               }
             },

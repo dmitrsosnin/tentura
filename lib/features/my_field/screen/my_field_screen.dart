@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/app/router.dart';
+import 'package:tentura/ui/route.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';

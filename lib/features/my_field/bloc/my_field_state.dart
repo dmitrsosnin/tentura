@@ -13,20 +13,21 @@ final class MyFieldState extends StateBase {
 
   @override
   MyFieldState copyWith({
-    FetchStatus? status,
     Object? error,
-    List<GBeaconFields>? beacons,
+    FetchStatus? status,
     bool? hasReachedMax,
+    List<GBeaconFields>? beacons,
   }) =>
       MyFieldState(
-        status: status ?? (error == null ? this.status : FetchStatus.hasError),
         error: error ?? this.error,
-        beacons: beacons ?? this.beacons,
+        status: status ?? (error == null ? this.status : FetchStatus.hasError),
         hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+        beacons: beacons ?? this.beacons,
       );
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
+        error,
         status,
         beacons,
         beacons.length,

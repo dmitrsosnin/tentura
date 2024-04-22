@@ -2,7 +2,6 @@ part of 'rating_cubit.dart';
 
 final class RatingState extends StateBase {
   const RatingState({
-    required this.myId,
     this.items = const [],
     this.searchFilter = '',
     this.isSortedByAsc = false,
@@ -11,7 +10,6 @@ final class RatingState extends StateBase {
     super.error,
   });
 
-  final String myId;
   final String searchFilter;
   final bool isSortedByAsc;
   final bool isSortedByEgo;
@@ -27,7 +25,6 @@ final class RatingState extends StateBase {
     Object? error,
   }) =>
       RatingState(
-        myId: myId,
         items: items ?? this.items,
         searchFilter: searchFilter ?? this.searchFilter,
         isSortedByAsc: isSortedByAsc ?? this.isSortedByAsc,

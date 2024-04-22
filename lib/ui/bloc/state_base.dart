@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
+export 'package:hydrated_bloc/hydrated_bloc.dart';
 
 enum FetchStatus { isEmpty, isLoading, hasData, hasError }
 

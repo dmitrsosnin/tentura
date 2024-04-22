@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router.dart';
-import 'package:tentura/features/graph/bloc/graph_cubit.dart';
-import 'package:tentura/features/graph/widget/graph_body.dart';
-import 'package:tentura/ui/utils/state_base.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
+
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+
+import '../bloc/graph_cubit.dart';
+import '../widget/graph_body.dart';
 
 class GraphScreen extends StatelessWidget {
   const GraphScreen({super.key});
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (_) => GraphCubit(
+        create: (context) => GraphCubit(
+          myId: GetIt.I<AuthCubit>().state.currentAccount,
           focus: GoRouterState.of(context).uri.queryParameters['focus'],
         ),
         lazy: false,

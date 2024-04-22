@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
-import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/ui/utils/state_base.dart';
 
 import 'package:tentura/features/graph/domain/entity/edge_details.dart';
 import 'package:tentura/features/graph/domain/entity/node_details.dart';
@@ -20,8 +19,11 @@ typedef _Response = OperationResponse<GGraphFetchData, GGraphFetchVars>;
 class GraphCubit extends Cubit<GraphState> {
   static const _requestId = 'FetchGraph';
 
-  GraphCubit({String? focus})
-      : super(GraphState(
+  GraphCubit({
+    required String myId,
+    String? focus,
+  })  : _myId = myId,
+        super(GraphState(
           focus: focus ?? '',
           isAnimated: true,
         )) {
@@ -41,6 +43,8 @@ class GraphCubit extends Cubit<GraphState> {
         );
   }
 
+  final String _myId;
+
   final graphController =
       GraphController<NodeDetails, EdgeDetails<NodeDetails>>();
 
@@ -54,7 +58,6 @@ class GraphCubit extends Cubit<GraphState> {
     size: 80,
   );
 
-  final _myId = GetIt.I<AuthRepository>().myId;
   final _users = <String, GGraphFetchData_gravityGraph_users_user>{};
   final _beacons = <String, GGraphFetchData_gravityGraph_beacons_beacon>{};
   final _comments = <String, GGraphFetchData_gravityGraph_comments_comment>{};

@@ -1,8 +1,7 @@
 import 'package:tentura/consts.dart';
-import 'package:tentura/app/router.dart';
-import 'package:tentura/data/auth_repository.dart';
 import 'package:tentura/data/gql/user/user_utils.dart';
 
+import 'package:tentura/ui/route.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
@@ -10,6 +9,8 @@ import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
+
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/widget/beacon_tile.dart';
 
 import '../data/_g/profile_fetch_by_user_id.req.gql.dart';
@@ -22,7 +23,7 @@ class ProfileViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myId = GetIt.I<AuthRepository>().myId;
+    final myId = GetIt.I<AuthCubit>().state.currentAccount;
     final userId = GoRouterState.of(context).uri.queryParameters['id'] ?? myId;
     final isMine = myId.isNotEmpty && userId == myId;
     return Operation(

@@ -1,8 +1,7 @@
-import 'package:tentura/app/router.dart';
-
-import 'package:tentura/data/auth_repository.dart';
-
+import 'package:tentura/ui/route.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
+
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
 class MyProfileLogoutDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showDialog<void>(
@@ -19,7 +18,7 @@ class MyProfileLogoutDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              await GetIt.I<AuthRepository>().signOut();
+              await GetIt.I<AuthCubit>().signOut();
               if (context.mounted) context.go(pathLogin);
             },
             child: const Text('Yes'),

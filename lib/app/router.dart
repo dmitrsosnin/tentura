@@ -1,13 +1,10 @@
-import 'package:get_it/get_it.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'package:tentura/data/auth_repository.dart';
+import 'package:tentura/ui/route.dart';
 import 'package:tentura/ui/screens/error_screen.dart';
 import 'package:tentura/features/home/home_screen.dart';
-import 'package:tentura/features/auth/login_screen.dart';
+import 'package:tentura/features/auth/ui/login_screen.dart';
 import 'package:tentura/features/updates/updates_screen.dart';
 import 'package:tentura/features/graph/screen/graph_screen.dart';
 import 'package:tentura/features/rating/screen/rating_screen.dart';
@@ -17,25 +14,9 @@ import 'package:tentura/features/profile/screen/profile_edit_screen.dart';
 import 'package:tentura/features/beacon/screen/beacon_create_screen.dart';
 import 'package:tentura/features/beacon/screen/beacon_view_screen.dart';
 
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+
 export 'package:go_router/go_router.dart';
-
-const pathLogin = '/login';
-
-const pathHomeField = '/field';
-const pathHomeUpdates = '/updates';
-const pathHomeProfile = '/profile';
-
-const pathGraph = '/graph';
-const pathRating = '/rating';
-
-const pathProfileView = '/profile/view';
-const pathProfileEdit = '/profile/edit';
-
-const pathBeaconView = '/beacon/view';
-const pathBeaconCreate = '/beacon/create';
-
-final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
-final homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 
 final router = GoRouter(
   initialLocation: pathLogin,
@@ -44,12 +25,12 @@ final router = GoRouter(
   observers: [SentryNavigatorObserver()],
   errorBuilder: (context, state) => const ErrorScreen(),
   redirect: (context, state) =>
-      GetIt.I<AuthRepository>().isAuthenticated ? null : pathLogin,
+      GetIt.I<AuthCubit>().state.isAuthenticated ? null : pathLogin,
   routes: [
     GoRoute(
       path: pathLogin,
       redirect: (context, state) =>
-          GetIt.I<AuthRepository>().isAuthenticated ? pathHomeField : null,
+          GetIt.I<AuthCubit>().state.isAuthenticated ? pathHomeField : null,
       builder: (context, state) => const LogInScreen(),
       parentNavigatorKey: rootNavigatorKey,
     ),

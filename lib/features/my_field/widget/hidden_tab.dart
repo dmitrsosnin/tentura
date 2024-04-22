@@ -1,11 +1,12 @@
-import 'package:tentura/data/auth_repository.dart';
-import 'package:tentura/features/beacon/data/_g/beacon_unhide_by_id.req.gql.dart';
-import 'package:tentura/features/my_field/data/_g/beacon_fetch_hidden_by_user_id.req.gql.dart';
-
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/empty_list_scroll_view.dart';
+
 import 'package:tentura/features/beacon/widget/beacon_tile.dart';
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/beacon/data/_g/beacon_unhide_by_id.req.gql.dart';
+
+import '../data/_g/beacon_fetch_hidden_by_user_id.req.gql.dart';
 
 class HiddenTab extends StatelessWidget {
   static const _requestId = 'BeaconFetchHidden';
@@ -15,7 +16,7 @@ class HiddenTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final client = GetIt.I<Client>();
-    final myId = GetIt.I<AuthRepository>().myId;
+    final myId = GetIt.I<AuthCubit>().state.currentAccount;
     return Operation(
       client: client,
       operationRequest: GBeaconFetchHiddenByUserIdReq(

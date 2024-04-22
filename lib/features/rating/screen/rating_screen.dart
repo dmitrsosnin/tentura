@@ -1,16 +1,19 @@
-import 'package:tentura/app/router.dart';
+import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ferry_utils.dart';
+
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/rating/bloc/rating_cubit.dart';
 import 'package:tentura/features/rating/widget/rating_list_tile.dart';
-// import 'package:tentura/ui/widget/avatar_image.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
 
 class RatingScreen extends StatelessWidget {
   const RatingScreen({super.key});
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => RatingCubit(),
+        create: (context) => RatingCubit(
+          myId: GetIt.I<AuthCubit>().state.currentAccount,
+        ),
         child: Scaffold(
           appBar: AppBar(
             actions: [
@@ -77,7 +80,6 @@ class RatingScreen extends StatelessWidget {
           ),
           body: BlocBuilder<RatingCubit, RatingState>(
             builder: (context, state) {
-              // final myAvatar = AvatarImage(userId: state.myId, size: 40);
               return ListView.separated(
                 padding: paddingH20,
                 itemCount: state.items.length,
@@ -90,7 +92,6 @@ class RatingScreen extends StatelessWidget {
                       queryParameters: {'id': item.user?.id},
                     ).toString()),
                     child: RatingListTile(
-                      // myAvatar: myAvatar,
                       egoScore: item.egoScore,
                       userScore: item.nodeScore,
                       user: item.user!,

@@ -1,5 +1,4 @@
 import 'package:tentura/app/router.dart';
-import 'package:tentura/data/auth_repository.dart';
 import 'package:tentura/data/gql/user/user_utils.dart';
 import 'package:tentura/data/geolocation_repository.dart';
 import 'package:tentura/data/gql/beacon/beacon_utils.dart';
@@ -13,9 +12,11 @@ import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
 
-import 'package:tentura/features/beacon/widget/beacon_control_row.dart';
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/comment/widget/new_comment_input.dart';
 import 'package:tentura/features/comment/widget/comments_expansion_tile.dart';
+
+import '../widget/beacon_control_row.dart';
 
 class BeaconViewScreen extends StatelessWidget {
   static const _requestId = 'FetchBeaconById';
@@ -56,7 +57,7 @@ class BeaconViewScreen extends StatelessWidget {
                 : ErrorCenterText(response: response, error: error),
           );
         }
-        final isMine = beacon.author.id == GetIt.I<AuthRepository>().myId;
+        final isMine = GetIt.I<AuthCubit>().state.checkIfIsMe(beacon.author.id);
         return Scaffold(
           appBar: AppBar(title: const Text('Beacon')),
           bottomSheet: NewCommentInput(

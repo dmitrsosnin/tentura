@@ -1,6 +1,6 @@
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/ui/utils/state_base.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/empty_list_scroll_view.dart';
 import 'package:tentura/features/beacon/widget/beacon_tile.dart';
 import 'package:tentura/features/my_field/bloc/my_field_cubit.dart';

@@ -1,19 +1,19 @@
 import 'dart:io';
 import 'package:tentura/consts.dart';
-import 'package:tentura/app/router.dart';
-
-import 'package:tentura/data/auth_repository.dart';
-import 'package:tentura/data/image_repository.dart';
 import 'package:tentura/data/gql/user/user_utils.dart';
+import 'package:tentura/data/repository/image_repository.dart';
 import 'package:tentura/data/gql/user/_g/user_update.req.gql.dart';
 import 'package:tentura/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
 
+import 'package:tentura/ui/route.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/dialog/error_dialog.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
+
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({super.key});
@@ -23,6 +23,8 @@ class ProfileEditScreen extends StatefulWidget {
 }
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
+  final _authCubit = GetIt.I<AuthCubit>();
+
   String? _title;
   String? _description;
   String? _newImagePath;
@@ -31,7 +33,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   Widget build(BuildContext context) => Operation(
         client: GetIt.I<Client>(),
         operationRequest: GUserFetchByIdReq(
-          (b) => b..vars.id = GetIt.I<AuthRepository>().myId,
+          (b) => b..vars.id = _authCubit.state.currentAccount,
         ),
         builder: (context, response, error) {
           final profile = response?.data?.user_by_pk;
@@ -160,12 +162,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         ),
       );
     }
-    final authRepository = GetIt.I<AuthRepository>();
     try {
       if (_newImagePath != null) {
         await GetIt.I<ImageRepository>().putAvatar(
-          userId: authRepository.myId,
-          authToken: (await authRepository.freshLink.token)!.accessToken,
+          userId: _authCubit.state.currentAccount,
+          authToken: await _authCubit.accessToken,
           image: await File(_newImagePath!).readAsBytes(),
         );
       }
@@ -182,7 +183,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         context: context,
         request: GUserUpdateReq(
           (b) => b.vars
-            ..id = authRepository.myId
+            ..id = _authCubit.state.currentAccount
             ..title = _title ?? profile.title
             ..description = _description ?? profile.description
             ..has_picture = _newImagePath != null || profile.has_picture,
