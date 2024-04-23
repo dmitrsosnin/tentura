@@ -65,6 +65,7 @@ dev_dependencies:
   very_good_analysis: ^5.1.0
   ferry_generator: ^0.9.1-dev.2
   build_runner: ^2.4.6
+  bloc_test: ^9.1.7
 
 flutter:
   uses-material-design: true

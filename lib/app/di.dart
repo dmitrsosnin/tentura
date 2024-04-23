@@ -19,7 +19,7 @@ class DI {
     GetIt.I.registerSingleton(await GeolocationRepository().init());
 
     GetIt.I.registerSingleton(
-      await AuthCubit().init(),
+      AuthCubit(),
       dispose: (i) async => i.close(),
     );
 

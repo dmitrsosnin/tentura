@@ -1,4 +1,6 @@
-import 'package:tentura/ui/bloc/state_base.dart';
+import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import '../../data/auth_service.dart';
 import '../../domain/exception.dart';
@@ -8,17 +10,23 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'auth_state.dart';
 
-// TBD: if code obfuscation is needed then visit
-//   https://github.com/felangel/bloc/issues/3255
+//
+// TBD: if code obfuscation is needed then visit https://github.com/felangel/bloc/issues/3255
+//
 class AuthCubit extends HydratedCubit<AuthState> {
   AuthCubit({
-    AuthService? authRepository,
-  })  : _authService = authRepository ?? AuthService(),
-        super(const AuthState());
+    AuthService? authService,
+  })  : _authService = authService ?? AuthService(),
+        super(const AuthState()) {
+    hydrate();
+    if (isAuthenticated) _authService.signIn(state.accounts[id]!);
+  }
 
   final AuthService _authService;
 
   Future<String> get accessToken => _authService.accessToken;
+
+  bool get isAuthenticated => state.currentAccount.isNotEmpty;
 
   @override
   AuthState? fromJson(Map<String, dynamic> json) =>
@@ -33,48 +41,52 @@ class AuthCubit extends HydratedCubit<AuthState> {
     return super.close();
   }
 
-  Future<AuthCubit> init() async {
-    hydrate();
-    if (state.isAuthenticated) await signIn(id);
-    return this;
-  }
-
   Future<void> addAccount(String? seed) async {
     if (seed == null) return;
     if (state.accounts.values.contains(seed)) {
-      return emit(state.copyWith(
-        error: const SeedExistsException(),
-      ));
+      return emit(state.setError(const SeedExistsException()));
     }
-    emit(state.copyWith(status: FetchStatus.isLoading));
+    emit(state.setLoading());
     try {
       final id = await _authService.signIn(seed);
-      emit(state.addAccount(id, seed));
+      emit(AuthState(
+        currentAccount: id,
+        accounts: {
+          ...state.accounts,
+          id: seed,
+        },
+      ));
     } catch (e) {
-      emit(state.copyWith(error: e));
+      emit(state.setError(e));
     }
   }
 
   Future<void> signUp() async {
-    emit(state.copyWith(status: FetchStatus.isLoading));
+    emit(state.setLoading());
     try {
       final (:id, :seed) = await _authService.signUp();
-      emit(state.addAccount(id, seed));
+      emit(AuthState(
+        currentAccount: id,
+        accounts: {
+          ...state.accounts,
+          id: seed,
+        },
+      ));
     } catch (e) {
-      emit(state.copyWith(error: e));
+      emit(state.setError(e));
     }
   }
 
   Future<void> signIn(String id) async {
-    emit(state.copyWith(status: FetchStatus.isLoading));
+    emit(state.setLoading());
     try {
       await _authService.signIn(state.accounts[id]!);
-      emit(state.copyWith(
-        status: FetchStatus.hasData,
+      emit(AuthState(
         currentAccount: id,
+        accounts: state.accounts,
       ));
     } catch (e) {
-      emit(state.copyWith(error: e));
+      emit(state.setError(e));
     }
   }
 
@@ -82,24 +94,32 @@ class AuthCubit extends HydratedCubit<AuthState> {
     try {
       await _authService.signOut();
     } finally {
-      emit(state.copyWith(
-        status: FetchStatus.hasData,
-        currentAccount: '',
+      emit(AuthState(
+        accounts: state.accounts,
       ));
     }
   }
 
   /// Remove account from local storage
-  void removeAccount(String id) => emit(state.removeAccount(id));
+  void removeAccount(String id) {
+    state.accounts.remove(id);
+    emit(AuthState(
+      accounts: {...state.accounts},
+      currentAccount: state.currentAccount,
+    ));
+  }
 
   /// Remove account from remote server and local storage
   Future<void> deleteAccount(String id) async {
-    emit(state.copyWith(status: FetchStatus.isLoading));
+    emit(state.setLoading());
     try {
       await _authService.delete();
-      removeAccount(id);
+      state.accounts.remove(id);
+      emit(AuthState(
+        accounts: {...state.accounts},
+      ));
     } catch (e) {
-      emit(state.copyWith(error: e));
+      emit(state.setError(e));
     }
   }
 }
