@@ -1,21 +1,20 @@
 part of 'auth_cubit.dart';
 
-class AuthState extends Equatable {
+final class AuthState extends StateBase {
   const AuthState({
     this.currentAccount = '',
     this.accounts = const {},
-    this.isLoading = false,
-    this.error,
+    super.status,
+    super.error,
   });
 
-  factory AuthState.fromJson(Map<String, dynamic> json) => AuthState(
-        currentAccount: json['currentAccount'] as String? ?? '',
-        accounts: json['accounts'] as Map<String, String>? ?? {},
+  factory AuthState.fromJson(Map<dynamic, dynamic>? json) => AuthState(
+        currentAccount: json?['currentAccount'] as String? ?? '',
+        accounts: {
+          for (final e in (json?['accounts'] as Map? ?? {}).entries)
+            e.key.toString(): e.value.toString(),
+        },
       );
-
-  final Object? error;
-
-  final bool isLoading;
 
   final String currentAccount;
 
@@ -24,34 +23,40 @@ class AuthState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isLoading,
         currentAccount,
+        status,
         error,
         accounts,
       ];
 
-  Map<String, dynamic>? toJson(AuthState state) =>
-      state.currentAccount == currentAccount &&
-              mapEquals(state.accounts, accounts)
-          ? null
-          : {
-              'accounts': accounts,
-              'currentAccount': currentAccount,
-            };
+  Map<String, dynamic>? toJson(AuthState state) => {
+        'currentAccount': currentAccount,
+        'accounts': accounts,
+      };
 
   bool checkIfIsMe(String id) => id == currentAccount;
 
   bool checkIfIsNotMe(String id) => id != currentAccount;
 
+  AuthState copyWith({
+    String? currentAccount,
+    Map<String, String>? accounts,
+  }) =>
+      AuthState(
+        currentAccount: currentAccount ?? this.currentAccount,
+        accounts: accounts ?? this.accounts,
+      );
+
   AuthState setError(Object error) => AuthState(
         error: error,
         accounts: accounts,
         currentAccount: currentAccount,
+        status: FetchStatus.isFailure,
       );
 
   AuthState setLoading() => AuthState(
-        isLoading: true,
         accounts: accounts,
         currentAccount: currentAccount,
+        status: FetchStatus.isLoading,
       );
 }

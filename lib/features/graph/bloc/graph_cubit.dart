@@ -156,11 +156,7 @@ class GraphCubit extends Cubit<GraphState> {
         if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
       }
       if (missedIds.isNotEmpty) emit(state.copyWith(error: missedIds));
-      emit(state.copyWith(
-        status: mutator.controller.edges.isEmpty
-            ? FetchStatus.isEmpty
-            : FetchStatus.hasData,
-      ));
+      emit(state.copyWith(status: FetchStatus.isSuccess));
     });
   }
 

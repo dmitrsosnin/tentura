@@ -1,7 +1,6 @@
+import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/ui/bloc/state_base.dart';
-import 'package:tentura/ui/widget/empty_list_scroll_view.dart';
 import 'package:tentura/features/beacon/widget/beacon_tile.dart';
 import 'package:tentura/features/my_field/bloc/my_field_cubit.dart';
 import 'package:tentura/features/beacon/dialog/beacon_hide_dialog.dart';
@@ -20,12 +19,11 @@ class FeedTab extends StatelessWidget {
       builder: (context, state) => RefreshIndicator.adaptive(
         onRefresh: context.read<MyFieldCubit>().fetch,
         child: switch (state.status) {
-          FetchStatus.hasError => const Center(child: Text('Error')),
-          FetchStatus.isEmpty => const EmptyListScrollView(),
+          FetchStatus.isFailure => const Center(child: Text('Error')),
           FetchStatus.isLoading => const Center(
               child: CircularProgressIndicator.adaptive(),
             ),
-          FetchStatus.hasData => ListView.builder(
+          FetchStatus.isSuccess => ListView.builder(
               padding: paddingAll20,
               itemCount: state.beacons.length,
               itemBuilder: (context, i) {

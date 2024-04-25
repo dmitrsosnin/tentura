@@ -12,7 +12,10 @@ class DI {
   Future<bool> init() async {
     if (_isInited) return _isInited;
 
-    await HydratedDbService.init();
+    GetIt.I.registerSingleton(
+      await HydratedStorageService().init(),
+      dispose: (i) => i.close(),
+    );
 
     GetIt.I.registerSingleton(ImageRepository());
 
@@ -20,7 +23,7 @@ class DI {
 
     GetIt.I.registerSingleton(
       AuthCubit(),
-      dispose: (i) async => i.close(),
+      dispose: (i) => i.close(),
     );
 
     return _isInited = true;

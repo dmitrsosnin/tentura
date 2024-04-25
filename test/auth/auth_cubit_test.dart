@@ -1,30 +1,34 @@
-import 'dart:io';
+// ignore_for_file: avoid_print
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
+import '../_mock/hydrated_db_mock.dart';
 import 'mock/auth_service_mock.dart';
 
 void main() async {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  // TestWidgetsFlutterBinding.ensureInitialized();
 
   group(
     'AuthCubit test group: ',
     () {
       late AuthCubit authCubit;
 
-      setUp(() async {
-        HydratedBloc.storage = await HydratedStorage.build(
-          storageDirectory: Directory.systemTemp,
-        );
-        authCubit = AuthCubit(authService: AuthServiceMock());
+      setUp(() {
+        print('SetUpGroup');
+        HydratedBloc.storage = HydratedStorageMock();
+        authCubit = AuthCubit(
+          authService: AuthServiceMock(),
+          trySignIn: false,
+        )..stream.listen(print);
       });
 
-      tearDown(() async {
-        await authCubit.close();
-        await HydratedBloc.storage.close();
+      tearDown(() {
+        print('TearDownGroup');
+        authCubit.close();
       });
 
       blocTest<AuthCubit, AuthState>(

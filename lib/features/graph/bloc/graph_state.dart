@@ -5,7 +5,7 @@ final class GraphState extends StateBase {
     required this.focus,
     this.isAnimated = false,
     this.positiveOnly = true,
-    super.status = FetchStatus.isEmpty,
+    super.status,
     super.error,
   });
 
@@ -13,7 +13,6 @@ final class GraphState extends StateBase {
   final bool isAnimated;
   final bool positiveOnly;
 
-  @override
   GraphState copyWith({
     String? focus,
     bool? isAnimated,
@@ -25,7 +24,7 @@ final class GraphState extends StateBase {
         focus: focus ?? this.focus,
         isAnimated: isAnimated ?? this.isAnimated,
         positiveOnly: positiveOnly ?? this.positiveOnly,
-        status: status ?? (error == null ? this.status : FetchStatus.hasError),
+        status: status ?? (error == null ? this.status : FetchStatus.isFailure),
         error: error ?? this.error,
       );
 

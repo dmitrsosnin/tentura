@@ -25,7 +25,6 @@ class AuthService {
         ]),
       ),
       dispose: (i) async => i.dispose(),
-      instanceName: serverName,
     );
   }
 

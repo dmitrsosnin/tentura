@@ -16,11 +16,9 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'my_field_state.dart';
 
 class MyFieldCubit extends Cubit<MyFieldState> {
-  MyFieldCubit()
-      : super(const MyFieldState(
-          status: FetchStatus.isLoading,
-        )) {
+  MyFieldCubit({bool needFetch = true}) : super(const MyFieldState()) {
     _subscription.resume();
+    if (needFetch) fetch();
   }
 
   final _request = GBeaconFetchMyFieldReq();
@@ -47,7 +45,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
           if (value.hasNoErrors) {
             state.beacons.removeWhere((e) => e.id == beaconId);
             emit(state.copyWith(
-              status: FetchStatus.hasData,
+              status: FetchStatus.isSuccess,
             ));
           }
           return value.hasNoErrors;
@@ -68,7 +66,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
                 if (value.hasNoErrors) {
                   state.beacons.removeWhere((e) => e.id == beaconId);
                   emit(state.copyWith(
-                    status: FetchStatus.hasData,
+                    status: FetchStatus.isSuccess,
                   ));
                 }
                 return value.hasNoErrors;
@@ -85,11 +83,11 @@ class MyFieldCubit extends Cubit<MyFieldState> {
       ));
     } else if (response.hasErrors) {
       emit(state.copyWith(
-        status: FetchStatus.hasError,
+        status: FetchStatus.isFailure,
       ));
     } else if (response.data != null) {
       emit(state.copyWith(
-        status: FetchStatus.hasData,
+        status: FetchStatus.isSuccess,
         beacons: response.data!.scores
             .where((e) => e.beacon != null)
             .map<GBeaconFields>((e) => e.beacon as GBeaconFields)

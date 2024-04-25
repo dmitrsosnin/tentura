@@ -6,7 +6,7 @@ final class RatingState extends StateBase {
     this.searchFilter = '',
     this.isSortedByAsc = false,
     this.isSortedByEgo = false,
-    super.status = FetchStatus.isEmpty,
+    super.status,
     super.error,
   });
 
@@ -15,7 +15,6 @@ final class RatingState extends StateBase {
   final bool isSortedByEgo;
   final List<GUsersRatingData_usersStats> items;
 
-  @override
   RatingState copyWith({
     List<GUsersRatingData_usersStats>? items,
     String? searchFilter,
@@ -29,7 +28,7 @@ final class RatingState extends StateBase {
         searchFilter: searchFilter ?? this.searchFilter,
         isSortedByAsc: isSortedByAsc ?? this.isSortedByAsc,
         isSortedByEgo: isSortedByEgo ?? this.isSortedByEgo,
-        status: status ?? (error == null ? this.status : FetchStatus.hasError),
+        status: status ?? (error == null ? this.status : FetchStatus.isFailure),
         error: error ?? this.error,
       );
 

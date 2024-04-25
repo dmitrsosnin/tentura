@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:equatable/equatable.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/auth_service.dart';
 import '../../domain/exception.dart';
@@ -11,15 +9,18 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'auth_state.dart';
 
 //
-// TBD: if code obfuscation is needed then visit https://github.com/felangel/bloc/issues/3255
+// If code obfuscation is needed then visit https://github.com/felangel/bloc/issues/3255
 //
 class AuthCubit extends HydratedCubit<AuthState> {
   AuthCubit({
+    bool trySignIn = true,
     AuthService? authService,
   })  : _authService = authService ?? AuthService(),
         super(const AuthState()) {
     hydrate();
-    if (isAuthenticated) _authService.signIn(state.accounts[id]!);
+    if (trySignIn && isAuthenticated) {
+      _authService.signIn(state.accounts[state.currentAccount]!);
+    }
   }
 
   final AuthService _authService;
@@ -29,8 +30,7 @@ class AuthCubit extends HydratedCubit<AuthState> {
   bool get isAuthenticated => state.currentAccount.isNotEmpty;
 
   @override
-  AuthState? fromJson(Map<String, dynamic> json) =>
-      json.isEmpty ? null : AuthState.fromJson(json);
+  AuthState fromJson(Map<String, dynamic> json) => AuthState.fromJson(json);
 
   @override
   Map<String, dynamic>? toJson(AuthState state) => this.state.toJson(state);

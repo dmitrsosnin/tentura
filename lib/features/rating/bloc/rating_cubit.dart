@@ -72,7 +72,7 @@ class RatingCubit extends Cubit<RatingState> {
     _items =
         response.data!.usersStats.where((e) => e.user?.id != myId).toList();
     emit(state.copyWith(
-      status: FetchStatus.hasData,
+      status: FetchStatus.isSuccess,
       items: _items,
     ));
     _sort();

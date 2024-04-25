@@ -19,7 +19,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => FutureBuilder(
         future: di.init(),
         builder: (context, snapshot) => snapshot.hasError
-            ? ErrorCenterText(error: snapshot.error.toString())
+            ? Directionality(
+                textDirection: TextDirection.ltr,
+                child: ErrorCenterText(error: snapshot.error.toString()),
+              )
             : snapshot.hasData
                 ? MaterialApp.router(
                     title: 'Tentura',

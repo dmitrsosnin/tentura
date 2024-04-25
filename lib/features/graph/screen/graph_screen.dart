@@ -41,14 +41,14 @@ class GraphScreen extends StatelessWidget {
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(4),
                 child: Offstage(
-                  offstage: !state.isLoading,
+                  offstage: !state.status.isLoading,
                   child: const LinearProgressIndicator(),
                 ),
               ),
               title: const Text('Graph view'),
             ),
             body: switch (state.status) {
-              FetchStatus.isEmpty || FetchStatus.isLoading => Container(),
+              FetchStatus.isLoading => Container(),
               _ => GraphBody(
                   controller: context.read<GraphCubit>().graphController,
                   isAnimated: state.isAnimated,
@@ -63,7 +63,7 @@ class GraphScreen extends StatelessWidget {
               backgroundColor: Theme.of(context).colorScheme.errorContainer,
             ));
           },
-          listenWhen: (p, c) => c.hasError,
+          listenWhen: (p, c) => c.status.isFailure,
         ),
       );
 }

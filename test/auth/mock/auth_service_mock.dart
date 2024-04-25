@@ -1,8 +1,8 @@
 import 'package:tentura/features/auth/data/auth_service.dart';
 
 class AuthServiceMock implements AuthService {
-  static const mockId = 'Uc1158424318a';
-  static const mockSeed = 'seed';
+  static const mockId = 'Ua42859384644';
+  static const mockSeed = '4vegTLcjwnxNrMLS3BRFfe1p0lO6VgY5EPNuAcq5ssI=';
 
   @override
   String get serverName => 'mock';

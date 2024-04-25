@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class HydratedDbService {
+class HydratedStorageService {
   static const _iOptions = IOSOptions(
     accessibility: KeychainAccessibility.first_unlock_this_device,
   );
@@ -16,7 +16,7 @@ class HydratedDbService {
   );
   static const _key = 'kSeed';
 
-  static Future<void> init() async {
+  Future<HydratedStorageService> init() async {
     const secureStorage = FlutterSecureStorage();
     final encodedKey = await secureStorage.read(
       key: _key,
@@ -38,5 +38,8 @@ class HydratedDbService {
       storageDirectory: await getApplicationDocumentsDirectory(),
       encryptionCipher: HydratedAesCipher(key),
     );
+    return this;
   }
+
+  Future<void> close() => HydratedBloc.storage.close();
 }
