@@ -1,17 +1,18 @@
 import 'dart:io';
-import 'package:latlong2/latlong.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/app/router.dart';
+import 'package:tentura/domain/entity/lat_long.dart';
 import 'package:tentura/data/repository/image_repository.dart';
-import 'package:tentura/data/geolocation_repository.dart';
+import 'package:tentura/data/repository/geolocation_repository.dart';
 import 'package:tentura/data/gql/beacon/_g/beacon_create.req.gql.dart';
-import 'package:tentura/ui/dialog/choose_location_dialog.dart';
 import 'package:tentura/ui/dialog/error_dialog.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+
+import '../dialog/choose_location_dialog.dart';
 
 class BeaconCreateScreen extends StatefulWidget {
   const BeaconCreateScreen({super.key});

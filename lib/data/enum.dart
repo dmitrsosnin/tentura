@@ -1,4 +1,0 @@
-enum PreferencesKeys {
-  kAccounts,
-  kCurrentId,
-}

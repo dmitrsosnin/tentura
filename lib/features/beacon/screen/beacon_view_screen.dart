@@ -1,8 +1,8 @@
 import 'package:tentura/app/router.dart';
 import 'package:tentura/data/gql/user/user_utils.dart';
-import 'package:tentura/data/geolocation_repository.dart';
-import 'package:tentura/data/gql/beacon/beacon_utils.dart';
+import 'package:tentura/data/repository/geolocation_repository.dart';
 import 'package:tentura/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
+import 'package:tentura/data/gql/beacon/beacon_utils.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';

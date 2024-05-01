@@ -1,6 +1,6 @@
-import 'package:tentura/data/geolocation_repository.dart';
 import 'package:tentura/data/service/hydrated_db_service.dart';
 import 'package:tentura/data/repository/image_repository.dart';
+import 'package:tentura/data/repository/geolocation_repository.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 

@@ -22,7 +22,9 @@ final router = GoRouter(
   initialLocation: pathLogin,
   navigatorKey: rootNavigatorKey,
   debugLogDiagnostics: kDebugMode,
-  observers: [SentryNavigatorObserver()],
+  observers: [
+    SentryNavigatorObserver(),
+  ],
   errorBuilder: (context, state) => const ErrorScreen(),
   redirect: (context, state) =>
       GetIt.I<AuthCubit>().isAuthenticated ? null : pathLogin,

@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import 'package:tentura/app/router.dart';
-import 'package:tentura/data/geolocation_repository.dart';
+import 'package:tentura/domain/entity/lat_long.dart';
+import 'package:tentura/data/repository/geolocation_repository.dart';
 
 class ChooseLocationDialog extends StatefulWidget {
   final LatLng? center;
@@ -38,8 +38,8 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
         body: FlutterMap(
           mapController: _mapController,
           options: MapOptions(
-            initialZoom: widget.center == null ? 4 : 10,
             maxZoom: 12,
+            initialZoom: widget.center == null ? 4 : 10,
             initialCenter: widget.center ?? const LatLng(0, 0),
             interactionOptions: const InteractionOptions(
               flags: InteractiveFlag.all & ~InteractiveFlag.rotate,

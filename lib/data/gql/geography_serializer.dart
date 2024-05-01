@@ -1,5 +1,6 @@
 import 'package:built_value/serializer.dart';
-import 'package:latlong2/latlong.dart';
+
+import 'package:tentura/domain/entity/lat_long.dart';
 
 class GeographySerializer implements PrimitiveSerializer<LatLng> {
   @override
