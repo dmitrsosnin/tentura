@@ -31,8 +31,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "com.intersubjective.tentura"
     compileSdk 34
-    ndkVersion "25.1.8937393"
-    // ndkVersion flutter.ndkVersion
+    ndkVersion "26.1.10909125"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

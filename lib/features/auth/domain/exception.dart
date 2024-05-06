@@ -10,6 +10,9 @@ sealed class AuthenticationException implements Exception {
   const AuthenticationException([this.description]);
 
   final String? description;
+
+  @override
+  String toString() => description ?? super.toString();
 }
 
 final class AuthenticationHttpException extends AuthenticationException {

@@ -5,6 +5,16 @@ import 'package:share_plus/share_plus.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 
 class ShareCodeDialog extends StatelessWidget {
+  static Future<void> show(
+    BuildContext context, {
+    required String id,
+    required String link,
+  }) =>
+      showDialog(
+        context: context,
+        builder: (context) => ShareCodeDialog(id: id, link: link),
+      );
+
   final String id;
   final String link;
 

@@ -4,18 +4,18 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:tentura/ui/utils/ui_consts.dart';
 
-class AccountSeedDialog extends StatelessWidget {
-  static Future<bool?> show(
+class ShowSeedDialog extends StatelessWidget {
+  static Future<void> show(
     BuildContext context, {
     required String id,
     required String seed,
   }) =>
-      showDialog<bool>(
+      showDialog(
         context: context,
-        builder: (context) => AccountSeedDialog(id: id, seed: seed),
+        builder: (context) => ShowSeedDialog(id: id, seed: seed),
       );
 
-  const AccountSeedDialog({
+  const ShowSeedDialog({
     required this.id,
     required this.seed,
     super.key,

@@ -77,16 +77,14 @@ class ProfileViewScreen extends StatelessWidget {
                               // Share
                               IconButton(
                                 icon: const Icon(Icons.share_outlined),
-                                onPressed: () => showDialog<void>(
-                                  context: context,
-                                  builder: (context) => ShareCodeDialog(
-                                    id: userId,
-                                    link: Uri.https(
-                                      appLinkBase,
-                                      pathHomeProfile,
-                                      {'id': userId},
-                                    ).toString(),
-                                  ),
+                                onPressed: () => ShareCodeDialog.show(
+                                  context,
+                                  id: userId,
+                                  link: Uri.https(
+                                    appLinkBase,
+                                    pathHomeProfile,
+                                    {'id': userId},
+                                  ).toString(),
                                 ),
                               ),
                               // More

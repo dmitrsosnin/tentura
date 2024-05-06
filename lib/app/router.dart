@@ -27,12 +27,10 @@ final router = GoRouter(
   ],
   errorBuilder: (context, state) => const ErrorScreen(),
   redirect: (context, state) =>
-      GetIt.I<AuthCubit>().isAuthenticated ? null : pathLogin,
+      GetIt.I<AuthCubit>().state.isAuthenticated ? null : pathLogin,
   routes: [
     GoRoute(
       path: pathLogin,
-      redirect: (context, state) =>
-          GetIt.I<AuthCubit>().isAuthenticated ? pathHomeField : null,
       builder: (context, state) => const LogInScreen(),
       parentNavigatorKey: rootNavigatorKey,
     ),

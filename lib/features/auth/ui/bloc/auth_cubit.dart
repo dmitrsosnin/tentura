@@ -18,7 +18,7 @@ class AuthCubit extends HydratedCubit<AuthState> {
   })  : _authService = authService ?? AuthService(),
         super(const AuthState()) {
     hydrate();
-    if (trySignIn && isAuthenticated) {
+    if (trySignIn && state.isAuthenticated) {
       _authService.signIn(state.accounts[state.currentAccount]!);
     }
   }
@@ -27,7 +27,7 @@ class AuthCubit extends HydratedCubit<AuthState> {
 
   Future<String> get accessToken => _authService.accessToken;
 
-  bool get isAuthenticated => state.currentAccount.isNotEmpty;
+  // bool get isAuthenticated => state.currentAccount.isNotEmpty;
 
   @override
   AuthState fromJson(Map<String, dynamic> json) => AuthState.fromJson(json);

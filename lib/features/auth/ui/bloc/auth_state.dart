@@ -24,10 +24,14 @@ final class AuthState extends StateBase {
   @override
   List<Object?> get props => [
         currentAccount,
+        accounts,
         status,
         error,
-        accounts,
       ];
+
+  bool get isAuthenticated => currentAccount.isNotEmpty;
+
+  bool get isNotAuthenticated => currentAccount.isEmpty;
 
   Map<String, dynamic>? toJson(AuthState state) => {
         'currentAccount': currentAccount,

@@ -55,9 +55,9 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
   final theme = Theme.of(context);
   ScaffoldMessenger.of(context).clearSnackBars();
   return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: duration,
     behavior: isFloating ? SnackBarBehavior.floating : null,
-    margin: const EdgeInsets.all(16),
+    margin: isFloating ? const EdgeInsets.all(16) : null,
+    duration: duration,
     backgroundColor: isError
         ? theme.colorScheme.error
         : color ?? theme.snackBarTheme.backgroundColor,
@@ -66,7 +66,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
         text: text,
         children: textSpans,
         style: isError
-            ? theme.snackBarTheme.contentTextStyle!.copyWith(
+            ? theme.snackBarTheme.contentTextStyle?.copyWith(
                 color: theme.colorScheme.onError,
               )
             : theme.snackBarTheme.contentTextStyle,
