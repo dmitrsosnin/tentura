@@ -13,6 +13,7 @@ final class GraphState extends StateBase {
   final bool isAnimated;
   final bool positiveOnly;
 
+  @override
   GraphState copyWith({
     String? focus,
     bool? isAnimated,

@@ -1,9 +1,9 @@
-import 'package:tentura/app/router.dart';
 import 'package:tentura/data/gql/user/user_utils.dart';
 import 'package:tentura/data/repository/geolocation_repository.dart';
 import 'package:tentura/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
 import 'package:tentura/data/gql/beacon/beacon_utils.dart';
 
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
@@ -20,6 +20,13 @@ import '../widget/beacon_control_row.dart';
 
 class BeaconViewScreen extends StatelessWidget {
   static const _requestId = 'FetchBeaconById';
+
+  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
+      GoRoute(
+        path: pathBeaconView,
+        parentNavigatorKey: parentNavigatorKey,
+        builder: (context, state) => const BeaconViewScreen(),
+      );
 
   const BeaconViewScreen({super.key});
 
@@ -57,7 +64,7 @@ class BeaconViewScreen extends StatelessWidget {
                 : ErrorCenterText(response: response, error: error),
           );
         }
-        final isMine = GetIt.I<AuthCubit>().state.checkIfIsMe(beacon.author.id);
+        final isMine = GetIt.I<AuthCubit>().checkIfIsMe(beacon.author.id);
         return Scaffold(
           appBar: AppBar(title: const Text('Beacon')),
           bottomSheet: NewCommentInput(

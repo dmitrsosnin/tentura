@@ -1,6 +1,6 @@
 import 'package:tentura/data/gql/user/user_utils.dart';
 
-import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/dialog/show_seed_dialog.dart';
@@ -20,7 +20,7 @@ class ProfilePopupMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      isMine ?? GetIt.I<AuthCubit>().state.checkIfIsMe(user.id)
+      isMine ?? GetIt.I<AuthCubit>().checkIfIsMe(user.id)
           ? PopupMenuButton(
               itemBuilder: (context) => <PopupMenuEntry<void>>[
                 PopupMenuItem<void>(
@@ -45,7 +45,7 @@ class ProfilePopupMenuButton extends StatelessWidget {
                 PopupMenuItem<void>(
                   onTap: () async {
                     await GetIt.I<AuthCubit>().signOut();
-                    if (context.mounted) context.go(pathLogin);
+                    if (context.mounted) context.go(pathAuthLogin);
                   },
                   child: const Text('Logout'),
                 ),

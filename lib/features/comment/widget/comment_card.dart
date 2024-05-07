@@ -1,6 +1,6 @@
 import 'package:tentura/data/gql/comment/_g/comment_fetch_by_beacon_id.data.gql.dart';
 
-import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
@@ -52,7 +52,7 @@ class CommentCard extends StatelessWidget {
             ),
           ),
           // Buttons
-          if (GetIt.I<AuthCubit>().state.checkIfIsNotMe(comment.user_id))
+          if (GetIt.I<AuthCubit>().checkIfIsNotMe(comment.user_id))
             Container(
               alignment: Alignment.centerRight,
               padding: paddingV8,

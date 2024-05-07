@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
@@ -9,8 +10,15 @@ import '../domain/exception.dart';
 import 'bloc/auth_cubit.dart';
 import 'widget/account_list_tile.dart';
 
-class LogInScreen extends StatelessWidget {
-  const LogInScreen({super.key});
+class AuthLoginScreen extends StatelessWidget {
+  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
+      GoRoute(
+        path: pathAuthLogin,
+        parentNavigatorKey: parentNavigatorKey,
+        builder: (context, state) => const AuthLoginScreen(),
+      );
+
+  const AuthLoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

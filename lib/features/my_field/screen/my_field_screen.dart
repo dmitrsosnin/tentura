@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
@@ -16,6 +16,13 @@ import 'package:tentura/features/my_field/widget/feed_tab.dart';
 enum FeedFilter { feed, pinned, hidden }
 
 class MyFieldScreen extends StatefulWidget {
+  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
+      GoRoute(
+        path: pathHomeField,
+        parentNavigatorKey: parentNavigatorKey,
+        builder: (context, state) => const MyFieldScreen(),
+      );
+
   const MyFieldScreen({super.key});
 
   @override

@@ -1,7 +1,15 @@
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
 class UpdatesScreen extends StatelessWidget {
+  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
+      GoRoute(
+        path: pathHomeUpdates,
+        parentNavigatorKey: parentNavigatorKey,
+        builder: (context, state) => const UpdatesScreen(),
+      );
+
   const UpdatesScreen({super.key});
 
   @override

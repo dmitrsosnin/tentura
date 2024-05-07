@@ -22,7 +22,6 @@ void main() async {
         HydratedBloc.storage = HydratedStorageMock();
         authCubit = AuthCubit(
           authService: AuthServiceMock(),
-          trySignIn: false,
         )..stream.listen(print);
       });
 

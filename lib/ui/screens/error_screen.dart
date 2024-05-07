@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 
 class ErrorScreen extends StatelessWidget {

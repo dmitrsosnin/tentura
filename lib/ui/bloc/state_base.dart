@@ -11,7 +11,7 @@ extension FetchStatusX on FetchStatus {
   bool get isFailure => this == FetchStatus.isFailure;
 }
 
-base class StateBase extends Equatable {
+abstract base class StateBase with EquatableMixin {
   const StateBase({
     this.status = FetchStatus.isSuccess,
     this.error,
@@ -25,4 +25,18 @@ base class StateBase extends Equatable {
         status,
         error,
       ];
+
+  StateBase setError(Object error) => copyWith(
+        status: FetchStatus.isFailure,
+        error: error,
+      );
+
+  StateBase setLoading() => copyWith(
+        status: FetchStatus.isLoading,
+      );
+
+  StateBase copyWith({
+    FetchStatus? status,
+    Object? error,
+  });
 }

@@ -15,6 +15,7 @@ final class RatingState extends StateBase {
   final bool isSortedByEgo;
   final List<GUsersRatingData_usersStats> items;
 
+  @override
   RatingState copyWith({
     List<GUsersRatingData_usersStats>? items,
     String? searchFilter,

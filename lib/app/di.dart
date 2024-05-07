@@ -22,7 +22,7 @@ class DI {
     GetIt.I.registerSingleton(await GeolocationRepository().init());
 
     GetIt.I.registerSingleton(
-      AuthCubit(),
+      await AuthCubit().init(),
       dispose: (i) => i.close(),
     );
 

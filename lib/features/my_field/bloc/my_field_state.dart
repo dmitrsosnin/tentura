@@ -11,6 +11,7 @@ final class MyFieldState extends StateBase {
   final List<GBeaconFields> beacons;
   final bool hasReachedMax;
 
+  @override
   MyFieldState copyWith({
     Object? error,
     FetchStatus? status,

@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-import 'package:tentura/app/router.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/domain/entity/lat_long.dart';
 import 'package:tentura/data/repository/geolocation_repository.dart';
 

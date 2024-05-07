@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:tentura/app/router.dart';
+import 'package:tentura/ui/routes.dart';
 
 class ErrorDialog extends StatelessWidget {
   final Object? error;

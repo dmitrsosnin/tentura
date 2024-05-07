@@ -11,35 +11,42 @@ part 'auth_state.dart';
 //
 // If code obfuscation is needed then visit https://github.com/felangel/bloc/issues/3255
 //
-class AuthCubit extends HydratedCubit<AuthState> {
+class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   AuthCubit({
-    bool trySignIn = true,
     AuthService? authService,
   })  : _authService = authService ?? AuthService(),
         super(const AuthState()) {
     hydrate();
-    if (trySignIn && state.isAuthenticated) {
-      _authService.signIn(state.accounts[state.currentAccount]!);
-    }
   }
 
   final AuthService _authService;
 
-  Future<String> get accessToken => _authService.accessToken;
+  bool get isAuthenticated => state.currentAccount.isNotEmpty;
 
-  // bool get isAuthenticated => state.currentAccount.isNotEmpty;
+  bool get isNotAuthenticated => state.currentAccount.isEmpty;
+
+  Future<String> get accessToken => _authService.accessToken;
 
   @override
   AuthState fromJson(Map<String, dynamic> json) => AuthState.fromJson(json);
 
   @override
-  Map<String, dynamic>? toJson(AuthState state) => this.state.toJson(state);
+  Map<String, dynamic>? toJson(AuthState state) => state.toJson();
 
   @override
   Future<void> close() async {
     await _authService.close();
     return super.close();
   }
+
+  Future<AuthCubit> init({bool trySignIn = true}) async {
+    if (trySignIn && isAuthenticated) await signIn(state.currentAccount);
+    return this;
+  }
+
+  bool checkIfIsMe(String id) => id == state.currentAccount;
+
+  bool checkIfIsNotMe(String id) => id != state.currentAccount;
 
   Future<void> addAccount(String? seed) async {
     if (seed == null) return;

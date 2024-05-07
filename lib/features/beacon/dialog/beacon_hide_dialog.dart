@@ -1,4 +1,4 @@
-import 'package:tentura/app/router.dart';
+import 'package:tentura/ui/routes.dart';
 
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';

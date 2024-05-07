@@ -1,11 +1,12 @@
 import 'dart:io';
+
 import 'package:tentura/consts.dart';
 import 'package:tentura/data/gql/user/user_utils.dart';
 import 'package:tentura/data/repository/image_repository.dart';
 import 'package:tentura/data/gql/user/_g/user_update.req.gql.dart';
 import 'package:tentura/data/gql/user/_g/user_fetch_by_id.req.gql.dart';
 
-import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/dialog/error_dialog.dart';
@@ -16,6 +17,13 @@ import 'package:tentura/ui/widget/error_center_text.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
 class ProfileEditScreen extends StatefulWidget {
+  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
+      GoRoute(
+        path: pathProfileEdit,
+        parentNavigatorKey: parentNavigatorKey,
+        builder: (context, state) => const ProfileEditScreen(),
+      );
+
   const ProfileEditScreen({super.key});
 
   @override

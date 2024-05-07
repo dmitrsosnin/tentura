@@ -1,4 +1,4 @@
-import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
@@ -34,7 +34,7 @@ class MyProfileDeleteDialog extends StatelessWidget {
                 context.pop();
               } else {
                 await authCubit.deleteAccount(myId);
-                if (context.mounted) context.go(pathLogin);
+                if (context.mounted) context.go(pathAuthLogin);
               }
             },
             child: const Text('Delete'),

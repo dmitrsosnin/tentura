@@ -2,7 +2,7 @@ import 'package:tentura/data/gql/user/user_utils.dart';
 import 'package:tentura/data/gql/beacon/beacon_utils.dart';
 import 'package:tentura/data/repository/geolocation_repository.dart';
 
-import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';

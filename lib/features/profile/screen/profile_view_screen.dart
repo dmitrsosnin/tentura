@@ -1,7 +1,7 @@
 import 'package:tentura/consts.dart';
 import 'package:tentura/data/gql/user/user_utils.dart';
 
-import 'package:tentura/ui/route.dart';
+import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
@@ -18,6 +18,13 @@ import '../widget/profile_popup_menu_button.dart';
 
 class ProfileViewScreen extends StatelessWidget {
   static const _requestId = 'FetchProfile';
+
+  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
+      GoRoute(
+        path: pathHomeProfile,
+        parentNavigatorKey: parentNavigatorKey,
+        builder: (context, state) => const ProfileViewScreen(),
+      );
 
   const ProfileViewScreen({super.key});
 
