@@ -43,6 +43,7 @@ class BeaconTile extends StatelessWidget {
                     size: 40,
                   ),
                 ),
+
                 // User displayName
                 Text(
                   beacon.author.title,
@@ -59,17 +60,6 @@ class BeaconTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Beacon Title
-              Padding(
-                padding: paddingV8,
-                child: Text(
-                  beacon.title,
-                  maxLines: 1,
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                  style: textTheme.headlineLarge,
-                ),
-              ),
               // Beacon Image
               if (beacon.has_picture)
                 Padding(
@@ -85,6 +75,19 @@ class BeaconTile extends StatelessWidget {
                     ),
                   ),
                 ),
+
+              // Beacon Title
+              Padding(
+                padding: paddingV8,
+                child: Text(
+                  beacon.title,
+                  maxLines: 1,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme.headlineLarge,
+                ),
+              ),
+
               // Beacon Description
               if (beacon.description.isNotEmpty)
                 Text(
@@ -94,10 +97,14 @@ class BeaconTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: textTheme.bodyLarge,
                 ),
+
+              // Beacon Timerange
               if (beacon.timerange != null)
                 Text(
                   '${fYMD(beacon.timerange?.start)} - ${fYMD(beacon.timerange?.end)}',
                 ),
+
+              // Beacon Geolocation
               if (beacon.place != null)
                 FutureBuilder(
                   key: Key(beacon.id),

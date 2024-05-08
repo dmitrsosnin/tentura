@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/data/gql/beacon/beacon_utils.dart';
-import 'package:tentura/ui/dialog/share_code_dialog.dart';
 import 'package:tentura/ui/routes.dart';
-
-import 'package:tentura/features/beacon/widget/beacon_vote_control.dart';
+import 'package:tentura/ui/dialog/share_code_dialog.dart';
+import 'package:tentura/data/gql/beacon/beacon_utils.dart';
 
 import 'beacon_popup_menu.dart';
+import 'beacon_vote_control.dart';
+import 'favorite_icon_button.dart';
 
 class BeaconControlRow extends StatelessWidget {
   final GBeaconFields beacon;
@@ -66,9 +66,12 @@ class BeaconControlRow extends StatelessWidget {
           if (isMine)
             // Menu
             BeaconPopupMenu(beacon: beacon)
-          else
+          else ...[
+            // Favorite
+            FavoriteIconButton(beacon: beacon),
             // Like\Dislike
             BeaconVoteControl(beacon: beacon),
+          ],
         ],
       );
 }

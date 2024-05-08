@@ -4,12 +4,9 @@ import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/data/gql/beacon/beacon_utils.dart';
 
-import 'package:tentura/features/beacon/data/_g/beacon_hide_by_id.req.gql.dart';
-
-import '../data/_g/beacon_fetch_my_field.data.gql.dart';
-import '../data/_g/beacon_fetch_my_field.req.gql.dart';
-import '../data/_g/beacon_fetch_my_field.var.gql.dart';
-import '../data/_g/beacon_pin_by_id.req.gql.dart';
+import '../../data/_g/beacon_fetch_my_field.data.gql.dart';
+import '../../data/_g/beacon_fetch_my_field.req.gql.dart';
+import '../../data/_g/beacon_fetch_my_field.var.gql.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,41 +34,6 @@ class MyFieldCubit extends Cubit<MyFieldState> {
   Future<void> fetch() async {
     GetIt.I<Client>().requestController.add(_request);
   }
-
-  Future<bool?> pinBeacon(String beaconId) async => doRequest(
-        request: GBeaconPinByIdReq((b) => b..vars.beacon_id = beaconId),
-      ).then(
-        (value) {
-          if (value.hasNoErrors) {
-            state.beacons.removeWhere((e) => e.id == beaconId);
-            emit(state.copyWith(
-              status: FetchStatus.isSuccess,
-            ));
-          }
-          return value.hasNoErrors;
-        },
-      );
-
-  Future<bool?> hideBeacon(String beaconId, Duration? hideFor) async =>
-      hideFor == null
-          ? null
-          : doRequest(
-              request: GBeaconHideByIdReq(
-                (b) => b
-                  ..vars.beacon_id = beaconId
-                  ..vars.hidden_until = DateTime.timestamp().add(hideFor),
-              ),
-            ).then(
-              (value) {
-                if (value.hasNoErrors) {
-                  state.beacons.removeWhere((e) => e.id == beaconId);
-                  emit(state.copyWith(
-                    status: FetchStatus.isSuccess,
-                  ));
-                }
-                return value.hasNoErrors;
-              },
-            );
 
   void _onData(
     OperationResponse<GBeaconFetchMyFieldData, GBeaconFetchMyFieldVars>

@@ -10,8 +10,8 @@ import 'package:tentura/features/auth/ui/auth_login_screen.dart';
 import 'package:tentura/features/home/ui/screen/home_screen.dart';
 import 'package:tentura/features/profile/screen/profile_view_screen.dart';
 import 'package:tentura/features/profile/screen/profile_edit_screen.dart';
-import 'package:tentura/features/beacon/screen/beacon_create_screen.dart';
-import 'package:tentura/features/beacon/screen/beacon_view_screen.dart';
+import 'package:tentura/features/beacon/ui/screen/beacon_create_screen.dart';
+import 'package:tentura/features/beacon/ui/screen/beacon_view_screen.dart';
 import 'package:tentura/features/rating/screen/rating_screen.dart';
 import 'package:tentura/features/graph/screen/graph_screen.dart';
 

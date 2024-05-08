@@ -11,7 +11,7 @@ import 'package:tentura/ui/widget/error_center_text.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/beacon/widget/beacon_tile.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 
 import '../data/_g/profile_fetch_by_user_id.req.gql.dart';
 import '../widget/profile_popup_menu_button.dart';

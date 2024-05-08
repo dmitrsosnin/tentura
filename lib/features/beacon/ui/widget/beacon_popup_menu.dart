@@ -2,7 +2,7 @@ import 'package:tentura/data/gql/beacon/_g/_fragments.data.gql.dart';
 import 'package:tentura/features/beacon/data/_g/beacon_update_by_id.req.gql.dart';
 
 import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/features/beacon/dialog/beacon_delete_dialog.dart';
+import 'package:tentura/features/beacon/ui/dialog/beacon_delete_dialog.dart';
 
 class BeaconPopupMenu extends StatelessWidget {
   final GBeaconFields beacon;
