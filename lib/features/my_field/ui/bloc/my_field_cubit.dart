@@ -36,9 +36,8 @@ class MyFieldCubit extends Cubit<MyFieldState> {
   }
 
   void _onData(
-    OperationResponse<GBeaconFetchMyFieldData, GBeaconFetchMyFieldVars>
-        response,
-  ) {
+      OperationResponse<GBeaconFetchMyFieldData, GBeaconFetchMyFieldVars>
+          response) {
     if (response.loading) {
       emit(state.copyWith(
         status: FetchStatus.isLoading,
@@ -54,11 +53,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
             .where((e) => e.beacon != null)
             .map<GBeaconFields>((e) => e.beacon as GBeaconFields)
             // TBD: remove that ugly hack when able filter in request
-            .where((e) =>
-                e.enabled &&
-                !(e.is_hidden ?? false) &&
-                !(e.is_pinned ?? false) &&
-                (e.my_vote ?? 0) >= 0)
+            .where((e) => e.enabled)
             .toList(),
       ));
     }
