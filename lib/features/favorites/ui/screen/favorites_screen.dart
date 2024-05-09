@@ -6,7 +6,7 @@ import 'package:tentura/ui/widget/empty_list_scroll_view.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 
-import '../../data/_g/beacon_fetch_pinned_by_user_id.req.gql.dart';
+import '../../data/gql/_g/beacon_fetch_pinned_by_user_id.req.gql.dart';
 
 class FavoritesScreen extends StatelessWidget {
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>

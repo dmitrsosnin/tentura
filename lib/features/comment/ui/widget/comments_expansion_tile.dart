@@ -1,8 +1,7 @@
-import 'package:tentura/data/gql/comment/_g/comment_fetch_by_beacon_id.req.gql.dart';
-
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
 
+import '../../data/gql/_g/comment_fetch_by_beacon_id.req.gql.dart';
 import 'comment_card.dart';
 
 class CommentsExpansionTile extends StatelessWidget {

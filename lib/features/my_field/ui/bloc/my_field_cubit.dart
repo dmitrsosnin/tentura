@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/data/gql/beacon/beacon_utils.dart';
 
-import '../../data/_g/beacon_fetch_my_field.data.gql.dart';
-import '../../data/_g/beacon_fetch_my_field.req.gql.dart';
-import '../../data/_g/beacon_fetch_my_field.var.gql.dart';
+import 'package:tentura/features/beacon/data/beacon_utils.dart';
+
+import '../../data/gql/_g/beacon_fetch_my_field.data.gql.dart';
+import '../../data/gql/_g/beacon_fetch_my_field.req.gql.dart';
+import '../../data/gql/_g/beacon_fetch_my_field.var.gql.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 

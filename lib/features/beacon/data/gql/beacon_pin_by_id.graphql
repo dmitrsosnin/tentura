@@ -1,4 +1,4 @@
-# import '/data/gql/beacon/_fragments.graphql'
+# import '_fragments.graphql'
 
 mutation BeaconPinById($beacon_id: String!) {
   insert_beacon_pinned_one(object: {beacon_id: $beacon_id}) {

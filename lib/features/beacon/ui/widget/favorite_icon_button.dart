@@ -1,9 +1,8 @@
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
-import 'package:tentura/data/gql/beacon/beacon_utils.dart';
-
-import '../../data/_g/beacon_pin_by_id.req.gql.dart';
-import '../../data/_g/beacon_unpin_by_id.req.gql.dart';
+import '../../data/gql/_g/beacon_pin_by_id.req.gql.dart';
+import '../../data/gql/_g/beacon_unpin_by_id.req.gql.dart';
+import '../../data/beacon_utils.dart';
 
 class FavoriteIconButton extends StatefulWidget {
   const FavoriteIconButton({

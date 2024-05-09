@@ -1,8 +1,3 @@
-import 'package:tentura/data/gql/user/user_utils.dart';
-import 'package:tentura/data/repository/geolocation_repository.dart';
-import 'package:tentura/data/gql/beacon/_g/beacon_fetch_by_id.req.gql.dart';
-import 'package:tentura/data/gql/beacon/beacon_utils.dart';
-
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
@@ -11,11 +6,15 @@ import 'package:tentura/ui/screens/error_screen.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
+import 'package:tentura/data/repository/geolocation_repository.dart';
 
+import 'package:tentura/features/profile/data/user_utils.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/comment/widget/new_comment_input.dart';
-import 'package:tentura/features/comment/widget/comments_expansion_tile.dart';
+import 'package:tentura/features/comment/ui/widget/new_comment_input.dart';
+import 'package:tentura/features/comment/ui/widget/comments_expansion_tile.dart';
 
+import '../../data/beacon_utils.dart';
+import '../../data/gql/_g/beacon_fetch_by_id.req.gql.dart';
 import '../widget/beacon_control_row.dart';
 
 class BeaconViewScreen extends StatelessWidget {

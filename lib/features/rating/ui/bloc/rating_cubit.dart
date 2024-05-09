@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import 'package:tentura/features/rating/data/_g/fetch_users_rating.data.gql.dart';
-import 'package:tentura/features/rating/data/_g/fetch_users_rating.req.gql.dart';
-import 'package:tentura/features/rating/data/_g/fetch_users_rating.var.gql.dart';
+import '../../data/gql/_g/fetch_users_rating.data.gql.dart';
+import '../../data/gql/_g/fetch_users_rating.req.gql.dart';
+import '../../data/gql/_g/fetch_users_rating.var.gql.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 

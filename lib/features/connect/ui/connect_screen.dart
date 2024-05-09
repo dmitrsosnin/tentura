@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 
@@ -63,7 +64,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
               padding: paddingAll20,
               child: FilledButton(
                 child: const Text('Search'),
-                onPressed: () => _goWithCode(context, _inputController.text),
+                onPressed: () => _goWithCode(_inputController.text),
               ),
             ),
             const Padding(
@@ -79,7 +80,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 child: const Text('Scan QR'),
                 onPressed: () async {
                   final code = await QRScanDialog.show(context);
-                  if (context.mounted) _goWithCode(context, code);
+                  if (context.mounted) _goWithCode(code);
                 },
               ),
             ),
@@ -89,8 +90,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
     );
   }
 
-  void _goWithCode(BuildContext context, String? code) {
-    if (code != null && code.length == idLength) {
+  void _goWithCode(String? code) {
+    if (code == null || code.isEmpty) return;
+    if (code.length == codeLength) {
+      // TBD: server side
+    } else if (code.length == idLength) {
       if (kDebugMode) print(code);
       if (code.startsWith('B')) {
         context.push(Uri(
@@ -106,18 +110,18 @@ class _ConnectScreenState extends State<ConnectScreen> {
         // TBD
         ScaffoldMessenger.of(context).showSnackBar(notImplementedSnackBar);
       } else {
-        final colorScheme = Theme.of(context).colorScheme;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            'Wrong code!',
-            style: TextStyle(color: colorScheme.onErrorContainer),
-          ),
-          backgroundColor: colorScheme.errorContainer,
-          behavior: SnackBarBehavior.floating,
-          margin: paddingH20,
-          showCloseIcon: true,
-        ));
+        showSnackBar(
+          context,
+          isError: true,
+          text: 'Wrong code prefix!',
+        );
       }
+    } else {
+      showSnackBar(
+        context,
+        isError: true,
+        text: 'Wrong code length!',
+      );
     }
   }
 }

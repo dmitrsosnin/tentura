@@ -1,4 +1,4 @@
-# import '/data/gql/user/_fragments.graphql'
+# import '/features/profile/data/gql/_fragments.graphql'
 
 query UsersRating {
   usersStats {

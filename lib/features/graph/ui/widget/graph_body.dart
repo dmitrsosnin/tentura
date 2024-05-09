@@ -7,8 +7,8 @@ import 'package:tentura/ui/routes.dart';
 
 import 'package:tentura/features/graph/domain/entity/edge_details.dart';
 import 'package:tentura/features/graph/domain/entity/node_details.dart';
-import 'package:tentura/features/graph/widget/graph_node_widget.dart';
-import 'package:tentura/features/graph/bloc/graph_cubit.dart';
+import 'package:tentura/features/graph/ui/widget/graph_node_widget.dart';
+import 'package:tentura/features/graph/ui/bloc/graph_cubit.dart';
 
 class GraphBody extends StatefulWidget {
   const GraphBody({

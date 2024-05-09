@@ -1,6 +1,4 @@
 import 'package:tentura/consts.dart';
-import 'package:tentura/data/gql/user/user_utils.dart';
-
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
@@ -13,7 +11,8 @@ import 'package:tentura/ui/dialog/share_code_dialog.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 
-import '../data/_g/profile_fetch_by_user_id.req.gql.dart';
+import '../data/user_utils.dart';
+import '../data/gql/_g/profile_fetch_by_user_id.req.gql.dart';
 import '../widget/profile_popup_menu_button.dart';
 
 class ProfileViewScreen extends StatelessWidget {

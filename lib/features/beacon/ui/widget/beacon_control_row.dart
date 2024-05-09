@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
-import 'package:tentura/data/gql/beacon/beacon_utils.dart';
+import 'package:tentura/features/beacon/data/beacon_utils.dart';
 
 import 'beacon_popup_menu.dart';
 import 'beacon_vote_control.dart';

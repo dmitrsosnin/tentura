@@ -1,6 +1,6 @@
-import 'package:tentura/data/gql/comment/_g/comment_create.req.gql.dart';
-
 import 'package:tentura/ui/utils/ferry_utils.dart';
+
+import '../../data/gql/_g/comment_create.req.gql.dart';
 
 class NewCommentInput extends StatefulWidget {
   final String beaconId;

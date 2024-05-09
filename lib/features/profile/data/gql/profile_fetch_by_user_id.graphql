@@ -1,5 +1,5 @@
-# import '/data/gql/user/_fragments.graphql'
-# import '/data/gql/beacon/_fragments.graphql'
+# import '_fragments.graphql'
+# import '/features/beacon/data/gql/_fragments.graphql'
 
 query ProfileFetchByUserId($user_id: String!) {
   user_by_pk(id: $user_id) {

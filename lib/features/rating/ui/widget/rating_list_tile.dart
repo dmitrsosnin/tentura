@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:tentura/data/gql/user/user_utils.dart';
+import 'package:tentura/features/profile/data/user_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 

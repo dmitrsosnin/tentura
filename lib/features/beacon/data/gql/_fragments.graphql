@@ -1,4 +1,4 @@
-# import '../user/_fragments.graphql'
+# import '/features/profile/data/gql/_fragments.graphql'
 
 fragment BeaconFields on beacon {
   id

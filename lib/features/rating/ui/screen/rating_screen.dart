@@ -3,8 +3,8 @@ import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/rating/bloc/rating_cubit.dart';
-import 'package:tentura/features/rating/widget/rating_list_tile.dart';
+import 'package:tentura/features/rating/ui/bloc/rating_cubit.dart';
+import 'package:tentura/features/rating/ui/widget/rating_list_tile.dart';
 
 class RatingScreen extends StatelessWidget {
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>

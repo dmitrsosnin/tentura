@@ -1,7 +1,7 @@
-import 'package:tentura/data/gql/beacon/beacon_utils.dart';
-import 'package:tentura/data/gql/beacon/_g/beacon_vote_by_id.req.gql.dart';
-
 import 'package:tentura/ui/utils/ferry_utils.dart';
+
+import '../../data/gql/_g/beacon_vote_by_id.req.gql.dart';
+import '../../data/beacon_utils.dart';
 
 class BeaconVoteControl extends StatefulWidget {
   final GBeaconFields beacon;
