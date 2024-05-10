@@ -16,43 +16,35 @@ class FavoritesScreen extends StatelessWidget {
         builder: (context, state) => const FavoritesScreen(),
       );
 
-  static const _requestId = 'BeaconFetchPinned';
+  static void _request(GBeaconFetchPinnedByUserIdReqBuilder r) => r
+    ..requestId = 'BeaconFetchPinned'
+    ..vars.user_id = GetIt.I<AuthCubit>().state.currentAccount;
 
   const FavoritesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final client = GetIt.I<Client>();
-    final myId = GetIt.I<AuthCubit>().state.currentAccount;
-    return SafeArea(
-      minimum: paddingH20,
-      child: Operation(
-        client: client,
-        operationRequest: GBeaconFetchPinnedByUserIdReq(
-          (b) => b
-            ..requestId = _requestId
-            ..vars.user_id = myId,
-        ),
-        builder: (context, response, error) =>
-            showLoaderOrErrorOr(response, error) ??
-            RefreshIndicator.adaptive(
-              onRefresh: () async =>
-                  client.requestController.add(GBeaconFetchPinnedByUserIdReq(
-                (b) => b
-                  ..requestId = _requestId
-                  ..vars.user_id = myId,
-              )),
-              child: response?.data?.beacon_pinned.isEmpty ?? false
-                  ? const EmptyListScrollView()
-                  : ListView.separated(
-                      itemCount: response!.data!.beacon_pinned.length,
-                      separatorBuilder: (_, __) => const Divider(),
-                      itemBuilder: (context, i) => BeaconTile(
-                        beacon: response.data!.beacon_pinned[i].beacon,
+  Widget build(BuildContext context) => SafeArea(
+        minimum: paddingH20,
+        child: Operation(
+          client: GetIt.I<Client>(),
+          operationRequest: GBeaconFetchPinnedByUserIdReq(_request),
+          builder: (context, response, error) =>
+              showLoaderOrErrorOr(response, error) ??
+              RefreshIndicator.adaptive(
+                onRefresh: () async => GetIt.I<Client>()
+                    .requestController
+                    .add(GBeaconFetchPinnedByUserIdReq(_request)),
+                child: response?.data?.beacon_pinned.isEmpty ?? false
+                    ? const EmptyListScrollView()
+                    : ListView.separated(
+                        itemCount: response!.data!.beacon_pinned.length,
+                        separatorBuilder: (_, __) => const Divider(),
+                        itemBuilder: (context, i) => BeaconTile(
+                          key: Key(response.data!.beacon_pinned[i].beacon.id),
+                          beacon: response.data!.beacon_pinned[i].beacon,
+                        ),
                       ),
-                    ),
-            ),
-      ),
-    );
-  }
+              ),
+        ),
+      );
 }

@@ -1,5 +1,7 @@
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+
 import '../../data/gql/_g/beacon_pin_by_id.req.gql.dart';
 import '../../data/gql/_g/beacon_unpin_by_id.req.gql.dart';
 import '../../data/beacon_utils.dart';
@@ -28,8 +30,9 @@ class _FavoriteIconButtonState extends State<FavoriteIconButton> {
         if (_isFavorite) {
           final result = await doRequest(
             context: context,
-            request: GBeaconUnpinByIdReq(
-                (b) => b..vars.beacon_id = widget.beacon.id),
+            request: GBeaconUnpinByIdReq((b) => b.vars
+              ..user_id = GetIt.I<AuthCubit>().state.currentAccount
+              ..beacon_id = widget.beacon.id),
           );
           if (result.hasNoErrors) setState(() => _isFavorite = false);
         } else {
