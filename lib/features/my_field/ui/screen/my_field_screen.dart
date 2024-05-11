@@ -34,7 +34,9 @@ class MyFieldScreen extends StatelessWidget {
               return RefreshIndicator.adaptive(
                 onRefresh: context.read<MyFieldCubit>().fetch,
                 child: switch (state.status) {
-                  FetchStatus.isFailure => const Center(child: Text('Error')),
+                  FetchStatus.isFailure => const Center(
+                      child: Text('Error'),
+                    ),
                   FetchStatus.isLoading => const Center(
                       child: CircularProgressIndicator.adaptive(),
                     ),
