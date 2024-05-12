@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,18 +7,16 @@ import 'package:geolocator/geolocator.dart';
 import 'package:tentura/domain/entity/lat_long.dart';
 
 class GeolocationRepository {
+  GeolocationRepository({bool checkOnStart = true}) {
+    if (checkOnStart) {
+      getMyCoords(isNeedRequest: false).then((v) => _myCoords = v);
+    }
+  }
   LatLng? _myCoords;
 
   LatLng? get myCoords {
     if (_myCoords == null) getMyCoords();
     return _myCoords;
-  }
-
-  Future<GeolocationRepository> init() async {
-    getMyCoords(isNeedRequest: false)
-        .then((value) => _myCoords = value)
-        .ignore();
-    return this;
   }
 
   Future<LatLng?> getMyCoords({

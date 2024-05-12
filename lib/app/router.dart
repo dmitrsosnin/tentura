@@ -10,10 +10,10 @@ import 'package:tentura/features/auth/ui/auth_login_screen.dart';
 import 'package:tentura/features/home/ui/screen/home_screen.dart';
 import 'package:tentura/features/graph/ui/screen/graph_screen.dart';
 import 'package:tentura/features/rating/ui/screen/rating_screen.dart';
-import 'package:tentura/features/profile/screen/profile_view_screen.dart';
-import 'package:tentura/features/profile/screen/profile_edit_screen.dart';
 import 'package:tentura/features/beacon/ui/screen/beacon_view_screen.dart';
 import 'package:tentura/features/beacon/ui/screen/beacon_create_screen.dart';
+import 'package:tentura/features/profile/ui/screen/profile_view_screen.dart';
+import 'package:tentura/features/profile/ui/screen/profile_edit_screen.dart';
 
 final router = GoRouter(
   debugLogDiagnostics: kDebugMode,
@@ -24,7 +24,7 @@ final router = GoRouter(
   ],
   errorBuilder: (context, state) => const ErrorScreen(),
   redirect: (context, state) =>
-      GetIt.I<AuthCubit>().isAuthenticated ? null : pathAuthLogin,
+      context.read<AuthCubit>().isAuthenticated ? null : pathAuthLogin,
   routes: [
     HomeScreen.getRoute(parentNavigatorKey: _rootNavigatorKey),
     AuthLoginScreen.getRoute(parentNavigatorKey: _rootNavigatorKey),

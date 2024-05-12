@@ -1,9 +1,8 @@
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import '../../data/auth_service.dart';
+import '../../data/auth_repository.dart';
 import '../../domain/exception.dart';
 
-export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'auth_state.dart';
@@ -12,37 +11,22 @@ part 'auth_state.dart';
 // If code obfuscation is needed then visit https://github.com/felangel/bloc/issues/3255
 //
 class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
-  AuthCubit({
-    AuthService? authService,
-  })  : _authService = authService ?? AuthService(),
-        super(const AuthState()) {
+  AuthCubit({bool trySignIn = true}) : super(const AuthState()) {
     hydrate();
+    if (trySignIn && isAuthenticated) signIn(state.currentAccount);
   }
 
-  final AuthService _authService;
+  final _authRepository = GetIt.I<AuthRepository>();
 
   bool get isAuthenticated => state.currentAccount.isNotEmpty;
 
   bool get isNotAuthenticated => state.currentAccount.isEmpty;
-
-  Future<String> get accessToken => _authService.accessToken;
 
   @override
   AuthState fromJson(Map<String, dynamic> json) => AuthState.fromJson(json);
 
   @override
   Map<String, dynamic>? toJson(AuthState state) => state.toJson();
-
-  @override
-  Future<void> close() async {
-    await _authService.close();
-    return super.close();
-  }
-
-  Future<AuthCubit> init({bool trySignIn = true}) async {
-    if (trySignIn && isAuthenticated) await signIn(state.currentAccount);
-    return this;
-  }
 
   bool checkIfIsMe(String id) => id == state.currentAccount;
 
@@ -55,7 +39,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
     }
     emit(state.setLoading());
     try {
-      final id = await _authService.signIn(seed);
+      final id = await _authRepository.signIn(seed);
       emit(AuthState(
         currentAccount: id,
         accounts: {
@@ -71,7 +55,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> signUp() async {
     emit(state.setLoading());
     try {
-      final (:id, :seed) = await _authService.signUp();
+      final (:id, :seed) = await _authRepository.signUp();
       emit(AuthState(
         currentAccount: id,
         accounts: {
@@ -87,7 +71,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> signIn(String id) async {
     emit(state.setLoading());
     try {
-      await _authService.signIn(state.accounts[id]!);
+      await _authRepository.signIn(state.accounts[id]!);
       emit(AuthState(
         currentAccount: id,
         accounts: state.accounts,
@@ -99,7 +83,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
 
   Future<void> signOut() async {
     try {
-      await _authService.signOut();
+      await _authRepository.signOut();
     } finally {
       emit(AuthState(
         accounts: state.accounts,
@@ -120,7 +104,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> deleteAccount(String id) async {
     emit(state.setLoading());
     try {
-      await _authService.delete();
+      await _authRepository.delete();
       state.accounts.remove(id);
       emit(AuthState(
         accounts: {...state.accounts},

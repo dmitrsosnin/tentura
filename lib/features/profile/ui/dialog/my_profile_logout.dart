@@ -18,7 +18,7 @@ class MyProfileLogoutDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              await GetIt.I<AuthCubit>().signOut();
+              await context.read<AuthCubit>().signOut();
               if (context.mounted) context.go(pathAuthLogin);
             },
             child: const Text('Yes'),

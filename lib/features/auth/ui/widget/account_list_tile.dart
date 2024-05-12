@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/dialog/show_seed_dialog.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
+
+import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 
 import '../bloc/auth_cubit.dart';
 import '../dialog/account_remove_dialog.dart';
@@ -57,7 +58,7 @@ class AccountListTile extends StatelessWidget {
             child: const Text('Remove from list'),
             onTap: () => AccountRemoveDialog.show(context, id: id).then(
               (v) {
-                if (v ?? false) GetIt.I<AuthCubit>().removeAccount(id);
+                if (v ?? false) context.read<AuthCubit>().removeAccount(id);
               },
             ),
           ),
@@ -66,7 +67,7 @@ class AccountListTile extends StatelessWidget {
 
       // Log in
       onTap: () async {
-        await GetIt.I<AuthCubit>().signIn(id);
+        await context.read<AuthCubit>().signIn(id);
         if (context.mounted) context.go(pathHomeProfile);
       },
     );

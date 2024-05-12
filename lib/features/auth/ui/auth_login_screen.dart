@@ -22,7 +22,7 @@ class AuthLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = GetIt.I<AuthCubit>();
+    final authCubit = context.read<AuthCubit>();
     return BlocConsumer<AuthCubit, AuthState>(
       bloc: authCubit,
       listenWhen: (p, c) => c.error != null,

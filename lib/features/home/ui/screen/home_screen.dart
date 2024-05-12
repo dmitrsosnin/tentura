@@ -5,7 +5,7 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/features/connect/ui/connect_screen.dart';
 import 'package:tentura/features/updates/ui/screen/updates_screen.dart';
 import 'package:tentura/features/my_field/ui/screen/my_field_screen.dart';
-import 'package:tentura/features/profile/screen/profile_view_screen.dart';
+import 'package:tentura/features/profile/ui/screen/profile_view_screen.dart';
 import 'package:tentura/features/favorites/ui/screen/favorites_screen.dart';
 
 class HomeScreen extends StatelessWidget {

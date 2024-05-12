@@ -31,7 +31,7 @@ class _FavoriteIconButtonState extends State<FavoriteIconButton> {
           final result = await doRequest(
             context: context,
             request: GBeaconUnpinByIdReq((b) => b.vars
-              ..user_id = GetIt.I<AuthCubit>().state.currentAccount
+              ..user_id = context.read<AuthCubit>().state.currentAccount
               ..beacon_id = widget.beacon.id),
           );
           if (result.hasNoErrors) setState(() => _isFavorite = false);

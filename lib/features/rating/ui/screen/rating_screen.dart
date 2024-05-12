@@ -19,7 +19,7 @@ class RatingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => RatingCubit(
-          myId: GetIt.I<AuthCubit>().state.currentAccount,
+          myId: context.read<AuthCubit>().state.currentAccount,
         ),
         child: Scaffold(
           appBar: AppBar(

@@ -3,13 +3,13 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/screens/error_screen.dart';
-import 'package:tentura/ui/widget/avatar_image.dart';
-import 'package:tentura/ui/widget/beacon_image.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
 import 'package:tentura/data/repository/geolocation_repository.dart';
 
 import 'package:tentura/features/profile/data/user_utils.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/image/ui/widget/avatar_image.dart';
+import 'package:tentura/features/image/ui/widget/beacon_image.dart';
 import 'package:tentura/features/comment/ui/widget/new_comment_input.dart';
 import 'package:tentura/features/comment/ui/widget/comments_expansion_tile.dart';
 
@@ -63,7 +63,7 @@ class BeaconViewScreen extends StatelessWidget {
                 : ErrorCenterText(response: response, error: error),
           );
         }
-        final isMine = GetIt.I<AuthCubit>().checkIfIsMe(beacon.author.id);
+        final isMine = context.read<AuthCubit>().checkIfIsMe(beacon.author.id);
         return Scaffold(
           appBar: AppBar(title: const Text('Beacon')),
           bottomSheet: NewCommentInput(

@@ -5,8 +5,8 @@ import 'package:tentura/ui/dialog/show_seed_dialog.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
-import '../data/gql/_g/user_vote_by_id.req.gql.dart';
-import '../data/user_utils.dart';
+import '../../data/gql/_g/user_vote_by_id.req.gql.dart';
+import '../../data/user_utils.dart';
 
 class ProfilePopupMenuButton extends StatelessWidget {
   const ProfilePopupMenuButton({
@@ -20,7 +20,7 @@ class ProfilePopupMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      isMine ?? GetIt.I<AuthCubit>().checkIfIsMe(user.id)
+      isMine ?? context.read<AuthCubit>().checkIfIsMe(user.id)
           ? PopupMenuButton(
               itemBuilder: (context) => <PopupMenuEntry<void>>[
                 PopupMenuItem<void>(
@@ -38,13 +38,13 @@ class ProfilePopupMenuButton extends StatelessWidget {
                   onTap: () => ShowSeedDialog.show(
                     context,
                     id: user.id,
-                    seed: GetIt.I<AuthCubit>().state.accounts[user.id]!,
+                    seed: context.read<AuthCubit>().state.accounts[user.id]!,
                   ),
                 ),
                 const PopupMenuDivider(),
                 PopupMenuItem<void>(
                   onTap: () async {
-                    await GetIt.I<AuthCubit>().signOut();
+                    await context.read<AuthCubit>().signOut();
                     if (context.mounted) context.go(pathAuthLogin);
                   },
                   child: const Text('Logout'),

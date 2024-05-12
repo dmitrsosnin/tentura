@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:tentura/data/repository/image_repository.dart';
+import '../../data/image_repository.dart';
 
 class AvatarImage extends StatelessWidget {
   static const _placeholderPath = 'assets/images/avatar-placeholder.jpg';

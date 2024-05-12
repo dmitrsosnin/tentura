@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/widget/error_center_text.dart';
 
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+
 import 'di.dart';
 import 'router.dart';
 import 'theme_dark.dart';
@@ -31,6 +33,19 @@ class App extends StatelessWidget {
                     debugShowCheckedModeBanner: false,
                     darkTheme: themeDark,
                     theme: themeLight,
+                    builder: (context, child) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (_) => AuthCubit(),
+                          lazy: false,
+                        ),
+                      ],
+                      child: BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) => child!,
+                        buildWhen: (p, c) =>
+                            p.currentAccount != c.currentAccount,
+                      ),
+                    ),
                   )
                 : const Center(
                     child: CircularProgressIndicator.adaptive(),

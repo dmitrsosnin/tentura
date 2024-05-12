@@ -21,7 +21,7 @@ class GraphScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => GraphCubit(
-          myId: GetIt.I<AuthCubit>().state.currentAccount,
+          myId: context.read<AuthCubit>().state.currentAccount,
           focus: GoRouterState.of(context).uri.queryParameters['focus'],
         ),
         lazy: false,

@@ -1,39 +1,29 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:ferry/ferry.dart';
-import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:fresh_graphql/fresh_graphql.dart';
-import 'package:gql_http_link/gql_http_link.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 
 import 'package:tentura/consts.dart';
 
 import '../domain/exception.dart';
 
-class AuthService {
+export 'package:get_it/get_it.dart';
+
+class AuthRepository {
   static const _jwtHeader = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.';
 
-  AuthService({this.serverName = appLinkBase}) {
-    GetIt.I.registerSingleton(
-      Client(
-        defaultFetchPolicies: {OperationType.query: FetchPolicy.NoCache},
-        link: Link.from([
-          _freshLink,
-          HttpLink('https://$serverName/v1/graphql'),
-        ]),
-      ),
-      dispose: (i) async => i.dispose(),
-    );
-  }
+  AuthRepository({
+    String serverName = appLinkBase,
+  }) : _serverName = serverName;
 
-  final String serverName;
+  final String _serverName;
 
-  late final _freshLink = FreshLink.oAuth2(
+  late final link = FreshLink.oAuth2(
     tokenStorage: InMemoryTokenStorage(),
     tokenHeader: (token) => {
-      'Authorization': 'Bearer ${token?.accessToken}',
+      'Authorization': 'Bearer ${token!.accessToken}',
     },
     refreshToken: (token, client) async {
       final jwt = await _fetchJWT('user/login');
@@ -47,11 +37,8 @@ class AuthService {
 
   late ed.KeyPair _keyPair;
 
-  Future<String> get accessToken =>
-      _freshLink.token.then((t) => t!.accessToken);
-
   Future<void> close() async {
-    await _freshLink.dispose();
+    await link.dispose();
   }
 
   Future<String> signIn(String seed) async {
@@ -59,7 +46,7 @@ class AuthService {
     _keyPair = ed.KeyPair(privateKey, ed.public(privateKey));
 
     final jwt = await _fetchJWT('user/login');
-    await _freshLink.setToken(OAuth2Token(
+    await link.setToken(OAuth2Token(
       accessToken: jwt.accessToken,
       expiresIn: jwt.expiresIn,
     ));
@@ -69,7 +56,7 @@ class AuthService {
   Future<({String id, String seed})> signUp() async {
     _keyPair = ed.generateKey();
     final jwt = await _fetchJWT('user/register');
-    await _freshLink.setToken(OAuth2Token(
+    await link.setToken(OAuth2Token(
       accessToken: jwt.accessToken,
       expiresIn: jwt.expiresIn,
     ));
@@ -81,19 +68,19 @@ class AuthService {
 
   // TBD: invalidate jwt on remote server also
   Future<void> signOut() async {
-    await _freshLink.clearToken();
+    await link.clearToken();
   }
 
   // TBD: remove account on remote server
   Future<void> delete() async {
-    await _freshLink.clearToken();
+    await link.clearToken();
   }
 
   Future<({String id, String accessToken, int expiresIn})> _fetchJWT(
     String path,
   ) async {
     final response = await http.post(
-      Uri.https(serverName, path),
+      Uri.https(_serverName, path),
       headers: {
         'Authorization': 'Bearer ${_createAuthRequestToken()}',
       },

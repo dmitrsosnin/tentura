@@ -1,8 +1,10 @@
-import 'package:tentura/data/service/hydrated_db_service.dart';
-import 'package:tentura/data/repository/image_repository.dart';
+import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/data/repository/keychain_repository.dart';
 import 'package:tentura/data/repository/geolocation_repository.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/auth/data/auth_repository.dart';
+import 'package:tentura/features/image/data/image_repository.dart';
 
 class DI {
   static bool _isInited = false;
@@ -12,20 +14,30 @@ class DI {
   Future<bool> init() async {
     if (_isInited) return _isInited;
 
+    GetIt.I.registerSingleton(GeolocationRepository());
+
+    GetIt.I.registerSingleton(KeychainRepository());
+
     GetIt.I.registerSingleton(
-      await HydratedStorageService().init(),
+      AuthRepository(),
       dispose: (i) => i.close(),
     );
 
-    GetIt.I.registerSingleton(ImageRepository());
-
-    GetIt.I.registerSingleton(await GeolocationRepository().init());
+    GetIt.I.registerSingleton(
+      ImageRepository(link: GetIt.I<AuthRepository>().link),
+    );
 
     GetIt.I.registerSingleton(
-      await AuthCubit().init(),
-      dispose: (i) => i.close(),
+      await buildGqlClient(link: GetIt.I<AuthRepository>().link),
+      dispose: (i) => i.dispose(),
     );
+
+    await StateBase.init();
 
     return _isInited = true;
+  }
+
+  Future<void> close() async {
+    await StateBase.close();
   }
 }

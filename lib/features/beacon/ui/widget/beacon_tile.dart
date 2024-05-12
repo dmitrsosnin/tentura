@@ -1,14 +1,15 @@
-import 'package:tentura/features/profile/data/user_utils.dart';
-import 'package:tentura/features/beacon/data/beacon_utils.dart';
 import 'package:tentura/data/repository/geolocation_repository.dart';
 
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/ui/widget/avatar_image.dart';
-import 'package:tentura/ui/widget/beacon_image.dart';
 
+import 'package:tentura/features/image/ui/widget/avatar_image.dart';
+import 'package:tentura/features/image/ui/widget/beacon_image.dart';
+import 'package:tentura/features/profile/data/user_utils.dart';
+
+import '../../data/beacon_utils.dart';
 import 'beacon_control_row.dart';
 
 class BeaconTile extends StatelessWidget {
