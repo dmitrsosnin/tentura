@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../data/image_repository.dart';
+import '../../domain/use_case/image_get_url_case.dart';
 
 class BeaconImage extends StatelessWidget {
   static const _placeholderPath = 'assets/images/image-placeholder.jpg';
 
+  const BeaconImage({
+    required this.authorId,
+    this.beaconId = '',
+    this.boxFit = BoxFit.cover,
+    this.getUrlCase = const ImageGetUrlCase(),
+    this.height,
+    this.width,
+    super.key,
+  });
+
+  final ImageGetUrlCase getUrlCase;
   final String beaconId;
   final String authorId;
   final double? height;
   final double? width;
   final BoxFit boxFit;
-
-  const BeaconImage({
-    required this.authorId,
-    this.beaconId = '',
-    this.height,
-    this.width,
-    this.boxFit = BoxFit.cover,
-    super.key,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class BeaconImage extends StatelessWidget {
             filterQuality: FilterQuality.high,
             placeholder: (context, url) => placeholder,
             errorWidget: (context, url, error) => placeholder,
-            imageUrl: ImageRepository.getBeaconUrl(authorId, beaconId),
+            imageUrl: getUrlCase.getBeaconUrl(authorId, beaconId),
           );
   }
 }

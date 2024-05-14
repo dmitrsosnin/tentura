@@ -8,19 +8,25 @@ import 'package:tentura/consts.dart';
 
 Future<Client> buildGqlClient({
   required Link link,
-  bool clearOnStart = true,
+  bool useCache = false,
   String serverName = appLinkBase,
 }) async {
-  final appDir = await getApplicationDocumentsDirectory();
-  Hive.init(appDir.path);
-  final box = await Hive.openBox<Map<String, dynamic>>('graphql_cache');
-  if (clearOnStart) await box.clear();
+  if (useCache) {
+    final appDir = await getApplicationDocumentsDirectory();
+    Hive.init(appDir.path);
+  }
   return Client(
     link: Link.from([
       link,
       HttpLink('https://$serverName/v1/graphql'),
     ]),
-    cache: Cache(store: HiveStore(box)),
+    cache: useCache
+        ? Cache(
+            store: HiveStore(
+              await Hive.openBox<Map<String, dynamic>>('graphql_cache'),
+            ),
+          )
+        : null,
     defaultFetchPolicies: {
       OperationType.query: FetchPolicy.NoCache,
     },

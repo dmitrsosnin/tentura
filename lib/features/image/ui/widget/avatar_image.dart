@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../data/image_repository.dart';
+import '../../domain/use_case/image_get_url_case.dart';
 
 class AvatarImage extends StatelessWidget {
   static const _placeholderPath = 'assets/images/avatar-placeholder.jpg';
 
+  const AvatarImage({
+    required this.size,
+    required this.userId,
+    this.boxFit = BoxFit.cover,
+    this.getUrlCase = const ImageGetUrlCase(),
+    super.key,
+  });
+
+  final ImageGetUrlCase getUrlCase;
   final String userId;
   final BoxFit boxFit;
   final double size;
-
-  const AvatarImage({
-    required this.size,
-    this.userId = '',
-    this.boxFit = BoxFit.cover,
-    super.key,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class AvatarImage extends StatelessWidget {
               filterQuality: FilterQuality.high,
               placeholder: (context, url) => placeholder,
               errorWidget: (context, url, error) => placeholder,
-              imageUrl: ImageRepository.getAvatarUrl(userId),
+              imageUrl: getUrlCase.getAvatarUrl(userId),
             ),
     );
   }

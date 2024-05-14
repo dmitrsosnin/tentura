@@ -6,9 +6,9 @@ import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 
-import '../domain/exception.dart';
-import 'bloc/auth_cubit.dart';
-import 'widget/account_list_tile.dart';
+import '../../domain/exception.dart';
+import '../bloc/auth_cubit.dart';
+import '../widget/account_list_tile.dart';
 
 class AuthLoginScreen extends StatelessWidget {
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
@@ -80,7 +80,6 @@ class AuthLoginScreen extends StatelessWidget {
                     itemCount: state.accounts.keys.length,
                     itemBuilder: (context, index) => AccountListTile(
                       id: accounts.elementAt(index).$2.key,
-                      seed: accounts.elementAt(index).$2.value,
                     ),
                     separatorBuilder: (context, index) => const Divider(),
                   ),

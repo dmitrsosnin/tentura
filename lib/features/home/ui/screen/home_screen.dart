@@ -5,8 +5,9 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/features/connect/ui/connect_screen.dart';
 import 'package:tentura/features/updates/ui/screen/updates_screen.dart';
 import 'package:tentura/features/my_field/ui/screen/my_field_screen.dart';
-import 'package:tentura/features/profile/ui/screen/profile_view_screen.dart';
 import 'package:tentura/features/favorites/ui/screen/favorites_screen.dart';
+import 'package:tentura/features/profile/ui/screen/profile_mine_screen.dart';
+import 'package:tentura/features/profile/ui/widget/profile_navbar_item.dart';
 
 class HomeScreen extends StatelessWidget {
   static const _routes = [
@@ -46,7 +47,7 @@ class HomeScreen extends StatelessWidget {
           ),
           StatefulShellBranch(
             routes: [
-              ProfileViewScreen.getRoute(),
+              ProfileMineScreen.getRoute(),
             ],
           ),
         ],
@@ -81,9 +82,10 @@ class HomeScreen extends StatelessWidget {
             NavigationDestination(
               icon: Icon(Icons.notifications_none_outlined),
               label: 'Updates',
+              enabled: false,
             ),
             NavigationDestination(
-              icon: Icon(Icons.account_circle_outlined),
+              icon: ProfileNavBarItem(),
               label: 'Profile',
             ),
           ],

@@ -6,10 +6,10 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/screens/error_screen.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/auth/ui/auth_login_screen.dart';
 import 'package:tentura/features/home/ui/screen/home_screen.dart';
 import 'package:tentura/features/graph/ui/screen/graph_screen.dart';
 import 'package:tentura/features/rating/ui/screen/rating_screen.dart';
+import 'package:tentura/features/auth/ui/screen/auth_login_screen.dart';
 import 'package:tentura/features/beacon/ui/screen/beacon_view_screen.dart';
 import 'package:tentura/features/beacon/ui/screen/beacon_create_screen.dart';
 import 'package:tentura/features/profile/ui/screen/profile_view_screen.dart';

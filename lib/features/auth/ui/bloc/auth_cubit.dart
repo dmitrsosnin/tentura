@@ -8,10 +8,13 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'auth_state.dart';
 
 //
-// If code obfuscation is needed then visit https://github.com/felangel/bloc/issues/3255
+// If code obfuscation is needed then visit
+//   https://github.com/felangel/bloc/issues/3255
 //
 class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
-  AuthCubit({bool trySignIn = true}) : super(const AuthState()) {
+  AuthCubit({
+    bool trySignIn = true,
+  }) : super(const AuthState()) {
     hydrate();
     if (trySignIn && isAuthenticated) signIn(state.currentAccount);
   }
@@ -26,7 +29,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   AuthState fromJson(Map<String, dynamic> json) => AuthState.fromJson(json);
 
   @override
-  Map<String, dynamic>? toJson(AuthState state) => state.toJson();
+  Map<String, dynamic>? toJson(AuthState state) => state.toJson(state);
 
   bool checkIfIsMe(String id) => id == state.currentAccount;
 

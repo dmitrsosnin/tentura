@@ -5,7 +5,6 @@ import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 
@@ -16,11 +15,9 @@ import '../widget/avatar_positioned.dart';
 import '../widget/gradient_stack.dart';
 
 class ProfileViewScreen extends StatelessWidget {
-  static const _requestId = 'FetchProfile';
-
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
       GoRoute(
-        path: pathHomeProfile,
+        path: pathProfileView,
         parentNavigatorKey: parentNavigatorKey,
         builder: (context, state) => const ProfileViewScreen(),
       );
@@ -29,32 +26,19 @@ class ProfileViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myId = context.read<AuthCubit>().state.currentAccount;
-    final userId = GoRouterState.of(context).uri.queryParameters['id'] ?? myId;
-    final isMine = myId.isNotEmpty && userId == myId;
-    void request(GProfileFetchByUserIdReqBuilder b) => b
-      ..requestId = _requestId + userId
-      ..vars.user_id = userId;
+    final userId = GoRouterState.of(context).uri.queryParameters['id'] ?? '';
+    void request(GProfileFetchByUserIdReqBuilder b) => b.vars.user_id = userId;
     return Operation(
       client: GetIt.I<Client>(),
       operationRequest: GProfileFetchByUserIdReq(request),
       builder: (context, response, error) {
         final profile = response?.data?.user_by_pk;
         final textTheme = Theme.of(context).textTheme;
-        final beacons = (isMine
-                ? response?.data?.user_by_pk?.beacons.toList()
-                : response?.data?.user_by_pk?.beacons
-                    .where((e) => e.enabled)
-                    .toList(growable: false)) ??
+        final beacons = response?.data?.user_by_pk?.beacons
+                .where((e) => e.enabled)
+                .toList(growable: false) ??
             [];
         return Scaffold(
-          floatingActionButton: isMine
-              ? FloatingActionButton(
-                  heroTag: 'FAB.NewBeacon',
-                  child: const Icon(Icons.add),
-                  onPressed: () => context.push(pathBeaconCreate),
-                )
-              : null,
           body: showLoaderOrErrorOr(response, error) ??
               RefreshIndicator.adaptive(
                 onRefresh: () async => GetIt.I<Client>().requestController.add(
@@ -91,7 +75,7 @@ class ProfileViewScreen extends StatelessWidget {
                               // More
                               ProfilePopupMenuButton(
                                 user: profile,
-                                isMine: isMine,
+                                isMine: false,
                               ),
                             ],
                             floating: true,
@@ -131,8 +115,13 @@ class ProfileViewScreen extends StatelessWidget {
                                     textAlign: TextAlign.left,
                                     style: textTheme.bodyLarge,
                                   ),
-                                  if (profile.beacons.isNotEmpty)
-                                    const Divider(),
+                                  const Divider(),
+                                  Text(
+                                    'Beacons',
+                                    textAlign: TextAlign.left,
+                                    style: textTheme.titleMedium,
+                                  ),
+                                  const Divider(),
                                 ],
                               ),
                             ),
@@ -145,7 +134,6 @@ class ProfileViewScreen extends StatelessWidget {
                                 padding: paddingH20,
                                 child: BeaconTile(
                                   beacon: beacons[i],
-                                  isMine: isMine,
                                 ),
                               ),
                               separatorBuilder: (_, __) => const Divider(

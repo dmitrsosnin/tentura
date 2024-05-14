@@ -2,28 +2,31 @@ part of 'profile_cubit.dart';
 
 final class ProfileState extends StateBase {
   const ProfileState({
-    this.profile = const _ProfileEmptyState(),
+    required this.user,
     super.status,
     super.error,
   });
 
-  final GUserFields profile;
+  factory ProfileState.fromJson(Map<String, dynamic> json) =>
+      ProfileState(user: GUserFieldsData.fromJson(json)!);
+
+  final GUserFields user;
 
   @override
   List<Object?> get props => [
         status,
         error,
-        profile,
+        user,
       ];
 
   @override
   ProfileState copyWith({
-    GUserFields? profile,
+    GUserFields? user,
     FetchStatus? status,
     Object? error,
   }) =>
       ProfileState(
-        profile: profile ?? this.profile,
+        user: user ?? this.user,
         status: status ?? this.status,
         error: error ?? this.error,
       );
@@ -31,43 +34,46 @@ final class ProfileState extends StateBase {
   @override
   ProfileState setError(Object error) => ProfileState(
         status: FetchStatus.isFailure,
-        profile: profile,
+        user: user,
         error: error,
       );
 
   @override
   ProfileState setLoading() => ProfileState(
         status: FetchStatus.isLoading,
-        profile: profile,
+        user: user,
       );
+
+  Map<String, dynamic>? toJson(ProfileState state) =>
+      state.user == user ? null : state.user.toJson();
 }
 
-class _ProfileEmptyState implements GUserFields {
-  const _ProfileEmptyState();
+class UserFields extends GUserFields {
+  UserFields({
+    required this.id,
+  });
+
+  @override
+  String id;
 
   @override
   // ignore: non_constant_identifier_names
-  String get G__typename => throw UnimplementedError();
+  String get G__typename => 'user';
 
   @override
-  String get description => throw UnimplementedError();
-
-  @override
-  // ignore: non_constant_identifier_names
-  bool get has_picture => throw UnimplementedError();
-
-  @override
-  String get id => throw UnimplementedError();
+  String get description => '';
 
   @override
   // ignore: non_constant_identifier_names
-  int? get my_vote => throw UnimplementedError();
+  bool get has_picture => false;
 
   @override
-  String get title => throw UnimplementedError();
+  // ignore: non_constant_identifier_names
+  int? get my_vote => null;
 
   @override
-  Map<String, dynamic> toJson() {
-    throw UnimplementedError();
-  }
+  String get title => '';
+
+  @override
+  Map<String, dynamic> toJson() => {};
 }

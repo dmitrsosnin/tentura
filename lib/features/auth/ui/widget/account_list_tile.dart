@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/dialog/show_seed_dialog.dart';
+import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
 
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
@@ -13,12 +13,10 @@ import '../dialog/account_remove_dialog.dart';
 class AccountListTile extends StatelessWidget {
   const AccountListTile({
     required this.id,
-    required this.seed,
     super.key,
   });
 
   final String id;
-  final String seed;
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +43,7 @@ class AccountListTile extends StatelessWidget {
           // Share account seed
           PopupMenuItem<void>(
             child: const Text('Show seed'),
-            onTap: () => ShowSeedDialog.show(
-              context,
-              id: id,
-              seed: seed,
-            ),
+            onTap: () => ShowSeedDialog.show(context, userId: id),
           ),
           const PopupMenuDivider(),
 

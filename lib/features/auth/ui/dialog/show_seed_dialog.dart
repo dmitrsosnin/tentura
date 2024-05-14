@@ -4,36 +4,36 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:tentura/ui/utils/ui_consts.dart';
 
+import '../bloc/auth_cubit.dart';
+
 class ShowSeedDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required String id,
-    required String seed,
+    required String userId,
   }) =>
       showDialog(
         context: context,
-        builder: (context) => ShowSeedDialog(id: id, seed: seed),
+        builder: (context) => ShowSeedDialog(userId: userId),
       );
 
   const ShowSeedDialog({
-    required this.id,
-    required this.seed,
+    required this.userId,
     super.key,
   });
 
-  final String id;
-  final String seed;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final seed = context.read<AuthCubit>().state.accounts[userId]!;
     return AlertDialog.adaptive(
       alignment: Alignment.center,
       actionsAlignment: MainAxisAlignment.spaceBetween,
       titlePadding: paddingAll20,
       contentPadding: paddingAll20,
       title: Text(
-        id,
+        userId,
         maxLines: 1,
         overflow: TextOverflow.clip,
         textAlign: TextAlign.center,

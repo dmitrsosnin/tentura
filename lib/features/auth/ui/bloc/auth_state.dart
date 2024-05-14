@@ -58,8 +58,11 @@ final class AuthState extends StateBase {
         status: FetchStatus.isLoading,
       );
 
-  Map<String, dynamic>? toJson() => {
-        'currentAccount': currentAccount,
-        'accounts': accounts,
-      };
+  Map<String, dynamic>? toJson(AuthState state) =>
+      state.currentAccount == currentAccount && state.accounts == accounts
+          ? null
+          : {
+              'currentAccount': currentAccount,
+              'accounts': accounts,
+            };
 }
