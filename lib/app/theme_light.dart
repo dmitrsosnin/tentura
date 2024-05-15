@@ -11,7 +11,7 @@ final themeLight = ThemeData.light().copyWith(
   ),
   filledButtonTheme: const FilledButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStatePropertyAll(_primaryColor),
+      backgroundColor: WidgetStatePropertyAll(_primaryColor),
     ),
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(

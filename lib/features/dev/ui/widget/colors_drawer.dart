@@ -45,8 +45,8 @@ class ColorsDrawer extends StatelessWidget {
                 )),
             Text('Background',
                 style: TextStyle(
-                  backgroundColor: colorScheme.background,
-                  color: colorScheme.onBackground,
+                  backgroundColor: colorScheme.surface,
+                  color: colorScheme.onSurface,
                 )),
             Text('Surface',
                 style: TextStyle(
@@ -55,7 +55,7 @@ class ColorsDrawer extends StatelessWidget {
                 )),
             Text('SurfaceVariant',
                 style: TextStyle(
-                  backgroundColor: colorScheme.surfaceVariant,
+                  backgroundColor: colorScheme.surfaceContainer,
                   color: colorScheme.onSurfaceVariant,
                 )),
             Text('Error',
