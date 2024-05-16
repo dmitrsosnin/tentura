@@ -17,7 +17,7 @@ class ProfileCubit extends Cubit<ProfileState>
   }) : super(ProfileState(user: UserFields(id: id))) {
     hydrate();
     _subscription.resume();
-    if (needFetch) fetch();
+    if (needFetch) _gqlClient.requestController.add(_request);
   }
 
   @override
@@ -76,7 +76,7 @@ class ProfileCubit extends Cubit<ProfileState>
             ..description = description
             ..has_picture = hasPicture,
         ))
-        .firstWhere((e) => e.dataSource != DataSource.Optimistic);
+        .firstWhere((e) => e.dataSource == DataSource.Link);
     if (response.hasErrors) {
       throw Exception(response.linkException ??
           response.graphqlErrors ??

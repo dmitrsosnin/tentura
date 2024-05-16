@@ -26,11 +26,12 @@ class ProfileViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final client = GetIt.I<Client>();
     final userId = GoRouterState.of(context).uri.queryParameters['id'] ?? '';
-    void request(GProfileFetchByUserIdReqBuilder b) => b.vars.user_id = userId;
+    final request = GProfileFetchByUserIdReq((b) => b.vars.user_id = userId);
     return Operation(
-      client: GetIt.I<Client>(),
-      operationRequest: GProfileFetchByUserIdReq(request),
+      client: client,
+      operationRequest: request,
       builder: (context, response, error) {
         final profile = response?.data?.user_by_pk;
         final textTheme = Theme.of(context).textTheme;
@@ -41,9 +42,7 @@ class ProfileViewScreen extends StatelessWidget {
         return Scaffold(
           body: showLoaderOrErrorOr(response, error) ??
               RefreshIndicator.adaptive(
-                onRefresh: () async => GetIt.I<Client>().requestController.add(
-                      GProfileFetchByUserIdReq(request),
-                    ),
+                onRefresh: () async => client.requestController.add(request),
                 child: profile == null
                     ? const ErrorCenterText(error: 'Profile not found!')
                     : CustomScrollView(

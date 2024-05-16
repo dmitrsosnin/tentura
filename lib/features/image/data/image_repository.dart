@@ -38,7 +38,6 @@ class ImageRepository {
       },
       body: image,
     );
-    // TBD: evict from cache
   }
 
   Future<void> putBeacon({
@@ -54,6 +53,5 @@ class ImageRepository {
       },
       body: image,
     );
-    // TBD: evict from cache
   }
 }
