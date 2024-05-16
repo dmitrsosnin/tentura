@@ -5,7 +5,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/screens/error_screen.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+// import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/home/ui/screen/home_screen.dart';
 import 'package:tentura/features/graph/ui/screen/graph_screen.dart';
 import 'package:tentura/features/rating/ui/screen/rating_screen.dart';
@@ -23,8 +23,8 @@ final router = GoRouter(
     SentryNavigatorObserver(),
   ],
   errorBuilder: (context, state) => const ErrorScreen(),
-  redirect: (context, state) =>
-      context.read<AuthCubit>().isAuthenticated ? null : pathAuthLogin,
+  // redirect: (context, state) =>
+  //     context.read<AuthCubit>().isAuthenticated ? null : pathAuthLogin,
   routes: [
     HomeScreen.getRoute(parentNavigatorKey: _rootNavigatorKey),
     AuthLoginScreen.getRoute(parentNavigatorKey: _rootNavigatorKey),

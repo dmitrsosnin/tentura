@@ -16,13 +16,10 @@ class ErrorCenterText extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(20),
         child: Text(
-          error != null
-              ? error.toString()
-              : response?.linkException != null
-                  ? response!.linkException.toString()
-                  : response?.graphqlErrors != null
-                      ? response!.graphqlErrors.toString()
-                      : 'Unknown error!',
+          error?.toString() ??
+              response?.linkException?.toString() ??
+              response?.graphqlErrors?.toString() ??
+              'Unknown error!',
           style: const TextStyle(color: Colors.red),
         ),
       );

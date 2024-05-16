@@ -26,125 +26,127 @@ class ProfileViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final client = GetIt.I<Client>();
+    final textTheme = Theme.of(context).textTheme;
     final userId = GoRouterState.of(context).uri.queryParameters['id'] ?? '';
-    final request = GProfileFetchByUserIdReq((b) => b.vars.user_id = userId);
-    return Operation(
-      client: client,
-      operationRequest: request,
-      builder: (context, response, error) {
-        final profile = response?.data?.user_by_pk;
-        final textTheme = Theme.of(context).textTheme;
-        final beacons = response?.data?.user_by_pk?.beacons
-                .where((e) => e.enabled)
-                .toList(growable: false) ??
-            [];
-        return Scaffold(
-          body: showLoaderOrErrorOr(response, error) ??
-              RefreshIndicator.adaptive(
-                onRefresh: () async => client.requestController.add(request),
-                child: profile == null
-                    ? const ErrorCenterText(error: 'Profile not found!')
-                    : CustomScrollView(
-                        slivers: [
-                          // Header
-                          SliverAppBar(
-                            actions: [
-                              // Graph View
-                              IconButton(
-                                icon: const Icon(Icons.hub_outlined),
-                                onPressed: () => context.push(Uri(
-                                  path: pathGraph,
-                                  queryParameters: {'focus': userId},
-                                ).toString()),
-                              ),
-                              // Share
-                              IconButton(
-                                icon: const Icon(Icons.share_outlined),
-                                onPressed: () => ShareCodeDialog.show(
-                                  context,
-                                  id: userId,
-                                  link: Uri.https(
-                                    appLinkBase,
-                                    pathHomeProfile,
-                                    {'id': userId},
-                                  ).toString(),
-                                ),
-                              ),
-                              // More
-                              ProfilePopupMenuButton(
-                                user: profile,
-                                isMine: false,
-                              ),
-                            ],
-                            floating: true,
-                            expandedHeight: GradientStack.defaultHeight,
-                            flexibleSpace: FlexibleSpaceBar(
-                              background: GradientStack(
-                                children: [
-                                  AvatarPositioned(
-                                    child: AvatarImage(
-                                      userId: profile.imageId,
-                                      size: AvatarPositioned.childSize,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Body
-                          SliverToBoxAdapter(
-                            child: Padding(
-                              padding: paddingH20,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Title
-                                  Text(
-                                    profile.title.isEmpty
-                                        ? 'No name'
-                                        : profile.title,
-                                    textAlign: TextAlign.left,
-                                    style: textTheme.headlineLarge,
-                                  ),
-                                  const Padding(padding: paddingV8),
-                                  // Description
-                                  Text(
-                                    profile.description,
-                                    textAlign: TextAlign.left,
-                                    style: textTheme.bodyLarge,
-                                  ),
-                                  const Divider(),
-                                  Text(
-                                    'Beacons',
-                                    textAlign: TextAlign.left,
-                                    style: textTheme.titleMedium,
-                                  ),
-                                  const Divider(),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Beacons
-                          if (beacons.isNotEmpty)
-                            SliverList.separated(
-                              itemCount: beacons.length,
-                              itemBuilder: (context, i) => Padding(
-                                padding: paddingH20,
-                                child: BeaconTile(
-                                  beacon: beacons[i],
-                                ),
-                              ),
-                              separatorBuilder: (_, __) => const Divider(
-                                indent: 20,
-                                endIndent: 20,
-                              ),
-                            ),
-                        ],
+    return Scaffold(
+      body: Operation(
+          client: GetIt.I<Client>(),
+          operationRequest:
+              GProfileFetchByUserIdReq((b) => b.vars.user_id = userId),
+          builder: (context, response, error) {
+            if (error != null) {
+              return ErrorCenterText(
+                response: response,
+                error: error,
+              );
+            }
+            if (response?.loading ?? true) {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            }
+            final profile = response?.data?.user_by_pk;
+            if (profile == null) {
+              return const ErrorCenterText(error: 'Profile not found!');
+            }
+            final beacons = response?.data?.user_by_pk?.beacons
+                    .where((e) => e.enabled)
+                    .toList(growable: false) ??
+                [];
+            return CustomScrollView(
+              slivers: [
+                // Header
+                SliverAppBar(
+                  actions: [
+                    // Graph View
+                    IconButton(
+                      icon: const Icon(Icons.hub_outlined),
+                      onPressed: () => context.push(Uri(
+                        path: pathGraph,
+                        queryParameters: {'focus': userId},
+                      ).toString()),
+                    ),
+                    // Share
+                    IconButton(
+                      icon: const Icon(Icons.share_outlined),
+                      onPressed: () => ShareCodeDialog.show(
+                        context,
+                        id: userId,
+                        link: Uri.https(
+                          appLinkBase,
+                          pathHomeProfile,
+                          {'id': userId},
+                        ).toString(),
                       ),
-              ),
-        );
-      },
+                    ),
+                    // More
+                    ProfilePopupMenuButton(user: profile),
+                  ],
+                  floating: true,
+                  expandedHeight: GradientStack.defaultHeight,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: GradientStack(
+                      children: [
+                        AvatarPositioned(
+                          child: AvatarImage(
+                            userId: profile.imageId,
+                            size: AvatarPositioned.childSize,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Body
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: paddingH20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title
+                        Text(
+                          profile.title.isEmpty ? 'No name' : profile.title,
+                          textAlign: TextAlign.left,
+                          style: textTheme.headlineLarge,
+                        ),
+                        const Padding(padding: paddingV8),
+                        // Description
+                        Text(
+                          profile.description,
+                          textAlign: TextAlign.left,
+                          style: textTheme.bodyLarge,
+                        ),
+                        const Divider(),
+                        Text(
+                          'Beacons',
+                          textAlign: TextAlign.left,
+                          style: textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Beacons
+                if (beacons.isNotEmpty)
+                  SliverList.separated(
+                    itemCount: beacons.length,
+                    itemBuilder: (context, i) => Padding(
+                      padding: paddingH20,
+                      child: BeaconTile(
+                        beacon: beacons[i],
+                        withAvatar: false,
+                        isMine: false,
+                      ),
+                    ),
+                    separatorBuilder: (_, __) => const Divider(
+                      endIndent: 20,
+                      indent: 20,
+                    ),
+                  ),
+              ],
+            );
+          }),
     );
   }
 }

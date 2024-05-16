@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/routes.dart';
 
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/connect/ui/connect_screen.dart';
 import 'package:tentura/features/updates/ui/screen/updates_screen.dart';
 import 'package:tentura/features/my_field/ui/screen/my_field_screen.dart';
@@ -24,6 +25,8 @@ class HomeScreen extends StatelessWidget {
       StatefulShellRoute.indexedStack(
         parentNavigatorKey: parentNavigatorKey,
         builder: (context, state, child) => HomeScreen(child: child),
+        redirect: (context, state) =>
+            context.read<AuthCubit>().isAuthenticated ? null : pathAuthLogin,
         branches: [
           StatefulShellBranch(
             routes: [

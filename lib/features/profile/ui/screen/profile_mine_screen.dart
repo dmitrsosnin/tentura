@@ -6,14 +6,15 @@ import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
 
+import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
-import 'package:tentura/features/beacon/ui/widget/beacon_by_user_id_list.dart';
 
 import '../../data/user_utils.dart';
 import '../bloc/profile_cubit.dart';
 import '../widget/gradient_stack.dart';
 import '../widget/avatar_positioned.dart';
-import '../widget/profile_popup_menu_button.dart';
+import '../widget/my_profile_menu_button.dart';
 
 class ProfileMineScreen extends StatelessWidget {
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
@@ -28,12 +29,17 @@ class ProfileMineScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return RefreshIndicator.adaptive(
-      onRefresh: context.read<ProfileCubit>().fetch,
-      child: BlocConsumer<ProfileCubit, ProfileState>(
-        buildWhen: (p, c) => c.status.isSuccess,
-        builder: (context, state) {
-          return CustomScrollView(
+    return BlocConsumer<ProfileCubit, ProfileState>(
+      buildWhen: (p, c) => c.status.isSuccess,
+      builder: (context, state) {
+        final profile = state.user;
+        return RefreshIndicator.adaptive(
+          key: ValueKey(profile.id),
+          onRefresh: () async {
+            context.read<ProfileCubit>().fetch();
+            context.read<BeaconCubit>().fetch();
+          },
+          child: CustomScrollView(
             slivers: [
               // Header
               SliverAppBar(
@@ -43,7 +49,7 @@ class ProfileMineScreen extends StatelessWidget {
                     icon: const Icon(Icons.hub_outlined),
                     onPressed: () => context.push(Uri(
                       path: pathGraph,
-                      queryParameters: {'focus': state.user.id},
+                      queryParameters: {'focus': profile.id},
                     ).toString()),
                   ),
                   // Share
@@ -51,19 +57,16 @@ class ProfileMineScreen extends StatelessWidget {
                     icon: const Icon(Icons.share_outlined),
                     onPressed: () => ShareCodeDialog.show(
                       context,
-                      id: state.user.id,
+                      id: profile.id,
                       link: Uri.https(
                         appLinkBase,
                         pathHomeProfile,
-                        {'id': state.user.id},
+                        {'id': profile.id},
                       ).toString(),
                     ),
                   ),
                   // More
-                  ProfilePopupMenuButton(
-                    user: state.user,
-                    isMine: true,
-                  ),
+                  const MyProfileMenuButton(),
                 ],
                 floating: true,
                 expandedHeight: GradientStack.defaultHeight,
@@ -72,7 +75,7 @@ class ProfileMineScreen extends StatelessWidget {
                     children: [
                       AvatarPositioned(
                         child: AvatarImage(
-                          userId: state.user.imageId,
+                          userId: profile.imageId,
                           size: AvatarPositioned.childSize,
                         ),
                       ),
@@ -89,14 +92,14 @@ class ProfileMineScreen extends StatelessWidget {
                     children: [
                       // Title
                       Text(
-                        state.user.title.isEmpty ? 'No name' : state.user.title,
+                        profile.title.isEmpty ? 'No name' : profile.title,
                         textAlign: TextAlign.left,
                         style: textTheme.headlineLarge,
                       ),
                       const Padding(padding: paddingV8),
                       // Description
                       Text(
-                        state.user.description,
+                        profile.description,
                         textAlign: TextAlign.left,
                         style: textTheme.bodyLarge,
                       ),
@@ -121,24 +124,47 @@ class ProfileMineScreen extends StatelessWidget {
               ),
               // Beacons List
               SliverFillRemaining(
-                child: BeaconsByUserIdList(
-                  userId: state.user.id,
-                  isMine: true,
+                child: BlocConsumer<BeaconCubit, BeaconState>(
+                  listener: (context, state) {
+                    // TODO: implement listener
+                  },
+                  buildWhen: (p, c) => c.status.isSuccess,
+                  builder: (context, state) {
+                    final beacons = state.beacons.values.toList();
+                    return ListView.separated(
+                      itemCount: beacons.length,
+                      itemBuilder: (context, i) => Padding(
+                        padding: paddingH20,
+                        child: BeaconTile(
+                          beacon: beacons[i],
+                          withAvatar: false,
+                          isMine: true,
+                        ),
+                      ),
+                      separatorBuilder: (_, __) => const Divider(
+                        endIndent: 20,
+                        indent: 20,
+                      ),
+                    );
+                  },
                 ),
+                // child: BeaconsByUserIdList(
+                //   userId: profile.id,
+                //   isMine: true,
+                // ),
               )
             ],
-          );
-        },
-        listenWhen: (p, c) => c.hasError,
-        listener: (context, state) {
-          showSnackBar(
-            context,
-            isError: true,
-            text: state.error?.toString() ??
-                'Can`t fetch profile for id: ${state.user.id}',
-          );
-        },
-      ),
+          ),
+        );
+      },
+      listenWhen: (p, c) => c.hasError,
+      listener: (context, state) {
+        showSnackBar(
+          context,
+          isError: true,
+          text: state.error?.toString(),
+        );
+      },
     );
   }
 }

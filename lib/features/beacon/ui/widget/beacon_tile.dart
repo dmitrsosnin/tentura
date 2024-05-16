@@ -13,14 +13,16 @@ import '../../data/beacon_utils.dart';
 import 'beacon_control_row.dart';
 
 class BeaconTile extends StatelessWidget {
-  final GBeaconFields beacon;
-  final bool isMine;
-
   const BeaconTile({
     required this.beacon,
-    this.isMine = false,
+    required this.isMine,
+    required this.withAvatar,
     super.key,
   });
+
+  final GBeaconFields beacon;
+  final bool withAvatar;
+  final bool isMine;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class BeaconTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!isMine)
+        if (withAvatar)
           GestureDetector(
             onTap: () => context.push(Uri(
               path: pathProfileView,
@@ -123,7 +125,10 @@ class BeaconTile extends StatelessWidget {
         ),
         Padding(
           padding: paddingV8,
-          child: BeaconControlRow(beacon: beacon, isMine: isMine),
+          child: BeaconControlRow(
+            beacon: beacon,
+            isMine: isMine,
+          ),
         ),
       ],
     );

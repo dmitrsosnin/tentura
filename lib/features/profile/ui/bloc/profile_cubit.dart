@@ -13,11 +13,9 @@ class ProfileCubit extends Cubit<ProfileState>
     with HydratedMixin<ProfileState> {
   ProfileCubit({
     required this.id,
-    bool needFetch = true,
   }) : super(ProfileState(user: UserFields(id: id))) {
     hydrate();
     _subscription.resume();
-    if (needFetch) _gqlClient.requestController.add(_request);
   }
 
   @override
@@ -58,7 +56,7 @@ class ProfileCubit extends Cubit<ProfileState>
     return super.close();
   }
 
-  Future<void> fetch() async => _gqlClient.requestController.add(_request);
+  void fetch() => _gqlClient.requestController.add(_request);
 
   Future<void> update({
     required String title,

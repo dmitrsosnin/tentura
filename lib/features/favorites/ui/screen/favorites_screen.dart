@@ -42,6 +42,8 @@ class FavoritesScreen extends StatelessWidget {
                       itemBuilder: (context, i) => BeaconTile(
                         key: Key(response.data!.beacon_pinned[i].beacon.id),
                         beacon: response.data!.beacon_pinned[i].beacon,
+                        withAvatar: true,
+                        isMine: false,
                       ),
                     ),
             ),

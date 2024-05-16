@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 
 import 'di.dart';
@@ -41,13 +42,24 @@ class App extends StatelessWidget {
                       theme: themeLight,
                       builder: (context, child) {
                         return BlocBuilder<AuthCubit, AuthState>(
-                          // buildWhen: (p, c) =>
-                          //     p.currentAccount != c.currentAccount,
-                          builder: (context, state) => BlocProvider(
-                            key: ValueKey(state.currentAccount),
-                            create: (context) =>
-                                ProfileCubit(id: state.currentAccount),
-                            child: child,
+                          buildWhen: (p, c) =>
+                              p.currentAccount != c.currentAccount,
+                          builder: (context, state) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                create: (context) => ProfileCubit(
+                                  id: state.currentAccount,
+                                ),
+                                lazy: false,
+                              ),
+                              BlocProvider(
+                                create: (context) => BeaconCubit(
+                                  id: state.currentAccount,
+                                ),
+                                lazy: false,
+                              ),
+                            ],
+                            child: child!,
                           ),
                         );
                       },

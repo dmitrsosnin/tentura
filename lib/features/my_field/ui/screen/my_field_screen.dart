@@ -45,7 +45,11 @@ class MyFieldScreen extends StatelessWidget {
                       itemBuilder: (context, i) => Container(
                         decoration: decoration,
                         padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: BeaconTile(beacon: state.beacons[i]),
+                        child: BeaconTile(
+                          beacon: state.beacons[i],
+                          withAvatar: true,
+                          isMine: false,
+                        ),
                       ),
                     ),
                 },
