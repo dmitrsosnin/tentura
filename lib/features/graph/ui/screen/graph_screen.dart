@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/routes.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
@@ -20,57 +21,45 @@ class GraphScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => GraphCubit(
+        create: (_) => GraphCubit(
           myId: context.read<AuthCubit>().state.currentAccount,
           focus: GoRouterState.of(context).uri.queryParameters['focus'],
         ),
-        lazy: false,
-        child: BlocConsumer<GraphCubit, GraphState>(
-          builder: (context, state) => Scaffold(
-            appBar: AppBar(
-              actions: [
-                PopupMenuButton(
-                  itemBuilder: (context) => <PopupMenuEntry<void>>[
+        child: Scaffold(
+          appBar: AppBar(
+            actions: [
+              PopupMenuButton(
+                itemBuilder: (context) {
+                  final cubit = context.read<GraphCubit>();
+                  return <PopupMenuEntry<void>>[
                     PopupMenuItem<void>(
-                      onTap: context.read<GraphCubit>().jumpToEgo,
+                      onTap: cubit.jumpToEgo,
                       child: const Text('Go to Ego'),
                     ),
                     const PopupMenuDivider(),
                     PopupMenuItem<void>(
-                      onTap: context.read<GraphCubit>().togglePositiveOnly,
-                      child: state.positiveOnly
+                      onTap: cubit.togglePositiveOnly,
+                      child: cubit.state.positiveOnly
                           ? const Text('Show negative')
                           : const Text('Hide negative'),
                     ),
-                  ],
-                ),
-              ],
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(4),
-                child: Offstage(
-                  offstage: !state.status.isLoading,
-                  child: const LinearProgressIndicator(),
-                ),
+                  ];
+                },
               ),
-              title: const Text('Graph view'),
-            ),
-            body: switch (state.status) {
-              FetchStatus.isLoading => Container(),
-              _ => GraphBody(
-                  controller: context.read<GraphCubit>().graphController,
-                  isAnimated: state.isAnimated,
-                ),
-            },
+            ],
+            title: const Text('Graph view'),
           ),
-          buildWhen: (p, c) =>
-              p.status != c.status || p.positiveOnly != c.positiveOnly,
-          listener: (context, state) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text((state.error ?? 'Undescribed error').toString()),
-              backgroundColor: Theme.of(context).colorScheme.errorContainer,
-            ));
-          },
-          listenWhen: (p, c) => c.status.isFailure,
+          body: BlocListener<GraphCubit, GraphState>(
+            listenWhen: (p, c) => c.status.isFailure,
+            listener: (context, state) {
+              showSnackBar(
+                context,
+                isError: true,
+                text: state.error?.toString() ?? 'Undescribed error',
+              );
+            },
+            child: const GraphBody(),
+          ),
         ),
       );
 }

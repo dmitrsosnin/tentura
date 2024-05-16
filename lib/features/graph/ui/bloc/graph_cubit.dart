@@ -43,10 +43,14 @@ class GraphCubit extends Cubit<GraphState> {
         );
   }
 
-  final String _myId;
-
   final graphController =
       GraphController<NodeDetails, EdgeDetails<NodeDetails>>();
+
+  final String _myId;
+
+  final _users = <String, GGraphFetchData_gravityGraph_users_user>{};
+  final _beacons = <String, GGraphFetchData_gravityGraph_beacons_beacon>{};
+  final _comments = <String, GGraphFetchData_gravityGraph_comments_comment>{};
 
   late final StreamSubscription<_Response> _subscription;
   late final Map<String, int> _fetchLimits;
@@ -57,10 +61,6 @@ class GraphCubit extends Cubit<GraphState> {
     pinned: true,
     size: 80,
   );
-
-  final _users = <String, GGraphFetchData_gravityGraph_users_user>{};
-  final _beacons = <String, GGraphFetchData_gravityGraph_beacons_beacon>{};
-  final _comments = <String, GGraphFetchData_gravityGraph_comments_comment>{};
 
   late NodeDetails _egoNode = _defaultEgo;
 
