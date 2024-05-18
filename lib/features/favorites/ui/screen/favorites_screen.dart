@@ -4,6 +4,7 @@ import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/empty_list_scroll_view.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 
 import '../../data/gql/_g/beacon_fetch_pinned_by_user_id.req.gql.dart';
@@ -40,8 +41,9 @@ class FavoritesScreen extends StatelessWidget {
                       itemCount: response!.data!.beacon_pinned.length,
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder: (context, i) => BeaconTile(
-                        key: Key(response.data!.beacon_pinned[i].beacon.id),
-                        beacon: response.data!.beacon_pinned[i].beacon,
+                        key: ValueKey(response.data!.beacon_pinned[i]),
+                        beacon:
+                            response.data!.beacon_pinned[i].beacon as Beacon,
                         withAvatar: true,
                         isMine: false,
                       ),

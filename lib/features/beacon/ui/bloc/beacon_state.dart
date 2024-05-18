@@ -10,15 +10,9 @@ final class BeaconState extends StateBase {
   const BeaconState.empty({
     super.status,
     super.error,
-  }) : beacons = const {};
+  }) : beacons = const [];
 
-  // TBD
-  // ignore: avoid_unused_constructor_parameters
-  factory BeaconState.fromJson(Map<String, dynamic> json) =>
-      const BeaconState.empty();
-  // BeaconState(beacons: GBeaconFieldsData.fromJson(json)!);
-
-  final Map<String, GBeaconFields> beacons;
+  final List<Beacon> beacons;
 
   @override
   List<Object?> get props => [
@@ -31,7 +25,7 @@ final class BeaconState extends StateBase {
 
   @override
   BeaconState copyWith({
-    Map<String, GBeaconFields>? beacons,
+    List<Beacon>? beacons,
     FetchStatus? status,
     Object? error,
   }) =>
@@ -53,8 +47,4 @@ final class BeaconState extends StateBase {
         status: FetchStatus.isLoading,
         beacons: beacons,
       );
-
-  // TBD
-  Map<String, dynamic>? toJson(BeaconState state) => null;
-  // state.beacons == beacons ? null : state.beacons.toJson();
 }

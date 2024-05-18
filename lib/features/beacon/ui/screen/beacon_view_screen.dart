@@ -13,7 +13,7 @@ import 'package:tentura/features/image/ui/widget/beacon_image.dart';
 import 'package:tentura/features/comment/ui/widget/new_comment_input.dart';
 import 'package:tentura/features/comment/ui/widget/comments_expansion_tile.dart';
 
-import '../../data/beacon_utils.dart';
+import '../../domain/entity/beacon.dart';
 import '../../data/gql/_g/beacon_fetch_by_id.req.gql.dart';
 import '../widget/beacon_control_row.dart';
 
@@ -54,7 +54,7 @@ class BeaconViewScreen extends StatelessWidget {
           ..vars.id = beaconId,
       ),
       builder: (context, response, error) {
-        final beacon = response?.data?.beacon_by_pk;
+        final beacon = response?.data?.beacon_by_pk as Beacon?;
         if (beacon == null) {
           return Scaffold(
             appBar: AppBar(title: const Text('Beacon')),

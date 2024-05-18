@@ -48,7 +48,7 @@ class ProfileCubit extends Cubit<ProfileState>
       ProfileState.fromJson(json);
 
   @override
-  Map<String, dynamic>? toJson(ProfileState state) => state.toJson(state);
+  Map<String, dynamic>? toJson(ProfileState state) => this.state.toJson(state);
 
   @override
   Future<void> close() async {

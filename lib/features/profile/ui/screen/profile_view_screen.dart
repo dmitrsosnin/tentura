@@ -5,6 +5,7 @@ import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
 
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 
@@ -51,6 +52,7 @@ class ProfileViewScreen extends StatelessWidget {
             }
             final beacons = response?.data?.user_by_pk?.beacons
                     .where((e) => e.enabled)
+                    .map((e) => e as Beacon)
                     .toList(growable: false) ??
                 [];
             return CustomScrollView(

@@ -16,17 +16,18 @@ class KeychainRepository {
     ),
   );
 
-  static const _keySeed = 'kSeed';
+  // TBD: change value to 'kCipher'
+  static const _keyCipherKey = 'kSeed';
 
-  Future<Uint8List> getSeed() async {
-    final encodedKey = await _secureStorage.read(key: _keySeed);
+  Future<Uint8List> getCipherKey() async {
+    final encodedKey = await _secureStorage.read(key: _keyCipherKey);
     late final rnd = Random.secure();
     final key = encodedKey == null
         ? Uint8List.fromList(List<int>.generate(32, (i) => rnd.nextInt(255)))
         : base64Decode(encodedKey);
     if (encodedKey == null) {
       await _secureStorage.write(
-        key: _keySeed,
+        key: _keyCipherKey,
         value: base64UrlEncode(key),
       );
     }

@@ -1,3 +1,5 @@
+import 'package:path_provider/path_provider.dart';
+
 import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/data/repository/keychain_repository.dart';
 import 'package:tentura/data/repository/geolocation_repository.dart';
@@ -16,23 +18,28 @@ class DI {
 
     GetIt.I.registerSingleton(GeolocationRepository());
 
-    GetIt.I.registerSingleton(KeychainRepository());
+    final keychainRepository = KeychainRepository();
+    GetIt.I.registerSingleton(keychainRepository);
 
+    final authRepository = AuthRepository();
     GetIt.I.registerSingleton(
-      AuthRepository(),
+      authRepository,
       dispose: (i) => i.close(),
     );
 
     GetIt.I.registerSingleton(
-      ImageRepository(link: GetIt.I<AuthRepository>().link),
+      ImageRepository(link: authRepository.link),
     );
 
     GetIt.I.registerSingleton(
-      await buildGqlClient(link: GetIt.I<AuthRepository>().link),
+      await buildGqlClient(link: authRepository.link),
       dispose: (i) => i.dispose(),
     );
 
-    await StateBase.init();
+    await StateBase.init(
+      cipherKey: await keychainRepository.getCipherKey(),
+      storageDirectory: await getApplicationDocumentsDirectory(),
+    );
 
     return _isInited = true;
   }

@@ -5,6 +5,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:ferry_hive_store/ferry_hive_store.dart';
 
 import 'package:tentura/consts.dart';
+import 'package:tentura/domain/exception.dart';
+
+export 'package:ferry/ferry.dart';
+export 'package:get_it/get_it.dart';
 
 Future<Client> buildGqlClient({
   required Link link,
@@ -31,4 +35,26 @@ Future<Client> buildGqlClient({
       OperationType.query: FetchPolicy.NoCache,
     },
   );
+}
+
+extension ErrorHandler<TData, TVars> on OperationResponse<TData, TVars> {
+  bool get hasNoErrors => !hasErrors;
+
+  OperationResponse<TData, TVars> throwIfError({
+    bool failOnNull = true,
+    String? label,
+  }) {
+    if (hasErrors) {
+      throw GraphQLException(
+        error: linkException ?? graphqlErrors,
+        label: label,
+      );
+    }
+    if (failOnNull && data == null) {
+      throw GraphQLNoDataException(label: label);
+    }
+    return this;
+  }
+
+  TData dataOrThrow({String? label}) => throwIfError(label: label).data!;
 }

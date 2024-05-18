@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
-import 'package:tentura/features/beacon/data/beacon_utils.dart';
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
 import '../../data/gql/_g/beacon_fetch_my_field.req.gql.dart';
 
@@ -33,7 +33,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
           status: FetchStatus.isSuccess,
           beacons: response.data!.scores
               .where((e) => e.beacon != null)
-              .map<GBeaconFields>((e) => e.beacon as GBeaconFields)
+              .map((e) => e.beacon as Beacon)
               // TBD: remove that ugly hack when able filter in request
               .where((e) => e.enabled)
               .toList(),

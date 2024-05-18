@@ -1,11 +1,11 @@
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
-import '../../data/beacon_utils.dart';
 import '../../data/gql/_g/beacon_delete_by_id.req.gql.dart';
+import '../../domain/entity/beacon.dart';
 
 class BeaconDeleteDialog extends StatelessWidget {
-  final GBeaconFields beacon;
+  final Beacon beacon;
 
   const BeaconDeleteDialog({
     required this.beacon,

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
-import 'package:tentura/features/beacon/data/beacon_utils.dart';
 
+import '../../domain/entity/beacon.dart';
 import 'beacon_popup_menu.dart';
 import 'beacon_vote_control.dart';
 import 'favorite_icon_button.dart';
 
 class BeaconControlRow extends StatelessWidget {
-  final GBeaconFields beacon;
+  final Beacon beacon;
   final bool isMine;
 
   const BeaconControlRow({

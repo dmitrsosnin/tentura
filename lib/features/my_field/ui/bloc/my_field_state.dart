@@ -3,12 +3,12 @@ part of 'my_field_cubit.dart';
 final class MyFieldState extends StateBase {
   const MyFieldState({
     this.hasReachedMax = false,
-    this.beacons = const <GBeaconFields>[],
+    this.beacons = const <Beacon>[],
     super.status,
     super.error,
   });
 
-  final List<GBeaconFields> beacons;
+  final List<Beacon> beacons;
   final bool hasReachedMax;
 
   @override
@@ -16,7 +16,7 @@ final class MyFieldState extends StateBase {
     Object? error,
     FetchStatus? status,
     bool? hasReachedMax,
-    List<GBeaconFields>? beacons,
+    List<Beacon>? beacons,
   }) =>
       MyFieldState(
         error: error ?? this.error,

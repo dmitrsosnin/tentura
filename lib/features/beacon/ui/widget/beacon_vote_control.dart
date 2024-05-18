@@ -1,10 +1,10 @@
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
 import '../../data/gql/_g/beacon_vote_by_id.req.gql.dart';
-import '../../data/beacon_utils.dart';
+import '../../domain/entity/beacon.dart';
 
 class BeaconVoteControl extends StatefulWidget {
-  final GBeaconFields beacon;
+  final Beacon beacon;
 
   const BeaconVoteControl({
     required this.beacon,

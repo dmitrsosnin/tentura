@@ -29,16 +29,21 @@ class ProfileMineScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final beaconCubit = context.read<BeaconCubit>();
+    final profileCubit = context.read<ProfileCubit>();
+
+    Future<void> refresh() async {
+      profileCubit.fetch();
+      await beaconCubit.fetch();
+    }
+
     return BlocConsumer<ProfileCubit, ProfileState>(
       buildWhen: (p, c) => c.status.isSuccess,
       builder: (context, state) {
         final profile = state.user;
         return RefreshIndicator.adaptive(
-          key: ValueKey(profile.id),
-          onRefresh: () async {
-            context.read<ProfileCubit>().fetch();
-            context.read<BeaconCubit>().fetch();
-          },
+          key: const Key('ProfileHeader'),
+          onRefresh: refresh,
           child: CustomScrollView(
             slivers: [
               // Header
@@ -125,33 +130,38 @@ class ProfileMineScreen extends StatelessWidget {
               // Beacons List
               SliverFillRemaining(
                 child: BlocConsumer<BeaconCubit, BeaconState>(
-                  listener: (context, state) {
-                    // TODO: implement listener
-                  },
+                  key: const Key('ProfileBeacons'),
                   buildWhen: (p, c) => c.status.isSuccess,
                   builder: (context, state) {
-                    final beacons = state.beacons.values.toList();
-                    return ListView.separated(
-                      itemCount: beacons.length,
-                      itemBuilder: (context, i) => Padding(
-                        padding: paddingH20,
-                        child: BeaconTile(
-                          beacon: beacons[i],
-                          withAvatar: false,
-                          isMine: true,
+                    return RefreshIndicator.adaptive(
+                      key: const Key('ProfileBeaconsList'),
+                      onRefresh: refresh,
+                      child: ListView.separated(
+                        itemCount: state.beacons.length,
+                        itemBuilder: (context, i) => Padding(
+                          padding: paddingH20,
+                          child: BeaconTile(
+                            beacon: state.beacons[i],
+                            withAvatar: false,
+                            isMine: true,
+                          ),
                         ),
-                      ),
-                      separatorBuilder: (_, __) => const Divider(
-                        endIndent: 20,
-                        indent: 20,
+                        separatorBuilder: (_, __) => const Divider(
+                          endIndent: 20,
+                          indent: 20,
+                        ),
                       ),
                     );
                   },
+                  listenWhen: (p, c) => c.hasError,
+                  listener: (context, state) {
+                    showSnackBar(
+                      context,
+                      isError: true,
+                      text: state.error?.toString(),
+                    );
+                  },
                 ),
-                // child: BeaconsByUserIdList(
-                //   userId: profile.id,
-                //   isMine: true,
-                // ),
               )
             ],
           ),

@@ -4,7 +4,7 @@ import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
 import '../../data/gql/_g/beacon_pin_by_id.req.gql.dart';
 import '../../data/gql/_g/beacon_unpin_by_id.req.gql.dart';
-import '../../data/beacon_utils.dart';
+import '../../domain/entity/beacon.dart';
 
 class FavoriteIconButton extends StatefulWidget {
   const FavoriteIconButton({
@@ -12,7 +12,7 @@ class FavoriteIconButton extends StatefulWidget {
     super.key,
   });
 
-  final GBeaconFields beacon;
+  final Beacon beacon;
 
   @override
   State<FavoriteIconButton> createState() => _FavoriteIconButtonState();

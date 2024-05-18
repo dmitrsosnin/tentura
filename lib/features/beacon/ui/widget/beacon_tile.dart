@@ -9,7 +9,7 @@ import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/features/image/ui/widget/beacon_image.dart';
 import 'package:tentura/features/profile/data/user_utils.dart';
 
-import '../../data/beacon_utils.dart';
+import '../../domain/entity/beacon.dart';
 import 'beacon_control_row.dart';
 
 class BeaconTile extends StatelessWidget {
@@ -20,7 +20,7 @@ class BeaconTile extends StatelessWidget {
     super.key,
   });
 
-  final GBeaconFields beacon;
+  final Beacon beacon;
   final bool withAvatar;
   final bool isMine;
 

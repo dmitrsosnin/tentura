@@ -1,6 +1,6 @@
-import 'package:ferry/ferry.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+
+import 'package:tentura/data/gql/gql_client.dart';
 
 import '../widget/error_center_text.dart';
 
@@ -9,11 +9,7 @@ export 'package:get_it/get_it.dart';
 export 'package:flutter/material.dart';
 export 'package:ferry_flutter/ferry_flutter.dart';
 
-extension HasNo on OperationResponse<Object, Object> {
-  bool get hasNoErrors => !hasErrors;
-
-  bool get hasNoData => data == null;
-}
+export 'package:tentura/data/gql/gql_client.dart';
 
 /// Returns null if response has data otherwise shows loader or error
 Widget? showLoaderOrErrorOr(
