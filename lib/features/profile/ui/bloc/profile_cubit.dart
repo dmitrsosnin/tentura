@@ -74,13 +74,10 @@ class ProfileCubit extends Cubit<ProfileState>
             ..description = description
             ..has_picture = hasPicture,
         ))
-        .firstWhere((e) => e.dataSource == DataSource.Link);
-    if (response.hasErrors) {
-      throw Exception(response.linkException ??
-          response.graphqlErrors ??
-          'Profile: unknown error while update!');
-    } else {
-      emit(ProfileState(user: response.data!.update_user_by_pk!));
-    }
+        .firstWhere((e) => e.dataSource == DataSource.Link)
+        .then((r) => r.dataOrThrow(label: 'Profile') as GUserFields);
+    emit(ProfileState(
+      user: response,
+    ));
   }
 }

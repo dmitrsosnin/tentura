@@ -15,26 +15,38 @@ class BeaconRepository {
   final Client _gqlClient;
 
   Future<List<Beacon>> fetchByUserId(String userId) => _gqlClient
-      .request(GBeaconsFetchByUserIdReq((b) => b.vars.user_id = userId))
-      .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then((r) => r.dataOrThrow().beacon.asList() as List<Beacon>);
+      .request(
+        GBeaconsFetchByUserIdReq((b) => b.vars.user_id = userId),
+      )
+      .firstWhere(
+        (e) => e.dataSource == DataSource.Link,
+      )
+      .then(
+        (r) => r.dataOrThrow().beacon.asList() as List<Beacon>,
+      );
 
   Future<Beacon> create({
     required String title,
+    bool hasPicture = false,
     String description = '',
     DateTimeRange? dateRange,
     LatLng? coordinates,
-    String? imagePath,
   }) =>
       _gqlClient
-          .request(GBeaconCreateReq(
-            (b) => b.vars
-              ..title = title
-              ..description = description
-              ..timerange = dateRange
-              ..place = coordinates
-              ..has_picture = imagePath?.isNotEmpty,
-          ))
-          .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then((r) => r.dataOrThrow(label: 'Beacon') as Beacon);
+          .request(
+            GBeaconCreateReq(
+              (b) => b.vars
+                ..title = title
+                ..description = description
+                ..has_picture = hasPicture
+                ..timerange = dateRange
+                ..place = coordinates,
+            ),
+          )
+          .firstWhere(
+            (e) => e.dataSource == DataSource.Link,
+          )
+          .then(
+            (r) => r.dataOrThrow(label: 'Beacon').insert_beacon_one as Beacon,
+          );
 }

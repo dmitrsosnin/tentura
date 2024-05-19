@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:collection/collection.dart';
 
 import 'package:tentura/domain/entity/date_time_range.dart';
@@ -18,8 +18,10 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
 
   BeaconCubit({
     required this.id,
-    BeaconRepository? repository,
-  })  : _repository = repository ?? BeaconRepository(),
+    BeaconRepository? beaconRepository,
+    ImageRepository? imageRepository,
+  })  : _beaconRepository = beaconRepository ?? BeaconRepository(),
+        _imageRepository = imageRepository ?? GetIt.I<ImageRepository>(),
         super(const BeaconState.empty()) {
     hydrate();
   }
@@ -28,7 +30,8 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
   @override
   final String id;
 
-  final BeaconRepository _repository;
+  final BeaconRepository _beaconRepository;
+  final ImageRepository _imageRepository;
 
   @override
   BeaconState? fromJson(Map<String, dynamic> json) => json.containsKey(_jsonKey)
@@ -49,36 +52,38 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
-      emit(BeaconState(beacons: await _repository.fetchByUserId(id)));
+      emit(BeaconState(beacons: await _beaconRepository.fetchByUserId(id)));
     } catch (e) {
       emit(state.setError(e));
     }
   }
+
+  Future<({String path, String name})?> pickImage() =>
+      _imageRepository.pickImage();
 
   Future<void> create({
     required String title,
     String description = '',
     DateTimeRange? dateRange,
     LatLng? coordinates,
-    String? imagePath,
+    Uint8List? image,
   }) async {
     try {
-      final beacon = await _repository.create(
+      final beacon = await _beaconRepository.create(
         title: title,
         description: description,
         dateRange: dateRange,
         coordinates: coordinates,
-        imagePath: imagePath,
+        hasPicture: image != null,
       );
-      if (imagePath != null && imagePath.isNotEmpty) {
-        await GetIt.I<ImageRepository>().putBeacon(
-          userId: id,
+      if (image != null && image.isNotEmpty) {
+        await _imageRepository.putBeacon(
           beaconId: beacon.id,
-          image: await File(imagePath).readAsBytes(),
+          image: image,
+          userId: id,
         );
       }
-      state.beacons.add(beacon);
-      emit(BeaconState(beacons: state.beacons));
+      emit(BeaconState(beacons: [beacon, ...state.beacons]));
     } catch (e) {
       emit(state.setError(e));
     }
