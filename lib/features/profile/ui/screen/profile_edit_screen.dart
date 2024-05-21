@@ -189,7 +189,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           image: await File(_imagePath).readAsBytes(),
         );
         await CachedNetworkImage.evictFromCache(
-            widget.getUrlCase.getAvatarUrl(_profile.id));
+          widget.getUrlCase.getAvatarUrl(_profile.id),
+        );
       }
       await _profileCubit.update(
         title: _nameController.text,

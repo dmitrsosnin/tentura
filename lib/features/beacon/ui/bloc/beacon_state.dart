@@ -21,8 +21,6 @@ final class BeaconState extends StateBase {
         beacons,
       ];
 
-  bool get hasError => error != null;
-
   @override
   BeaconState copyWith({
     List<Beacon>? beacons,

@@ -19,8 +19,6 @@ final class ProfileState extends StateBase {
         user,
       ];
 
-  bool get hasError => error != null;
-
   @override
   ProfileState copyWith({
     GUserFields? user,

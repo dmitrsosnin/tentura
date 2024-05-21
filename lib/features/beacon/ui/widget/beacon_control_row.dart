@@ -65,7 +65,7 @@ class BeaconControlRow extends StatelessWidget {
           ),
           if (isMine)
             // Menu
-            BeaconPopupMenu(beacon: beacon)
+            BeaconPopupMenu(id: beacon.id)
           else ...[
             // Favorite
             FavoriteIconButton(beacon: beacon),

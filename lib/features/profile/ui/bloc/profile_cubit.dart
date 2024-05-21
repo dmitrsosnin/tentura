@@ -75,7 +75,10 @@ class ProfileCubit extends Cubit<ProfileState>
             ..has_picture = hasPicture,
         ))
         .firstWhere((e) => e.dataSource == DataSource.Link)
-        .then((r) => r.dataOrThrow(label: 'Profile') as GUserFields);
+        .then(
+          (r) =>
+              r.dataOrThrow(label: 'Profile').update_user_by_pk! as GUserFields,
+        );
     emit(ProfileState(
       user: response,
     ));

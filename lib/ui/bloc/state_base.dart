@@ -40,6 +40,9 @@ abstract base class StateBase with EquatableMixin {
         error,
       ];
 
+  bool get hasError => error != null || status.isFailure;
+  bool get hasNoError => error == null && status.isSuccess;
+
   StateBase setError(Object error) => copyWith(
         status: FetchStatus.isFailure,
         error: error,

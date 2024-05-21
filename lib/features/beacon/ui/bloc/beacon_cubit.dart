@@ -50,7 +50,6 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
             };
 
   Future<void> fetch() async {
-    emit(state.setLoading());
     try {
       emit(BeaconState(beacons: await _beaconRepository.fetchByUserId(id)));
     } catch (e) {
@@ -68,24 +67,36 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
     LatLng? coordinates,
     Uint8List? image,
   }) async {
-    try {
-      final beacon = await _beaconRepository.create(
-        title: title,
-        description: description,
-        dateRange: dateRange,
-        coordinates: coordinates,
-        hasPicture: image != null,
+    final beacon = await _beaconRepository.create(
+      title: title,
+      description: description,
+      dateRange: dateRange,
+      coordinates: coordinates,
+      hasPicture: image != null,
+    );
+    if (image != null && image.isNotEmpty) {
+      await _imageRepository.putBeacon(
+        beaconId: beacon.id,
+        image: image,
+        userId: id,
       );
-      if (image != null && image.isNotEmpty) {
-        await _imageRepository.putBeacon(
-          beaconId: beacon.id,
-          image: image,
-          userId: id,
-        );
-      }
-      emit(BeaconState(beacons: [beacon, ...state.beacons]));
-    } catch (e) {
-      emit(state.setError(e));
     }
+    emit(BeaconState(beacons: [beacon, ...state.beacons]));
+  }
+
+  Future<void> delete(String beaconId) async {
+    await _beaconRepository.delete(beaconId);
+    emit(BeaconState(
+      beacons: state.beacons.where((e) => e.id != beaconId).toList(),
+    ));
+  }
+
+  Future<void> toggleEnabled(String beaconId) async {
+    final beacon = state.beacons.singleWhere((e) => e.id == beaconId);
+    state.beacons[state.beacons.indexOf(beacon)] =
+        await _beaconRepository.setEnabled(
+      id: beaconId,
+      isEnabled: !beacon.enabled,
+    );
   }
 }

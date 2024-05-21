@@ -1,16 +1,26 @@
-import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:flutter/material.dart';
 
-import '../../data/gql/_g/beacon_delete_by_id.req.gql.dart';
-import '../../domain/entity/beacon.dart';
+import 'package:tentura/ui/routes.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
+
+import '../bloc/beacon_cubit.dart';
 
 class BeaconDeleteDialog extends StatelessWidget {
-  final Beacon beacon;
+  static Future<void> show(
+    BuildContext context, {
+    required String id,
+  }) =>
+      showDialog(
+        context: context,
+        builder: (context) => BeaconDeleteDialog(id: id),
+      );
 
   const BeaconDeleteDialog({
-    required this.beacon,
+    required this.id,
     super.key,
   });
+
+  final String id;
 
   @override
   Widget build(BuildContext context) => AlertDialog(
@@ -18,17 +28,17 @@ class BeaconDeleteDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              final response = await doRequest(
-                context: context,
-                request: GBeaconDeleteByIdReq((b) => b.vars..id = beacon.id),
-              );
-              if (context.mounted) {
-                if (response.hasErrors) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Error has occurred'),
-                  ));
+              try {
+                await context.read<BeaconCubit>().delete(id);
+                if (context.mounted) context.pop();
+              } catch (e) {
+                if (context.mounted) {
+                  showSnackBar(
+                    context,
+                    isError: true,
+                    text: e.toString(),
+                  );
                 }
-                context.pop();
               }
             },
             child: const Text('Delete'),

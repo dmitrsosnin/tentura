@@ -1,41 +1,50 @@
-import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:flutter/material.dart';
 
-import '../../domain/entity/beacon.dart';
-import '../../data/gql/_g/beacon_update_by_id.req.gql.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
+
+import '../bloc/beacon_cubit.dart';
 import '../dialog/beacon_delete_dialog.dart';
 
 class BeaconPopupMenu extends StatelessWidget {
-  final Beacon beacon;
+  final String id;
 
   const BeaconPopupMenu({
-    required this.beacon,
+    required this.id,
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) => PopupMenuButton<void>(
-        itemBuilder: (context) => [
+  Widget build(BuildContext context) {
+    return PopupMenuButton<void>(
+      itemBuilder: (context) {
+        final beaconCubit = context.read<BeaconCubit>();
+        return [
           PopupMenuItem<void>(
-            child: beacon.enabled
-                ? const Text('Disable beacon')
-                : const Text('Enable beacon'),
-            onTap: () => doRequest(
-              context: context,
-              request: GBeaconUpdateByIdReq(
-                (b) => b
-                  ..vars.id = beacon.id
-                  ..vars.enabled = !beacon.enabled,
-              ),
-            ),
+            child:
+                beaconCubit.state.beacons.singleWhere((e) => e.id == id).enabled
+                    ? const Text('Disable beacon')
+                    : const Text('Enable beacon'),
+            onTap: () async {
+              try {
+                await beaconCubit.toggleEnabled(id);
+              } catch (e) {
+                if (context.mounted) {
+                  showSnackBar(
+                    context,
+                    isError: true,
+                    text: e.toString(),
+                  );
+                }
+              }
+            },
           ),
           const PopupMenuDivider(),
           PopupMenuItem<void>(
             child: const Text('Delete beacon'),
-            onTap: () => showDialog<void>(
-              context: context,
-              builder: (context) => BeaconDeleteDialog(beacon: beacon),
-            ),
+            onTap: () => BeaconDeleteDialog.show(context, id: id),
           ),
-        ],
-      );
+        ];
+      },
+    );
+  }
 }
