@@ -1,37 +1,45 @@
-import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:flutter/material.dart';
 
-import '../../data/gql/_g/beacon_vote_by_id.req.gql.dart';
-import '../../domain/entity/beacon.dart';
+import '../bloc/beacon_cubit.dart';
 
 class BeaconVoteControl extends StatefulWidget {
-  final Beacon beacon;
-
   const BeaconVoteControl({
-    required this.beacon,
+    required this.id,
+    this.votes,
     super.key,
   });
+
+  final String id;
+  final int? votes;
 
   @override
   State<BeaconVoteControl> createState() => _BeaconVoteControlState();
 }
 
 class _BeaconVoteControlState extends State<BeaconVoteControl> {
-  late int _likeAmount = widget.beacon.my_vote ?? 0;
+  late final _colorScheme = Theme.of(context).colorScheme;
+
+  late int _likeAmount = widget.votes ?? 0;
 
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
-          color: Theme.of(context).colorScheme.secondaryContainer,
+          color: _colorScheme.secondaryContainer,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Like Button
             IconButton(
               icon: const Icon(Icons.thumb_up_outlined),
               onPressed: () => _updateVote(_likeAmount++),
             ),
+
+            // Amount
             Text(_likeAmount.toString()),
+
+            // Dislike Button
             IconButton(
               icon: const Icon(Icons.thumb_down_outlined),
               onPressed: () => _updateVote(_likeAmount--),
@@ -40,17 +48,11 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
         ),
       );
 
-  Future<void> _updateVote([int? amount]) => doRequest(
-        context: context,
-        request: GBeaconVoteByIdReq(
-          (b) => b
-            ..vars.amount = _likeAmount
-            ..vars.beacon_id = widget.beacon.id,
-        ),
-      ).then(
-        (response) {
-          final amount = response.data?.insert_vote_beacon_one?.amount;
-          if (amount != null) setState(() => _likeAmount = amount);
-        },
-      );
+  Future<void> _updateVote([int? _]) async {
+    _likeAmount = await context.read<BeaconCubit>().vote(
+          beaconId: widget.id,
+          amount: _likeAmount,
+        );
+    setState(() {});
+  }
 }

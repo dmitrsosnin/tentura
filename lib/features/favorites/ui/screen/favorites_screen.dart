@@ -21,20 +21,19 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void request(GBeaconFetchPinnedByUserIdReqBuilder r) => r
+    final request = GBeaconFetchPinnedByUserIdReq((r) => r
       ..requestId = 'BeaconFetchPinned'
-      ..vars.user_id = context.read<AuthCubit>().state.currentAccount;
+      ..vars.user_id = context.read<AuthCubit>().state.currentAccount);
     return SafeArea(
       minimum: paddingH20,
       child: Operation(
         client: GetIt.I<Client>(),
-        operationRequest: GBeaconFetchPinnedByUserIdReq(request),
+        operationRequest: request,
         builder: (context, response, error) =>
             showLoaderOrErrorOr(response, error) ??
             RefreshIndicator.adaptive(
-              onRefresh: () async => GetIt.I<Client>()
-                  .requestController
-                  .add(GBeaconFetchPinnedByUserIdReq(request)),
+              onRefresh: () async =>
+                  GetIt.I<Client>().requestController.add(request),
               child: response?.data?.beacon_pinned.isEmpty ?? false
                   ? const EmptyListScrollView()
                   : ListView.separated(

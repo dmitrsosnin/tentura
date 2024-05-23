@@ -3,7 +3,7 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
-import 'package:tentura/ui/dialog/share_code_dialog.dart';
+import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
@@ -68,19 +68,17 @@ class ProfileViewScreen extends StatelessWidget {
                         queryParameters: {'focus': userId},
                       ).toString()),
                     ),
+
                     // Share
-                    IconButton(
-                      icon: const Icon(Icons.share_outlined),
-                      onPressed: () => ShareCodeDialog.show(
-                        context,
-                        id: userId,
-                        link: Uri.https(
-                          appLinkBase,
-                          pathHomeProfile,
-                          {'id': userId},
-                        ).toString(),
+                    ShareCodeIconButton(
+                      header: userId,
+                      link: Uri.https(
+                        appLinkBase,
+                        pathProfileView,
+                        {'id': userId},
                       ),
                     ),
+
                     // More
                     ProfilePopupMenuButton(user: profile),
                   ],
@@ -99,6 +97,7 @@ class ProfileViewScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 // Body
                 SliverToBoxAdapter(
                   child: Padding(
@@ -113,6 +112,7 @@ class ProfileViewScreen extends StatelessWidget {
                           style: textTheme.headlineLarge,
                         ),
                         const Padding(padding: paddingV8),
+
                         // Description
                         Text(
                           profile.description,
@@ -120,6 +120,7 @@ class ProfileViewScreen extends StatelessWidget {
                           style: textTheme.bodyLarge,
                         ),
                         const Divider(),
+
                         Text(
                           'Beacons',
                           textAlign: TextAlign.left,
@@ -129,6 +130,7 @@ class ProfileViewScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 // Beacons
                 if (beacons.isNotEmpty)
                   SliverList.separated(

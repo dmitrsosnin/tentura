@@ -7,19 +7,22 @@ import 'package:tentura/ui/utils/ui_consts.dart';
 class ShareCodeDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required String id,
-    required String link,
+    required String header,
+    required Uri link,
   }) =>
       showDialog(
         context: context,
-        builder: (context) => ShareCodeDialog(id: id, link: link),
+        builder: (context) => ShareCodeDialog(
+          header: header,
+          link: link.toString(),
+        ),
       );
 
-  final String id;
+  final String header;
   final String link;
 
   const ShareCodeDialog({
-    required this.id,
+    required this.header,
     required this.link,
     super.key,
   });
@@ -32,17 +35,21 @@ class ShareCodeDialog extends StatelessWidget {
       actionsAlignment: MainAxisAlignment.spaceBetween,
       titlePadding: paddingAll20,
       contentPadding: paddingAll20,
+
+      // Header
       title: Text(
-        id,
+        header,
         maxLines: 1,
         overflow: TextOverflow.clip,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.headlineLarge,
       ),
+
+      // QRCode
       content: SizedBox.square(
         dimension: MediaQuery.of(context).size.width / 2,
         child: QrImageView(
-          data: id,
+          data: header,
           backgroundColor: colorScheme.primaryContainer,
           dataModuleStyle: QrDataModuleStyle(
             color: colorScheme.onPrimaryContainer,
@@ -54,6 +61,8 @@ class ShareCodeDialog extends StatelessWidget {
           ),
         ),
       ),
+
+      // Buttons
       actions: [
         Builder(
           builder: (context) => TextButton(

@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/dialog/share_code_dialog.dart';
+import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import '../../domain/entity/beacon.dart';
-import 'beacon_popup_menu.dart';
-import 'beacon_vote_control.dart';
 import 'favorite_icon_button.dart';
+import 'beacon_vote_control.dart';
+import 'beacon_popup_menu.dart';
 
 class BeaconControlRow extends StatelessWidget {
-  final Beacon beacon;
-  final bool isMine;
-
   const BeaconControlRow({
     required this.beacon,
     required this.isMine,
     super.key,
   });
+
+  final Beacon beacon;
+  final bool isMine;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -38,6 +38,7 @@ class BeaconControlRow extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
+
           // Graph View
           IconButton(
             icon: const Icon(Icons.hub_outlined),
@@ -48,29 +49,30 @@ class BeaconControlRow extends StatelessWidget {
                       queryParameters: {'focus': beacon.id},
                     ).toString()),
           ),
+
           // Share
-          IconButton(
-            icon: const Icon(Icons.share_outlined),
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (context) => ShareCodeDialog(
-                id: beacon.id,
-                link: Uri.https(
-                  appLinkBase,
-                  pathBeaconView,
-                  {'id': beacon.id},
-                ).toString(),
-              ),
+          ShareCodeIconButton(
+            header: beacon.id,
+            link: Uri.https(
+              appLinkBase,
+              pathBeaconView,
+              {'id': beacon.id},
             ),
           ),
+
           if (isMine)
+
             // Menu
             BeaconPopupMenu(id: beacon.id)
           else ...[
             // Favorite
             FavoriteIconButton(beacon: beacon),
+
             // Like\Dislike
-            BeaconVoteControl(beacon: beacon),
+            BeaconVoteControl(
+              id: beacon.id,
+              votes: beacon.my_vote,
+            ),
           ],
         ],
       );

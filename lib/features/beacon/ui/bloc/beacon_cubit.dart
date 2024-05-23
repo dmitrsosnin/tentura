@@ -51,7 +51,9 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
 
   Future<void> fetch() async {
     try {
-      emit(BeaconState(beacons: await _beaconRepository.fetchByUserId(id)));
+      emit(BeaconState(
+        beacons: (await _beaconRepository.fetchByUserId(id)).toList(),
+      ));
     } catch (e) {
       emit(state.setError(e));
     }
@@ -95,8 +97,15 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
     final beacon = state.beacons.singleWhere((e) => e.id == beaconId);
     state.beacons[state.beacons.indexOf(beacon)] =
         await _beaconRepository.setEnabled(
-      id: beaconId,
       isEnabled: !beacon.enabled,
+      id: beaconId,
     );
+  }
+
+  Future<int> vote({
+    required int amount,
+    required String beaconId,
+  }) async {
+    return _beaconRepository.vote(id: beaconId, amount: amount);
   }
 }

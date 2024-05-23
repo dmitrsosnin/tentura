@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/ui/dialog/share_code_dialog.dart';
+import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
@@ -49,19 +50,17 @@ class ProfileMineScreen extends StatelessWidget {
                   queryParameters: {'focus': userId},
                 ).toString()),
               ),
+
               // Share
-              IconButton(
-                icon: const Icon(Icons.share_outlined),
-                onPressed: () => ShareCodeDialog.show(
-                  context,
-                  id: userId,
-                  link: Uri.https(
-                    appLinkBase,
-                    pathHomeProfile,
-                    {'id': userId},
-                  ).toString(),
+              ShareCodeIconButton(
+                header: userId,
+                link: Uri.https(
+                  appLinkBase,
+                  pathProfileView,
+                  {'id': userId},
                 ),
               ),
+
               // More
               const MyProfileMenuButton(),
             ],
@@ -83,6 +82,7 @@ class ProfileMineScreen extends StatelessWidget {
               ),
             ),
           ),
+
           // Profile
           SliverToBoxAdapter(
             child: Padding(
@@ -106,6 +106,7 @@ class ProfileMineScreen extends StatelessWidget {
                       style: textTheme.headlineLarge,
                     ),
                     const Padding(padding: paddingV8),
+
                     // Description
                     Text(
                       state.user.description,
@@ -113,6 +114,7 @@ class ProfileMineScreen extends StatelessWidget {
                       style: textTheme.bodyLarge,
                     ),
                     const Divider(),
+
                     // Create
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,6 +134,7 @@ class ProfileMineScreen extends StatelessWidget {
               ),
             ),
           ),
+
           // Beacons List
           BlocConsumer<BeaconCubit, BeaconState>(
             builder: (context, state) => SliverList.separated(
