@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class KeychainRepository {
+class SettingsRepository {
   static const _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(
       encryptedSharedPreferences: true,
@@ -16,8 +16,7 @@ class KeychainRepository {
     ),
   );
 
-  // TBD: change value to 'kCipher'
-  static const _keyCipherKey = 'kSeed';
+  static const _keyCipherKey = 'kCipherKey';
 
   Future<Uint8List> getCipherKey() async {
     final encodedKey = await _secureStorage.read(key: _keyCipherKey);

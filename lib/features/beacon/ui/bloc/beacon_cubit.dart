@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart' show DateTimeRange;
 
-import 'package:tentura/domain/entity/date_time_range.dart';
-import 'package:tentura/domain/entity/lat_long.dart';
+import 'package:tentura/features/geo/domain/entity/lat_long.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import 'package:tentura/features/image/data/image_repository.dart';

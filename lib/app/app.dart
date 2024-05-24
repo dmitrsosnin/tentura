@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/widget/error_center_text.dart';
 
+import 'package:tentura/features/geo/ui/cubit/geo_cubit.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
@@ -30,9 +31,17 @@ class App extends StatelessWidget {
                 child: ErrorCenterText(error: snapshot.error.toString()),
               )
             : snapshot.hasData
-                ? BlocProvider(
-                    lazy: false,
-                    create: (context) => AuthCubit(),
+                ? MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) => GeoCubit(),
+                        lazy: false,
+                      ),
+                      BlocProvider(
+                        create: (context) => AuthCubit(),
+                        lazy: false,
+                      ),
+                    ],
                     child: MaterialApp.router(
                       title: 'Tentura',
                       routerConfig: router,

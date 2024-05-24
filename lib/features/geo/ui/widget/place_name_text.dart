@@ -1,10 +1,6 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import 'package:tentura/domain/entity/lat_long.dart';
-import 'package:tentura/domain/entity/place_name.dart';
-
-import '../../data/geo_repository.dart';
+import '../cubit/geo_cubit.dart';
 
 class PlaceNameText extends StatelessWidget {
   const PlaceNameText({
@@ -18,14 +14,17 @@ class PlaceNameText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final geoRepository = GetIt.I<GeoRepository>();
-    return geoRepository.cache.containsKey(coords)
+    final geoCubit = context.read<GeoCubit>();
+    return geoCubit.cache.containsKey(coords)
         ? _buildText(
-            geoRepository.cache[coords],
+            geoCubit.cache[coords],
             style ?? Theme.of(context).textTheme.bodyLarge,
           )
         : FutureBuilder(
-            future: geoRepository.getPlaceByCoords(coords),
+            future: geoCubit.getPlaceNameByCoords(
+              coords: coords,
+              useCache: false,
+            ),
             builder: (context, snapshot) => _buildText(
               snapshot.data,
               style ?? Theme.of(context).textTheme.bodyLarge,

@@ -1,6 +1,7 @@
+import 'package:latlong2/latlong.dart' show LatLng;
+import 'package:flutter/material.dart' show DateTimeRange;
+
 import 'package:tentura/data/gql/gql_client.dart';
-import 'package:tentura/domain/entity/lat_long.dart';
-import 'package:tentura/domain/entity/date_time_range.dart';
 
 import '../domain/entity/beacon.dart';
 import 'gql/_g/beacon_create.req.gql.dart';

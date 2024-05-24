@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:ferry_hive_store/ferry_hive_store.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/domain/exception.dart';
 
 export 'package:ferry/ferry.dart';
 export 'package:get_it/get_it.dart';
@@ -57,4 +56,28 @@ extension ErrorHandler<TData, TVars> on OperationResponse<TData, TVars> {
   }
 
   TData dataOrThrow({String? label}) => throwIfError(label: label).data!;
+}
+
+class GraphQLException implements Exception {
+  const GraphQLException({
+    this.label = 'No label',
+    this.error = 'Unknown error on OperationRequest',
+  });
+
+  final Object? error;
+  final String? label;
+
+  @override
+  String toString() => '$label: $error';
+}
+
+class GraphQLNoDataException implements Exception {
+  const GraphQLNoDataException({
+    this.label = 'No label',
+  });
+
+  final String? label;
+
+  @override
+  String toString() => '$label: OperationResponse has no data';
 }

@@ -6,8 +6,8 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
-import 'package:tentura/domain/entity/lat_long.dart';
 
+import 'package:tentura/features/geo/domain/entity/lat_long.dart';
 import 'package:tentura/features/geo/ui/dialog/choose_location_dialog.dart';
 
 import '../bloc/beacon_cubit.dart';
