@@ -3,9 +3,8 @@ import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
-import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
-
 import '../bloc/my_field_cubit.dart';
+import '../widget/beacon_tile.dart';
 
 class MyFieldScreen extends StatelessWidget {
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
@@ -45,11 +44,7 @@ class MyFieldScreen extends StatelessWidget {
                       itemBuilder: (context, i) => Container(
                         decoration: decoration,
                         padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: BeaconTile(
-                          beacon: state.beacons[i],
-                          withAvatar: true,
-                          isMine: false,
-                        ),
+                        child: BeaconTile(beacon: state.beacons[i]),
                       ),
                     ),
                 },

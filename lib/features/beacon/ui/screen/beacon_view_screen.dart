@@ -4,22 +4,21 @@ import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/screens/error_screen.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
-import 'package:tentura/data/repository/geolocation_repository.dart';
 
 import 'package:tentura/features/profile/data/user_utils.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/features/image/ui/widget/beacon_image.dart';
+import 'package:tentura/features/geo/ui/widget/place_name_text.dart';
 import 'package:tentura/features/comment/ui/widget/new_comment_input.dart';
 import 'package:tentura/features/comment/ui/widget/comments_expansion_tile.dart';
+import 'package:tentura/features/my_field/ui/widget/beacon_tile_control.dart';
 
 import '../../domain/entity/beacon.dart';
 import '../../data/gql/_g/beacon_fetch_by_id.req.gql.dart';
-import '../widget/beacon_control_row.dart';
+import '../widget/beacon_mine_control.dart';
 
 class BeaconViewScreen extends StatelessWidget {
-  static const _requestId = 'FetchBeaconById';
-
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
       GoRoute(
         path: pathBeaconView,
@@ -41,23 +40,17 @@ class BeaconViewScreen extends StatelessWidget {
       );
     }
     final client = GetIt.I<Client>();
-    final refreshRequest = GBeaconFetchByIdReq(
-      (b) => b
-        ..requestId = _requestId + beaconId
-        ..vars.id = beaconId,
-    );
+    final request = GBeaconFetchByIdReq((b) => b.vars.id = beaconId);
     return Operation(
       client: client,
-      operationRequest: GBeaconFetchByIdReq(
-        (b) => b
-          ..requestId = _requestId + beaconId
-          ..vars.id = beaconId,
-      ),
+      operationRequest: request,
       builder: (context, response, error) {
         final beacon = response?.data?.beacon_by_pk as Beacon?;
         if (beacon == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Beacon')),
+            appBar: AppBar(
+              title: const Text('Beacon'),
+            ),
             body: response?.loading ?? false
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : ErrorCenterText(response: response, error: error),
@@ -65,13 +58,15 @@ class BeaconViewScreen extends StatelessWidget {
         }
         final isMine = context.read<AuthCubit>().checkIfIsMe(beacon.author.id);
         return Scaffold(
-          appBar: AppBar(title: const Text('Beacon')),
+          appBar: AppBar(
+            title: const Text('Beacon'),
+          ),
           bottomSheet: NewCommentInput(
             beaconId: beaconId,
-            refreshRequest: refreshRequest,
+            refreshRequest: request,
           ),
           body: RefreshIndicator.adaptive(
-            onRefresh: () async => client.requestController.add(refreshRequest),
+            onRefresh: () async => client.requestController.add(request),
             child: ListView(
               padding: paddingAll20,
               children: [
@@ -95,11 +90,13 @@ class BeaconViewScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+
                 // Title
                 Text(
                   beacon.title,
                   style: textTheme.headlineMedium,
                 ),
+
                 // Image of Beacon
                 if (beacon.has_picture)
                   Container(
@@ -114,35 +111,31 @@ class BeaconViewScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
                 // Description
                 if (beacon.description.isNotEmpty)
                   Text(
                     beacon.description,
                     style: textTheme.bodyLarge,
                   ),
+
                 // Date
                 Text(
                   fYMD(beacon.created_at),
                   style: textTheme.bodyLarge,
                 ),
+
                 // Place
-                if (beacon.place != null)
-                  FutureBuilder(
-                    key: Key(beaconId),
-                    future: GetIt.I<GeolocationRepository>()
-                        .getPlaceNameByCoords(beacon.place!),
-                    builder: (context, snapshot) => Text(
-                      snapshot.data == null
-                          ? beacon.place!.toSexagesimal()
-                          : '${snapshot.data?.locality}, ${snapshot.data?.country}',
-                      style: textTheme.bodyLarge,
-                    ),
-                  ),
+                if (beacon.place != null) PlaceNameText(coords: beacon.place!),
+
                 // Buttons Row
                 Padding(
                   padding: paddingV8,
-                  child: BeaconControlRow(beacon: beacon, isMine: isMine),
+                  child: isMine
+                      ? BeaconMineControl(beacon: beacon)
+                      : BeaconTileControl(beacon: beacon),
                 ),
+
                 // Comments
                 if (beacon.comments_count > 0)
                   Padding(

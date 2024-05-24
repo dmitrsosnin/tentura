@@ -101,11 +101,4 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
       id: beaconId,
     );
   }
-
-  Future<int> vote({
-    required int amount,
-    required String beaconId,
-  }) async {
-    return _beaconRepository.vote(id: beaconId, amount: amount);
-  }
 }

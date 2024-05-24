@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../bloc/beacon_cubit.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
+
+import '../bloc/my_field_cubit.dart';
 
 class BeaconVoteControl extends StatefulWidget {
   const BeaconVoteControl({
@@ -18,6 +20,7 @@ class BeaconVoteControl extends StatefulWidget {
 
 class _BeaconVoteControlState extends State<BeaconVoteControl> {
   late final _colorScheme = Theme.of(context).colorScheme;
+  late final _myFieldCubit = context.read<MyFieldCubit>();
 
   late int _likeAmount = widget.votes ?? 0;
 
@@ -33,7 +36,7 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
             // Like Button
             IconButton(
               icon: const Icon(Icons.thumb_up_outlined),
-              onPressed: () => _updateVote(_likeAmount++),
+              onPressed: () async => _updateVote(1),
             ),
 
             // Amount
@@ -42,17 +45,30 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
             // Dislike Button
             IconButton(
               icon: const Icon(Icons.thumb_down_outlined),
-              onPressed: () => _updateVote(_likeAmount--),
+              onPressed: () async => _updateVote(-1),
             ),
           ],
         ),
       );
 
-  Future<void> _updateVote([int? _]) async {
-    _likeAmount = await context.read<BeaconCubit>().vote(
-          beaconId: widget.id,
-          amount: _likeAmount,
-        );
+  // TBD: debounce
+  Future<void> _updateVote(int add) async {
+    _likeAmount += add;
     setState(() {});
+    try {
+      _likeAmount = await _myFieldCubit.vote(
+        beaconId: widget.id,
+        amount: _likeAmount,
+      );
+      setState(() {});
+    } catch (e) {
+      if (mounted) {
+        showSnackBar(
+          context,
+          isError: true,
+          text: e.toString(),
+        );
+      }
+    }
   }
 }

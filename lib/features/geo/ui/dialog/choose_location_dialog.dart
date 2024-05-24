@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-import 'package:tentura/data/repository/geolocation_repository.dart';
+import 'package:tentura/features/geo/data/geo_repository.dart';
 import 'package:tentura/domain/entity/lat_long.dart';
 import 'package:tentura/ui/routes.dart';
 
@@ -34,7 +34,7 @@ class ChooseLocationDialog extends StatefulWidget {
 }
 
 class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
-  final _geoRepository = GetIt.I<GeolocationRepository>();
+  final _geoRepository = GetIt.I<GeoRepository>();
   final _mapController = MapController();
 
   @override
@@ -61,7 +61,10 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
               flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
             ),
             onTap: (tapPosition, point) async {
-              final place = await _geoRepository.getPlaceNameByCoords(point);
+              final place = await _geoRepository.getPlaceByCoords(
+                point,
+                useCache: true,
+              );
               if (context.mounted) {
                 context.pop((
                   point: point,

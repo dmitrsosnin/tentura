@@ -6,7 +6,6 @@ import '../domain/entity/beacon.dart';
 import 'gql/_g/beacon_create.req.gql.dart';
 import 'gql/_g/beacon_delete_by_id.req.gql.dart';
 import 'gql/_g/beacon_update_by_id.req.gql.dart';
-import 'gql/_g/beacon_vote_by_id.req.gql.dart';
 import 'gql/_g/beacons_fetch_by_user_id.req.gql.dart';
 
 export '../domain/entity/beacon.dart';
@@ -63,17 +62,4 @@ class BeaconRepository {
           ))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then((r) => r.dataOrThrow().update_beacon_by_pk as Beacon);
-
-  Future<int> vote({
-    required String id,
-    required int amount,
-  }) =>
-      _gqlClient
-          .request(GBeaconVoteByIdReq(
-            (b) => b
-              ..vars.amount = amount
-              ..vars.beacon_id = id,
-          ))
-          .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then((r) => r.dataOrThrow().insert_vote_beacon_one!.amount);
 }

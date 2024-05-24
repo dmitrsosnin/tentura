@@ -6,8 +6,8 @@ import 'package:tentura/ui/widget/error_center_text.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/beacon/domain/entity/beacon.dart';
-import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
+import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
 
 import '../../data/user_utils.dart';
 import '../../data/gql/_g/profile_fetch_by_user_id.req.gql.dart';
@@ -137,11 +137,7 @@ class ProfileViewScreen extends StatelessWidget {
                     itemCount: beacons.length,
                     itemBuilder: (context, i) => Padding(
                       padding: paddingH20,
-                      child: BeaconTile(
-                        beacon: beacons[i],
-                        withAvatar: false,
-                        isMine: false,
-                      ),
+                      child: BeaconTile(beacon: beacons[i]),
                     ),
                     separatorBuilder: (_, __) => const Divider(
                       endIndent: 20,

@@ -4,20 +4,18 @@ import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
-import '../../domain/entity/beacon.dart';
-import 'favorite_icon_button.dart';
-import 'beacon_vote_control.dart';
-import 'beacon_popup_menu.dart';
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
-class BeaconControlRow extends StatelessWidget {
-  const BeaconControlRow({
+import 'beacon_pin_icon_button.dart';
+import 'beacon_vote_control.dart';
+
+class BeaconTileControl extends StatelessWidget {
+  const BeaconTileControl({
     required this.beacon,
-    required this.isMine,
     super.key,
   });
 
   final Beacon beacon;
-  final bool isMine;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -60,20 +58,14 @@ class BeaconControlRow extends StatelessWidget {
             ),
           ),
 
-          if (isMine)
+          // Favorite
+          BeaconPinIconButton(beacon: beacon),
 
-            // Menu
-            BeaconPopupMenu(id: beacon.id)
-          else ...[
-            // Favorite
-            FavoriteIconButton(beacon: beacon),
-
-            // Like\Dislike
-            BeaconVoteControl(
-              id: beacon.id,
-              votes: beacon.my_vote,
-            ),
-          ],
+          // Like\Dislike
+          BeaconVoteControl(
+            id: beacon.id,
+            votes: beacon.my_vote,
+          ),
         ],
       );
 }

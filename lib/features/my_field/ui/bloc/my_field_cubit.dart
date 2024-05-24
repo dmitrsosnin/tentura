@@ -6,16 +6,23 @@ import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
 import '../../data/gql/_g/beacon_fetch_my_field.req.gql.dart';
+import '../../data/my_field_repository.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'my_field_state.dart';
 
 class MyFieldCubit extends Cubit<MyFieldState> {
-  MyFieldCubit({bool needFetch = true}) : super(const MyFieldState()) {
+  MyFieldCubit({
+    MyFieldRepository? myFieldRepository,
+    bool needFetch = true,
+  })  : _myFieldRepository = myFieldRepository ?? MyFieldRepository(),
+        super(const MyFieldState()) {
     _subscription.resume();
     if (needFetch) fetch();
   }
+
+  final MyFieldRepository _myFieldRepository;
 
   late final _subscription =
       GetIt.I<Client>().request(GBeaconFetchMyFieldReq()).listen(
@@ -51,5 +58,13 @@ class MyFieldCubit extends Cubit<MyFieldState> {
 
   Future<void> fetch() async {
     GetIt.I<Client>().requestController.add(GBeaconFetchMyFieldReq());
+  }
+
+  Future<int> vote({
+    required int amount,
+    required String beaconId,
+  }) async {
+    final beacon = await _myFieldRepository.vote(id: beaconId, amount: amount);
+    return beacon.my_vote ?? 0;
   }
 }

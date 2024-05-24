@@ -1,10 +1,10 @@
 import 'package:path_provider/path_provider.dart';
 
+import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/data/repository/keychain_repository.dart';
-import 'package:tentura/data/repository/geolocation_repository.dart';
-import 'package:tentura/ui/bloc/state_base.dart';
 
+import 'package:tentura/features/geo/data/geo_repository.dart';
 import 'package:tentura/features/auth/data/auth_repository.dart';
 import 'package:tentura/features/image/data/image_repository.dart';
 
@@ -16,7 +16,7 @@ class DI {
   Future<bool> init() async {
     if (_isInited) return _isInited;
 
-    GetIt.I.registerSingleton(GeolocationRepository());
+    GetIt.I.registerSingleton(GeoRepository());
 
     final keychainRepository = KeychainRepository();
     GetIt.I.registerSingleton(keychainRepository);

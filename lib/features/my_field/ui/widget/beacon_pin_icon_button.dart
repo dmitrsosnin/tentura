@@ -1,13 +1,13 @@
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
 import '../../data/gql/_g/beacon_pin_by_id.req.gql.dart';
 import '../../data/gql/_g/beacon_unpin_by_id.req.gql.dart';
-import '../../domain/entity/beacon.dart';
 
-class FavoriteIconButton extends StatefulWidget {
-  const FavoriteIconButton({
+class BeaconPinIconButton extends StatefulWidget {
+  const BeaconPinIconButton({
     required this.beacon,
     super.key,
   });
@@ -15,10 +15,10 @@ class FavoriteIconButton extends StatefulWidget {
   final Beacon beacon;
 
   @override
-  State<FavoriteIconButton> createState() => _FavoriteIconButtonState();
+  State<BeaconPinIconButton> createState() => _BeaconPinIconButtonState();
 }
 
-class _FavoriteIconButtonState extends State<FavoriteIconButton> {
+class _BeaconPinIconButtonState extends State<BeaconPinIconButton> {
   late bool _isFavorite = widget.beacon.is_pinned ?? false;
 
   @override
