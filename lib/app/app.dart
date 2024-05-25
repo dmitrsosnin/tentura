@@ -50,26 +50,24 @@ class App extends StatelessWidget {
                       darkTheme: themeDark,
                       theme: themeLight,
                       builder: (context, child) {
-                        return BlocBuilder<AuthCubit, AuthState>(
-                          buildWhen: (p, c) =>
-                              p.currentAccount != c.currentAccount,
-                          builder: (context, state) => MultiBlocProvider(
-                            providers: [
-                              BlocProvider(
-                                create: (context) => ProfileCubit(
-                                  id: state.currentAccount,
-                                ),
-                                lazy: false,
+                        final authCubit = context.watch<AuthCubit>();
+                        return MultiBlocProvider(
+                          key: ValueKey(authCubit.state.currentAccount),
+                          providers: [
+                            BlocProvider(
+                              create: (context) => ProfileCubit(
+                                id: authCubit.state.currentAccount,
                               ),
-                              BlocProvider(
-                                create: (context) => BeaconCubit(
-                                  id: state.currentAccount,
-                                ),
-                                lazy: false,
+                              // lazy: false,
+                            ),
+                            BlocProvider(
+                              create: (context) => BeaconCubit(
+                                id: authCubit.state.currentAccount,
                               ),
-                            ],
-                            child: child!,
-                          ),
+                              // lazy: false,
+                            ),
+                          ],
+                          child: child!,
                         );
                       },
                     ),

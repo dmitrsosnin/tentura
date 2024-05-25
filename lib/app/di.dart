@@ -1,6 +1,6 @@
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/data/gql/gql_client.dart';
 
 import 'package:tentura/features/auth/data/auth_repository.dart';
@@ -14,9 +14,13 @@ class DI {
 
   Future<bool> init() async {
     if (_isInited) return _isInited;
-
-    final settingsRepository = SettingsRepository();
-    GetIt.I.registerSingleton(settingsRepository);
+    final appDir = await getApplicationDocumentsDirectory();
+    HydratedBloc.storage = await HydratedStorage.build(
+      encryptionCipher: HydratedAesCipher(
+        await const SettingsRepository().getCipherKey(),
+      ),
+      storageDirectory: appDir,
+    );
 
     final authRepository = AuthRepository();
     GetIt.I.registerSingleton(
@@ -33,15 +37,6 @@ class DI {
       dispose: (i) => i.dispose(),
     );
 
-    await StateBase.init(
-      cipherKey: await settingsRepository.getCipherKey(),
-      storageDirectory: await getApplicationDocumentsDirectory(),
-    );
-
     return _isInited = true;
-  }
-
-  Future<void> close() async {
-    await StateBase.close();
   }
 }

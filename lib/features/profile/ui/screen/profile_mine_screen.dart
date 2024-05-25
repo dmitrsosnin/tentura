@@ -6,12 +6,11 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
-import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_mine_control.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 
-import '../../data/user_utils.dart';
 import '../bloc/profile_cubit.dart';
 import '../widget/gradient_stack.dart';
 import '../widget/avatar_positioned.dart';

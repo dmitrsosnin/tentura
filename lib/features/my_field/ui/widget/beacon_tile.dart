@@ -4,7 +4,7 @@ import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 
-import 'package:tentura/features/profile/data/user_utils.dart';
+import 'package:tentura/features/profile/domain/entity/user.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
@@ -24,13 +24,14 @@ class BeaconTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final author = beacon.author as User;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
           onTap: () => context.push(Uri(
             path: pathProfileView,
-            queryParameters: {'id': beacon.author.id},
+            queryParameters: {'id': author.id},
           ).toString()),
           child: Row(
             children: [
@@ -38,14 +39,14 @@ class BeaconTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: AvatarImage(
-                  userId: beacon.author.imageId,
+                  userId: author.imageId,
                   size: 40,
                 ),
               ),
 
               // User displayName
               Text(
-                beacon.author.title,
+                author.title,
                 style: textTheme.headlineMedium,
               ),
             ],

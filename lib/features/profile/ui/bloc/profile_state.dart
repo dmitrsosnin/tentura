@@ -7,10 +7,7 @@ final class ProfileState extends StateBase {
     super.error,
   });
 
-  factory ProfileState.fromJson(Map<String, dynamic> json) =>
-      ProfileState(user: GUserFieldsData.fromJson(json)!);
-
-  final GUserFields user;
+  final User user;
 
   @override
   List<Object?> get props => [
@@ -21,7 +18,7 @@ final class ProfileState extends StateBase {
 
   @override
   ProfileState copyWith({
-    GUserFields? user,
+    User? user,
     FetchStatus? status,
     Object? error,
   }) =>
@@ -43,37 +40,4 @@ final class ProfileState extends StateBase {
         status: FetchStatus.isLoading,
         user: user,
       );
-
-  Map<String, dynamic>? toJson(ProfileState state) =>
-      state.user == user ? null : state.user.toJson();
-}
-
-class UserFields extends GUserFields {
-  UserFields({
-    required this.id,
-  });
-
-  @override
-  String id;
-
-  @override
-  // ignore: non_constant_identifier_names
-  String get G__typename => 'user';
-
-  @override
-  String get description => '';
-
-  @override
-  // ignore: non_constant_identifier_names
-  bool get has_picture => false;
-
-  @override
-  // ignore: non_constant_identifier_names
-  int? get my_vote => null;
-
-  @override
-  String get title => '';
-
-  @override
-  Map<String, dynamic> toJson() => {};
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 
-import '../../data/user_utils.dart';
 import '../bloc/profile_cubit.dart';
 
 class ProfileNavBarItem extends StatelessWidget {

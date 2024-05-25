@@ -18,6 +18,8 @@ class SettingsRepository {
 
   static const _keyCipherKey = 'kCipherKey';
 
+  const SettingsRepository();
+
   Future<Uint8List> getCipherKey() async {
     final encodedKey = await _secureStorage.read(key: _keyCipherKey);
     late final rnd = Random.secure();

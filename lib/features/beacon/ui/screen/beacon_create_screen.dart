@@ -20,6 +20,8 @@ class BeaconCreateScreen extends StatefulWidget {
         path: pathBeaconCreate,
         parentNavigatorKey: parentNavigatorKey,
         builder: (context, state) => const BeaconCreateScreen(),
+        redirect: (context, state) =>
+            context.read<BeaconCubit>().id.isEmpty ? pathAuthLogin : null,
       );
 
   const BeaconCreateScreen({super.key});

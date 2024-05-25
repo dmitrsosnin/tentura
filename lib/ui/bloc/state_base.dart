@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:equatable/equatable.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -14,18 +12,6 @@ extension FetchStatusX on FetchStatus {
 }
 
 abstract base class StateBase with EquatableMixin {
-  static Future<void> init({
-    required List<int> cipherKey,
-    required Directory storageDirectory,
-  }) async {
-    HydratedBloc.storage = await HydratedStorage.build(
-      storageDirectory: storageDirectory,
-      encryptionCipher: HydratedAesCipher(cipherKey),
-    );
-  }
-
-  static Future<void> close() => HydratedBloc.storage.close();
-
   const StateBase({
     this.status = FetchStatus.isSuccess,
     this.error,

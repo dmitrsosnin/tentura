@@ -1,7 +1,7 @@
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
-import '../../data/user_utils.dart';
+import '../../domain/entity/user.dart';
 import '../../data/gql/_g/user_update.req.gql.dart';
 import '../../data/gql/_g/user_fetch_by_id.req.gql.dart';
 
@@ -13,7 +13,7 @@ class ProfileCubit extends Cubit<ProfileState>
     with HydratedMixin<ProfileState> {
   ProfileCubit({
     required this.id,
-  }) : super(ProfileState(user: UserFields(id: id))) {
+  }) : super(ProfileState(user: User.empty(id))) {
     hydrate();
     _subscription.resume();
   }
@@ -37,7 +37,7 @@ class ProfileCubit extends Cubit<ProfileState>
               Exception('Profile: Unknown error while fetch data!'),
         ));
       } else if (response.data != null) {
-        emit(ProfileState(user: response.data!.user_by_pk! as GUserFields));
+        emit(ProfileState(user: response.data!.user_by_pk! as User));
       }
     },
     cancelOnError: false,
@@ -45,10 +45,10 @@ class ProfileCubit extends Cubit<ProfileState>
 
   @override
   ProfileState? fromJson(Map<String, dynamic> json) =>
-      ProfileState.fromJson(json);
+      json.isEmpty ? null : ProfileState(user: User.fromJson(json));
 
   @override
-  Map<String, dynamic>? toJson(ProfileState state) => this.state.toJson(state);
+  Map<String, dynamic>? toJson(ProfileState state) => state.user.toJson();
 
   @override
   Future<void> close() async {
@@ -76,11 +76,8 @@ class ProfileCubit extends Cubit<ProfileState>
         ))
         .firstWhere((e) => e.dataSource == DataSource.Link)
         .then(
-          (r) =>
-              r.dataOrThrow(label: 'Profile').update_user_by_pk! as GUserFields,
+          (r) => r.dataOrThrow(label: 'Profile').update_user_by_pk! as User,
         );
-    emit(ProfileState(
-      user: response,
-    ));
+    emit(ProfileState(user: response));
   }
 }

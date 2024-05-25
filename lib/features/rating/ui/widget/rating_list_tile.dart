@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/utils/ui_consts.dart';
 
-import 'package:tentura/features/profile/data/user_utils.dart';
+import 'package:tentura/features/profile/domain/entity/user.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 
 class RatingListTile extends StatelessWidget {
@@ -21,7 +21,7 @@ class RatingListTile extends StatelessWidget {
   final double height;
   final double egoScore;
   final double userScore;
-  final GUserFields user;
+  final User user;
 
   late final _barbellSize = Size(height * ratio, height);
 

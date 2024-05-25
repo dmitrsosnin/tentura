@@ -10,7 +10,6 @@ import 'package:tentura/features/image/data/image_repository.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/features/image/domain/use_case/image_get_url_case.dart';
 
-import '../../data/user_utils.dart';
 import '../bloc/profile_cubit.dart';
 import '../widget/gradient_stack.dart';
 import '../widget/avatar_positioned.dart';
@@ -21,6 +20,8 @@ class ProfileEditScreen extends StatefulWidget {
         path: pathProfileEdit,
         parentNavigatorKey: parentNavigatorKey,
         builder: (context, state) => const ProfileEditScreen(),
+        redirect: (context, state) =>
+            context.read<ProfileCubit>().id.isEmpty ? pathAuthLogin : null,
       );
 
   const ProfileEditScreen({
@@ -197,6 +198,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         description: _descriptionController.text,
         hasPicture: _hasPicture,
       );
+      if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
         await showAdaptiveDialog<void>(
@@ -205,6 +207,5 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         );
       }
     }
-    if (mounted) context.pop();
   }
 }

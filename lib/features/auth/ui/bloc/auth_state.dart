@@ -8,14 +8,6 @@ final class AuthState extends StateBase {
     super.error,
   });
 
-  factory AuthState.fromJson(Map<dynamic, dynamic>? json) => AuthState(
-        currentAccount: json?['currentAccount'] as String? ?? '',
-        accounts: {
-          for (final e in (json?['accounts'] as Map? ?? {}).entries)
-            e.key.toString(): e.value.toString(),
-        },
-      );
-
   final String currentAccount;
 
   // id:seed(base64)
@@ -57,12 +49,4 @@ final class AuthState extends StateBase {
         currentAccount: currentAccount,
         status: FetchStatus.isLoading,
       );
-
-  Map<String, dynamic>? toJson(AuthState state) =>
-      state.currentAccount == currentAccount && state.accounts == accounts
-          ? null
-          : {
-              'currentAccount': currentAccount,
-              'accounts': accounts,
-            };
 }

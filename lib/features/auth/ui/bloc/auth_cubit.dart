@@ -26,10 +26,25 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   bool get isNotAuthenticated => state.currentAccount.isEmpty;
 
   @override
-  AuthState fromJson(Map<String, dynamic> json) => AuthState.fromJson(json);
+  AuthState? fromJson(Map<String, dynamic> json) => json.isEmpty
+      ? null
+      : AuthState(
+          currentAccount: json['currentAccount'] as String? ?? '',
+          accounts: {
+            for (final e in (json['accounts'] as Map? ?? {}).entries)
+              e.key.toString(): e.value.toString(),
+          },
+        );
 
   @override
-  Map<String, dynamic>? toJson(AuthState state) => state.toJson(state);
+  Map<String, dynamic>? toJson(AuthState state) =>
+      state.currentAccount == this.state.currentAccount &&
+              state.accounts == this.state.accounts
+          ? null
+          : {
+              'currentAccount': state.currentAccount,
+              'accounts': state.accounts,
+            };
 
   bool checkIfIsMe(String id) => id == state.currentAccount;
 

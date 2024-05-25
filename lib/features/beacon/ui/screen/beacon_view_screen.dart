@@ -5,8 +5,8 @@ import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/screens/error_screen.dart';
 import 'package:tentura/ui/widget/error_center_text.dart';
 
-import 'package:tentura/features/profile/data/user_utils.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/profile/domain/entity/user.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/features/image/ui/widget/beacon_image.dart';
 import 'package:tentura/features/geo/ui/widget/place_name_text.dart';
@@ -56,7 +56,8 @@ class BeaconViewScreen extends StatelessWidget {
                 : ErrorCenterText(response: response, error: error),
           );
         }
-        final isMine = context.read<AuthCubit>().checkIfIsMe(beacon.author.id);
+        final author = beacon.author as User;
+        final isMine = context.read<AuthCubit>().checkIfIsMe(author.id);
         return Scaffold(
           appBar: AppBar(
             title: const Text('Beacon'),
@@ -77,13 +78,13 @@ class BeaconViewScreen extends StatelessWidget {
                     child: Row(
                       children: [
                         AvatarImage(
-                          userId: beacon.author.imageId,
+                          userId: author.imageId,
                           size: 40,
                         ),
                         Padding(
                           padding: paddingH8,
                           child: Text(
-                            beacon.author.title,
+                            author.title,
                             style: textTheme.headlineSmall,
                           ),
                         ),
@@ -105,7 +106,7 @@ class BeaconViewScreen extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: borderRadius20,
                       child: BeaconImage(
-                        authorId: beacon.author.id,
+                        authorId: author.id,
                         beaconId: beacon.imageId,
                         height: 200,
                       ),

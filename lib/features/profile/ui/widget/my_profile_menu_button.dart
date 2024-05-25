@@ -1,5 +1,6 @@
+import 'package:flutter/material.dart';
+
 import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
@@ -36,8 +37,11 @@ class MyProfileMenuButton extends StatelessWidget {
         const PopupMenuDivider(),
         PopupMenuItem<void>(
           onTap: () async {
-            await context.read<AuthCubit>().signOut();
-            if (context.mounted) context.go(pathAuthLogin);
+            context.go(pathAuthLogin);
+            await Future.delayed(
+              const Duration(seconds: 1),
+              context.read<AuthCubit>().signOut,
+            );
           },
           child: const Text('Logout'),
         ),

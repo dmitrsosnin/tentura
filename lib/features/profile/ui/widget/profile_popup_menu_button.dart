@@ -1,8 +1,8 @@
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
+import '../../domain/entity/user.dart';
 import '../../data/gql/_g/user_vote_by_id.req.gql.dart';
-import '../../data/user_utils.dart';
 
 class ProfilePopupMenuButton extends StatelessWidget {
   const ProfilePopupMenuButton({
@@ -10,7 +10,7 @@ class ProfilePopupMenuButton extends StatelessWidget {
     super.key,
   });
 
-  final GUserFields user;
+  final User user;
 
   @override
   Widget build(BuildContext context) => PopupMenuButton(

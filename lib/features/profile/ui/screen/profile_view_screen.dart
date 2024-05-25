@@ -9,7 +9,7 @@ import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
 
-import '../../data/user_utils.dart';
+import '../../domain/entity/user.dart';
 import '../../data/gql/_g/profile_fetch_by_user_id.req.gql.dart';
 import '../widget/profile_popup_menu_button.dart';
 import '../widget/avatar_positioned.dart';
@@ -46,7 +46,7 @@ class ProfileViewScreen extends StatelessWidget {
                 child: CircularProgressIndicator.adaptive(),
               );
             }
-            final profile = response?.data?.user_by_pk;
+            final profile = response?.data?.user_by_pk as User?;
             if (profile == null) {
               return const ErrorCenterText(error: 'Profile not found!');
             }
