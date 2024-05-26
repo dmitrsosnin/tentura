@@ -6,6 +6,7 @@ import 'package:tentura/features/geo/ui/cubit/geo_cubit.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
+import 'package:tentura/features/favorites/ui/bloc/favorites_cubit.dart';
 
 import 'di.dart';
 import 'router.dart';
@@ -50,21 +51,26 @@ class App extends StatelessWidget {
                       darkTheme: themeDark,
                       theme: themeLight,
                       builder: (context, child) {
-                        final authCubit = context.watch<AuthCubit>();
+                        final currentAccount =
+                            context.select<AuthCubit, String>(
+                                (s) => s.state.currentAccount);
                         return MultiBlocProvider(
-                          key: ValueKey(authCubit.state.currentAccount),
+                          key: ValueKey(currentAccount),
                           providers: [
                             BlocProvider(
                               create: (context) => ProfileCubit(
-                                id: authCubit.state.currentAccount,
+                                id: currentAccount,
                               ),
-                              // lazy: false,
                             ),
                             BlocProvider(
                               create: (context) => BeaconCubit(
-                                id: authCubit.state.currentAccount,
+                                id: currentAccount,
                               ),
-                              // lazy: false,
+                            ),
+                            BlocProvider(
+                              create: (context) => FavoritesCubit(
+                                id: currentAccount,
+                              ),
                             ),
                           ],
                           child: child!,

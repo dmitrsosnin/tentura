@@ -38,7 +38,7 @@ class BeaconRepository {
           )
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
-            (r) => r.dataOrThrow(label: 'Beacon').insert_beacon_one as Beacon,
+            (r) => r.dataOrThrow(label: 'Beacon').insert_beacon_one! as Beacon,
           );
 
   Future<Iterable<Beacon>> fetchByUserId(String userId) => _gqlClient
@@ -62,5 +62,5 @@ class BeaconRepository {
               ..vars.enabled = isEnabled,
           ))
           .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then((r) => r.dataOrThrow().update_beacon_by_pk as Beacon);
+          .then((r) => r.dataOrThrow().update_beacon_by_pk! as Beacon);
 }

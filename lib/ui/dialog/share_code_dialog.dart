@@ -68,7 +68,7 @@ class ShareCodeDialog extends StatelessWidget {
           builder: (context) => TextButton(
             child: const Text('Share Link'),
             onPressed: () {
-              final box = context.findRenderObject() as RenderBox;
+              final box = context.findRenderObject()! as RenderBox;
               Share.share(
                 link,
                 sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,

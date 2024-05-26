@@ -33,10 +33,10 @@ class ProfileMineScreen extends StatelessWidget {
     final profileCubit = context.read<ProfileCubit>();
     final userId = profileCubit.state.user.id;
     return RefreshIndicator.adaptive(
-      onRefresh: () async {
-        profileCubit.fetch();
-        await beaconCubit.fetch();
-      },
+      onRefresh: () => Future.wait([
+        profileCubit.fetch(),
+        beaconCubit.fetch(),
+      ]),
       child: CustomScrollView(
         slivers: [
           // Header

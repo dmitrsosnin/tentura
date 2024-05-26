@@ -1,6 +1,7 @@
 import '../../data/gql/_g/_fragments.data.gql.dart';
 
 extension type const User(GUserFields i) implements GUserFields {
+  // TBD: remove id?
   factory User.empty(String id) {
     final user = GUserFieldsDataBuilder()
       ..id = id

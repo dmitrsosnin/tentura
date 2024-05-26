@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
+
 import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/bloc/state_base.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
+
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
 import '../bloc/my_field_cubit.dart';
 import '../widget/beacon_tile.dart';
@@ -18,10 +21,20 @@ class MyFieldScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => MyFieldCubit(),
+        create: (context) => MyFieldCubit(
+          id: context.read<AuthCubit>().state.currentAccount,
+        ),
         child: SafeArea(
           minimum: paddingH20,
-          child: BlocBuilder<MyFieldCubit, MyFieldState>(
+          child: BlocConsumer<MyFieldCubit, MyFieldState>(
+            listenWhen: (p, c) => c.hasError,
+            listener: (context, state) {
+              showSnackBar(
+                context,
+                isError: true,
+                text: state.error?.toString(),
+              );
+            },
             builder: (context, state) {
               final decoration = BoxDecoration(
                 border: Border(
@@ -32,22 +45,14 @@ class MyFieldScreen extends StatelessWidget {
               );
               return RefreshIndicator.adaptive(
                 onRefresh: context.read<MyFieldCubit>().fetch,
-                child: switch (state.status) {
-                  FetchStatus.isFailure => const Center(
-                      child: Text('Error'),
-                    ),
-                  FetchStatus.isLoading => const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    ),
-                  FetchStatus.isSuccess => ListView.builder(
-                      itemCount: state.beacons.length,
-                      itemBuilder: (context, i) => Container(
-                        decoration: decoration,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: BeaconTile(beacon: state.beacons[i]),
-                      ),
-                    ),
-                },
+                child: ListView.builder(
+                  itemCount: state.beacons.length,
+                  itemBuilder: (context, i) => Container(
+                    decoration: decoration,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: BeaconTile(beacon: state.beacons[i]),
+                  ),
+                ),
               );
             },
           ),

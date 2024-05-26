@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:tentura/consts.dart';
 
+import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
-
-import 'package:tentura/features/profile/domain/entity/user.dart';
-import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
-import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
-import 'beacon_pin_icon_button.dart';
+import 'package:tentura/features/profile/domain/entity/user.dart';
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
+import 'package:tentura/features/image/ui/widget/avatar_image.dart';
+import 'package:tentura/features/favorites/ui/widget/beacon_pin_icon_button.dart';
+
 import 'beacon_vote_control.dart';
 
 class BeaconTile extends StatelessWidget {
@@ -100,7 +100,10 @@ class BeaconTile extends StatelessWidget {
               ),
 
               // Favorite
-              BeaconPinIconButton(beacon: beacon),
+              BeaconPinIconButton(
+                id: beacon.id,
+                isPinned: beacon.is_pinned,
+              ),
 
               // Like\Dislike
               BeaconVoteControl(

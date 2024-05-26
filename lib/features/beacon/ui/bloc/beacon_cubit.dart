@@ -2,9 +2,9 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart' show DateTimeRange;
 
-import 'package:tentura/features/geo/domain/entity/lat_long.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
+import 'package:tentura/features/geo/domain/entity/lat_long.dart';
 import 'package:tentura/features/image/data/image_repository.dart';
 
 import '../../data/beacon_repository.dart';
@@ -13,6 +13,7 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'beacon_state.dart';
 
+// TBD: use Hive directly
 class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
   static const _jsonKey = 'beacons';
 

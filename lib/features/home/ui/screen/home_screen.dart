@@ -6,7 +6,7 @@ import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/connect/ui/connect_screen.dart';
 import 'package:tentura/features/updates/ui/screen/updates_screen.dart';
 import 'package:tentura/features/my_field/ui/screen/my_field_screen.dart';
-import 'package:tentura/features/my_field/ui/screen/favorites_screen.dart';
+import 'package:tentura/features/favorites/ui/screen/favorites_screen.dart';
 import 'package:tentura/features/profile/ui/screen/profile_mine_screen.dart';
 import 'package:tentura/features/profile/ui/widget/profile_navbar_item.dart';
 

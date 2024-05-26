@@ -2,7 +2,7 @@ import 'package:tentura/data/gql/gql_client.dart';
 
 import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
-import 'gql/_g/beacon_fetch_pinned_by_user_id.req.gql.dart';
+import 'gql/_g/beacon_fetch_my_field.req.gql.dart';
 import 'gql/_g/beacon_vote_by_id.req.gql.dart';
 
 class MyFieldRepository {
@@ -14,11 +14,11 @@ class MyFieldRepository {
 
   final Client _gqlClient;
 
-  Future<Iterable<Beacon>> fetchPinned(String userId) => _gqlClient
-      .request(GBeaconFetchPinnedByUserIdReq((r) => r.vars.user_id = userId))
+  Future<Iterable<Beacon>> fetchFieldOf(String userId) => _gqlClient
+      .request(GBeaconFetchMyFieldReq())
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
-        (r) => r.dataOrThrow(label: _label).beacon_pinned as Iterable<Beacon>,
+        (r) => r.dataOrThrow(label: _label).scores as Iterable<Beacon>,
       );
 
   Future<Beacon> vote({

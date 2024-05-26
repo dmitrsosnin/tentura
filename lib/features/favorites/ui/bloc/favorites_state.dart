@@ -1,11 +1,16 @@
-part of 'my_field_cubit.dart';
+part of 'favorites_cubit.dart';
 
-final class MyFieldState extends StateBase {
-  const MyFieldState({
+final class FavoritesState extends StateBase {
+  const FavoritesState({
     this.beacons = const <Beacon>[],
     super.status,
     super.error,
   });
+
+  const FavoritesState.empty({
+    super.status,
+    super.error,
+  }) : beacons = const [];
 
   final List<Beacon> beacons;
 
@@ -18,27 +23,27 @@ final class MyFieldState extends StateBase {
       ];
 
   @override
-  MyFieldState copyWith({
+  FavoritesState copyWith({
     Object? error,
     FetchStatus? status,
     bool? hasReachedMax,
     List<Beacon>? beacons,
   }) =>
-      MyFieldState(
+      FavoritesState(
         error: error ?? this.error,
         status: status ?? (error == null ? this.status : FetchStatus.isFailure),
         beacons: beacons ?? this.beacons,
       );
 
   @override
-  MyFieldState setError(Object error) => MyFieldState(
+  FavoritesState setError(Object error) => FavoritesState(
         status: FetchStatus.isFailure,
         beacons: beacons,
         error: error,
       );
 
   @override
-  MyFieldState setLoading() => MyFieldState(
+  FavoritesState setLoading() => FavoritesState(
         status: FetchStatus.isLoading,
         beacons: beacons,
       );
