@@ -43,7 +43,7 @@ dependencies:
 
   # UI related
   qr_flutter: ^4.1.0
-  flutter_map: ^6.1.0
+  flutter_map: ^7.0.0
   flutter_svg: ^2.0.10
   image_picker: ^1.1.1
   # pretty_qr_code: ^3.3.0

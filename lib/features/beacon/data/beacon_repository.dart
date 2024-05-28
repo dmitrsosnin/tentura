@@ -12,11 +12,20 @@ import 'gql/_g/beacons_fetch_by_user_id.req.gql.dart';
 export '../domain/entity/beacon.dart';
 
 class BeaconRepository {
+  static const _label = 'Beacon';
+
   BeaconRepository({
     Client? gqlClient,
   }) : _gqlClient = gqlClient ?? GetIt.I<Client>();
 
   final Client _gqlClient;
+
+  Future<Iterable<Beacon>> fetchByUserId(String userId) => _gqlClient
+      .request(GBeaconsFetchByUserIdReq((b) => b.vars.user_id = userId))
+      .firstWhere((e) => e.dataSource == DataSource.Link)
+      .then(
+        (r) => r.dataOrThrow(label: _label).beacon as Iterable<Beacon>,
+      );
 
   Future<Beacon> create({
     required String title,
@@ -38,18 +47,13 @@ class BeaconRepository {
           )
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
-            (r) => r.dataOrThrow(label: 'Beacon').insert_beacon_one! as Beacon,
+            (r) => r.dataOrThrow(label: _label).insert_beacon_one! as Beacon,
           );
-
-  Future<Iterable<Beacon>> fetchByUserId(String userId) => _gqlClient
-      .request(GBeaconsFetchByUserIdReq((b) => b.vars.user_id = userId))
-      .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then((r) => r.dataOrThrow().beacon as Iterable<Beacon>);
 
   Future<void> delete(String id) => _gqlClient
       .request(GBeaconDeleteByIdReq((b) => b.vars.id = id))
       .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then((r) => r.dataOrThrow(label: 'Beacon').delete_beacon_by_pk);
+      .then((r) => r.dataOrThrow(label: _label));
 
   Future<Beacon> setEnabled({
     required String id,

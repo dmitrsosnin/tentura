@@ -35,9 +35,9 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
   final ImageRepository _imageRepository;
 
   @override
-  BeaconState? fromJson(Map<String, dynamic> json) => json.containsKey(_jsonKey)
+  BeaconState? fromJson(Map<String, Object?> json) => json.containsKey(_jsonKey)
       ? BeaconState(beacons: [
-          for (final b in json[_jsonKey] as List)
+          for (final b in json[_jsonKey] as List? ?? [])
             Beacon.fromJson(b as Map<String, Object?>)
         ])
       : const BeaconState.empty();
@@ -60,9 +60,6 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
     }
   }
 
-  Future<({String path, String name})?> pickImage() =>
-      _imageRepository.pickImage();
-
   Future<void> create({
     required String title,
     String description = '',
@@ -84,7 +81,12 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
         userId: id,
       );
     }
-    emit(BeaconState(beacons: [beacon, ...state.beacons]));
+    emit(BeaconState(
+      beacons: [
+        beacon,
+        ...state.beacons,
+      ],
+    ));
   }
 
   Future<void> delete(String beaconId) async {
@@ -102,4 +104,7 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
       id: beaconId,
     );
   }
+
+  Future<({String path, String name})?> pickImage() =>
+      _imageRepository.pickImage();
 }

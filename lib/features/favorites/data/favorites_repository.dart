@@ -19,7 +19,10 @@ class FavoritesRepository {
       .request(GBeaconFetchPinnedByUserIdReq((r) => r.vars.user_id = userId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
-        (r) => r.dataOrThrow(label: _label).beacon_pinned as Iterable<Beacon>,
+        (r) => r
+            .dataOrThrow(label: _label)
+            .beacon_pinned
+            .map((r) => r.beacon as Beacon),
       );
 
   Future<Beacon> pin(String id) => _gqlClient

@@ -1,7 +1,10 @@
-import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:flutter/material.dart';
 
-import '../../data/gql/_g/_fragments.data.gql.dart';
-import '../../data/gql/_g/comment_vote_by_id.req.gql.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
+
+import 'package:tentura/domain/entity/_g/comment.data.gql.dart';
+
+import '../bloc/beacon_view_cubit.dart';
 
 class CommentVoteControl extends StatefulWidget {
   final GCommentFields comment;
@@ -16,6 +19,8 @@ class CommentVoteControl extends StatefulWidget {
 }
 
 class _CommentVoteControlState extends State<CommentVoteControl> {
+  late final _cubit = context.read<BeaconViewCubit>();
+
   late int _likeAmount = widget.comment.my_vote ?? 0;
 
   @override
@@ -40,17 +45,24 @@ class _CommentVoteControlState extends State<CommentVoteControl> {
         ),
       );
 
-  Future<void> _updateVote([int? amount]) => doRequest(
-        context: context,
-        request: GCommentVoteByIdReq(
-          (b) => b
-            ..vars.amount = _likeAmount
-            ..vars.comment_id = widget.comment.id,
-        ),
-      ).then(
-        (response) {
-          final amount = response.data?.insert_vote_comment_one?.amount;
-          if (amount != null) setState(() => _likeAmount = amount);
-        },
+  // TBD: debounce
+  Future<void> _updateVote(int add) async {
+    _likeAmount += add;
+    setState(() {});
+    try {
+      _likeAmount = await _cubit.voteForComment(
+        commentId: widget.comment.id,
+        amount: _likeAmount,
       );
+      setState(() {});
+    } catch (e) {
+      if (mounted) {
+        showSnackBar(
+          context,
+          isError: true,
+          text: e.toString(),
+        );
+      }
+    }
+  }
 }

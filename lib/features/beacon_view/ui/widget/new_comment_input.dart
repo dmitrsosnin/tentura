@@ -1,16 +1,16 @@
-import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:flutter/material.dart';
 
-import '../../data/gql/_g/comment_create.req.gql.dart';
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+
+import '../bloc/beacon_view_cubit.dart';
 
 class NewCommentInput extends StatefulWidget {
-  final String beaconId;
-  final OperationRequest<Object, Object> refreshRequest;
-
   const NewCommentInput({
     required this.beaconId,
-    required this.refreshRequest,
     super.key,
   });
+
+  final String beaconId;
 
   @override
   State<NewCommentInput> createState() => _NewCommentInputState();
@@ -20,12 +20,18 @@ class _NewCommentInputState extends State<NewCommentInput> {
   final _textController = TextEditingController();
 
   @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(bottom: 20, left: 20),
         child: Row(
           children: [
             Expanded(
-              child: TextField(
+              child: TextFormField(
                 controller: _textController,
                 decoration: const InputDecoration(
                   hintText: 'Write a comment',
@@ -37,20 +43,12 @@ class _NewCommentInputState extends State<NewCommentInput> {
             IconButton(
               icon: const Icon(Icons.send),
               onPressed: () async {
-                final response = await doRequest(
-                  context: context,
-                  request: GCommentCreateReq(
-                    (b) => b
-                      ..vars.beacon_id = widget.beaconId
-                      ..vars.content = _textController.text,
-                  ),
-                );
-                if (context.mounted && response.hasNoErrors) {
+                await context
+                    .read<BeaconViewCubit>()
+                    .addComment(_textController.text);
+                if (context.mounted) {
                   _textController.clear();
                   FocusScope.of(context).unfocus();
-                  GetIt.I<Client>()
-                      .requestController
-                      .add(widget.refreshRequest);
                 }
               },
             ),

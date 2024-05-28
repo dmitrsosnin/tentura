@@ -1,20 +1,21 @@
+import 'package:flutter/material.dart';
+
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
+import 'package:tentura/domain/entity/comment.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 
-import '../../data/gql/_g/comment_fetch_by_beacon_id.data.gql.dart';
 import 'comment_vote_control.dart';
 
 class CommentCard extends StatelessWidget {
-  final GCommentFetchByBeaconIdData_comment comment;
-
   const CommentCard({
     required this.comment,
     super.key,
   });
+
+  final Comment comment;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -24,13 +25,13 @@ class CommentCard extends StatelessWidget {
           GestureDetector(
             onTap: () => context.push(Uri(
               path: pathProfileView,
-              queryParameters: {'id': comment.user_id},
+              queryParameters: {'id': comment.author.id},
             ).toString()),
             child: Row(
               children: [
                 // Avatar
                 AvatarImage(
-                  userId: comment.author.has_picture ? comment.user_id : '',
+                  userId: comment.author.has_picture ? comment.author.id : '',
                   size: 40,
                 ),
                 const SizedBox(width: 20),
@@ -51,7 +52,7 @@ class CommentCard extends StatelessWidget {
             ),
           ),
           // Buttons
-          if (context.read<AuthCubit>().checkIfIsNotMe(comment.user_id))
+          if (context.read<AuthCubit>().checkIfIsNotMe(comment.author.id))
             Container(
               alignment: Alignment.centerRight,
               padding: paddingV8,

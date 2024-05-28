@@ -13,7 +13,7 @@ class ProfileCubit extends Cubit<ProfileState>
     required this.id,
     ProfileRepository? profileRepository,
   })  : _profileRepository = profileRepository ?? ProfileRepository(),
-        super(ProfileState(user: User.empty(id))) {
+        super(ProfileState(user: User.empty)) {
     hydrate();
   }
 

@@ -1,8 +1,12 @@
 fragment CommentFields on comment {
   id
-  user_id
   beacon_id
   created_at
   content
   my_vote
+  author {
+    id
+    title
+    has_picture
+  }
 }
