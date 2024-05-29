@@ -4,6 +4,7 @@ import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 import 'package:tentura/features/profile/domain/entity/user.dart';
 
 import 'gql/_g/profile_fetch_by_user_id.req.gql.dart';
+import 'gql/_g/user_vote_by_id.req.gql.dart';
 
 class ProfileViewRepository {
   static const _label = 'ProfileView';
@@ -27,4 +28,18 @@ class ProfileViewRepository {
           );
         },
       );
+
+  Future<int> voteById({
+    required String userId,
+    required int amount,
+  }) =>
+      _gqlClient
+          .request(GUserVoteByIdReq(
+            (b) => b.vars
+              ..object = userId
+              ..amount = amount,
+          ))
+          .firstWhere((e) => e.dataSource == DataSource.Link)
+          .then(
+              (r) => r.dataOrThrow(label: _label).insert_vote_user_one!.amount);
 }

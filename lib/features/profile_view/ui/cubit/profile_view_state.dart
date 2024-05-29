@@ -25,15 +25,15 @@ final class ProfileViewState extends StateBase {
 
   @override
   ProfileViewState copyWith({
-    FetchStatus? status,
-    Object? error,
     User? user,
+    Object? error,
+    FetchStatus? status,
     List<Beacon>? beacons,
   }) =>
       ProfileViewState(
+        user: user ?? this.user,
         error: error ?? this.error,
         status: status ?? this.status,
-        user: user ?? this.user,
         beacons: beacons ?? this.beacons,
       );
 

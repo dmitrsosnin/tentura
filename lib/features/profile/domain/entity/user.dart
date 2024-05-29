@@ -12,4 +12,21 @@ extension type const User(GUserFields i) implements GUserFields {
       GUserFieldsData.fromJson(json)! as User;
 
   String get imageId => i.has_picture ? i.id : '';
+
+  bool get isfriend => (my_vote ?? 0) > 0;
+
+  User copyWith({
+    String? id,
+    String? title,
+    String? description,
+    bool? hasPicture,
+    int? myVote,
+  }) =>
+      (GUserFieldsDataBuilder()
+            ..id = id ?? this.id
+            ..title = title ?? this.title
+            ..description = description ?? this.description
+            ..has_picture = hasPicture ?? has_picture
+            ..my_vote = myVote ?? my_vote)
+          .build() as User;
 }

@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
+import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
 
 import '../../data/gql/_g/graph_fetch.data.gql.dart';
 import '../../data/gql/_g/graph_fetch.req.gql.dart';

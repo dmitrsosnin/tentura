@@ -37,4 +37,21 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
       emit(state.setError(e));
     }
   }
+
+  Future<void> voteById({
+    required String userId,
+    required int amount,
+  }) async {
+    try {
+      emit(state.copyWith(
+        user: state.user.copyWith(
+            myVote: await _profileViewRepository.voteById(
+          userId: userId,
+          amount: amount,
+        )),
+      ));
+    } catch (e) {
+      emit(state.setError(e));
+    }
+  }
 }

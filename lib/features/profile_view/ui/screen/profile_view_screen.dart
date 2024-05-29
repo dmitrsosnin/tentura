@@ -13,7 +13,6 @@ import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
 
 import '../cubit/profile_view_cubit.dart';
-import '../widget/profile_view_popup_menu_button.dart';
 
 class ProfileViewScreen extends StatelessWidget {
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
@@ -47,6 +46,7 @@ class ProfileViewScreen extends StatelessWidget {
                 text: state.error?.toString(),
               );
             },
+            buildWhen: (p, c) => c.hasNoError,
             builder: (context, state) {
               if (state.isLoading) {
                 return const Center(
@@ -80,10 +80,25 @@ class ProfileViewScreen extends StatelessWidget {
                       ),
 
                       // More
-                      ProfileViewPopupMenuButton(user: user),
+                      PopupMenuButton(
+                        itemBuilder: (context) => <PopupMenuEntry<void>>[
+                          PopupMenuItem<void>(
+                            onTap: () =>
+                                context.read<ProfileViewCubit>().voteById(
+                                      userId: user.id,
+                                      amount: user.isfriend ? 0 : 1,
+                                    ),
+                            child: user.isfriend
+                                ? const Text('Remove from my field')
+                                : const Text('Add to my field'),
+                          )
+                        ],
+                      ),
                     ],
                     floating: true,
                     expandedHeight: GradientStack.defaultHeight,
+
+                    // Avatar
                     flexibleSpace: FlexibleSpaceBar(
                       background: GradientStack(
                         children: [

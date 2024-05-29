@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/profile/domain/entity/user.dart';

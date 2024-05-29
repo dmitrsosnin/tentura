@@ -1,6 +1,7 @@
 import 'package:tentura/data/gql/gql_client.dart';
 
 import '../domain/entity/user.dart';
+import 'gql/_g/user_delete_by_id.req.gql.dart';
 import 'gql/_g/user_fetch_by_id.req.gql.dart';
 import 'gql/_g/user_update.req.gql.dart';
 
@@ -25,13 +26,16 @@ class ProfileRepository {
     required bool hasPicture,
   }) =>
       _gqlClient
-          .request(GUserUpdateReq(
-            (b) => b.vars
-              ..id = id
-              ..title = title
-              ..description = description
-              ..has_picture = hasPicture,
-          ))
+          .request(GUserUpdateReq((b) => b.vars
+            ..id = id
+            ..title = title
+            ..description = description
+            ..has_picture = hasPicture))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then((r) => r.dataOrThrow(label: _label).update_user_by_pk! as User);
+
+  Future<void> deleteById(String id) => _gqlClient
+      .request(GUserDeleteByIdReq((b) => b.vars.id = id))
+      .firstWhere((e) => e.dataSource == DataSource.Link)
+      .then((r) => r.dataOrThrow(label: _label));
 }

@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 
 import '../../domain/exception.dart';

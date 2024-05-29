@@ -48,4 +48,6 @@ class ProfileCubit extends Cubit<ProfileState>
       ),
     ));
   }
+
+  Future<void> delete() => _profileRepository.deleteById(id);
 }
