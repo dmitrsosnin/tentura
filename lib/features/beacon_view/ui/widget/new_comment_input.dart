@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-
 import '../bloc/beacon_view_cubit.dart';
 
 class NewCommentInput extends StatefulWidget {

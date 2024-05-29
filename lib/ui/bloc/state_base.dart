@@ -26,6 +26,9 @@ abstract base class StateBase with EquatableMixin {
         error,
       ];
 
+  bool get isLoading => status.isLoading;
+  bool get isNotLoading => !status.isLoading;
+
   bool get hasError => error != null || status.isFailure;
   bool get hasNoError => error == null && status.isSuccess;
 

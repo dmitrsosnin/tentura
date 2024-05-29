@@ -1,18 +1,18 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/utils/ferry_utils.dart';
 import 'package:tentura/ui/dialog/error_dialog.dart';
+import 'package:tentura/ui/widget/gradient_stack.dart';
+import 'package:tentura/ui/widget/avatar_positioned.dart';
 
 import 'package:tentura/features/image/data/image_repository.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/features/image/domain/use_case/image_get_url_case.dart';
 
 import '../bloc/profile_cubit.dart';
-import '../widget/gradient_stack.dart';
-import '../widget/avatar_positioned.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>

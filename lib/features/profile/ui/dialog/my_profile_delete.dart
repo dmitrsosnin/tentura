@@ -3,7 +3,7 @@ import 'package:tentura/ui/utils/ferry_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
-import '../../data/gql/_g/profile_delete_by_user_id.req.gql.dart';
+import '../../data/gql/_g/user_delete_by_id.req.gql.dart';
 
 class MyProfileDeleteDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showDialog<void>(
@@ -28,7 +28,7 @@ class MyProfileDeleteDialog extends StatelessWidget {
               final myId = authCubit.state.currentAccount;
               final response = await doRequest(
                 context: context,
-                request: GProfileDeleteByUserIdReq((b) => b.vars..id = myId),
+                request: GUserDeleteByIdReq((b) => b.vars..id = myId),
               );
               if (response.hasErrors && context.mounted) {
                 context.pop();

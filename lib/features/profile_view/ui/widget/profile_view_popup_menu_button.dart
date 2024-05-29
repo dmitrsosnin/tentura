@@ -1,11 +1,11 @@
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ferry_utils.dart';
 
-import '../../domain/entity/user.dart';
+import 'package:tentura/features/profile/domain/entity/user.dart';
+
 import '../../data/gql/_g/user_vote_by_id.req.gql.dart';
 
-class ProfilePopupMenuButton extends StatelessWidget {
-  const ProfilePopupMenuButton({
+class ProfileViewPopupMenuButton extends StatelessWidget {
+  const ProfileViewPopupMenuButton({
     required this.user,
     super.key,
   });
@@ -39,14 +39,6 @@ class ProfilePopupMenuButton extends StatelessWidget {
                 ),
               ),
             ),
-          const PopupMenuDivider(),
-          PopupMenuItem<void>(
-            child: const Text('Show hidden Beacons'),
-            onTap: () {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(notImplementedSnackBar);
-            },
-          ),
         ],
       );
 }

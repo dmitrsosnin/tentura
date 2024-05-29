@@ -5,8 +5,8 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
 
-class MyProfileMenuButton extends StatelessWidget {
-  const MyProfileMenuButton({super.key});
+class ProfileMineMenuButton extends StatelessWidget {
+  const ProfileMineMenuButton({super.key});
 
   @override
   Widget build(BuildContext context) {
