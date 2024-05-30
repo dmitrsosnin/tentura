@@ -2,9 +2,9 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/data/repository/image_repository.dart';
 
 import 'package:tentura/features/auth/data/auth_repository.dart';
-import 'package:tentura/features/image/data/image_repository.dart';
 import 'package:tentura/features/settings/data/settings_repository.dart';
 
 class DI {

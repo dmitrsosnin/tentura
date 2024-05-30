@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/ui/widget/empty_list_scroll_view.dart';
 
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
 
@@ -36,7 +35,16 @@ class FavoritesScreen extends StatelessWidget {
         builder: (context, state) => RefreshIndicator.adaptive(
           onRefresh: context.watch<FavoritesCubit>().fetch,
           child: state.beacons.isEmpty
-              ? const EmptyListScrollView()
+              ? CustomScrollView(
+                  slivers: [
+                    SliverFillRemaining(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: const Text('Nothing here yet'),
+                      ),
+                    ),
+                  ],
+                )
               : ListView.separated(
                   itemCount: state.beacons.length,
                   separatorBuilder: (_, __) => const Divider(),

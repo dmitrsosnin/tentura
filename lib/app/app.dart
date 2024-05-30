@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:tentura/ui/widget/error_center_text.dart';
-
 import 'package:tentura/features/geo/ui/cubit/geo_cubit.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
@@ -29,7 +27,14 @@ class App extends StatelessWidget {
         return snapshot.hasError
             ? Directionality(
                 textDirection: TextDirection.ltr,
-                child: ErrorCenterText(error: snapshot.error.toString()),
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    snapshot.error?.toString() ?? 'Unknown error!',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
               )
             : snapshot.hasData
                 ? MultiBlocProvider(

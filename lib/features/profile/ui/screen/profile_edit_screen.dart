@@ -5,12 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/dialog/error_dialog.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
-
-import 'package:tentura/features/image/data/image_repository.dart';
-import 'package:tentura/features/image/ui/widget/avatar_image.dart';
-import 'package:tentura/features/image/domain/use_case/image_get_url_case.dart';
+import 'package:tentura/data/repository/image_repository.dart';
 
 import '../bloc/profile_cubit.dart';
 
@@ -24,12 +22,7 @@ class ProfileEditScreen extends StatefulWidget {
             context.read<ProfileCubit>().id.isEmpty ? pathAuthLogin : null,
       );
 
-  const ProfileEditScreen({
-    this.getUrlCase = const ImageGetUrlCase(),
-    super.key,
-  });
-
-  final ImageGetUrlCase getUrlCase;
+  const ProfileEditScreen({super.key});
 
   @override
   State<ProfileEditScreen> createState() => _ProfileEditScreenState();
@@ -190,7 +183,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           image: await File(_imagePath).readAsBytes(),
         );
         await CachedNetworkImage.evictFromCache(
-          widget.getUrlCase.getAvatarUrl(_profile.id),
+          AvatarImage.getAvatarUrl(userId: _profile.id),
         );
       }
       await _profileCubit.update(
