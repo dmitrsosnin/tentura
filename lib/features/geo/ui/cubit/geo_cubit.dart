@@ -1,15 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';
-import 'package:tentura/features/geo/domain/entity/lat_long.dart';
-import 'package:tentura/features/geo/domain/entity/place_name.dart';
+import 'package:tentura/domain/entity/lat_long.dart';
 
 import '../../data/geo_repository.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
-
-export 'package:tentura/features/geo/domain/entity/lat_long.dart';
-export 'package:tentura/features/geo/domain/entity/place_name.dart';
 
 class GeoCubit extends Cubit<LatLng> with HydratedMixin<LatLng> {
   GeoCubit({
@@ -21,7 +17,7 @@ class GeoCubit extends Cubit<LatLng> with HydratedMixin<LatLng> {
     if (fetchOnCreate) getMyCoords();
   }
 
-  final Map<LatLng, PlaceName?> cache = {};
+  final Map<LatLng, ({String? country, String? locality})?> cache = {};
 
   final GeoRepository _geoRepository;
 
@@ -44,7 +40,7 @@ class GeoCubit extends Cubit<LatLng> with HydratedMixin<LatLng> {
     }
   }
 
-  Future<PlaceName?> getPlaceNameByCoords({
+  Future<({String? country, String? locality})?> getPlaceNameByCoords({
     required LatLng coords,
     required bool useCache,
   }) async {

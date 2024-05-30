@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/utils/ui_consts.dart';
 
-import 'package:tentura/features/profile/domain/entity/user.dart';
+import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 
 class RatingListTile extends StatelessWidget {

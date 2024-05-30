@@ -11,3 +11,5 @@ const appLinkBase = String.fromEnvironment('APP_LINK_BASE');
 const jwtExpiresIn = Duration(
   seconds: int.fromEnvironment('JWT_EXPIRES_IN', defaultValue: 3600),
 );
+
+final zeroDateTime = DateTime.fromMillisecondsSinceEpoch(0);

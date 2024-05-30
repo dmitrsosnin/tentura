@@ -2,14 +2,12 @@ import 'package:latlong2/latlong.dart' show LatLng;
 import 'package:flutter/material.dart' show DateTimeRange;
 
 import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 
-import '../domain/entity/beacon.dart';
 import 'gql/_g/beacon_create.req.gql.dart';
 import 'gql/_g/beacon_delete_by_id.req.gql.dart';
 import 'gql/_g/beacon_update_by_id.req.gql.dart';
 import 'gql/_g/beacons_fetch_by_user_id.req.gql.dart';
-
-export '../domain/entity/beacon.dart';
 
 class BeaconRepository {
   static const _label = 'Beacon';

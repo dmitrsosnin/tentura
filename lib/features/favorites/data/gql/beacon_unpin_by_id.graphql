@@ -1,4 +1,4 @@
-# import '/features/beacon/data/gql/_fragments.graphql'
+# import '/domain/entity/beacon.graphql'
 
 mutation BeaconUnpinById($user_id: String!, $beacon_id: String!) {
   delete_beacon_pinned_by_pk(user_id: $user_id, beacon_id: $beacon_id) {

@@ -4,7 +4,7 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/features/image/ui/widget/beacon_image.dart';
 import 'package:tentura/features/geo/ui/widget/place_name_text.dart';
 

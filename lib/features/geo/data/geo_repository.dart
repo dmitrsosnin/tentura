@@ -1,11 +1,10 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../domain/entity/lat_long.dart';
-import '../domain/entity/place_name.dart';
+import 'package:tentura/domain/entity/lat_long.dart';
 
 class GeoRepository {
-  Future<PlaceName?> getPlaceNameByCoords(
+  Future<({String? country, String? locality})?> getPlaceNameByCoords(
     LatLng coords, {
     bool useCache = false,
   }) async {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:tentura/domain/entity/lat_long.dart';
+
 import '../cubit/geo_cubit.dart';
 
 class PlaceNameText extends StatelessWidget {
@@ -32,7 +34,11 @@ class PlaceNameText extends StatelessWidget {
           );
   }
 
-  Text _buildText(PlaceName? place, TextStyle? style) => Text(
+  Text _buildText(
+    ({String? country, String? locality})? place,
+    TextStyle? style,
+  ) =>
+      Text(
         place == null
             ? coords.toSexagesimal()
             : '${place.locality}, ${place.country}',

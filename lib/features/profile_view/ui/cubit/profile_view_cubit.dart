@@ -1,7 +1,7 @@
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
-import 'package:tentura/features/profile/domain/entity/user.dart';
+import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/user.dart';
 
 import '../../data/profile_view_repository.dart';
 

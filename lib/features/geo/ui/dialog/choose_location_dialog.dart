@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import 'package:tentura/ui/routes.dart';
+import 'package:tentura/domain/entity/lat_long.dart';
 
 import '../cubit/geo_cubit.dart';
 

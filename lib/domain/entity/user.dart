@@ -1,4 +1,4 @@
-import '../../data/gql/_g/_fragments.data.gql.dart';
+import '_g/user.data.gql.dart';
 
 extension type const User(GUserFields i) implements GUserFields {
   static final empty = (GUserFieldsDataBuilder()
@@ -13,7 +13,7 @@ extension type const User(GUserFields i) implements GUserFields {
 
   String get imageId => i.has_picture ? i.id : '';
 
-  bool get isfriend => (my_vote ?? 0) > 0;
+  bool get isFriend => (my_vote ?? 0) > 0;
 
   User copyWith({
     String? id,

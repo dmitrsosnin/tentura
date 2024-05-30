@@ -5,7 +5,7 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 
 import '../bloc/beacon_cubit.dart';
 import '../dialog/beacon_delete_dialog.dart';

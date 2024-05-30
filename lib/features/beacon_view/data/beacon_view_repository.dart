@@ -1,7 +1,7 @@
 import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/domain/entity/comment.dart';
 
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 
 import 'gql/_g/beacon_fetch_by_id.req.gql.dart';
 import 'gql/_g/comment_create.req.gql.dart';

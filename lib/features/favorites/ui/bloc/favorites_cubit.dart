@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 
 import '../../data/favorites_repository.dart';
 

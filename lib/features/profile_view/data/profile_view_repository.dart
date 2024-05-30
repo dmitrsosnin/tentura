@@ -1,7 +1,7 @@
 import 'package:tentura/data/gql/gql_client.dart';
 
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
-import 'package:tentura/features/profile/domain/entity/user.dart';
+import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/user.dart';
 
 import 'gql/_g/profile_fetch_by_user_id.req.gql.dart';
 import 'gql/_g/user_vote_by_id.req.gql.dart';

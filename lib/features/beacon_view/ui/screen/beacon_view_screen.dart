@@ -6,7 +6,7 @@ import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/profile/domain/entity/user.dart';
+import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/features/image/ui/widget/avatar_image.dart';
 import 'package:tentura/features/image/ui/widget/beacon_image.dart';
 import 'package:tentura/features/geo/ui/widget/place_name_text.dart';

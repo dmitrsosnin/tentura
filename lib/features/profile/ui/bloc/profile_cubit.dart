@@ -1,7 +1,7 @@
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/profile_repository.dart';
-import '../../domain/entity/user.dart';
+import '../../../../domain/entity/user.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 

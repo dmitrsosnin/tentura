@@ -4,7 +4,7 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/profile/domain/entity/user.dart';
+import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/features/rating/ui/bloc/rating_cubit.dart';
 import 'package:tentura/features/rating/ui/widget/rating_list_tile.dart';
 

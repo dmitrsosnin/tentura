@@ -86,9 +86,9 @@ class ProfileViewScreen extends StatelessWidget {
                             onTap: () =>
                                 context.read<ProfileViewCubit>().voteById(
                                       userId: user.id,
-                                      amount: user.isfriend ? 0 : 1,
+                                      amount: user.isFriend ? 0 : 1,
                                     ),
-                            child: user.isfriend
+                            child: user.isFriend
                                 ? const Text('Remove from my field')
                                 : const Text('Add to my field'),
                           )

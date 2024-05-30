@@ -1,6 +1,6 @@
 import 'package:tentura/data/gql/gql_client.dart';
 
-import '../domain/entity/user.dart';
+import '../../../domain/entity/user.dart';
 import 'gql/_g/user_delete_by_id.req.gql.dart';
 import 'gql/_g/user_fetch_by_id.req.gql.dart';
 import 'gql/_g/user_update.req.gql.dart';

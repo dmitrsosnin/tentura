@@ -1,6 +1,6 @@
 import 'package:tentura/data/gql/gql_client.dart';
 
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 
 import 'gql/_g/beacon_fetch_pinned_by_user_id.req.gql.dart';
 import 'gql/_g/beacon_pin_by_id.req.gql.dart';

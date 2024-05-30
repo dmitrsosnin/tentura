@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 
 import '../../data/my_field_repository.dart';
 

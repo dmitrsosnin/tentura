@@ -1,4 +1,4 @@
-# import '/features/beacon/data/gql/_fragments.graphql'
+# import '/domain/entity/beacon.graphql'
 
 mutation BeaconVoteById($beacon_id: String!, $amount: Int!) {
   insert_vote_beacon_one(object: {amount: $amount, object: $beacon_id},
