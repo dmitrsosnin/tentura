@@ -1,7 +1,7 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:tentura/domain/entity/user.dart';
-
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
@@ -65,7 +65,6 @@ class _CustomBarbellPainter extends CustomPainter {
     final quarterHeight = halfHeight / 2;
     final leftOffset = Offset(halfHeight, halfHeight);
     final rightOffset = Offset(size.width - halfHeight, halfHeight);
-    // final maxRadius = halfHeight - quarterHeight;
     final maxRadius = halfHeight;
     final minRadius = quarterHeight / 2;
     final leftColor = _calcColor(leftWeight);
@@ -104,16 +103,15 @@ class _CustomBarbellPainter extends CustomPainter {
     double maxRadius,
     double weight,
   ) =>
-      weight < 0.01
-          ? minRadius
-          : weight < 0.1
-              ? minRadius + (maxRadius - minRadius) / 2
-              : maxRadius;
+      min(
+        maxRadius,
+        (maxRadius - minRadius) * weight * 10 + minRadius,
+      );
 
   // TBD: normalization
-  Color _calcColor(double weight) => weight < 0.01
-      ? Colors.amber[100]!
-      : weight < 0.1
-          ? Colors.amber[500]!
-          : Colors.amber[900]!;
+  Color _calcColor(double weight) => weight >= 0.9
+      ? Colors.amber[900]!
+      : weight >= 0.2
+          ? Colors.amber[weight ~/ 0.1 * 100]!
+          : Colors.amber[weight ~/ 0.01 * 100 + 100]!;
 }

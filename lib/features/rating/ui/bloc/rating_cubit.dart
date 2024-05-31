@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 
-import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import '../../data/gql/_g/fetch_users_rating.data.gql.dart';
-import '../../data/gql/_g/fetch_users_rating.req.gql.dart';
-import '../../data/gql/_g/fetch_users_rating.var.gql.dart';
+import '../../data/rating_repository.dart';
+import '../../entity/user_rating.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,32 +12,41 @@ part 'rating_state.dart';
 class RatingCubit extends Cubit<RatingState> {
   RatingCubit({
     required this.id,
-    required this.gqlClient,
+    required this.ratingRepository,
+    bool fetchOnCreate = true,
   }) : super(const RatingState()) {
-    _subscription.resume();
+    if (fetchOnCreate) fetch();
   }
 
-  final String id;
-  final Client gqlClient;
-
-  final searchFocusNode = FocusNode();
-  final searchController = TextEditingController();
-
-  final _request = GUsersRatingReq();
-
-  late final _subscription = gqlClient.request(_request).listen(
-        _onData,
-        cancelOnError: false,
-        onError: (Object? e) => emit(state.copyWith(error: e)),
+  factory RatingCubit.build({
+    required String id,
+    required Client gqlClient,
+  }) =>
+      RatingCubit(
+        id: id,
+        ratingRepository: RatingRepository(
+          gqlClient: gqlClient,
+        ),
       );
 
-  List<GUsersRatingData_usersStats> _items = [];
+  final String id;
+  final RatingRepository ratingRepository;
 
-  @override
-  Future<void> close() async {
-    searchController.dispose();
-    await _subscription.cancel();
-    return super.close();
+  List<UserRating> _items = [];
+
+  Future<void> fetch() async {
+    try {
+      _items = (await ratingRepository.fetchUsersRating())
+          .where((e) => e.user.id != id)
+          .toList();
+      emit(state.copyWith(
+        status: FetchStatus.isSuccess,
+        items: _items,
+      ));
+      _sort();
+    } catch (e) {
+      emit(state.setError(e));
+    }
   }
 
   void toggleSortingByAsc() {
@@ -56,27 +62,14 @@ class RatingCubit extends Cubit<RatingState> {
   void setSearchFilter(String f) => emit(state.copyWith(
         searchFilter: f,
         items: _items
-            .where((e) => e.user!.title.toLowerCase().contains(f.toLowerCase()))
+            .where((e) => e.user.title.toLowerCase().contains(f.toLowerCase()))
             .toList(),
       ));
 
-  void clearSearchFilter() {
-    searchController.clear();
-    emit(state.copyWith(
-      searchFilter: '',
-      items: _items,
-    ));
-  }
-
-  void _onData(OperationResponse<GUsersRatingData, GUsersRatingVars> response) {
-    if (response.data == null) return;
-    _items = response.data!.usersStats.where((e) => e.user?.id != id).toList();
-    emit(state.copyWith(
-      status: FetchStatus.isSuccess,
-      items: _items,
-    ));
-    _sort();
-  }
+  void clearSearchFilter() => emit(state.copyWith(
+        searchFilter: '',
+        items: _items,
+      ));
 
   void _sort() {
     if (state.isSortedByEgo) {
@@ -89,8 +82,8 @@ class RatingCubit extends Cubit<RatingState> {
     } else {
       state.items.sort((a, b) {
         final c = state.isSortedByAsc
-            ? a.nodeScore - b.nodeScore
-            : b.nodeScore - a.nodeScore;
+            ? a.userScore - b.userScore
+            : b.userScore - a.userScore;
         return (c * 10000).toInt();
       });
     }
