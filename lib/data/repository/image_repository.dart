@@ -5,17 +5,15 @@ import 'package:fresh_graphql/fresh_graphql.dart';
 
 import 'package:tentura/consts.dart';
 
-export 'package:get_it/get_it.dart';
-
 class ImageRepository {
   ImageRepository({
     required this.link,
-    String serverName = appLinkBase,
-  }) : _serverName = serverName;
+    this.serverName = appLinkBase,
+  });
 
   final FreshLink<OAuth2Token> link;
 
-  final String _serverName;
+  final String serverName;
 
   Future<({String path, String name})?> pickImage() async {
     final xFile = await ImagePicker().pickImage(
@@ -31,7 +29,7 @@ class ImageRepository {
     required Uint8List image,
   }) async {
     await put(
-      Uri.https(_serverName, '/images/$userId/avatar.jpg'),
+      Uri.https(serverName, '/images/$userId/avatar.jpg'),
       headers: {
         'Content-Type': 'image/jpeg',
         'Authorization': 'Bearer ${(await link.token)!.accessToken}',
@@ -46,7 +44,7 @@ class ImageRepository {
     required Uint8List image,
   }) async {
     await put(
-      Uri.https(_serverName, '/images/$userId/$beaconId.jpg'),
+      Uri.https(serverName, '/images/$userId/$beaconId.jpg'),
       headers: {
         'Content-Type': 'image/jpeg',
         'Authorization': 'Bearer ${(await link.token)!.accessToken}',

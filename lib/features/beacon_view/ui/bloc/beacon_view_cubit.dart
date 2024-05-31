@@ -1,7 +1,6 @@
 import 'package:tentura/ui/bloc/state_base.dart';
-import 'package:tentura/domain/entity/comment.dart';
-
 import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/comment.dart';
 
 import '../../data/beacon_view_repository.dart';
 
@@ -12,26 +11,25 @@ part 'beacon_view_state.dart';
 class BeaconViewCubit extends Cubit<BeaconViewState> {
   BeaconViewCubit({
     required this.id,
+    required this.beaconViewRepository,
     bool fetchOnStart = true,
-    BeaconViewRepository? beaconViewRepository,
-  })  : _beaconViewRepository = beaconViewRepository ?? BeaconViewRepository(),
-        super(BeaconViewState.empty) {
+  }) : super(BeaconViewState.empty) {
     if (fetchOnStart) fetch();
   }
 
   final String id;
 
-  final BeaconViewRepository _beaconViewRepository;
+  final BeaconViewRepository beaconViewRepository;
 
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
       emit(state.copyWith(
-        beacon: await _beaconViewRepository.fetchById(id),
+        beacon: await beaconViewRepository.fetchById(id),
       ));
       emit(state.copyWith(
         status: FetchStatus.isSuccess,
-        comments: (await _beaconViewRepository.fetchByBeaconId(id)).toList(),
+        comments: (await beaconViewRepository.fetchByBeaconId(id)).toList(),
       ));
     } catch (e) {
       emit(state.setError(e));
@@ -40,7 +38,7 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
 
   Future<void> addComment(String text) async {
     try {
-      final comment = await _beaconViewRepository.addComment(
+      final comment = await beaconViewRepository.addComment(
         beaconId: id,
         text: text,
       );
@@ -59,7 +57,7 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
     required String commentId,
     required int amount,
   }) =>
-      _beaconViewRepository.voteForComment(
+      beaconViewRepository.voteForComment(
         commentId: commentId,
         amount: amount,
       );

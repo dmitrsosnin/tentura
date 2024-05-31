@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';
-
 import 'package:tentura/domain/entity/beacon.dart';
 
 import '../../data/favorites_repository.dart';
@@ -18,9 +17,8 @@ class FavoritesCubit extends Cubit<FavoritesState>
 
   FavoritesCubit({
     required this.id,
-    FavoritesRepository? favoritesRepository,
-  })  : _favoritesRepository = favoritesRepository ?? FavoritesRepository(),
-        super(const FavoritesState()) {
+    required this.favoritesRepository,
+  }) : super(const FavoritesState()) {
     hydrate();
   }
 
@@ -28,7 +26,7 @@ class FavoritesCubit extends Cubit<FavoritesState>
   @override
   final String id;
 
-  final FavoritesRepository _favoritesRepository;
+  final FavoritesRepository favoritesRepository;
 
   @override
   FavoritesState? fromJson(Map<String, dynamic> json) =>
@@ -50,7 +48,7 @@ class FavoritesCubit extends Cubit<FavoritesState>
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
-      final beacons = await _favoritesRepository.fetchPinned(id);
+      final beacons = await favoritesRepository.fetchPinned(id);
       emit(FavoritesState(
         // TBD: remove that ugly 'where' when able filter in request
         beacons: beacons.where((e) => e.enabled).toList(),
@@ -60,9 +58,9 @@ class FavoritesCubit extends Cubit<FavoritesState>
     }
   }
 
-  Future<Beacon> pin(String beaconId) => _favoritesRepository.pin(beaconId);
+  Future<Beacon> pin(String beaconId) => favoritesRepository.pin(beaconId);
 
-  Future<Beacon> unpin(String beaconId) => _favoritesRepository.unpin(
+  Future<Beacon> unpin(String beaconId) => favoritesRepository.unpin(
         userId: id,
         beaconId: beaconId,
       );

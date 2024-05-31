@@ -12,6 +12,7 @@ import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/geo/ui/widget/place_name_text.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile_control.dart';
 
+import '../../data/beacon_view_repository.dart';
 import '../bloc/beacon_view_cubit.dart';
 import '../widget/comment_card.dart';
 import '../widget/new_comment_input.dart';
@@ -32,8 +33,12 @@ class BeaconViewScreen extends StatelessWidget {
     final queryParameters = GoRouterState.of(context).uri.queryParameters;
     final beaconId = queryParameters['id']!;
     return BlocProvider(
-      create: (context) => BeaconViewCubit(id: beaconId),
-      lazy: false,
+      create: (context) => BeaconViewCubit(
+        id: beaconId,
+        beaconViewRepository: BeaconViewRepository(
+          gqlClient: context.read<Client>(),
+        ),
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Beacon'),

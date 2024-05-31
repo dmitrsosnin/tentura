@@ -9,12 +9,12 @@ class MyFieldRepository {
   static const _label = 'MyField';
 
   MyFieldRepository({
-    Client? gqlClient,
-  }) : _gqlClient = gqlClient ?? GetIt.I<Client>();
+    required this.gqlClient,
+  });
 
-  final Client _gqlClient;
+  final Client gqlClient;
 
-  Future<Iterable<Beacon>> fetchFieldOf(String userId) => _gqlClient
+  Future<Iterable<Beacon>> fetchFieldOf(String userId) => gqlClient
       .request(GBeaconFetchMyFieldReq())
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
@@ -29,7 +29,7 @@ class MyFieldRepository {
     required String id,
     required int amount,
   }) =>
-      _gqlClient
+      gqlClient
           .request(GBeaconVoteByIdReq(
             (b) => b
               ..vars.amount = amount

@@ -13,13 +13,14 @@ part 'auth_state.dart';
 //
 class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   AuthCubit({
+    required this.authRepository,
     bool trySignIn = true,
   }) : super(const AuthState()) {
     hydrate();
     if (trySignIn && isAuthenticated) signIn(state.currentAccount);
   }
 
-  final _authRepository = GetIt.I<AuthRepository>();
+  final AuthRepository authRepository;
 
   bool get isAuthenticated => state.currentAccount.isNotEmpty;
 
@@ -57,7 +58,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
     }
     emit(state.setLoading());
     try {
-      final id = await _authRepository.signIn(seed);
+      final id = await authRepository.signIn(seed);
       emit(AuthState(
         currentAccount: id,
         accounts: {
@@ -73,7 +74,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> signUp() async {
     emit(state.setLoading());
     try {
-      final (:id, :seed) = await _authRepository.signUp();
+      final (:id, :seed) = await authRepository.signUp();
       emit(AuthState(
         currentAccount: id,
         accounts: {
@@ -89,7 +90,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> signIn(String id) async {
     emit(state.setLoading());
     try {
-      await _authRepository.signIn(state.accounts[id]!);
+      await authRepository.signIn(state.accounts[id]!);
       emit(AuthState(
         currentAccount: id,
         accounts: state.accounts,
@@ -101,7 +102,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
 
   Future<void> signOut() async {
     try {
-      await _authRepository.signOut();
+      await authRepository.signOut();
     } finally {
       emit(AuthState(
         accounts: state.accounts,
@@ -122,7 +123,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> deleteAccount(String id) async {
     emit(state.setLoading());
     try {
-      await _authRepository.delete();
+      await authRepository.delete();
       state.accounts.remove(id);
       emit(AuthState(
         accounts: {...state.accounts},

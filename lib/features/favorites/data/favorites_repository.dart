@@ -6,16 +6,18 @@ import 'gql/_g/beacon_fetch_pinned_by_user_id.req.gql.dart';
 import 'gql/_g/beacon_pin_by_id.req.gql.dart';
 import 'gql/_g/beacon_unpin_by_id.req.gql.dart';
 
+export 'package:tentura/data/gql/gql_client.dart';
+
 class FavoritesRepository {
   static const _label = 'Favorites';
 
   FavoritesRepository({
-    Client? gqlClient,
-  }) : _gqlClient = gqlClient ?? GetIt.I<Client>();
+    required this.gqlClient,
+  });
 
-  final Client _gqlClient;
+  final Client gqlClient;
 
-  Future<Iterable<Beacon>> fetchPinned(String userId) => _gqlClient
+  Future<Iterable<Beacon>> fetchPinned(String userId) => gqlClient
       .request(GBeaconFetchPinnedByUserIdReq((r) => r.vars.user_id = userId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
@@ -25,7 +27,7 @@ class FavoritesRepository {
             .map((r) => r.beacon as Beacon),
       );
 
-  Future<Beacon> pin(String id) => _gqlClient
+  Future<Beacon> pin(String id) => gqlClient
       .request(GBeaconPinByIdReq((b) => b.vars.beacon_id = id))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
@@ -36,7 +38,7 @@ class FavoritesRepository {
     required String userId,
     required String beaconId,
   }) =>
-      _gqlClient
+      gqlClient
           .request(GBeaconUnpinByIdReq(
             (b) => b.vars
               ..user_id = userId

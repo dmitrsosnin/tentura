@@ -10,13 +10,13 @@ class ProfileViewRepository {
   static const _label = 'ProfileView';
 
   ProfileViewRepository({
-    Client? gqlClient,
-  }) : _gqlClient = gqlClient ?? GetIt.I<Client>();
+    required this.gqlClient,
+  });
 
-  final Client _gqlClient;
+  final Client gqlClient;
 
   Future<({User user, List<Beacon> beacons})> fetchById(String userId) =>
-      _gqlClient
+      gqlClient
           .request(GProfileFetchByUserIdReq((b) => b.vars.user_id = userId))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
@@ -33,7 +33,7 @@ class ProfileViewRepository {
     required String userId,
     required int amount,
   }) =>
-      _gqlClient
+      gqlClient
           .request(GUserVoteByIdReq(
             (b) => b.vars
               ..object = userId

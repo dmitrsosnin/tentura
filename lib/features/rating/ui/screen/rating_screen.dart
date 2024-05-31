@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/domain/entity/user.dart';
+import 'package:tentura/data/gql/gql_client.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/features/rating/ui/bloc/rating_cubit.dart';
 import 'package:tentura/features/rating/ui/widget/rating_list_tile.dart';
 
@@ -21,7 +22,8 @@ class RatingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => RatingCubit(
-          myId: context.read<AuthCubit>().state.currentAccount,
+          gqlClient: context.read<Client>(),
+          id: context.read<AuthCubit>().state.currentAccount,
         ),
         child: Scaffold(
           appBar: AppBar(

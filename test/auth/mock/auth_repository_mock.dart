@@ -7,6 +7,16 @@ class AuthRepositoryMock implements AuthRepository {
   static const mockSeed = '4vegTLcjwnxNrMLS3BRFfe1p0lO6VgY5EPNuAcq5ssI=';
 
   @override
+  String get serverName => 'Mock';
+
+  @override
+  FreshLink<OAuth2Token> get link => FreshLink.oAuth2(
+        tokenStorage: InMemoryTokenStorage(),
+        refreshToken: (token, __) async => null,
+        shouldRefresh: (_) => false,
+      );
+
+  @override
   Future<({String id, String seed})> signUp() async =>
       (id: mockId, seed: mockSeed);
 
@@ -14,14 +24,11 @@ class AuthRepositoryMock implements AuthRepository {
   Future<String> signIn(String seed) async => mockId;
 
   @override
-  Future<void> close() async {}
+  Future<void> dispose() async {}
 
   @override
   Future<void> delete() async {}
 
   @override
   Future<void> signOut() async {}
-
-  @override
-  FreshLink<OAuth2Token> get link => throw UnimplementedError();
 }

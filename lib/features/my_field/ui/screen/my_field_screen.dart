@@ -6,6 +6,7 @@ import 'package:tentura/ui/utils/ui_consts.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
+import '../../data/my_field_repository.dart';
 import '../bloc/my_field_cubit.dart';
 import '../widget/beacon_tile.dart';
 
@@ -23,6 +24,9 @@ class MyFieldScreen extends StatelessWidget {
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => MyFieldCubit(
           id: context.read<AuthCubit>().state.currentAccount,
+          myFieldRepository: MyFieldRepository(
+            gqlClient: context.read<Client>(),
+          ),
         ),
         child: SafeArea(
           minimum: paddingH20,

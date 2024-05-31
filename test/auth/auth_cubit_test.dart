@@ -4,7 +4,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-import 'package:tentura/features/auth/data/auth_repository.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
 import '../_mock/hydrated_db_mock.dart';
@@ -21,12 +20,11 @@ void main() async {
       setUp(() {
         print('SetUpGroup');
         HydratedBloc.storage = HydratedStorageMock();
-        GetIt.I.registerSingleton<AuthRepository>(
-          AuthRepositoryMock(),
-          dispose: (i) => i.close(),
-        );
 
-        authCubit = AuthCubit()..stream.listen(print);
+        authCubit = AuthCubit(
+          trySignIn: false,
+          authRepository: AuthRepositoryMock(),
+        )..stream.listen(print);
       });
 
       tearDown(() {

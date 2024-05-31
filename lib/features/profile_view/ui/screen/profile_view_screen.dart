@@ -8,10 +8,12 @@ import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
+import 'package:tentura/data/gql/gql_client.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
 
+import '../../data/profile_view_repository.dart';
 import '../cubit/profile_view_cubit.dart';
 
 class ProfileViewScreen extends StatelessWidget {
@@ -35,6 +37,9 @@ class ProfileViewScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => ProfileViewCubit(
         id: GoRouterState.of(context).uri.queryParameters['id'] ?? '',
+        profileViewRepository: ProfileViewRepository(
+          gqlClient: context.read<Client>(),
+        ),
       ),
       child: Scaffold(
         body: BlocConsumer<ProfileViewCubit, ProfileViewState>(

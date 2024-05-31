@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
+import 'package:tentura/data/gql/gql_client.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
@@ -22,7 +23,8 @@ class GraphScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (_) => GraphCubit(
-          myId: context.read<AuthCubit>().state.currentAccount,
+          id: context.read<AuthCubit>().state.currentAccount,
+          gqlClient: context.read<Client>(),
           focus: GoRouterState.of(context).uri.queryParameters['focus'],
         ),
         child: Scaffold(

@@ -1,30 +1,31 @@
 import 'package:tentura/data/gql/gql_client.dart';
-import 'package:tentura/domain/entity/comment.dart';
-
 import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/comment.dart';
 
 import 'gql/_g/beacon_fetch_by_id.req.gql.dart';
 import 'gql/_g/comment_create.req.gql.dart';
 import 'gql/_g/comment_fetch_by_beacon_id.req.gql.dart';
 import 'gql/_g/comment_vote_by_id.req.gql.dart';
 
+export 'package:tentura/data/gql/gql_client.dart';
+
 class BeaconViewRepository {
   static const _label = 'Comment';
 
   BeaconViewRepository({
-    Client? gqlClient,
-  }) : _gqlClient = gqlClient ?? GetIt.I<Client>();
+    required this.gqlClient,
+  });
 
-  final Client _gqlClient;
+  final Client gqlClient;
 
-  Future<Beacon> fetchById(String beaconId) => _gqlClient
+  Future<Beacon> fetchById(String beaconId) => gqlClient
       .request(GBeaconFetchByIdReq((b) => b.vars.id = beaconId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
         (r) => r.dataOrThrow(label: _label).beacon_by_pk! as Beacon,
       );
 
-  Future<Iterable<Comment>> fetchByBeaconId(String beaconId) => _gqlClient
+  Future<Iterable<Comment>> fetchByBeaconId(String beaconId) => gqlClient
       .request(GCommentFetchByBeaconIdReq((b) => b.vars.beacon_id = beaconId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
@@ -38,7 +39,7 @@ class BeaconViewRepository {
     required String beaconId,
     required String text,
   }) =>
-      _gqlClient
+      gqlClient
           .request(GCommentCreateReq(
             (b) => b.vars
               ..beacon_id = beaconId
@@ -53,7 +54,7 @@ class BeaconViewRepository {
     required String commentId,
     required int amount,
   }) =>
-      _gqlClient
+      gqlClient
           .request(GCommentVoteByIdReq(
             (b) => b
               ..vars.amount = amount

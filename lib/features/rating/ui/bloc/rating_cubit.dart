@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'package:ferry/ferry.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
+import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/gql/_g/fetch_users_rating.data.gql.dart';
@@ -15,19 +14,21 @@ part 'rating_state.dart';
 
 class RatingCubit extends Cubit<RatingState> {
   RatingCubit({
-    required this.myId,
+    required this.id,
+    required this.gqlClient,
   }) : super(const RatingState()) {
     _subscription.resume();
   }
 
-  final String myId;
+  final String id;
+  final Client gqlClient;
 
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
 
   final _request = GUsersRatingReq();
 
-  late final _subscription = GetIt.I<Client>().request(_request).listen(
+  late final _subscription = gqlClient.request(_request).listen(
         _onData,
         cancelOnError: false,
         onError: (Object? e) => emit(state.copyWith(error: e)),
@@ -69,8 +70,7 @@ class RatingCubit extends Cubit<RatingState> {
 
   void _onData(OperationResponse<GUsersRatingData, GUsersRatingVars> response) {
     if (response.data == null) return;
-    _items =
-        response.data!.usersStats.where((e) => e.user?.id != myId).toList();
+    _items = response.data!.usersStats.where((e) => e.user?.id != id).toList();
     emit(state.copyWith(
       status: FetchStatus.isSuccess,
       items: _items,

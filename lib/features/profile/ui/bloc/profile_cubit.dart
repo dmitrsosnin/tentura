@@ -1,7 +1,8 @@
+import 'package:tentura/data/repository/image_repository.dart';
+import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/profile_repository.dart';
-import '../../../../domain/entity/user.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,16 +12,18 @@ class ProfileCubit extends Cubit<ProfileState>
     with HydratedMixin<ProfileState> {
   ProfileCubit({
     required this.id,
-    ProfileRepository? profileRepository,
-  })  : _profileRepository = profileRepository ?? ProfileRepository(),
-        super(ProfileState(user: User.empty)) {
+    required this.imageRepository,
+    required this.profileRepository,
+  }) : super(ProfileState(user: User.empty)) {
     hydrate();
   }
 
   @override
   final String id;
 
-  final ProfileRepository _profileRepository;
+  final ProfileRepository profileRepository;
+
+  final ImageRepository imageRepository;
 
   @override
   ProfileState? fromJson(Map<String, dynamic> json) =>
@@ -29,7 +32,7 @@ class ProfileCubit extends Cubit<ProfileState>
   @override
   Map<String, dynamic>? toJson(ProfileState state) => state.user.toJson();
 
-  Future<void> fetch() => _profileRepository.fetchById(id);
+  Future<void> fetch() => profileRepository.fetchById(id);
 
   Future<void> update({
     required String title,
@@ -40,7 +43,7 @@ class ProfileCubit extends Cubit<ProfileState>
         description == state.user.description &&
         hasPicture == state.user.has_picture) return;
     emit(ProfileState(
-      user: await _profileRepository.update(
+      user: await profileRepository.update(
         id: id,
         title: title,
         description: description,
@@ -49,5 +52,5 @@ class ProfileCubit extends Cubit<ProfileState>
     ));
   }
 
-  Future<void> delete() => _profileRepository.deleteById(id);
+  Future<void> delete() => profileRepository.deleteById(id);
 }

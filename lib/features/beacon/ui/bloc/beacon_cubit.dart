@@ -3,8 +3,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart' show DateTimeRange;
 
 import 'package:tentura/data/repository/image_repository.dart';
-import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/lat_long.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/beacon_repository.dart';
@@ -19,10 +19,10 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
 
   BeaconCubit({
     required this.id,
-    BeaconRepository? beaconRepository,
-    ImageRepository? imageRepository,
-  })  : _beaconRepository = beaconRepository ?? BeaconRepository(),
-        _imageRepository = imageRepository ?? GetIt.I<ImageRepository>(),
+    required ImageRepository imageRepository,
+    required BeaconRepository beaconRepository,
+  })  : _beaconRepository = beaconRepository,
+        _imageRepository = imageRepository,
         super(const BeaconState.empty()) {
     hydrate();
   }

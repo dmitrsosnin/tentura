@@ -21,15 +21,15 @@ class GraphCubit extends Cubit<GraphState> {
   static const _requestId = 'FetchGraph';
 
   GraphCubit({
-    required String myId,
+    required this.id,
+    required this.gqlClient,
     String? focus,
-  })  : _myId = myId,
-        super(GraphState(
+  }) : super(GraphState(
           focus: focus ?? '',
           isAnimated: true,
         )) {
     _fetchLimits = {super.state.focus: 10};
-    _subscription = GetIt.I<Client>()
+    _subscription = gqlClient
         .request(GGraphFetchReq(
           (b) => b
             ..requestId = _requestId
@@ -44,10 +44,12 @@ class GraphCubit extends Cubit<GraphState> {
         );
   }
 
+  final Client gqlClient;
+
   final graphController =
       GraphController<NodeDetails, EdgeDetails<NodeDetails>>();
 
-  final String _myId;
+  final String id;
 
   final _users = <String, GGraphFetchData_gravityGraph_users_user>{};
   final _beacons = <String, GGraphFetchData_gravityGraph_beacons_beacon>{};
@@ -57,7 +59,7 @@ class GraphCubit extends Cubit<GraphState> {
   late final Map<String, int> _fetchLimits;
 
   late final _defaultEgo = UserNode(
-    id: _myId,
+    id: id,
     label: 'Me',
     pinned: true,
     size: 80,
@@ -95,13 +97,13 @@ class GraphCubit extends Cubit<GraphState> {
   void _fetch(String focus) {
     final limit = (_fetchLimits[focus] ?? 0) + 3;
     _fetchLimits[focus] = limit;
-    GetIt.I<Client>().requestController.add(GGraphFetchReq(
-          (b) => b
-            ..requestId = _requestId
-            ..vars.focus = focus
-            ..vars.limit = limit
-            ..vars.positiveOnly = state.positiveOnly,
-        ));
+    gqlClient.requestController.add(GGraphFetchReq(
+      (b) => b
+        ..requestId = _requestId
+        ..vars.focus = focus
+        ..vars.limit = limit
+        ..vars.positiveOnly = state.positiveOnly,
+    ));
   }
 
   void _onData(_Response response) {
@@ -126,7 +128,7 @@ class GraphCubit extends Cubit<GraphState> {
     }
     graphController.mutate((mutator) {
       _egoNode = _buildNodeDetails(
-            node: _myId,
+            node: id,
             pinned: true,
             size: 80,
           ) ??

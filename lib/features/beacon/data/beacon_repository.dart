@@ -13,12 +13,12 @@ class BeaconRepository {
   static const _label = 'Beacon';
 
   BeaconRepository({
-    Client? gqlClient,
-  }) : _gqlClient = gqlClient ?? GetIt.I<Client>();
+    required this.gqlClient,
+  });
 
-  final Client _gqlClient;
+  final Client gqlClient;
 
-  Future<Iterable<Beacon>> fetchByUserId(String userId) => _gqlClient
+  Future<Iterable<Beacon>> fetchByUserId(String userId) => gqlClient
       .request(GBeaconsFetchByUserIdReq((b) => b.vars.user_id = userId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
@@ -32,7 +32,7 @@ class BeaconRepository {
     DateTimeRange? dateRange,
     LatLng? coordinates,
   }) =>
-      _gqlClient
+      gqlClient
           .request(
             GBeaconCreateReq(
               (b) => b.vars
@@ -48,7 +48,7 @@ class BeaconRepository {
             (r) => r.dataOrThrow(label: _label).insert_beacon_one! as Beacon,
           );
 
-  Future<void> delete(String id) => _gqlClient
+  Future<void> delete(String id) => gqlClient
       .request(GBeaconDeleteByIdReq((b) => b.vars.id = id))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) => r.dataOrThrow(label: _label));
@@ -57,7 +57,7 @@ class BeaconRepository {
     required String id,
     required bool isEnabled,
   }) =>
-      _gqlClient
+      gqlClient
           .request(GBeaconUpdateByIdReq(
             (b) => b
               ..vars.id = id

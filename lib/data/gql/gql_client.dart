@@ -8,7 +8,6 @@ import 'package:ferry_hive_store/ferry_hive_store.dart';
 import 'package:tentura/consts.dart';
 
 export 'package:ferry/ferry.dart';
-export 'package:get_it/get_it.dart';
 
 Future<Client> buildGqlClient({
   required Link link,

@@ -12,22 +12,20 @@ part 'profile_view_state.dart';
 class ProfileViewCubit extends Cubit<ProfileViewState> {
   ProfileViewCubit({
     required this.id,
+    required this.profileViewRepository,
     bool fetchOnStart = true,
-    ProfileViewRepository? profileViewRepository,
-  })  : _profileViewRepository =
-            profileViewRepository ?? ProfileViewRepository(),
-        super(ProfileViewState.empty) {
+  }) : super(ProfileViewState.empty) {
     if (fetchOnStart) fetch();
   }
 
   final String id;
 
-  final ProfileViewRepository _profileViewRepository;
+  final ProfileViewRepository profileViewRepository;
 
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
-      final profile = await _profileViewRepository.fetchById(id);
+      final profile = await profileViewRepository.fetchById(id);
       emit(state.copyWith(
         user: profile.user,
         beacons: profile.beacons,
@@ -45,7 +43,7 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
     try {
       emit(state.copyWith(
         user: state.user.copyWith(
-            myVote: await _profileViewRepository.voteById(
+            myVote: await profileViewRepository.voteById(
           userId: userId,
           amount: amount,
         )),

@@ -9,16 +9,14 @@ import 'package:tentura/consts.dart';
 
 import '../domain/exception.dart';
 
-export 'package:get_it/get_it.dart';
-
 class AuthRepository {
   static const _jwtHeader = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.';
 
   AuthRepository({
-    String serverName = appLinkBase,
-  }) : _serverName = serverName;
+    this.serverName = appLinkBase,
+  });
 
-  final String _serverName;
+  final String serverName;
 
   late final link = FreshLink.oAuth2(
     tokenStorage: InMemoryTokenStorage(),
@@ -37,7 +35,7 @@ class AuthRepository {
 
   late ed.KeyPair _keyPair;
 
-  Future<void> close() async {
+  Future<void> dispose() async {
     await link.dispose();
   }
 
@@ -80,7 +78,7 @@ class AuthRepository {
     String path,
   ) async {
     final response = await http.post(
-      Uri.https(_serverName, path),
+      Uri.https(serverName, path),
       headers: {
         'Authorization': 'Bearer ${_createAuthRequestToken()}',
       },

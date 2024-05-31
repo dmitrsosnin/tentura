@@ -8,7 +8,6 @@ import 'package:tentura/ui/dialog/error_dialog.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
-import 'package:tentura/data/repository/image_repository.dart';
 
 import '../bloc/profile_cubit.dart';
 
@@ -30,7 +29,6 @@ class ProfileEditScreen extends StatefulWidget {
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _imageRepository = GetIt.I<ImageRepository>();
 
   late final _profileCubit = context.read<ProfileCubit>();
   late final _profile = _profileCubit.state.user;
@@ -112,7 +110,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         iconSize: 50,
                         icon: const Icon(Icons.add_a_photo_outlined),
                         onPressed: () async {
-                          final image = await _imageRepository.pickImage();
+                          final image =
+                              await _profileCubit.imageRepository.pickImage();
                           if (image != null) {
                             setState(() {
                               _hasPicture = true;
@@ -178,7 +177,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     if (!_formKey.currentState!.validate()) return;
     try {
       if (_imagePath.isNotEmpty) {
-        await _imageRepository.putAvatar(
+        await _profileCubit.imageRepository.putAvatar(
           userId: _profile.id,
           image: await File(_imagePath).readAsBytes(),
         );
