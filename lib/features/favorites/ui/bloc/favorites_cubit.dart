@@ -22,6 +22,17 @@ class FavoritesCubit extends Cubit<FavoritesState>
     hydrate();
   }
 
+  factory FavoritesCubit.build({
+    required String id,
+    required Client gqlClient,
+  }) =>
+      FavoritesCubit(
+        id: id,
+        favoritesRepository: FavoritesRepository(
+          gqlClient: gqlClient,
+        ),
+      );
+
   /// current UserId
   @override
   final String id;

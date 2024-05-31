@@ -17,6 +17,17 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
     if (fetchOnStart) fetch();
   }
 
+  factory BeaconViewCubit.build({
+    required String id,
+    required Client gqlClient,
+  }) =>
+      BeaconViewCubit(
+        id: id,
+        beaconViewRepository: BeaconViewRepository(
+          gqlClient: gqlClient,
+        ),
+      );
+
   final String id;
 
   final BeaconViewRepository beaconViewRepository;

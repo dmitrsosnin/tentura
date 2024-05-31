@@ -5,6 +5,8 @@ import 'package:tentura/domain/entity/beacon.dart';
 import 'gql/_g/beacon_fetch_my_field.req.gql.dart';
 import 'gql/_g/beacon_vote_by_id.req.gql.dart';
 
+export 'package:tentura/data/gql/gql_client.dart';
+
 class MyFieldRepository {
   static const _label = 'MyField';
 

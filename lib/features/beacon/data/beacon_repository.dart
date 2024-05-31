@@ -9,6 +9,8 @@ import 'gql/_g/beacon_delete_by_id.req.gql.dart';
 import 'gql/_g/beacon_update_by_id.req.gql.dart';
 import 'gql/_g/beacons_fetch_by_user_id.req.gql.dart';
 
+export 'package:tentura/data/gql/gql_client.dart';
+
 class BeaconRepository {
   static const _label = 'Beacon';
 

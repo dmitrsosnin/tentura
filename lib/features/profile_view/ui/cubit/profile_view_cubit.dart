@@ -1,7 +1,6 @@
-import 'package:tentura/ui/bloc/state_base.dart';
-
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/user.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/profile_view_repository.dart';
 
@@ -17,6 +16,17 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
   }) : super(ProfileViewState.empty) {
     if (fetchOnStart) fetch();
   }
+
+  factory ProfileViewCubit.build({
+    required Client gqlClient,
+    required String id,
+  }) =>
+      ProfileViewCubit(
+        profileViewRepository: ProfileViewRepository(
+          gqlClient: gqlClient,
+        ),
+        id: id,
+      );
 
   final String id;
 

@@ -33,11 +33,9 @@ class BeaconViewScreen extends StatelessWidget {
     final queryParameters = GoRouterState.of(context).uri.queryParameters;
     final beaconId = queryParameters['id']!;
     return BlocProvider(
-      create: (context) => BeaconViewCubit(
+      create: (context) => BeaconViewCubit.build(
         id: beaconId,
-        beaconViewRepository: BeaconViewRepository(
-          gqlClient: context.read<Client>(),
-        ),
+        gqlClient: context.read<Client>(),
       ),
       child: Scaffold(
         appBar: AppBar(

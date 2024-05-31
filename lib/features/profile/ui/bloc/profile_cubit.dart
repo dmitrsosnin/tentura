@@ -1,6 +1,6 @@
-import 'package:tentura/data/repository/image_repository.dart';
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
+import 'package:tentura/domain/entity/user.dart';
+import 'package:tentura/data/repository/image_repository.dart';
 
 import '../../data/profile_repository.dart';
 
@@ -17,6 +17,19 @@ class ProfileCubit extends Cubit<ProfileState>
   }) : super(ProfileState(user: User.empty)) {
     hydrate();
   }
+
+  factory ProfileCubit.build({
+    required String id,
+    required Client gqlClient,
+    required ImageRepository imageRepository,
+  }) =>
+      ProfileCubit(
+        id: id,
+        imageRepository: imageRepository,
+        profileRepository: ProfileRepository(
+          gqlClient: gqlClient,
+        ),
+      );
 
   @override
   final String id;

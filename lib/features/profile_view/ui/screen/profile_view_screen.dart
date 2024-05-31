@@ -13,7 +13,6 @@ import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
 
-import '../../data/profile_view_repository.dart';
 import '../cubit/profile_view_cubit.dart';
 
 class ProfileViewScreen extends StatelessWidget {
@@ -35,11 +34,9 @@ class ProfileViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return BlocProvider(
-      create: (_) => ProfileViewCubit(
+      create: (_) => ProfileViewCubit.build(
         id: GoRouterState.of(context).uri.queryParameters['id'] ?? '',
-        profileViewRepository: ProfileViewRepository(
-          gqlClient: context.read<Client>(),
-        ),
+        gqlClient: context.read<Client>(),
       ),
       child: Scaffold(
         body: BlocConsumer<ProfileViewCubit, ProfileViewState>(

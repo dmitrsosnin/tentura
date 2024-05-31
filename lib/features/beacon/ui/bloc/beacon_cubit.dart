@@ -27,6 +27,17 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
     hydrate();
   }
 
+  factory BeaconCubit.build({
+    required String id,
+    required Client gqlClient,
+    required ImageRepository imageRepository,
+  }) =>
+      BeaconCubit(
+        id: id,
+        imageRepository: imageRepository,
+        beaconRepository: BeaconRepository(gqlClient: gqlClient),
+      );
+
   /// current UserId
   @override
   final String id;

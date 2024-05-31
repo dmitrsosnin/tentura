@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 
 import '../../data/my_field_repository.dart';
 
@@ -18,6 +18,17 @@ class MyFieldCubit extends Cubit<MyFieldState> {
   }) : super(const MyFieldState()) {
     if (needFetch) fetch();
   }
+
+  factory MyFieldCubit.build({
+    required String id,
+    required Client gqlClient,
+  }) =>
+      MyFieldCubit(
+        id: id,
+        myFieldRepository: MyFieldRepository(
+          gqlClient: gqlClient,
+        ),
+      );
 
   final String id;
 
