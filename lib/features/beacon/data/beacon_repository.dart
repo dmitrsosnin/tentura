@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' show DateTimeRange;
 
 import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/geo.dart';
 
 import 'gql/_g/beacon_create.req.gql.dart';
 import 'gql/_g/beacon_delete_by_id.req.gql.dart';
@@ -32,7 +33,7 @@ class BeaconRepository {
     bool hasPicture = false,
     String description = '',
     DateTimeRange? dateRange,
-    LatLng? coordinates,
+    Coordinates? coordinates,
   }) =>
       gqlClient
           .request(
@@ -42,7 +43,9 @@ class BeaconRepository {
                 ..description = description
                 ..has_picture = hasPicture
                 ..timerange = dateRange
-                ..place = coordinates,
+                ..place = coordinates == null
+                    ? null
+                    : LatLng(coordinates.lat, coordinates.long),
             ),
           )
           .firstWhere((e) => e.dataSource == DataSource.Link)

@@ -4,11 +4,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/data/repository/geo_repository.dart';
 import 'package:tentura/data/repository/image_repository.dart';
 import 'package:tentura/data/repository/settings_repository.dart';
 
-import 'package:tentura/features/geo/ui/cubit/geo_cubit.dart';
-import 'package:tentura/features/geo/data/geo_repository.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/data/auth_repository.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
@@ -70,10 +69,6 @@ class _DIState extends State<DI> {
               builder: (context, currentAccount) => MultiBlocProvider(
                 key: ValueKey(currentAccount),
                 providers: [
-                  //TBD: remove
-                  BlocProvider(
-                    create: (context) => GeoCubit(),
-                  ),
                   BlocProvider(
                     create: (context) => ProfileCubit.build(
                       id: currentAccount,

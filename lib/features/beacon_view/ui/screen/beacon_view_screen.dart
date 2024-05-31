@@ -6,10 +6,10 @@ import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
+import 'package:tentura/ui/widget/place_name_text.dart';
 import 'package:tentura/domain/entity/user.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/geo/ui/widget/place_name_text.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile_control.dart';
 
 import '../../data/beacon_view_repository.dart';
@@ -113,7 +113,14 @@ class BeaconViewScreen extends StatelessWidget {
                   ),
 
                 // Place
-                if (beacon.place != null) PlaceNameText(coords: beacon.place!),
+                if (beacon.place != null)
+                  PlaceNameText(
+                    coords: (
+                      lat: beacon.place!.latitude,
+                      long: beacon.place!.longitude,
+                    ),
+                    style: textTheme.bodyLarge,
+                  ),
 
                 // Buttons Row
                 if (context.read<AuthCubit>().checkIfIsNotMe(author.id))

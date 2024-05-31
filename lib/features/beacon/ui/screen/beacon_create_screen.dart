@@ -6,9 +6,8 @@ import 'package:tentura/consts.dart';
 import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/domain/entity/lat_long.dart';
-
-import 'package:tentura/features/geo/ui/dialog/choose_location_dialog.dart';
+import 'package:tentura/ui/dialog/choose_location_dialog.dart';
+import 'package:tentura/domain/entity/geo.dart';
 
 import '../bloc/beacon_cubit.dart';
 
@@ -41,7 +40,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
   late final _beaconCubit = context.read<BeaconCubit>();
 
   DateTimeRange? _dateRange;
-  LatLng? _coordinates;
+  Coordinates? _coordinates;
   Uint8List? _image;
 
   @override
@@ -149,15 +148,16 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                         ),
                 ),
                 onTap: () async {
-                  final place = await ChooseLocationDialog.show(
+                  final location = await ChooseLocationDialog.show(
                     context,
                     center: _coordinates,
                   );
-                  if (place != null) {
-                    _coordinates = place.point;
-                    _locationController.text = place.country == null
+                  if (location != null) {
+                    _coordinates = location.coords;
+                    _locationController.text = location.place.country == null
                         ? _coordinates.toString()
-                        : '${place.locality ?? "Unknown"}, ${place.country}';
+                        : '${location.place.locality ?? "Unknown"}, '
+                            '${location.place.country}';
                   }
                 },
               ),

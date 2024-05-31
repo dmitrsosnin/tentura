@@ -4,9 +4,8 @@ import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
+import 'package:tentura/ui/widget/place_name_text.dart';
 import 'package:tentura/domain/entity/beacon.dart';
-
-import 'package:tentura/features/geo/ui/widget/place_name_text.dart';
 
 class BeaconInfo extends StatelessWidget {
   const BeaconInfo({
@@ -72,7 +71,14 @@ class BeaconInfo extends StatelessWidget {
             ),
 
           // Beacon Geolocation
-          if (beacon.place != null) PlaceNameText(coords: beacon.place!),
+          if (beacon.place != null)
+            PlaceNameText(
+              coords: (
+                lat: beacon.place!.latitude,
+                long: beacon.place!.longitude,
+              ),
+              style: textTheme.bodyLarge,
+            ),
         ],
       ),
     );

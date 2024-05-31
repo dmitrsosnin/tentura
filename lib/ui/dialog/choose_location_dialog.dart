@@ -1,28 +1,22 @@
+import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:tentura/ui/routes.dart';
-import 'package:tentura/domain/entity/lat_long.dart';
-
-import '../cubit/geo_cubit.dart';
-
-typedef LocationResult = ({
-  LatLng point,
-  String? country,
-  String? locality,
-});
+import 'package:tentura/data/repository/geo_repository.dart';
 
 class ChooseLocationDialog extends StatefulWidget {
-  static Future<LocationResult?> show(
+  static Future<Location?> show(
     BuildContext context, {
-    LatLng? center,
+    Coordinates? center,
   }) =>
-      showDialog<LocationResult>(
+      showDialog<Location>(
         context: context,
         builder: (_) => ChooseLocationDialog(center: center),
       );
 
-  final LatLng? center;
+  final Coordinates? center;
 
   const ChooseLocationDialog({
     this.center,
@@ -36,7 +30,7 @@ class ChooseLocationDialog extends StatefulWidget {
 class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
   final _mapController = MapController();
 
-  late final _geoCubit = context.read<GeoCubit>();
+  late final _geoRepository = context.read<GeoRepository>();
 
   @override
   void dispose() {
@@ -57,27 +51,27 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
           options: MapOptions(
             maxZoom: 12,
             initialZoom: widget.center == null ? 4 : 10,
-            initialCenter: widget.center ?? const LatLng(0, 0),
+            initialCenter: LatLng(
+              widget.center?.lat ?? 0,
+              widget.center?.long ?? 0,
+            ),
             interactionOptions: const InteractionOptions(
               flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
             ),
             onTap: (tapPosition, point) async {
-              final place = await _geoCubit.getPlaceNameByCoords(
-                coords: point,
-                useCache: true,
-              );
-              if (context.mounted) {
-                context.pop((
-                  point: point,
-                  country: place?.country,
-                  locality: place?.locality,
-                ));
+              final coords = (lat: point.latitude, long: point.longitude);
+              final place = await _geoRepository.getPlaceNameByCoords(coords);
+              if (context.mounted) context.pop((coords: coords, place: place));
+            },
+            onMapReady: () {
+              final center = widget.center ?? _geoRepository.myCoordinates;
+              if (center != null) {
+                _mapController.move(
+                  LatLng(center.lat, center.long),
+                  _mapController.camera.zoom,
+                );
               }
             },
-            onMapReady: () => _mapController.move(
-              widget.center ?? _geoCubit.state,
-              _mapController.camera.zoom,
-            ),
           ),
           children: [
             TileLayer(
