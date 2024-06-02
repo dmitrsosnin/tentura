@@ -10,11 +10,9 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'favorites_state.dart';
 
-// TBD: use Hive directly
+// TBD: use ferry cache?
 class FavoritesCubit extends Cubit<FavoritesState>
     with HydratedMixin<FavoritesState> {
-  static const _jsonKey = 'beacons';
-
   FavoritesCubit({
     required this.id,
     required this.favoritesRepository,
@@ -40,39 +38,51 @@ class FavoritesCubit extends Cubit<FavoritesState>
   final FavoritesRepository favoritesRepository;
 
   @override
-  FavoritesState? fromJson(Map<String, dynamic> json) =>
-      json.containsKey(_jsonKey)
-          ? FavoritesState(beacons: [
-              for (final b in json[_jsonKey] as List)
-                Beacon.fromJson(b as Map<String, Object?>)
-            ])
-          : const FavoritesState.empty();
+  FavoritesState? fromJson(Map<String, dynamic> json) => FavoritesState(
+      beacons: json.values
+          .map((e) => Beacon.fromJson(e as Map<String, Object?>))
+          .toList());
 
   @override
   Map<String, dynamic>? toJson(FavoritesState state) =>
-      const ListEquality<Beacon>().equals(this.state.beacons, state.beacons)
+      state.isSameAs(this.state)
           ? null
           : {
-              _jsonKey: [for (final b in state.beacons) b.toJson()],
+              for (final b in state.beacons.indexed)
+                b.$1.toString(): b.$2.toJson(),
             };
 
   Future<void> fetch() async {
-    emit(state.setLoading());
     try {
       final beacons = await favoritesRepository.fetchPinned(id);
       emit(FavoritesState(
-        // TBD: remove that ugly 'where' when able filter in request
-        beacons: beacons.where((e) => e.enabled).toList(),
+        beacons: beacons.toList(),
       ));
     } catch (e) {
       emit(state.setError(e));
     }
   }
 
-  Future<Beacon> pin(String beaconId) => favoritesRepository.pin(beaconId);
+  Future<Beacon> pin(String beaconId) async {
+    final beacon = await favoritesRepository.pin(beaconId);
+    emit(FavoritesState(
+      beacons: [
+        ...state.beacons,
+        beacon,
+      ],
+    ));
+    return beacon;
+  }
 
-  Future<Beacon> unpin(String beaconId) => favoritesRepository.unpin(
-        userId: id,
-        beaconId: beaconId,
-      );
+  Future<Beacon> unpin(String beaconId) async {
+    final beacon = favoritesRepository.unpin(
+      userId: id,
+      beaconId: beaconId,
+    );
+    final beacons = [...state.beacons]..removeWhere((e) => e.id == beaconId);
+    emit(FavoritesState(
+      beacons: beacons,
+    ));
+    return beacon;
+  }
 }

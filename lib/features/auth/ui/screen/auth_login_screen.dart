@@ -6,9 +6,10 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 
+import 'package:tentura/features/profile/ui/widget/profile_list_tile.dart';
+
 import '../../domain/exception.dart';
 import '../bloc/auth_cubit.dart';
-import '../widget/account_list_tile.dart';
 
 class AuthLoginScreen extends StatelessWidget {
   static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
@@ -22,10 +23,8 @@ class AuthLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = context.read<AuthCubit>();
     return BlocConsumer<AuthCubit, AuthState>(
-      bloc: authCubit,
-      listenWhen: (p, c) => c.error != null,
+      listenWhen: (p, c) => c.hasError,
       listener: (context, state) {
         switch (state.error) {
           case SeedExistsException:
@@ -50,8 +49,10 @@ class AuthLoginScreen extends StatelessWidget {
             );
         }
       },
+      buildWhen: (p, c) => c.hasNoError,
       builder: (context, state) {
-        final accounts = state.accounts.entries.indexed;
+        final authCubit = context.read<AuthCubit>();
+        final accounts = state.accounts.keys.toList();
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -77,9 +78,9 @@ class AuthLoginScreen extends StatelessWidget {
                   // Accounts list
                   ListView.separated(
                     shrinkWrap: true,
-                    itemCount: state.accounts.keys.length,
-                    itemBuilder: (context, index) => AccountListTile(
-                      id: accounts.elementAt(index).$2.key,
+                    itemCount: accounts.length,
+                    itemBuilder: (context, i) => AccountListTile(
+                      id: accounts[i],
                     ),
                     separatorBuilder: (context, index) => const Divider(),
                   ),
@@ -108,7 +109,6 @@ class AuthLoginScreen extends StatelessWidget {
                     },
                   ),
                 ),
-
                 const Spacer(),
 
                 // Create new account

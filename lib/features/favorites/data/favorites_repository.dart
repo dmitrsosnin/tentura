@@ -31,7 +31,8 @@ class FavoritesRepository {
       .request(GBeaconPinByIdReq((b) => b.vars.beacon_id = id))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
-        (r) => r.dataOrThrow(label: _label).insert_beacon_pinned_one! as Beacon,
+        (r) => r.dataOrThrow(label: _label).insert_beacon_pinned_one!.beacon
+            as Beacon,
       );
 
   Future<Beacon> unpin({
@@ -46,7 +47,9 @@ class FavoritesRepository {
           ))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
-            (r) => r.dataOrThrow(label: _label).delete_beacon_pinned_by_pk!
-                as Beacon,
+            (r) => r
+                .dataOrThrow(label: _label)
+                .delete_beacon_pinned_by_pk!
+                .beacon as Beacon,
           );
 }

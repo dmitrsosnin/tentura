@@ -22,26 +22,30 @@ class BeaconViewScreen extends StatelessWidget {
       GoRoute(
         path: pathBeaconView,
         parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => const BeaconViewScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => BeaconViewCubit.build(
+            id: state.uri.queryParameters['id'] ?? '',
+            gqlClient: context.read<Client>(),
+          ),
+          child: state.uri.queryParameters['expanded'] == 'true'
+              ? const BeaconViewScreen(isExpanded: true)
+              : const BeaconViewScreen(isExpanded: false),
+        ),
       );
 
-  const BeaconViewScreen({super.key});
+  const BeaconViewScreen({
+    required this.isExpanded,
+    super.key,
+  });
+
+  final bool isExpanded;
 
   @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final queryParameters = GoRouterState.of(context).uri.queryParameters;
-    final beaconId = queryParameters['id']!;
-    return BlocProvider(
-      create: (context) => BeaconViewCubit.build(
-        id: beaconId,
-        gqlClient: context.read<Client>(),
-      ),
-      child: Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: const Text('Beacon'),
         ),
-        bottomSheet: NewCommentInput(beaconId: beaconId),
+        bottomSheet: const NewCommentInput(),
         body: BlocConsumer<BeaconViewCubit, BeaconViewState>(
           listenWhen: (p, c) => c.hasError,
           listener: (context, state) {
@@ -54,6 +58,7 @@ class BeaconViewScreen extends StatelessWidget {
           builder: (context, state) {
             final beacon = state.beacon;
             final author = beacon.author as User;
+            final textTheme = Theme.of(context).textTheme;
             return ListView(
               padding: paddingAll20,
               children: [
@@ -135,7 +140,7 @@ class BeaconViewScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8, bottom: 64),
                     child: ExpansionTile(
                       key: ValueKey(state.comments),
-                      initiallyExpanded: queryParameters['expanded'] == 'true',
+                      initiallyExpanded: isExpanded,
                       title: const Text('Comments'),
                       trailing: state.status.isLoading
                           ? const CircularProgressIndicator.adaptive()
@@ -149,7 +154,5 @@ class BeaconViewScreen extends StatelessWidget {
             );
           },
         ),
-      ),
-    );
-  }
+      );
 }

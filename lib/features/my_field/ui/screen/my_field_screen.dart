@@ -14,49 +14,50 @@ class MyFieldScreen extends StatelessWidget {
       GoRoute(
         path: pathHomeField,
         parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => const MyFieldScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => MyFieldCubit.build(
+            id: context.read<AuthCubit>().state.currentAccount,
+            gqlClient: context.read<Client>(),
+          ),
+          child: const MyFieldScreen(),
+        ),
       );
 
   const MyFieldScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (context) => MyFieldCubit.build(
-          id: context.read<AuthCubit>().state.currentAccount,
-          gqlClient: context.read<Client>(),
-        ),
-        child: SafeArea(
-          minimum: paddingH20,
-          child: BlocConsumer<MyFieldCubit, MyFieldState>(
-            listenWhen: (p, c) => c.hasError,
-            listener: (context, state) {
-              showSnackBar(
-                context,
-                isError: true,
-                text: state.error?.toString(),
-              );
-            },
-            builder: (context, state) {
-              final decoration = BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                  ),
+  Widget build(BuildContext context) => SafeArea(
+        minimum: paddingH20,
+        child: BlocConsumer<MyFieldCubit, MyFieldState>(
+          listenWhen: (p, c) => c.hasError,
+          listener: (context, state) {
+            showSnackBar(
+              context,
+              isError: true,
+              text: state.error?.toString(),
+            );
+          },
+          buildWhen: (p, c) => c.hasNoError,
+          builder: (context, state) {
+            final decoration = BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).colorScheme.inversePrimary,
                 ),
-              );
-              return RefreshIndicator.adaptive(
-                onRefresh: context.read<MyFieldCubit>().fetch,
-                child: ListView.builder(
-                  itemCount: state.beacons.length,
-                  itemBuilder: (context, i) => Container(
-                    decoration: decoration,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: BeaconTile(beacon: state.beacons[i]),
-                  ),
+              ),
+            );
+            return RefreshIndicator.adaptive(
+              onRefresh: context.read<MyFieldCubit>().fetch,
+              child: ListView.builder(
+                itemCount: state.beacons.length,
+                itemBuilder: (context, i) => Container(
+                  decoration: decoration,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: BeaconTile(beacon: state.beacons[i]),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       );
 }

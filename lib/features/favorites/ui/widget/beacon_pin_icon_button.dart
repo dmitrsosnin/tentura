@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:tentura/ui/utils/ui_utils.dart';
+
 import '../bloc/favorites_cubit.dart';
 
 class BeaconPinIconButton extends StatefulWidget {
@@ -17,22 +19,34 @@ class BeaconPinIconButton extends StatefulWidget {
 }
 
 class _BeaconPinIconButtonState extends State<BeaconPinIconButton> {
-  late bool _isFavorite = widget.isPinned ?? false;
+  late final _cubit = context.read<FavoritesCubit>();
+
+  late bool _isPinned = widget.isPinned ?? false;
 
   @override
-  Widget build(BuildContext context) => _isFavorite
+  Widget build(BuildContext context) => _isPinned
       ? IconButton(
           icon: const Icon(Icons.star),
-          onPressed: () async {
-            await context.read<FavoritesCubit>().unpin(widget.id);
-            setState(() => _isFavorite = false);
-          },
+          onPressed: () => _cubit.unpin(widget.id).then(
+            (beacon) {
+              if (mounted) setState(() => _isPinned = beacon.is_pinned!);
+            },
+            onError: _onError,
+          ),
         )
       : IconButton(
           icon: const Icon(Icons.star_border),
-          onPressed: () async {
-            await context.read<FavoritesCubit>().pin(widget.id);
-            setState(() => _isFavorite = true);
-          },
+          onPressed: () => _cubit.pin(widget.id).then(
+            (beacon) {
+              if (mounted) setState(() => _isPinned = beacon.is_pinned!);
+            },
+            onError: _onError,
+          ),
         );
+
+  void _onError(Object e) => showSnackBar(
+        context,
+        isError: true,
+        text: e.toString(),
+      );
 }

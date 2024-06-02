@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import '../bloc/beacon_view_cubit.dart';
 
 class NewCommentInput extends StatefulWidget {
-  const NewCommentInput({
-    required this.beaconId,
-    super.key,
-  });
-
-  final String beaconId;
+  const NewCommentInput({super.key});
 
   @override
   State<NewCommentInput> createState() => _NewCommentInputState();

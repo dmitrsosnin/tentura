@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../bloc/auth_cubit.dart';
+
 class AccountRemoveDialog extends StatelessWidget {
-  static Future<bool?> show(
+  static Future<void> show(
     BuildContext context, {
     required String id,
   }) =>
-      showDialog<bool>(
+      showDialog(
         context: context,
         builder: (context) => AccountRemoveDialog(id: id),
       );
@@ -24,7 +26,10 @@ class AccountRemoveDialog extends StatelessWidget {
         title: Text(id),
         actions: [
           TextButton(
-            onPressed: () => context.pop(true),
+            onPressed: () {
+              context.read<AuthCubit>().removeAccount(id);
+              context.pop();
+            },
             child: const Text('Remove'),
           ),
           TextButton(

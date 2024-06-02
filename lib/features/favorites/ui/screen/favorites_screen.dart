@@ -33,7 +33,7 @@ class FavoritesScreen extends StatelessWidget {
         },
         buildWhen: (p, c) => c.hasNoError,
         builder: (context, state) => RefreshIndicator.adaptive(
-          onRefresh: context.watch<FavoritesCubit>().fetch,
+          onRefresh: context.read<FavoritesCubit>().fetch,
           child: state.beacons.isEmpty
               ? CustomScrollView(
                   slivers: [

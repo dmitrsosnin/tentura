@@ -1,16 +1,13 @@
 part of 'favorites_cubit.dart';
 
 final class FavoritesState extends StateBase {
+  static const _listEquality = ListEquality<Beacon>();
+
   const FavoritesState({
     this.beacons = const <Beacon>[],
     super.status,
     super.error,
   });
-
-  const FavoritesState.empty({
-    super.status,
-    super.error,
-  }) : beacons = const [];
 
   final List<Beacon> beacons;
 
@@ -21,6 +18,9 @@ final class FavoritesState extends StateBase {
         beacons,
         beacons.length,
       ];
+
+  bool isSameAs(FavoritesState state) =>
+      _listEquality.equals(state.beacons, beacons);
 
   @override
   FavoritesState copyWith({
