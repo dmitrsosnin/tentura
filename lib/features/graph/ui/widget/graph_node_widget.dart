@@ -6,11 +6,12 @@ import 'package:tentura/ui/widget/beacon_image.dart';
 import '../../domain/entity/node_details.dart';
 
 class GraphNodeWidget extends StatelessWidget {
-  GraphNodeWidget({
+  const GraphNodeWidget({
     required this.nodeDetails,
-    this.onTap,
     this.onDoubleTap,
-  }) : super(key: ValueKey(nodeDetails));
+    this.onTap,
+    super.key,
+  });
 
   final NodeDetails nodeDetails;
   final VoidCallback? onTap;

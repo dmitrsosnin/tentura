@@ -28,6 +28,7 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
     String? id,
     String? title,
     String? description,
+    String? authorId,
     bool? hasPicture,
     bool? isPinned,
     bool? enabled,
@@ -46,9 +47,9 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
             ..created_at = created_at
             ..updated_at = updated_at
             ..author = (GBeaconFieldsData_authorBuilder()
-              ..id = ''
-              ..title = ''
-              ..description = ''
-              ..has_picture = false))
+              ..id = authorId ?? author.id
+              ..title = author.title
+              ..description = author.description
+              ..has_picture = author.has_picture))
           .build() as Beacon;
 }

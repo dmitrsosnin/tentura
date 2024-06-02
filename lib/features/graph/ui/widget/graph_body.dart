@@ -45,6 +45,7 @@ class GraphBodyState extends State<GraphBody>
     vsync: this,
   );
 
+  late final _theme = Theme.of(context);
   late final _cubit = context.read<GraphCubit>();
 
   @override
@@ -61,7 +62,6 @@ class GraphBodyState extends State<GraphBody>
 
   @override
   Widget build(BuildContext context) {
-    final highlightColor = Theme.of(context).canvasColor;
     return GraphView<NodeDetails, EdgeDetails<NodeDetails>>(
       controller: _cubit.graphController,
       canvasSize: widget.canvasSize,
@@ -73,8 +73,8 @@ class GraphBodyState extends State<GraphBody>
           parent: _animationController,
           curve: const EaseInOutReynolds(),
         ),
-        highlightColor: highlightColor,
         highlightRadius: 0.15,
+        highlightColor: _theme.canvasColor,
         isAnimated: _cubit.state.isAnimated,
       ),
       labelBuilder: widget.isLabeled
@@ -82,11 +82,7 @@ class GraphBodyState extends State<GraphBody>
               labelSize: widget.labelSize,
               builder: (context, node) => switch (node) {
                 final UserNode node => Text(
-                    node.label,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.visible,
-                  ),
-                final BeaconNode node => Text(
+                    key: ValueKey(node),
                     node.label,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
@@ -95,37 +91,28 @@ class GraphBodyState extends State<GraphBody>
               },
             )
           : null,
-      nodeBuilder: (context, node) {
-        void onTap() => _cubit.setFocus(node);
-        void onDoubleTap() => context.push(switch (node) {
-              final UserNode node => Uri(
-                  path: pathProfileView,
-                  queryParameters: {
-                    'id': node.id,
-                  },
-                ),
-              final BeaconNode node => Uri(
-                  path: pathBeaconView,
-                  queryParameters: {
-                    'id': node.id,
-                    'expanded': 'false',
-                  },
-                ),
-              final CommentNode node => Uri(
-                  path: pathBeaconView,
-                  queryParameters: {
-                    'id': node.beaconId,
-                    'expanded': 'true',
-                  },
-                ),
-            }
-                .toString());
-        return GraphNodeWidget(
-          nodeDetails: node,
-          onTap: onTap,
-          onDoubleTap: onDoubleTap,
-        );
-      },
+      nodeBuilder: (context, node) => GraphNodeWidget(
+        key: ValueKey(node),
+        nodeDetails: node,
+        onTap: () => _cubit.setFocus(node),
+        onDoubleTap: () => context.push(switch (node) {
+          final UserNode node => Uri(
+              path: pathProfileView,
+              queryParameters: {
+                'id': node.id,
+              },
+            ),
+          final BeaconNode node => Uri(
+              path: pathBeaconView,
+              queryParameters: {
+                'id': node.id,
+                'expanded': 'false',
+              },
+            ),
+          _ => nil,
+        }
+            .toString()),
+      ),
     );
   }
 }

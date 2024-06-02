@@ -15,53 +15,53 @@ class GraphScreen extends StatelessWidget {
       GoRoute(
         path: pathGraph,
         parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => const GraphScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => GraphCubit.build(
+            id: context.read<AuthCubit>().state.currentAccount,
+            focus: state.uri.queryParameters['focus'],
+            gqlClient: context.read<Client>(),
+          ),
+          child: const GraphScreen(),
+        ),
       );
 
   const GraphScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (_) => GraphCubit(
-          id: context.read<AuthCubit>().state.currentAccount,
-          gqlClient: context.read<Client>(),
-          focus: GoRouterState.of(context).uri.queryParameters['focus'],
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          actions: [
+            PopupMenuButton(
+              itemBuilder: (context) {
+                final cubit = context.read<GraphCubit>();
+                return <PopupMenuEntry<void>>[
+                  PopupMenuItem<void>(
+                    onTap: cubit.jumpToEgo,
+                    child: const Text('Go to Ego'),
+                  ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem<void>(
+                    onTap: cubit.togglePositiveOnly,
+                    child: cubit.state.positiveOnly
+                        ? const Text('Show negative')
+                        : const Text('Hide negative'),
+                  ),
+                ];
+              },
+            ),
+          ],
+          title: const Text('Graph view'),
         ),
-        child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              PopupMenuButton(
-                itemBuilder: (context) {
-                  final cubit = context.read<GraphCubit>();
-                  return <PopupMenuEntry<void>>[
-                    PopupMenuItem<void>(
-                      onTap: cubit.jumpToEgo,
-                      child: const Text('Go to Ego'),
-                    ),
-                    const PopupMenuDivider(),
-                    PopupMenuItem<void>(
-                      onTap: cubit.togglePositiveOnly,
-                      child: cubit.state.positiveOnly
-                          ? const Text('Show negative')
-                          : const Text('Hide negative'),
-                    ),
-                  ];
-                },
-              ),
-            ],
-            title: const Text('Graph view'),
-          ),
-          body: BlocListener<GraphCubit, GraphState>(
-            listenWhen: (p, c) => c.status.isFailure,
-            listener: (context, state) {
-              showSnackBar(
-                context,
-                isError: true,
-                text: state.error?.toString() ?? 'Undescribed error',
-              );
-            },
-            child: const GraphBody(),
-          ),
+        body: BlocListener<GraphCubit, GraphState>(
+          listenWhen: (p, c) => c.status.isFailure,
+          listener: (context, state) {
+            showSnackBar(
+              context,
+              isError: true,
+              text: state.error?.toString() ?? 'Undescribed error',
+            );
+          },
+          child: const GraphBody(),
         ),
       );
 }

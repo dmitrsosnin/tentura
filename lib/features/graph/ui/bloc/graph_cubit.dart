@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/comment.dart';
+import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import '../../data/gql/_g/graph_fetch.data.gql.dart';
-import '../../data/gql/_g/graph_fetch.req.gql.dart';
-import '../../data/gql/_g/graph_fetch.var.gql.dart';
+import '../../data/graph_repository.dart';
 import '../../domain/entity/edge_details.dart';
 import '../../domain/entity/node_details.dart';
 
@@ -15,47 +16,41 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'graph_state.dart';
 
-typedef _Response = OperationResponse<GGraphFetchData, GGraphFetchVars>;
-
 class GraphCubit extends Cubit<GraphState> {
-  static const _requestId = 'FetchGraph';
-
   GraphCubit({
     required this.id,
-    required this.gqlClient,
-    String? focus,
-  }) : super(GraphState(
-          focus: focus ?? '',
-          isAnimated: true,
-        )) {
-    _fetchLimits = {super.state.focus: 10};
-    _subscription = gqlClient
-        .request(GGraphFetchReq(
-          (b) => b
-            ..requestId = _requestId
-            ..vars.positiveOnly = state.positiveOnly
-            ..vars.limit = _fetchLimits[focus]
-            ..vars.focus = focus,
-        ))
-        .listen(
-          _onData,
-          cancelOnError: false,
-          onError: (Object? e) => emit(state.copyWith(error: e)),
-        );
+    required this.graphRepository,
+    bool fetchOnCreate = true,
+    String focus = '',
+  }) : super(GraphState(focus: focus)) {
+    _fetchLimits = {super.state.focus: 5};
+    if (fetchOnCreate) fetch(focus);
   }
 
-  final Client gqlClient;
+  factory GraphCubit.build({
+    required String id,
+    required Client gqlClient,
+    String? focus,
+  }) =>
+      GraphCubit(
+        id: id,
+        focus: focus ?? '',
+        graphRepository: GraphRepository(
+          gqlClient: gqlClient,
+        ),
+      );
+
+  final GraphRepository graphRepository;
 
   final graphController =
       GraphController<NodeDetails, EdgeDetails<NodeDetails>>();
 
   final String id;
 
-  final _users = <String, GGraphFetchData_gravityGraph_users_user>{};
-  final _beacons = <String, GGraphFetchData_gravityGraph_beacons_beacon>{};
-  final _comments = <String, GGraphFetchData_gravityGraph_comments_comment>{};
+  final _users = <String, User>{};
+  final _beacons = <String, Beacon>{};
+  final _comments = <String, Comment>{};
 
-  late final StreamSubscription<_Response> _subscription;
   late final Map<String, int> _fetchLimits;
 
   late final _defaultEgo = UserNode(
@@ -68,9 +63,8 @@ class GraphCubit extends Cubit<GraphState> {
   late NodeDetails _egoNode = _defaultEgo;
 
   @override
-  Future<void> close() async {
+  Future<void> close() {
     graphController.dispose();
-    await _subscription.cancel();
     return super.close();
   }
 
@@ -80,10 +74,9 @@ class GraphCubit extends Cubit<GraphState> {
     graphController.clear();
     emit(state.copyWith(
       focus: '',
-      status: FetchStatus.isLoading,
       positiveOnly: !state.positiveOnly,
     ));
-    _fetch(state.focus);
+    fetch(state.focus);
   }
 
   void setFocus(NodeDetails node) {
@@ -91,41 +84,49 @@ class GraphCubit extends Cubit<GraphState> {
     graphController
       ..setPinned(node, true)
       ..jumpToNode(node);
-    _fetch(node.id);
+    fetch(node.id);
   }
 
-  void _fetch(String focus) {
+  Future<void> fetch(String focus) async {
     final limit = (_fetchLimits[focus] ?? 0) + 3;
     _fetchLimits[focus] = limit;
-    gqlClient.requestController.add(GGraphFetchReq(
-      (b) => b
-        ..requestId = _requestId
-        ..vars.focus = focus
-        ..vars.limit = limit
-        ..vars.positiveOnly = state.positiveOnly,
-    ));
+    try {
+      await _fetch(focus, limit);
+    } catch (e) {
+      emit(state.copyWith(
+        error: 'No data or got error',
+      ));
+    }
   }
 
-  void _onData(_Response response) {
-    final graph = response.data?.gravityGraph;
-    if (graph == null) {
-      return emit(
-        state.copyWith(error: 'No data or got error'),
-      );
-    } else {
-      for (final e in graph.users) {
-        final user = e?.user;
-        if (user != null) _users.putIfAbsent(user.id, () => user);
-      }
-      for (final e in graph.beacons) {
-        final beacon = e?.beacon;
-        if (beacon != null) _beacons.putIfAbsent(beacon.id, () => beacon);
-      }
-      for (final e in graph.comments) {
-        final comment = e?.comment;
-        if (comment != null) _comments.putIfAbsent(comment.id, () => comment);
+  Future<void> _fetch(String focus, int limit) async {
+    final graph = await graphRepository.fetch(
+      focus: focus,
+      limit: limit,
+      positiveOnly: state.positiveOnly,
+    );
+
+    // update cache
+    for (final e in graph.users) {
+      final user = e?.user;
+      if (user != null) {
+        _users.putIfAbsent(user.id, () => user as User);
       }
     }
+    for (final e in graph.beacons) {
+      final beacon = e?.beacon;
+      if (beacon != null) {
+        _beacons.putIfAbsent(beacon.id, () => beacon as Beacon);
+      }
+    }
+    for (final e in graph.comments) {
+      final comment = e?.comment;
+      if (comment != null) {
+        _comments.putIfAbsent(comment.id, () => comment as Comment);
+      }
+    }
+
+    // update graph
     graphController.mutate((mutator) {
       _egoNode = _buildNodeDetails(
             node: id,
@@ -136,14 +137,12 @@ class GraphCubit extends Cubit<GraphState> {
       if (!mutator.controller.nodes.contains(_egoNode)) {
         mutator.addNode(_egoNode);
       }
-      final missedIds = <String>[];
       for (final e in graph.edges) {
         if (state.positiveOnly && e!.weight < 0) continue;
         final src = _buildNodeDetails(node: e!.src);
-        if (src == null) missedIds.add(e.src);
+        if (src == null) continue;
         final dst = _buildNodeDetails(node: e.dest);
-        if (dst == null) missedIds.add(e.dest);
-        if (src == null || dst == null) continue;
+        if (dst == null) continue;
         final edge = EdgeDetails<NodeDetails>(
           source: src,
           destination: dst,
@@ -158,11 +157,10 @@ class GraphCubit extends Cubit<GraphState> {
         if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
         if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
       }
-      if (missedIds.isNotEmpty) emit(state.copyWith(error: missedIds));
-      emit(state.copyWith(status: FetchStatus.isSuccess));
     });
   }
 
+  /// return null if noy in cache
   NodeDetails? _buildNodeDetails({
     required String node,
     double size = 40,
@@ -174,24 +172,24 @@ class GraphCubit extends Cubit<GraphState> {
         'C' => _comments[node],
         _ => throw Exception('Wrong id type'),
       }) {
-        final GGraphFetchData_gravityGraph_users_user n => UserNode(
+        final User n => UserNode(
             id: n.id,
             label: n.title,
             hasImage: n.has_picture,
             pinned: pinned,
             size: size,
           ),
-        final GGraphFetchData_gravityGraph_beacons_beacon n => BeaconNode(
+        final Beacon n => BeaconNode(
             id: n.id,
-            userId: n.user_id,
+            userId: n.author.id,
             hasImage: n.has_picture,
             label: n.title,
             pinned: pinned,
             size: size,
           ),
-        final GGraphFetchData_gravityGraph_comments_comment n => CommentNode(
+        final Comment n => CommentNode(
             id: n.id,
-            userId: n.user_id,
+            userId: n.author.id,
             beaconId: n.beacon_id,
             pinned: pinned,
             size: size,

@@ -21,10 +21,6 @@ sealed class NodeDetails extends NodeBase with EquatableMixin {
   List<Object> get props => [id];
 
   String get userId;
-
-  NodeDetails copyWith({
-    bool? pinned,
-  });
 }
 
 final class UserNode extends NodeDetails {
@@ -40,19 +36,13 @@ final class UserNode extends NodeDetails {
   String get userId => id;
 
   @override
-  UserNode copyWith({
-    bool? pinned,
-  }) =>
-      UserNode(
+  UserNode copyWithPinned(bool pinned) => UserNode(
         id: id,
         size: size,
         label: label,
         hasImage: hasImage,
-        pinned: pinned ?? this.pinned,
+        pinned: pinned,
       );
-
-  @override
-  UserNode copyWithPinned(bool pinned) => copyWith(pinned: pinned);
 }
 
 final class BeaconNode extends NodeDetails {
@@ -69,20 +59,14 @@ final class BeaconNode extends NodeDetails {
   final String userId;
 
   @override
-  BeaconNode copyWith({
-    bool? pinned,
-  }) =>
-      BeaconNode(
+  BeaconNode copyWithPinned(bool pinned) => BeaconNode(
         id: id,
         size: size,
         label: label,
         userId: userId,
         hasImage: hasImage,
-        pinned: pinned ?? this.pinned,
+        pinned: pinned,
       );
-
-  @override
-  BeaconNode copyWithPinned(bool pinned) => copyWith(pinned: pinned);
 }
 
 final class CommentNode extends NodeDetails {
@@ -103,17 +87,11 @@ final class CommentNode extends NodeDetails {
   String get label => id;
 
   @override
-  CommentNode copyWith({
-    bool? pinned,
-  }) =>
-      CommentNode(
+  CommentNode copyWithPinned(bool pinned) => CommentNode(
         id: id,
         size: size,
         userId: userId,
         beaconId: beaconId,
-        pinned: pinned ?? this.pinned,
+        pinned: pinned,
       );
-
-  @override
-  CommentNode copyWithPinned(bool pinned) => copyWith(pinned: pinned);
 }

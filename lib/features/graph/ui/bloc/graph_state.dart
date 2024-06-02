@@ -3,7 +3,7 @@ part of 'graph_cubit.dart';
 final class GraphState extends StateBase {
   const GraphState({
     required this.focus,
-    this.isAnimated = false,
+    this.isAnimated = true,
     this.positiveOnly = true,
     super.status,
     super.error,
@@ -12,6 +12,15 @@ final class GraphState extends StateBase {
   final String focus;
   final bool isAnimated;
   final bool positiveOnly;
+
+  @override
+  List<Object?> get props => [
+        positiveOnly,
+        isAnimated,
+        status,
+        focus,
+        error,
+      ];
 
   @override
   GraphState copyWith({
@@ -28,13 +37,4 @@ final class GraphState extends StateBase {
         status: status ?? (error == null ? this.status : FetchStatus.isFailure),
         error: error ?? this.error,
       );
-
-  @override
-  List<Object?> get props => [
-        positiveOnly,
-        isAnimated,
-        status,
-        focus,
-        error,
-      ];
 }
