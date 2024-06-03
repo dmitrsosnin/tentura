@@ -10,24 +10,23 @@ import 'package:tentura/consts.dart';
 export 'package:ferry/ferry.dart';
 
 Future<Client> buildGqlClient({
-  required Link link,
+  required Link authLink,
   String serverName = appLinkBase,
-  Directory? appDir,
+  Directory? storageDirectory,
 }) async {
-  final useCache = appDir != null;
-  if (useCache) Hive.init(appDir.path);
+  final link = Link.from([
+    authLink,
+    HttpLink('https://$serverName/v1/graphql'),
+  ]);
+  if (storageDirectory == null) return Client(link: link);
+  Hive.init(storageDirectory.path);
   return Client(
-    link: Link.from([
-      link,
-      HttpLink('https://$serverName/v1/graphql'),
-    ]),
-    cache: useCache
-        ? Cache(
-            store: HiveStore(
-              await Hive.openBox<Map<String, dynamic>>('graphql_cache'),
-            ),
-          )
-        : null,
+    link: link,
+    cache: Cache(
+      store: HiveStore(
+        await Hive.openBox<Map<dynamic, dynamic>>('graphql_cache'),
+      ),
+    ),
     defaultFetchPolicies: {
       OperationType.query: FetchPolicy.NoCache,
     },

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -39,13 +40,16 @@ class GeoRepository {
     if (_myCoords != null) return _myCoords;
 
     if (await _checkLocationPermission()) {
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.lowest,
-        timeLimit: timeLimit,
-      );
-      return (lat: position.latitude, long: position.longitude);
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.lowest,
+          timeLimit: timeLimit,
+        );
+        return (lat: position.latitude, long: position.longitude);
+      } catch (e) {
+        if (kDebugMode) print(e);
+      }
     }
-
     return null;
   }
 

@@ -10,14 +10,13 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'favorites_state.dart';
 
-// TBD: use ferry cache?
-class FavoritesCubit extends Cubit<FavoritesState>
-    with HydratedMixin<FavoritesState> {
+// TBD: use stream for fetch?
+class FavoritesCubit extends Cubit<FavoritesState> {
   FavoritesCubit({
     required this.id,
     required this.favoritesRepository,
   }) : super(const FavoritesState()) {
-    hydrate();
+    _fetchSubscription.resume();
   }
 
   factory FavoritesCubit.build({
@@ -28,41 +27,35 @@ class FavoritesCubit extends Cubit<FavoritesState>
         id: id,
         favoritesRepository: FavoritesRepository(
           gqlClient: gqlClient,
+          userId: id,
         ),
       );
 
   /// current UserId
-  @override
   final String id;
 
   final FavoritesRepository favoritesRepository;
 
-  @override
-  FavoritesState? fromJson(Map<String, dynamic> json) => FavoritesState(
-      beacons: json.values
-          .map((e) => Beacon.fromJson(e as Map<String, Object?>))
-          .toList());
+  late final _fetchSubscription = favoritesRepository.fetch().listen(
+        (e) => emit(FavoritesState(
+          beacons: e.toList(),
+        )),
+        onError: (dynamic e) => emit(state.setError(e.toString())),
+        cancelOnError: false,
+      );
 
   @override
-  Map<String, dynamic>? toJson(FavoritesState state) =>
-      state.isSameAs(this.state)
-          ? null
-          : {
-              for (final b in state.beacons.indexed)
-                b.$1.toString(): b.$2.toJson(),
-            };
-
-  Future<void> fetch() async {
-    try {
-      final beacons = await favoritesRepository.fetchPinned(id);
-      emit(FavoritesState(
-        beacons: beacons.toList(),
-      ));
-    } catch (e) {
-      emit(state.setError(e));
-    }
+  Future<void> close() async {
+    await _fetchSubscription.cancel();
+    return super.close();
   }
 
+  Future<void> fetch() async {
+    emit(state.setLoading());
+    favoritesRepository.refetch();
+  }
+
+  // TBD: update cache?
   Future<Beacon> pin(String beaconId) async {
     final beacon = await favoritesRepository.pin(beaconId);
     emit(FavoritesState(
@@ -74,11 +67,9 @@ class FavoritesCubit extends Cubit<FavoritesState>
     return beacon;
   }
 
+  // TBD: update cache?
   Future<Beacon> unpin(String beaconId) async {
-    final beacon = favoritesRepository.unpin(
-      userId: id,
-      beaconId: beaconId,
-    );
+    final beacon = favoritesRepository.unpin(beaconId);
     final beacons = [...state.beacons]..removeWhere((e) => e.id == beaconId);
     emit(FavoritesState(
       beacons: beacons,

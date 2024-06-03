@@ -101,14 +101,18 @@ class _DIState extends State<DI> {
       DeviceOrientation.portraitUp,
     ]);
 
+    final storageDirectory = await getApplicationDocumentsDirectory();
     HydratedBloc.storage = await HydratedStorage.build(
       encryptionCipher: HydratedAesCipher(
         await _settingsRepository.getCipherKey(),
       ),
-      storageDirectory: await getApplicationDocumentsDirectory(),
+      storageDirectory: storageDirectory,
     );
 
-    _gqlClient = await buildGqlClient(link: _authRepository.link);
+    _gqlClient = await buildGqlClient(
+      authLink: _authRepository.link,
+      storageDirectory: storageDirectory,
+    );
     setState(() => _isLoading = false);
   }
 }

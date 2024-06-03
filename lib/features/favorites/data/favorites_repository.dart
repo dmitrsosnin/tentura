@@ -12,44 +12,44 @@ class FavoritesRepository {
   static const _label = 'Favorites';
 
   FavoritesRepository({
+    required this.userId,
     required this.gqlClient,
   });
 
+  final String userId;
   final Client gqlClient;
 
-  Future<Iterable<Beacon>> fetchPinned(String userId) => gqlClient
-      .request(GBeaconFetchPinnedByUserIdReq((r) => r.vars.user_id = userId))
-      .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then(
-        (r) => r
-            .dataOrThrow(label: _label)
-            .beacon_pinned
-            .map((r) => r.beacon as Beacon),
-      );
+  late final _fetchRequest = GBeaconFetchPinnedByUserIdReq(
+    (r) => r
+      ..vars.user_id = userId
+      ..fetchPolicy = FetchPolicy.CacheAndNetwork,
+  );
 
-  Future<Beacon> pin(String id) => gqlClient
-      .request(GBeaconPinByIdReq((b) => b.vars.beacon_id = id))
+  Stream<Iterable<Beacon>> fetch() =>
+      gqlClient.request(_fetchRequest).map((r) => r
+          .dataOrThrow(label: _label)
+          .beacon_pinned
+          .map((r) => r.beacon as Beacon));
+
+  void refetch() => gqlClient.requestController.add(_fetchRequest);
+
+  Future<Beacon> pin(String beaconId) => gqlClient
+      .request(GBeaconPinByIdReq((b) => b.vars.beacon_id = beaconId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
         (r) => r.dataOrThrow(label: _label).insert_beacon_pinned_one!.beacon
             as Beacon,
       );
 
-  Future<Beacon> unpin({
-    required String userId,
-    required String beaconId,
-  }) =>
-      gqlClient
-          .request(GBeaconUnpinByIdReq(
-            (b) => b.vars
-              ..user_id = userId
-              ..beacon_id = beaconId,
-          ))
-          .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then(
-            (r) => r
-                .dataOrThrow(label: _label)
-                .delete_beacon_pinned_by_pk!
-                .beacon as Beacon,
-          );
+  Future<Beacon> unpin(String beaconId) => gqlClient
+      .request(GBeaconUnpinByIdReq(
+        (b) => b.vars
+          ..user_id = userId
+          ..beacon_id = beaconId,
+      ))
+      .firstWhere((e) => e.dataSource == DataSource.Link)
+      .then(
+        (r) => r.dataOrThrow(label: _label).delete_beacon_pinned_by_pk!.beacon
+            as Beacon,
+      );
 }
