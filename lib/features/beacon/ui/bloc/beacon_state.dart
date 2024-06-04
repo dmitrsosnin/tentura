@@ -2,15 +2,10 @@ part of 'beacon_cubit.dart';
 
 final class BeaconState extends StateBase {
   const BeaconState({
-    required this.beacons,
+    this.beacons = const [],
     super.status,
     super.error,
   });
-
-  const BeaconState.empty({
-    super.status,
-    super.error,
-  }) : beacons = const [];
 
   final List<Beacon> beacons;
 

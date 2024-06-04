@@ -10,8 +10,7 @@ import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
-import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
-import 'package:tentura/features/beacon/ui/widget/beacon_mine_control.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_mine_list.dart';
 
 import '../bloc/profile_cubit.dart';
 import '../widget/profile_mine_menu_button.dart';
@@ -136,36 +135,7 @@ class ProfileMineScreen extends StatelessWidget {
           ),
 
           // Beacons List
-          BlocConsumer<BeaconCubit, BeaconState>(
-            builder: (context, state) => SliverList.separated(
-              itemCount: state.beacons.length,
-              itemBuilder: (context, i) => Padding(
-                padding: paddingH20,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BeaconInfo(beacon: state.beacons[i]),
-                    Padding(
-                      padding: paddingV8,
-                      child: BeaconMineControl(beacon: state.beacons[i]),
-                    ),
-                  ],
-                ),
-              ),
-              separatorBuilder: (_, __) => const Divider(
-                endIndent: 20,
-                indent: 20,
-              ),
-            ),
-            listenWhen: (p, c) => c.hasError,
-            listener: (context, state) {
-              showSnackBar(
-                context,
-                isError: true,
-                text: state.error?.toString(),
-              );
-            },
-          )
+          const BeaconMineList(),
         ],
       ),
     );

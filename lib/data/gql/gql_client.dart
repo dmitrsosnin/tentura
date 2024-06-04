@@ -20,12 +20,13 @@ Future<Client> buildGqlClient({
   ]);
   if (storageDirectory == null) return Client(link: link);
   Hive.init(storageDirectory.path);
+  final box = await Hive.openBox<Map<dynamic, dynamic>>(
+    'graphql_cache',
+  );
   return Client(
     link: link,
     cache: Cache(
-      store: HiveStore(
-        await Hive.openBox<Map<dynamic, dynamic>>('graphql_cache'),
-      ),
+      store: HiveStore(box),
     ),
     defaultFetchPolicies: {
       OperationType.query: FetchPolicy.NoCache,

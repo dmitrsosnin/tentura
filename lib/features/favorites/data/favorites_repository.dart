@@ -21,11 +21,11 @@ class FavoritesRepository {
 
   late final _fetchRequest = GBeaconFetchPinnedByUserIdReq(
     (r) => r
-      ..vars.user_id = userId
-      ..fetchPolicy = FetchPolicy.CacheAndNetwork,
+      ..fetchPolicy = FetchPolicy.CacheAndNetwork
+      ..vars.user_id = userId,
   );
 
-  Stream<Iterable<Beacon>> fetch() =>
+  Stream<Iterable<Beacon>> get stream =>
       gqlClient.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
           .beacon_pinned

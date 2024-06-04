@@ -78,14 +78,14 @@ class _DIState extends State<DI> {
                   ),
                   BlocProvider(
                     create: (context) => BeaconCubit.build(
-                      id: currentAccount,
+                      userId: currentAccount,
                       gqlClient: _gqlClient,
                       imageRepository: _imageRepository,
                     ),
                   ),
                   BlocProvider(
                     create: (context) => FavoritesCubit.build(
-                      id: currentAccount,
+                      userId: currentAccount,
                       gqlClient: _gqlClient,
                     ),
                   ),

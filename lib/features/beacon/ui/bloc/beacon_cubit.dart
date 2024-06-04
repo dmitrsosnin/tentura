@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart' show DateTimeRange;
 
 import 'package:tentura/data/repository/image_repository.dart';
@@ -13,62 +12,45 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'beacon_state.dart';
 
-// TBD: use Hive directly
-class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
-  static const _jsonKey = 'beacons';
-
+class BeaconCubit extends Cubit<BeaconState> {
   BeaconCubit({
-    required this.id,
-    required ImageRepository imageRepository,
-    required BeaconRepository beaconRepository,
-  })  : _beaconRepository = beaconRepository,
-        _imageRepository = imageRepository,
-        super(const BeaconState.empty()) {
-    hydrate();
+    required this.imageRepository,
+    required this.beaconRepository,
+  }) : super(const BeaconState(status: FetchStatus.isLoading)) {
+    _fetchSubscription.resume();
   }
 
   factory BeaconCubit.build({
-    required String id,
+    required String userId,
     required Client gqlClient,
     required ImageRepository imageRepository,
   }) =>
       BeaconCubit(
-        id: id,
         imageRepository: imageRepository,
-        beaconRepository: BeaconRepository(gqlClient: gqlClient),
+        beaconRepository: BeaconRepository(
+          gqlClient: gqlClient,
+          userId: userId,
+        ),
       );
 
-  /// current UserId
-  @override
-  final String id;
+  final BeaconRepository beaconRepository;
+  final ImageRepository imageRepository;
 
-  final BeaconRepository _beaconRepository;
-  final ImageRepository _imageRepository;
-
-  @override
-  BeaconState? fromJson(Map<String, Object?> json) => json.containsKey(_jsonKey)
-      ? BeaconState(beacons: [
-          for (final b in json[_jsonKey] as List? ?? [])
-            Beacon.fromJson(b as Map<String, Object?>)
-        ])
-      : const BeaconState.empty();
+  late final _fetchSubscription = beaconRepository.stream.listen(
+    (e) => emit(BeaconState(beacons: e.toList())),
+    onError: (dynamic e) => emit(state.setError(e.toString())),
+    cancelOnError: false,
+  );
 
   @override
-  Map<String, dynamic>? toJson(BeaconState state) =>
-      const ListEquality<Beacon>().equals(this.state.beacons, state.beacons)
-          ? null
-          : {
-              _jsonKey: [for (final b in state.beacons) b.toJson()],
-            };
+  Future<void> close() async {
+    await _fetchSubscription.cancel();
+    return super.close();
+  }
 
   Future<void> fetch() async {
-    try {
-      emit(BeaconState(
-        beacons: (await _beaconRepository.fetchByUserId(id)).toList(),
-      ));
-    } catch (e) {
-      emit(state.setError(e));
-    }
+    emit(state.setLoading());
+    beaconRepository.refetch();
   }
 
   Future<void> create({
@@ -78,7 +60,7 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
     Coordinates? coordinates,
     Uint8List? image,
   }) async {
-    final beacon = await _beaconRepository.create(
+    final beacon = await beaconRepository.create(
       title: title,
       description: description,
       dateRange: dateRange,
@@ -86,10 +68,10 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
       hasPicture: image != null,
     );
     if (image != null && image.isNotEmpty) {
-      await _imageRepository.putBeacon(
+      await imageRepository.putBeacon(
         beaconId: beacon.id,
         image: image,
-        userId: id,
+        userId: beaconRepository.userId,
       );
     }
     emit(BeaconState(
@@ -101,7 +83,7 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
   }
 
   Future<void> delete(String beaconId) async {
-    await _beaconRepository.delete(beaconId);
+    await beaconRepository.delete(beaconId);
     emit(BeaconState(
       beacons: state.beacons.where((e) => e.id != beaconId).toList(),
     ));
@@ -110,12 +92,12 @@ class BeaconCubit extends Cubit<BeaconState> with HydratedMixin<BeaconState> {
   Future<void> toggleEnabled(String beaconId) async {
     final beacon = state.beacons.singleWhere((e) => e.id == beaconId);
     state.beacons[state.beacons.indexOf(beacon)] =
-        await _beaconRepository.setEnabled(
+        await beaconRepository.setEnabled(
       isEnabled: !beacon.enabled,
       id: beaconId,
     );
   }
 
   Future<({String path, String name})?> pickImage() =>
-      _imageRepository.pickImage();
+      imageRepository.pickImage();
 }

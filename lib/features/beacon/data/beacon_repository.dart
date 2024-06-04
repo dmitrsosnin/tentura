@@ -16,17 +16,24 @@ class BeaconRepository {
   static const _label = 'Beacon';
 
   BeaconRepository({
+    required this.userId,
     required this.gqlClient,
   });
 
+  final String userId;
   final Client gqlClient;
 
-  Future<Iterable<Beacon>> fetchByUserId(String userId) => gqlClient
-      .request(GBeaconsFetchByUserIdReq((b) => b.vars.user_id = userId))
-      .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then(
-        (r) => r.dataOrThrow(label: _label).beacon as Iterable<Beacon>,
-      );
+  late final _fetchRequest = GBeaconsFetchByUserIdReq(
+    (b) => b
+      ..fetchPolicy = FetchPolicy.CacheAndNetwork
+      ..vars.user_id = userId,
+  );
+
+  Stream<Iterable<Beacon>> get stream => gqlClient
+      .request(_fetchRequest)
+      .map((r) => r.dataOrThrow(label: _label).beacon.map((r) => r as Beacon));
+
+  void refetch() => gqlClient.requestController.add(_fetchRequest);
 
   Future<Beacon> create({
     required String title,
