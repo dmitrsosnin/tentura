@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:tentura/domain/entity/user.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
 class RatingListTile extends StatelessWidget {
@@ -29,16 +28,16 @@ class RatingListTile extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         children: [
           Padding(
-            padding: paddingAll8,
+            padding: const EdgeInsets.all(8),
             child: AvatarImage(userId: user.imageId, size: height),
           ),
           Padding(
-            padding: paddingAll8,
+            padding: const EdgeInsets.all(8),
             child: Text(user.title),
           ),
           const Spacer(),
           Padding(
-            padding: paddingAll8,
+            padding: const EdgeInsets.all(8),
             child: CustomPaint(
               size: _barbellSize,
               painter: _CustomBarbellPainter(userScore, egoScore),
@@ -46,7 +45,7 @@ class RatingListTile extends StatelessWidget {
           ),
           if (myAvatar != null)
             Padding(
-              padding: paddingAll8,
+              padding: const EdgeInsets.all(8),
               child: myAvatar,
             ),
         ],

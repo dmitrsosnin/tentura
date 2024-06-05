@@ -1,4 +1,4 @@
-import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/user.dart';
@@ -6,19 +6,17 @@ import 'package:tentura/domain/entity/user.dart';
 import 'gql/_g/profile_fetch_by_user_id.req.gql.dart';
 import 'gql/_g/user_vote_by_id.req.gql.dart';
 
-export 'package:tentura/data/gql/gql_client.dart';
-
 class ProfileViewRepository {
   static const _label = 'ProfileView';
 
   ProfileViewRepository({
-    required this.gqlClient,
+    required this.remoteApiService,
   });
 
-  final Client gqlClient;
+  final RemoteApiService remoteApiService;
 
   Future<({User user, List<Beacon> beacons})> fetchById(String userId) =>
-      gqlClient
+      remoteApiService.gqlClient
           .request(GProfileFetchByUserIdReq((b) => b.vars.user_id = userId))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
@@ -35,7 +33,7 @@ class ProfileViewRepository {
     required String userId,
     required int amount,
   }) =>
-      gqlClient
+      remoteApiService.gqlClient
           .request(GUserVoteByIdReq(
             (b) => b.vars
               ..object = userId

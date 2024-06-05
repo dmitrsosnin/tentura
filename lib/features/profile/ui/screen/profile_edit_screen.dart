@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/dialog/error_dialog.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
@@ -12,15 +12,6 @@ import 'package:tentura/ui/widget/avatar_positioned.dart';
 import '../bloc/profile_cubit.dart';
 
 class ProfileEditScreen extends StatefulWidget {
-  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
-      GoRoute(
-        path: pathProfileEdit,
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => const ProfileEditScreen(),
-        redirect: (context, state) =>
-            context.read<ProfileCubit>().id.isEmpty ? pathAuthLogin : null,
-      );
-
   const ProfileEditScreen({super.key});
 
   @override
@@ -110,8 +101,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         iconSize: 50,
                         icon: const Icon(Icons.add_a_photo_outlined),
                         onPressed: () async {
-                          final image =
-                              await _profileCubit.imageRepository.pickImage();
+                          final image = await _profileCubit.pickImage();
                           if (image != null) {
                             setState(() {
                               _hasPicture = true;
@@ -177,7 +167,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     if (!_formKey.currentState!.validate()) return;
     try {
       if (_imagePath.isNotEmpty) {
-        await _profileCubit.imageRepository.putAvatar(
+        await _profileCubit.profileRepository.remoteApiService.putAvatar(
           userId: _profile.id,
           image: await File(_imagePath).readAsBytes(),
         );

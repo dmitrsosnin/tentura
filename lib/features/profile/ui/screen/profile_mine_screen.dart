@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
@@ -16,13 +15,6 @@ import '../bloc/profile_cubit.dart';
 import '../widget/profile_mine_menu_button.dart';
 
 class ProfileMineScreen extends StatelessWidget {
-  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
-      GoRoute(
-        path: pathHomeProfile,
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => const ProfileMineScreen(),
-      );
-
   const ProfileMineScreen({super.key});
 
   @override
@@ -85,7 +77,7 @@ class ProfileMineScreen extends StatelessWidget {
           // Profile
           SliverToBoxAdapter(
             child: Padding(
-              padding: paddingH20,
+              padding: paddingMediumH,
               child: BlocConsumer<ProfileCubit, ProfileState>(
                 listenWhen: (p, c) => c.hasError,
                 listener: (context, state) {
@@ -104,7 +96,7 @@ class ProfileMineScreen extends StatelessWidget {
                       textAlign: TextAlign.left,
                       style: textTheme.headlineLarge,
                     ),
-                    const Padding(padding: paddingV8),
+                    const Padding(padding: paddingSmallV),
 
                     // Description
                     Text(

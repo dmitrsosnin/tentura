@@ -1,39 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
-import 'package:tentura/data/gql/gql_client.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
 
 import '../cubit/profile_view_cubit.dart';
 
 class ProfileViewScreen extends StatelessWidget {
-  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
-      GoRoute(
-        path: pathProfileView,
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => BlocProvider(
-          create: (context) => ProfileViewCubit.build(
-            id: state.uri.queryParameters['id'] ?? '',
-            gqlClient: context.read<Client>(),
-          ),
-          child: const ProfileViewScreen(),
-        ),
-        redirect: (context, state) => context
-                .read<AuthCubit>()
-                .checkIfIsMe(state.uri.queryParameters['id'] ?? '')
-            ? pathHomeProfile
-            : null,
-      );
-
   const ProfileViewScreen({super.key});
 
   @override
@@ -118,7 +97,7 @@ class ProfileViewScreen extends StatelessWidget {
                 // Body
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: paddingH20,
+                    padding: paddingMediumH,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -128,7 +107,7 @@ class ProfileViewScreen extends StatelessWidget {
                           textAlign: TextAlign.left,
                           style: textTheme.headlineLarge,
                         ),
-                        const Padding(padding: paddingV8),
+                        const Padding(padding: paddingSmallV),
 
                         // Description
                         Text(
@@ -153,7 +132,7 @@ class ProfileViewScreen extends StatelessWidget {
                   SliverList.separated(
                     itemCount: beacons.length,
                     itemBuilder: (context, i) => Padding(
-                      padding: paddingH20,
+                      padding: paddingMediumH,
                       child: BeaconTile(beacon: beacons[i]),
                     ),
                     separatorBuilder: (_, __) =>

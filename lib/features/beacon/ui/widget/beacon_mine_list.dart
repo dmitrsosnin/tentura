@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import '../bloc/beacon_cubit.dart';
@@ -23,13 +22,13 @@ class BeaconMineList extends StatelessWidget {
         builder: (context, state) => SliverList.separated(
           itemCount: state.beacons.length,
           itemBuilder: (context, i) => Padding(
-            padding: paddingH20,
+            padding: paddingMediumH,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 BeaconInfo(beacon: state.beacons[i]),
                 Padding(
-                  padding: paddingV8,
+                  padding: paddingSmallV,
                   child: BeaconMineControl(beacon: state.beacons[i]),
                 ),
               ],

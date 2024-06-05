@@ -1,38 +1,20 @@
 import 'package:flutter/material.dart';
 
-import 'package:tentura/ui/routes.dart';
+import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
 import 'package:tentura/ui/widget/place_name_text.dart';
-import 'package:tentura/domain/entity/user.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile_control.dart';
 
-import '../../data/beacon_view_repository.dart';
 import '../bloc/beacon_view_cubit.dart';
 import '../widget/comment_card.dart';
 import '../widget/new_comment_input.dart';
 
 class BeaconViewScreen extends StatelessWidget {
-  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
-      GoRoute(
-        path: pathBeaconView,
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => BlocProvider(
-          create: (context) => BeaconViewCubit.build(
-            id: state.uri.queryParameters['id'] ?? '',
-            gqlClient: context.read<Client>(),
-          ),
-          child: state.uri.queryParameters['expanded'] == 'true'
-              ? const BeaconViewScreen(isExpanded: true)
-              : const BeaconViewScreen(isExpanded: false),
-        ),
-      );
-
   const BeaconViewScreen({
     required this.isExpanded,
     super.key,
@@ -60,7 +42,7 @@ class BeaconViewScreen extends StatelessWidget {
             final author = beacon.author as User;
             final textTheme = Theme.of(context).textTheme;
             return ListView(
-              padding: paddingAll20,
+              padding: paddingMediumA,
               children: [
                 // User row (Avatar and Name)
                 Padding(
@@ -72,7 +54,7 @@ class BeaconViewScreen extends StatelessWidget {
                         size: 40,
                       ),
                       Padding(
-                        padding: paddingH8,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           author.title,
                           style: textTheme.headlineSmall,
@@ -92,9 +74,9 @@ class BeaconViewScreen extends StatelessWidget {
                 if (beacon.has_picture)
                   Container(
                     alignment: Alignment.centerLeft,
-                    padding: paddingV20,
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: ClipRRect(
-                      borderRadius: borderRadius20,
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
                       child: BeaconImage(
                         authorId: author.id,
                         beaconId: beacon.imageId,
@@ -130,7 +112,7 @@ class BeaconViewScreen extends StatelessWidget {
                 // Buttons Row
                 if (context.read<AuthCubit>().checkIfIsNotMe(author.id))
                   Padding(
-                    padding: paddingV8,
+                    padding: paddingSmallV,
                     child: BeaconTileControl(beacon: beacon),
                   ),
 

@@ -1,6 +1,8 @@
-import 'package:tentura/ui/bloc/state_base.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+
 import 'package:tentura/domain/entity/user.dart';
-import 'package:tentura/data/repository/image_repository.dart';
+import 'package:tentura/domain/use_case/pick_image_case.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/profile_repository.dart';
 
@@ -8,35 +10,25 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'profile_state.dart';
 
+//
+// If code obfuscation is needed then visit
+//   https://github.com/felangel/bloc/issues/3255
+//
 class ProfileCubit extends Cubit<ProfileState>
     with HydratedMixin<ProfileState> {
   ProfileCubit({
     required this.id,
-    required this.imageRepository,
     required this.profileRepository,
+    this.pickImageCase = const PickImageCase(),
   }) : super(ProfileState(user: User.empty)) {
     hydrate();
   }
 
-  factory ProfileCubit.build({
-    required String id,
-    required Client gqlClient,
-    required ImageRepository imageRepository,
-  }) =>
-      ProfileCubit(
-        id: id,
-        imageRepository: imageRepository,
-        profileRepository: ProfileRepository(
-          gqlClient: gqlClient,
-        ),
-      );
-
   @override
   final String id;
 
+  final PickImageCase pickImageCase;
   final ProfileRepository profileRepository;
-
-  final ImageRepository imageRepository;
 
   @override
   ProfileState? fromJson(Map<String, dynamic> json) =>
@@ -66,4 +58,7 @@ class ProfileCubit extends Cubit<ProfileState>
   }
 
   Future<void> delete() => profileRepository.deleteById(id);
+
+  Future<({String name, String path})?> pickImage() =>
+      pickImageCase.pickImage();
 }

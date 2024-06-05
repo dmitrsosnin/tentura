@@ -11,25 +11,14 @@ part 'rating_state.dart';
 
 class RatingCubit extends Cubit<RatingState> {
   RatingCubit({
-    required this.id,
+    required this.userId,
     required this.ratingRepository,
     bool fetchOnCreate = true,
   }) : super(const RatingState()) {
     if (fetchOnCreate) fetch();
   }
 
-  factory RatingCubit.build({
-    required String id,
-    required Client gqlClient,
-  }) =>
-      RatingCubit(
-        id: id,
-        ratingRepository: RatingRepository(
-          gqlClient: gqlClient,
-        ),
-      );
-
-  final String id;
+  final String userId;
   final RatingRepository ratingRepository;
 
   List<UserRating> _items = [];
@@ -37,7 +26,7 @@ class RatingCubit extends Cubit<RatingState> {
   Future<void> fetch() async {
     try {
       _items = (await ratingRepository.fetchUsersRating())
-          .where((e) => e.user.id != id)
+          .where((e) => e.user.id != userId)
           .toList();
       emit(state.copyWith(
         status: FetchStatus.isSuccess,

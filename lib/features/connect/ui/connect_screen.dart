@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/routes.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 
 class ConnectScreen extends StatefulWidget {
-  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
-      GoRoute(
-        path: pathHomeConnect,
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => const ConnectScreen(),
-      );
-
   const ConnectScreen({super.key});
 
   @override
@@ -34,19 +26,19 @@ class _ConnectScreenState extends State<ConnectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: paddingAll20,
+        minimum: paddingMediumA,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Padding(
-              padding: paddingAll20,
+              padding: paddingMediumA,
               child: Text(
                 'If you have Code, please write it here',
                 textAlign: TextAlign.center,
               ),
             ),
             Padding(
-              padding: paddingAll20,
+              padding: paddingMediumA,
               child: TextFormField(
                 controller: _inputController,
                 decoration: const InputDecoration(
@@ -61,21 +53,21 @@ class _ConnectScreenState extends State<ConnectScreen> {
               ),
             ),
             Padding(
-              padding: paddingAll20,
+              padding: paddingMediumA,
               child: FilledButton(
                 child: const Text('Search'),
                 onPressed: () => _goWithCode(_inputController.text),
               ),
             ),
             const Padding(
-              padding: paddingAll20,
+              padding: paddingMediumA,
               child: Text(
                 'or',
                 textAlign: TextAlign.center,
               ),
             ),
             Padding(
-              padding: paddingAll20,
+              padding: paddingMediumA,
               child: FilledButton(
                 child: const Text('Scan QR'),
                 onPressed: () async {
@@ -108,7 +100,12 @@ class _ConnectScreenState extends State<ConnectScreen> {
         ).toString());
       } else if (code.startsWith('C')) {
         // TBD
-        ScaffoldMessenger.of(context).showSnackBar(notImplementedSnackBar);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Not implemented yet...'),
+          behavior: SnackBarBehavior.floating,
+          margin: paddingMediumA,
+          showCloseIcon: true,
+        ));
       } else {
         showSnackBar(
           context,

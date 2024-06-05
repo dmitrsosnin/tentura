@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:collection/collection.dart';
 
-import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/favorites_repository.dart';
 
@@ -16,17 +16,6 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }) : super(const FavoritesState(status: FetchStatus.isLoading)) {
     _fetchSubscription.resume();
   }
-
-  factory FavoritesCubit.build({
-    required String userId,
-    required Client gqlClient,
-  }) =>
-      FavoritesCubit(
-        favoritesRepository: FavoritesRepository(
-          gqlClient: gqlClient,
-          userId: userId,
-        ),
-      );
 
   final FavoritesRepository favoritesRepository;
 

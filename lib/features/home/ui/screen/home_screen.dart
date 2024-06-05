@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'package:tentura/ui/routes.dart';
+import 'package:tentura/consts.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/connect/ui/connect_screen.dart';
-import 'package:tentura/features/updates/ui/screen/updates_screen.dart';
-import 'package:tentura/features/my_field/ui/screen/my_field_screen.dart';
-import 'package:tentura/features/favorites/ui/screen/favorites_screen.dart';
-import 'package:tentura/features/profile/ui/screen/profile_mine_screen.dart';
 import 'package:tentura/features/profile/ui/widget/profile_navbar_item.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,43 +13,6 @@ class HomeScreen extends StatelessWidget {
     pathHomeUpdates,
     pathHomeProfile,
   ];
-
-  static StatefulShellRoute getRoute({
-    GlobalKey<NavigatorState>? parentNavigatorKey,
-  }) =>
-      StatefulShellRoute.indexedStack(
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state, child) => HomeScreen(child: child),
-        redirect: (context, state) =>
-            context.read<AuthCubit>().isAuthenticated ? null : pathAuthLogin,
-        branches: [
-          StatefulShellBranch(
-            routes: [
-              MyFieldScreen.getRoute(),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              FavoritesScreen.getRoute(),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              ConnectScreen.getRoute(),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              UpdatesScreen.getRoute(),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              ProfileMineScreen.getRoute(),
-            ],
-          ),
-        ],
-      );
 
   const HomeScreen({
     required this.child,

@@ -1,21 +1,19 @@
-import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/user.dart';
 
 import '../entity/user_rating.dart';
 import 'gql/_g/fetch_users_rating.req.gql.dart';
 
-export 'package:tentura/data/gql/gql_client.dart';
-
 class RatingRepository {
   static const _label = 'Rating';
 
   RatingRepository({
-    required this.gqlClient,
+    required this.remoteApiService,
   });
 
-  final Client gqlClient;
+  final RemoteApiService remoteApiService;
 
-  Future<Iterable<UserRating>> fetchUsersRating() => gqlClient
+  Future<Iterable<UserRating>> fetchUsersRating() => remoteApiService.gqlClient
       .request(GUsersRatingReq())
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(

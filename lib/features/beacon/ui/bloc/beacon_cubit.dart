@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart' show DateTimeRange;
 
-import 'package:tentura/data/repository/image_repository.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/geo.dart';
+import 'package:tentura/domain/use_case/pick_image_case.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/beacon_repository.dart';
@@ -14,27 +14,14 @@ part 'beacon_state.dart';
 
 class BeaconCubit extends Cubit<BeaconState> {
   BeaconCubit({
-    required this.imageRepository,
     required this.beaconRepository,
+    this.pickImageCase = const PickImageCase(),
   }) : super(const BeaconState(status: FetchStatus.isLoading)) {
     _fetchSubscription.resume();
   }
 
-  factory BeaconCubit.build({
-    required String userId,
-    required Client gqlClient,
-    required ImageRepository imageRepository,
-  }) =>
-      BeaconCubit(
-        imageRepository: imageRepository,
-        beaconRepository: BeaconRepository(
-          gqlClient: gqlClient,
-          userId: userId,
-        ),
-      );
-
+  final PickImageCase pickImageCase;
   final BeaconRepository beaconRepository;
-  final ImageRepository imageRepository;
 
   late final _fetchSubscription = beaconRepository.stream.listen(
     (e) => emit(BeaconState(beacons: e.toList())),
@@ -68,7 +55,7 @@ class BeaconCubit extends Cubit<BeaconState> {
       hasPicture: image != null,
     );
     if (image != null && image.isNotEmpty) {
-      await imageRepository.putBeacon(
+      await beaconRepository.remoteApiService.putBeacon(
         beaconId: beacon.id,
         image: image,
         userId: beaconRepository.userId,
@@ -99,5 +86,5 @@ class BeaconCubit extends Cubit<BeaconState> {
   }
 
   Future<({String path, String name})?> pickImage() =>
-      imageRepository.pickImage();
+      pickImageCase.pickImage();
 }

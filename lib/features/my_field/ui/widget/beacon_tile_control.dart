@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/routes.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
-import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/features/favorites/ui/widget/beacon_pin_icon_button.dart';
 
 import 'beacon_vote_control.dart';

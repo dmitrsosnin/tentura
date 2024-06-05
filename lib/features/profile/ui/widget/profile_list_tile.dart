@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/ui/dialog/share_code_dialog.dart';
-import 'package:tentura/data/repository/image_repository.dart';
-import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
 import 'package:tentura/features/auth/ui/dialog/account_remove_dialog.dart';
 
+import '../../data/profile_repository.dart';
 import '../bloc/profile_cubit.dart';
 
 class AccountListTile extends StatelessWidget {
@@ -24,10 +24,11 @@ class AccountListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileCubit.build(
+      create: (context) => ProfileCubit(
         id: id,
-        gqlClient: context.read<Client>(),
-        imageRepository: context.read<ImageRepository>(),
+        profileRepository: ProfileRepository(
+          remoteApiService: context.read<RemoteApiService>(),
+        ),
       ),
       child: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {

@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class SettingsRepository {
+class HydratedBlocStorage {
   static const _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(
       encryptedSharedPreferences: true,
@@ -18,9 +21,15 @@ class SettingsRepository {
 
   static const _keyCipherKey = 'kCipherKey';
 
-  const SettingsRepository();
+  static Future<void> init([Directory? storageDirectory]) async {
+    HydratedBloc.storage = await HydratedStorage.build(
+      encryptionCipher: HydratedAesCipher(await _getCipherKey()),
+      storageDirectory:
+          storageDirectory ?? await getApplicationDocumentsDirectory(),
+    );
+  }
 
-  Future<Uint8List> getCipherKey() async {
+  static Future<Uint8List> _getCipherKey() async {
     final encodedKey = await _secureStorage.read(key: _keyCipherKey);
     late final rnd = Random.secure();
     final key = encodedKey == null

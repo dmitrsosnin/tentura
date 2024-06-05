@@ -10,6 +10,6 @@ Future<void> main() async {
     (options) => options
       ..dsn = const String.fromEnvironment('SENTRY_URL')
       ..tracesSampleRate = 1.0,
-    appRunner: () => runApp(const DI()),
+    appRunner: () async => runApp(await const DI().init()),
   );
 }

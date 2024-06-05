@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/ui/widget/avatar_image.dart';
-import 'package:tentura/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/user.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/favorites/ui/widget/beacon_pin_icon_button.dart';
@@ -58,7 +58,7 @@ class BeaconTile extends StatelessWidget {
 
         // Beacon Control
         Padding(
-          padding: paddingV8,
+          padding: paddingSmallV,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

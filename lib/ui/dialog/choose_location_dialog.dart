@@ -1,9 +1,9 @@
-import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:tentura/ui/routes.dart';
 import 'package:tentura/data/repository/geo_repository.dart';
 
 class ChooseLocationDialog extends StatefulWidget {

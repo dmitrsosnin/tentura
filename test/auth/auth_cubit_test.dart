@@ -7,7 +7,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
 import '../_mock/hydrated_db_mock.dart';
-import 'mock/auth_repository_mock.dart';
+import 'mock/remote_api_service_mock.dart';
 
 void main() async {
   // TestWidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,7 @@ void main() async {
 
         authCubit = AuthCubit(
           trySignIn: false,
-          authRepository: AuthRepositoryMock(),
+          remoteApiService: RemoteApiServiceMock(),
         )..stream.listen(print);
       });
 
@@ -40,9 +40,9 @@ void main() async {
         skip: 1,
         expect: () => [
           const AuthState(
-            currentAccount: AuthRepositoryMock.mockId,
+            currentAccount: RemoteApiServiceMock.mockId,
             accounts: {
-              AuthRepositoryMock.mockId: AuthRepositoryMock.mockSeed,
+              RemoteApiServiceMock.mockId: RemoteApiServiceMock.mockSeed,
             },
           ),
         ],
@@ -52,16 +52,16 @@ void main() async {
         'Sign Out test',
         build: () => authCubit,
         seed: () => const AuthState(
-          currentAccount: AuthRepositoryMock.mockId,
+          currentAccount: RemoteApiServiceMock.mockId,
           accounts: {
-            AuthRepositoryMock.mockId: AuthRepositoryMock.mockSeed,
+            RemoteApiServiceMock.mockId: RemoteApiServiceMock.mockSeed,
           },
         ),
         act: (cubit) => cubit.signOut(),
         expect: () => [
           const AuthState(
             accounts: {
-              AuthRepositoryMock.mockId: AuthRepositoryMock.mockSeed,
+              RemoteApiServiceMock.mockId: RemoteApiServiceMock.mockSeed,
             },
           ),
         ],

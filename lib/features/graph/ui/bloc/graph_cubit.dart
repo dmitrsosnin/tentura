@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
-import 'package:tentura/data/gql/gql_client.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/comment.dart';
 import 'package:tentura/domain/entity/user.dart';
@@ -26,19 +25,6 @@ class GraphCubit extends Cubit<GraphState> {
     _fetchLimits = {super.state.focus: 5};
     if (fetchOnCreate) fetch(focus);
   }
-
-  factory GraphCubit.build({
-    required String id,
-    required Client gqlClient,
-    String? focus,
-  }) =>
-      GraphCubit(
-        id: id,
-        focus: focus ?? '',
-        graphRepository: GraphRepository(
-          gqlClient: gqlClient,
-        ),
-      );
 
   final GraphRepository graphRepository;
 

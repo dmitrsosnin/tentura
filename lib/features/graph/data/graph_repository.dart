@@ -1,4 +1,4 @@
-import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 
 import 'gql/_g/graph_fetch.data.gql.dart';
 import 'gql/_g/graph_fetch.req.gql.dart';
@@ -7,17 +7,17 @@ class GraphRepository {
   static const _label = 'Graph';
 
   GraphRepository({
-    required this.gqlClient,
+    required this.remoteApiService,
   });
 
-  final Client gqlClient;
+  final RemoteApiService remoteApiService;
 
   Future<GGraphFetchData_gravityGraph> fetch({
     required String focus,
     required bool positiveOnly,
     required int limit,
   }) =>
-      gqlClient
+      remoteApiService.gqlClient
           .request(GGraphFetchReq(
             (b) => b.vars
               ..focus = focus

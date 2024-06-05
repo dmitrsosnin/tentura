@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 import '../bloc/auth_cubit.dart';
 
@@ -30,8 +30,8 @@ class ShowSeedDialog extends StatelessWidget {
     return AlertDialog.adaptive(
       alignment: Alignment.center,
       actionsAlignment: MainAxisAlignment.spaceBetween,
-      titlePadding: paddingAll20,
-      contentPadding: paddingAll20,
+      titlePadding: paddingMediumA,
+      contentPadding: paddingMediumA,
       title: Text(
         userId,
         maxLines: 1,

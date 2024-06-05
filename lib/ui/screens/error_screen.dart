@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/consts.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String? title;
@@ -22,7 +23,7 @@ class ErrorScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: paddingAll20,
+              padding: paddingMediumA,
               child: Text(
                 (error ?? GoRouterState.of(context).error).toString(),
                 style: TextStyle(

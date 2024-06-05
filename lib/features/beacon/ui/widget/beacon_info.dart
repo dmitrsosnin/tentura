@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'package:tentura/ui/routes.dart';
+import 'package:tentura/consts.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
 import 'package:tentura/ui/widget/place_name_text.dart';
-import 'package:tentura/domain/entity/beacon.dart';
 
 class BeaconInfo extends StatelessWidget {
   const BeaconInfo({
@@ -29,7 +29,7 @@ class BeaconInfo extends StatelessWidget {
           // Beacon Image
           if (beacon.has_picture)
             Padding(
-              padding: paddingV8,
+              padding: paddingSmallV,
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
@@ -44,7 +44,7 @@ class BeaconInfo extends StatelessWidget {
 
           // Beacon Title
           Padding(
-            padding: paddingV8,
+            padding: paddingSmallV,
             child: Text(
               beacon.title,
               maxLines: 1,

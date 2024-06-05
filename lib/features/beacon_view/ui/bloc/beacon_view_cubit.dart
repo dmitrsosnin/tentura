@@ -1,6 +1,6 @@
-import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/comment.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/beacon_view_repository.dart';
 
@@ -16,17 +16,6 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
   }) : super(BeaconViewState.empty) {
     if (fetchOnStart) fetch();
   }
-
-  factory BeaconViewCubit.build({
-    required String id,
-    required Client gqlClient,
-  }) =>
-      BeaconViewCubit(
-        id: id,
-        beaconViewRepository: BeaconViewRepository(
-          gqlClient: gqlClient,
-        ),
-      );
 
   final String id;
 

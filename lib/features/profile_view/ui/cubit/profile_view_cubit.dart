@@ -17,17 +17,6 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
     if (fetchOnStart) fetch();
   }
 
-  factory ProfileViewCubit.build({
-    required Client gqlClient,
-    required String id,
-  }) =>
-      ProfileViewCubit(
-        profileViewRepository: ProfileViewRepository(
-          gqlClient: gqlClient,
-        ),
-        id: id,
-      );
-
   final String id;
 
   final ProfileViewRepository profileViewRepository;

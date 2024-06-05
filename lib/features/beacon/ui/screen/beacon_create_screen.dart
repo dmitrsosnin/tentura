@@ -1,26 +1,16 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/routes.dart';
-import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/ui/dialog/choose_location_dialog.dart';
 import 'package:tentura/domain/entity/geo.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/ui/dialog/choose_location_dialog.dart';
 
 import '../bloc/beacon_cubit.dart';
 
 class BeaconCreateScreen extends StatefulWidget {
-  static GoRoute getRoute({
-    GlobalKey<NavigatorState>? parentNavigatorKey,
-  }) =>
-      GoRoute(
-        path: pathBeaconCreate,
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => const BeaconCreateScreen(),
-      );
-
   const BeaconCreateScreen({super.key});
 
   @override
@@ -159,7 +149,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                   }
                 },
               ),
-              const Padding(padding: paddingV8),
+              const Padding(padding: paddingSmallV),
 
               // Time
               TextFormField(
@@ -192,7 +182,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                   }
                 },
               ),
-              const Padding(padding: paddingV8),
+              const Padding(padding: paddingSmallV),
 
               // Image Input
               TextFormField(

@@ -1,8 +1,9 @@
 import 'package:nil/nil.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
-import 'package:tentura/ui/routes.dart';
+import 'package:tentura/consts.dart';
 
 import '../../domain/entity/edge_details.dart';
 import '../../domain/entity/node_details.dart';

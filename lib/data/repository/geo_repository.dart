@@ -35,7 +35,7 @@ class GeoRepository {
   }
 
   Future<Coordinates?> getMyCoords({
-    Duration timeLimit = const Duration(seconds: 10),
+    Duration timeLimit = const Duration(seconds: 30),
   }) async {
     if (_myCoords != null) return _myCoords;
 

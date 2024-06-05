@@ -1,29 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'package:tentura/ui/routes.dart';
+import 'package:tentura/consts.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
-import 'package:tentura/data/gql/gql_client.dart';
-
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
 import '../bloc/rating_cubit.dart';
 import '../widget/rating_list_tile.dart';
 
 class RatingScreen extends StatefulWidget {
-  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
-      GoRoute(
-        path: pathRating,
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => BlocProvider(
-          create: (context) => RatingCubit.build(
-            id: context.read<AuthCubit>().state.currentAccount,
-            gqlClient: context.read<Client>(),
-          ),
-          child: const RatingScreen(),
-        ),
-      );
-
   const RatingScreen({super.key});
 
   @override
@@ -117,7 +101,7 @@ class _RatingScreenState extends State<RatingScreen> {
           },
           buildWhen: (p, c) => c.hasNoError,
           builder: (context, state) => ListView.separated(
-            padding: paddingH20,
+            padding: paddingMediumH,
             itemCount: state.items.length,
             separatorBuilder: (context, i) => const Divider(),
             itemBuilder: (context, i) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:tentura/ui/utils/ui_consts.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 class ShareCodeDialog extends StatelessWidget {
   static Future<void> show(
@@ -33,8 +33,8 @@ class ShareCodeDialog extends StatelessWidget {
     return AlertDialog.adaptive(
       alignment: Alignment.center,
       actionsAlignment: MainAxisAlignment.spaceBetween,
-      titlePadding: paddingAll20,
-      contentPadding: paddingAll20,
+      titlePadding: paddingMediumA,
+      contentPadding: paddingMediumA,
 
       // Header
       title: Text(

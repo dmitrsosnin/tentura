@@ -1,7 +1,7 @@
 import 'package:latlong2/latlong.dart' show LatLng;
 import 'package:flutter/material.dart' show DateTimeRange;
 
-import 'package:tentura/data/gql/gql_client.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/geo.dart';
 
@@ -10,18 +10,16 @@ import 'gql/_g/beacon_delete_by_id.req.gql.dart';
 import 'gql/_g/beacon_update_by_id.req.gql.dart';
 import 'gql/_g/beacons_fetch_by_user_id.req.gql.dart';
 
-export 'package:tentura/data/gql/gql_client.dart';
-
 class BeaconRepository {
   static const _label = 'Beacon';
 
   BeaconRepository({
     required this.userId,
-    required this.gqlClient,
+    required this.remoteApiService,
   });
 
   final String userId;
-  final Client gqlClient;
+  final RemoteApiService remoteApiService;
 
   late final _fetchRequest = GBeaconsFetchByUserIdReq(
     (b) => b
@@ -29,11 +27,12 @@ class BeaconRepository {
       ..vars.user_id = userId,
   );
 
-  Stream<Iterable<Beacon>> get stream => gqlClient
+  Stream<Iterable<Beacon>> get stream => remoteApiService.gqlClient
       .request(_fetchRequest)
       .map((r) => r.dataOrThrow(label: _label).beacon.map((r) => r as Beacon));
 
-  void refetch() => gqlClient.requestController.add(_fetchRequest);
+  void refetch() =>
+      remoteApiService.gqlClient.requestController.add(_fetchRequest);
 
   Future<Beacon> create({
     required String title,
@@ -42,7 +41,7 @@ class BeaconRepository {
     DateTimeRange? dateRange,
     Coordinates? coordinates,
   }) =>
-      gqlClient
+      remoteApiService.gqlClient
           .request(
             GBeaconCreateReq(
               (b) => b.vars
@@ -60,7 +59,7 @@ class BeaconRepository {
             (r) => r.dataOrThrow(label: _label).insert_beacon_one! as Beacon,
           );
 
-  Future<void> delete(String id) => gqlClient
+  Future<void> delete(String id) => remoteApiService.gqlClient
       .request(GBeaconDeleteByIdReq((b) => b.vars.id = id))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) => r.dataOrThrow(label: _label));
@@ -69,7 +68,7 @@ class BeaconRepository {
     required String id,
     required bool isEnabled,
   }) =>
-      gqlClient
+      remoteApiService.gqlClient
           .request(GBeaconUpdateByIdReq(
             (b) => b
               ..vars.id = id

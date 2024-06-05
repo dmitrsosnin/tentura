@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:tentura/ui/routes.dart';
+import 'package:tentura/domain/exception.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/utils/ui_consts.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 
 import 'package:tentura/features/profile/ui/widget/profile_list_tile.dart';
 
-import '../../domain/exception.dart';
 import '../bloc/auth_cubit.dart';
 
 class AuthLoginScreen extends StatelessWidget {
-  static GoRoute getRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
-      GoRoute(
-        path: pathAuthLogin,
-        parentNavigatorKey: parentNavigatorKey,
-        builder: (context, state) => const AuthLoginScreen(),
-      );
-
   const AuthLoginScreen({super.key});
 
   @override
@@ -59,14 +50,14 @@ class AuthLoginScreen extends StatelessWidget {
             title: const Text('Choose account'),
           ),
           body: SafeArea(
-            minimum: paddingH20,
+            minimum: paddingMediumH,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (state.accounts.isEmpty)
                   const Padding(
-                    padding: paddingAll20,
+                    padding: paddingMediumA,
                     child: Text(
                       'You can add your account by\n'
                       'scanning a QR from your other device\n'
@@ -87,7 +78,7 @@ class AuthLoginScreen extends StatelessWidget {
 
                 // Create from seed (QR)
                 Padding(
-                  padding: paddingAll20,
+                  padding: paddingMediumA,
                   child: OutlinedButton(
                     child: const Text('Add account by QR'),
                     onPressed: () async =>
@@ -97,7 +88,7 @@ class AuthLoginScreen extends StatelessWidget {
 
                 // Create from seed (clipboard)
                 Padding(
-                  padding: paddingAll20,
+                  padding: paddingMediumA,
                   child: OutlinedButton(
                     child: const Text('Add account by seed'),
                     onPressed: () async {
@@ -113,7 +104,7 @@ class AuthLoginScreen extends StatelessWidget {
 
                 // Create new account
                 Padding(
-                  padding: paddingAll20,
+                  padding: paddingMediumA,
                   child: FilledButton(
                     onPressed: authCubit.signUp,
                     child: const Text('Create new'),
