@@ -5,7 +5,6 @@ import 'dart:typed_data';
 
 import 'package:hive/hive.dart';
 import 'package:ferry/ferry.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:gql_http_link/gql_http_link.dart';
 import 'package:fresh_graphql/fresh_graphql.dart';
 import 'package:ferry_hive_store/ferry_hive_store.dart';
@@ -13,19 +12,19 @@ import 'package:ferry_hive_store/ferry_hive_store.dart';
 import 'package:http/http.dart' as http;
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 
-import 'package:tentura/consts.dart';
-import 'package:tentura/domain/exception.dart';
-
-export 'package:ferry/ferry.dart' show DataSource, FetchPolicy, Client;
+export 'package:ferry/ferry.dart' show DataSource, FetchPolicy;
 
 class RemoteApiService {
   static const _jwtHeader = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.';
 
   RemoteApiService({
-    this.serverName = appLinkBase,
+    required this.serverName,
+    this.jwtExpiresIn = const Duration(minutes: 1),
   });
 
   final String serverName;
+
+  final Duration jwtExpiresIn;
 
   late final Client gqlClient;
 
@@ -44,16 +43,18 @@ class RemoteApiService {
     shouldRefresh: (response) => response.errors != null,
   );
 
+  String _userId = '';
+
   late ed.KeyPair _keyPair;
+
+  String get userId => _userId;
 
   Future<String?> get token => _authLink.token.then((e) => e?.accessToken);
 
-  Future<RemoteApiService> init({Directory? storageDirectory}) async {
-    gqlClient = await _buildGqlClient(
-      serverName: serverName,
-      storageDirectory:
-          storageDirectory ?? await getApplicationDocumentsDirectory(),
-    );
+  Future<RemoteApiService> init({
+    Directory? storageDirectory,
+  }) async {
+    gqlClient = await _buildGqlClient(storageDirectory);
     return this;
   }
 
@@ -62,62 +63,27 @@ class RemoteApiService {
     await _authLink.dispose();
   }
 
-  Future<void> putAvatar({
-    required String userId,
-    required Uint8List image,
-  }) async {
-    await http.put(
-      Uri.https(
-        serverName,
-        '/images/$userId/avatar.jpg',
-      ),
-      headers: {
-        'Content-Type': 'image/jpeg',
-        'Authorization': 'Bearer ${await token}',
-      },
-      body: image,
-    );
-  }
+  Future<void> putAvatar(Uint8List image) async => http.put(
+        Uri.https(serverName, '/images/$userId/avatar.jpg'),
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'Authorization': 'Bearer ${await token}',
+        },
+        body: image,
+      );
 
-  Future<void> putBeacon({
-    required String userId,
+  Future<void> putBeacon(
+    Uint8List image, {
     required String beaconId,
-    required Uint8List image,
-  }) async {
-    await http.put(
-      Uri.https(
-        serverName,
-        '/images/$userId/$beaconId.jpg',
-      ),
-      headers: {
-        'Content-Type': 'image/jpeg',
-        'Authorization': 'Bearer ${await token}',
-      },
-      body: image,
-    );
-  }
-
-  Future<Client> _buildGqlClient({
-    String serverName = appLinkBase,
-    Directory? storageDirectory,
-  }) async {
-    final link = Link.from([
-      _authLink,
-      HttpLink('https://$serverName/v1/graphql'),
-    ]);
-    if (storageDirectory == null) return Client(link: link);
-    Hive.init(storageDirectory.path);
-    final box = await Hive.openBox<Map<dynamic, dynamic>>('graphql_cache');
-    return Client(
-      link: link,
-      cache: Cache(
-        store: HiveStore(box),
-      ),
-      defaultFetchPolicies: {
-        OperationType.query: FetchPolicy.NoCache,
-      },
-    );
-  }
+  }) async =>
+      http.put(
+        Uri.https(serverName, '/images/$userId/$beaconId.jpg'),
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'Authorization': 'Bearer ${await token}',
+        },
+        body: image,
+      );
 
   Future<String> signIn(String seed) async {
     final privateKey = ed.newKeyFromSeed(base64Decode(seed));
@@ -128,7 +94,7 @@ class RemoteApiService {
       accessToken: jwt.accessToken,
       expiresIn: jwt.expiresIn,
     ));
-    return jwt.id;
+    return _userId = jwt.id;
   }
 
   Future<({String id, String seed})> signUp() async {
@@ -139,18 +105,20 @@ class RemoteApiService {
       expiresIn: jwt.expiresIn,
     ));
     return (
-      id: jwt.id,
+      id: _userId = jwt.id,
       seed: base64UrlEncode(ed.seed(_keyPair.privateKey)),
     );
   }
 
   // TBD: invalidate jwt on remote server also
   Future<void> signOut() async {
+    _userId = '';
     await _authLink.clearToken();
   }
 
   // TBD: remove account on remote server
   Future<void> delete() async {
+    _userId = '';
     await _authLink.clearToken();
   }
 
@@ -199,6 +167,25 @@ class RemoteApiService {
     )).replaceAll('=', '');
     return '$_jwtHeader$body.$signature';
   }
+
+  Future<Client> _buildGqlClient(Directory? storageDirectory) async {
+    final link = Link.from([
+      _authLink,
+      HttpLink('https://$serverName/v1/graphql'),
+    ]);
+    if (storageDirectory == null) return Client(link: link);
+    Hive.init(storageDirectory.path);
+    final box = await Hive.openBox<Map<dynamic, dynamic>>('graphql_cache');
+    return Client(
+      link: link,
+      cache: Cache(
+        store: HiveStore(box),
+      ),
+      defaultFetchPolicies: {
+        OperationType.query: FetchPolicy.NoCache,
+      },
+    );
+  }
 }
 
 extension ErrorHandler<TData, TVars> on OperationResponse<TData, TVars> {
@@ -245,4 +232,43 @@ class GraphQLNoDataException implements Exception {
 
   @override
   String toString() => '$label: OperationResponse has no data';
+}
+
+sealed class AuthenticationException implements Exception {
+  const AuthenticationException([this.description]);
+
+  final String? description;
+
+  @override
+  String toString() => description ?? super.toString();
+}
+
+final class AuthenticationHttpException extends AuthenticationException {
+  const AuthenticationHttpException([
+    super.description = 'General HTTP error.',
+  ]);
+}
+
+final class AuthenticationFailedException extends AuthenticationException {
+  const AuthenticationFailedException([
+    super.description = 'Authorization failed. Wrong token',
+  ]);
+}
+
+final class AuthenticationNotFoundException extends AuthenticationException {
+  const AuthenticationNotFoundException([
+    super.description = 'Authorization failed. User not found',
+  ]);
+}
+
+final class AuthenticationDuplicatedException extends AuthenticationException {
+  const AuthenticationDuplicatedException([
+    super.description = 'Authorization failed. User registered already',
+  ]);
+}
+
+final class AuthenticationServerException extends AuthenticationException {
+  const AuthenticationServerException([
+    super.description = 'Internal server error.',
+  ]);
 }

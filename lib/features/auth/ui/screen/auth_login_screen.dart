@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:tentura/domain/exception.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 

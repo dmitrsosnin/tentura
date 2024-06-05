@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:tentura/consts.dart';
 import 'package:tentura/data/repository/geo_repository.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/data/service/hydrated_bloc_storage.dart';
@@ -19,19 +21,27 @@ import 'package:tentura/features/favorites/data/favorites_repository.dart';
 import 'app.dart';
 
 class DI extends StatelessWidget {
-  const DI({super.key});
+  const DI({
+    required this.storageDirectory,
+    super.key,
+  });
+
+  final Directory storageDirectory;
 
   Future<DI> init() async {
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    await HydratedBlocStorage.init();
+    await HydratedBlocStorage.init(storageDirectory);
     return this;
   }
 
   @override
   Widget build(BuildContext context) => FutureBuilder(
-        future: RemoteApiService().init(),
+        future: RemoteApiService(
+          serverName: appLinkBase,
+          jwtExpiresIn: jwtExpiresIn,
+        ).init(),
         builder: (context, snapshot) => snapshot.hasError
             // Show error
             ? Center(

@@ -167,10 +167,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     if (!_formKey.currentState!.validate()) return;
     try {
       if (_imagePath.isNotEmpty) {
-        await _profileCubit.profileRepository.remoteApiService.putAvatar(
-          userId: _profile.id,
-          image: await File(_imagePath).readAsBytes(),
-        );
+        await _profileCubit.profileRepository.remoteApiService
+            .putAvatar(await File(_imagePath).readAsBytes());
         await CachedNetworkImage.evictFromCache(
           AvatarImage.getAvatarUrl(userId: _profile.id),
         );

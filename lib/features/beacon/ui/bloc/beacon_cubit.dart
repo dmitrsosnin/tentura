@@ -56,9 +56,8 @@ class BeaconCubit extends Cubit<BeaconState> {
     );
     if (image != null && image.isNotEmpty) {
       await beaconRepository.remoteApiService.putBeacon(
+        image,
         beaconId: beacon.id,
-        image: image,
-        userId: beaconRepository.userId,
       );
     }
     emit(BeaconState(

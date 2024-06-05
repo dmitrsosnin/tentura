@@ -1,7 +1,6 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:tentura/data/service/remote_api_service.dart';
-import 'package:tentura/domain/exception.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
@@ -133,4 +132,12 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
       emit(state.setError(e));
     }
   }
+}
+
+class SeedExistsException implements Exception {
+  const SeedExistsException();
+}
+
+class SeedIsWrongException implements Exception {
+  const SeedIsWrongException();
 }

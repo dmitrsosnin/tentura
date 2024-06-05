@@ -1,9 +1,25 @@
-class SeedExistsException implements Exception {
-  const SeedExistsException();
+class GraphQLException implements Exception {
+  const GraphQLException({
+    this.label = 'No label',
+    this.error = 'Unknown error on OperationRequest',
+  });
+
+  final Object? error;
+  final String? label;
+
+  @override
+  String toString() => '$label: $error';
 }
 
-class SeedIsWrongException implements Exception {
-  const SeedIsWrongException();
+class GraphQLNoDataException implements Exception {
+  const GraphQLNoDataException({
+    this.label = 'No label',
+  });
+
+  final String? label;
+
+  @override
+  String toString() => '$label: OperationResponse has no data';
 }
 
 sealed class AuthenticationException implements Exception {
