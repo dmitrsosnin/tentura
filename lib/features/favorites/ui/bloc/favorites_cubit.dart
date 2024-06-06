@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:collection/collection.dart';
 
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
@@ -12,14 +14,20 @@ part 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
   FavoritesCubit({
-    required this.favoritesRepository,
-  }) : super(const FavoritesState(status: FetchStatus.isLoading)) {
+    required FavoritesRepository repository,
+  })  : _repository = repository,
+        super(const FavoritesState(status: FetchStatus.isLoading)) {
     _fetchSubscription.resume();
   }
 
-  final FavoritesRepository favoritesRepository;
+  FavoritesCubit.build(BuildContext context)
+      : this(
+          repository: FavoritesRepository(context.read<RemoteApiService>()),
+        );
 
-  late final _fetchSubscription = favoritesRepository.stream.listen(
+  final FavoritesRepository _repository;
+
+  late final _fetchSubscription = _repository.stream.listen(
     (e) => emit(FavoritesState(beacons: e.toList())),
     onError: (dynamic e) => emit(state.setError(e.toString())),
     cancelOnError: false,
@@ -33,11 +41,11 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    favoritesRepository.refetch();
+    _repository.refetch();
   }
 
   Future<Beacon> pin(String beaconId) async {
-    final beacon = await favoritesRepository.pin(beaconId);
+    final beacon = await _repository.pin(beaconId);
     emit(FavoritesState(
       beacons: [
         ...state.beacons,
@@ -48,7 +56,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   Future<Beacon> unpin(String beaconId) async {
-    final beacon = favoritesRepository.unpin(beaconId);
+    final beacon = _repository.unpin(beaconId);
     final beacons = [...state.beacons]..removeWhere((e) => e.id == beaconId);
     emit(FavoritesState(beacons: beacons));
     return beacon;

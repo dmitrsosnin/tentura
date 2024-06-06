@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:tentura/data/service/remote_api_service.dart';
@@ -13,14 +14,22 @@ part 'auth_state.dart';
 //
 class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   AuthCubit({
-    required this.remoteApiService,
-    bool trySignIn = true,
-  }) : super(const AuthState()) {
+    required RemoteApiService remoteApiService,
+  })  : _remoteApiService = remoteApiService,
+        super(const AuthState()) {
     hydrate();
-    if (trySignIn && isAuthenticated) signIn(state.currentAccount);
+    if (isAuthenticated) {
+      _remoteApiService.signIn(
+        seed: state.accounts[state.currentAccount]!,
+        prematureUserId: state.currentAccount,
+      );
+    }
   }
 
-  final RemoteApiService remoteApiService;
+  AuthCubit.build(BuildContext context)
+      : this(remoteApiService: context.read<RemoteApiService>());
+
+  final RemoteApiService _remoteApiService;
 
   bool get isAuthenticated => state.currentAccount.isNotEmpty;
 
@@ -51,14 +60,14 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
 
   bool checkIfIsNotMe(String id) => id != state.currentAccount;
 
-  Future<void> addAccount(String? seed) async {
+  Future<void> recoverAccount(String? seed) async {
     if (seed == null) return;
     if (state.accounts.values.contains(seed)) {
       return emit(state.setError(const SeedExistsException()));
     }
     emit(state.setLoading());
     try {
-      final id = await remoteApiService.signIn(seed);
+      final id = await _remoteApiService.signIn(seed: seed);
       emit(AuthState(
         currentAccount: id,
         accounts: {
@@ -74,7 +83,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> signUp() async {
     emit(state.setLoading());
     try {
-      final (:id, :seed) = await remoteApiService.signUp();
+      final (:id, :seed) = await _remoteApiService.signUp();
       emit(AuthState(
         currentAccount: id,
         accounts: {
@@ -90,7 +99,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> signIn(String id) async {
     emit(state.setLoading());
     try {
-      await remoteApiService.signIn(state.accounts[id]!);
+      await _remoteApiService.signIn(seed: state.accounts[id]!);
       emit(AuthState(
         currentAccount: id,
         accounts: state.accounts,
@@ -102,7 +111,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
 
   Future<void> signOut() async {
     try {
-      await remoteApiService.signOut();
+      await _remoteApiService.signOut();
     } finally {
       emit(AuthState(
         accounts: state.accounts,
@@ -123,7 +132,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> deleteAccount(String id) async {
     emit(state.setLoading());
     try {
-      await remoteApiService.delete();
+      await _remoteApiService.delete();
       state.accounts.remove(id);
       emit(AuthState(
         accounts: {...state.accounts},

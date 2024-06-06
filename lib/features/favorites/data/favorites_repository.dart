@@ -8,30 +8,26 @@ import 'gql/_g/beacon_unpin_by_id.req.gql.dart';
 class FavoritesRepository {
   static const _label = 'Favorites';
 
-  FavoritesRepository({
-    required this.userId,
-    required this.remoteApiService,
-  });
+  FavoritesRepository(this._remoteApiService);
 
-  final String userId;
-  final RemoteApiService remoteApiService;
+  final RemoteApiService _remoteApiService;
 
   late final _fetchRequest = GBeaconFetchPinnedByUserIdReq(
     (r) => r
       ..fetchPolicy = FetchPolicy.CacheAndNetwork
-      ..vars.user_id = userId,
+      ..vars.user_id = _remoteApiService.userId,
   );
 
   Stream<Iterable<Beacon>> get stream =>
-      remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
+      _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
           .beacon_pinned
           .map((r) => r.beacon as Beacon));
 
   void refetch() =>
-      remoteApiService.gqlClient.requestController.add(_fetchRequest);
+      _remoteApiService.gqlClient.requestController.add(_fetchRequest);
 
-  Future<Beacon> pin(String beaconId) => remoteApiService.gqlClient
+  Future<Beacon> pin(String beaconId) => _remoteApiService.gqlClient
       .request(GBeaconPinByIdReq((b) => b.vars.beacon_id = beaconId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
@@ -39,10 +35,10 @@ class FavoritesRepository {
             as Beacon,
       );
 
-  Future<Beacon> unpin(String beaconId) => remoteApiService.gqlClient
+  Future<Beacon> unpin(String beaconId) => _remoteApiService.gqlClient
       .request(GBeaconUnpinByIdReq(
         (b) => b.vars
-          ..user_id = userId
+          ..user_id = _remoteApiService.userId
           ..beacon_id = beaconId,
       ))
       .firstWhere((e) => e.dataSource == DataSource.Link)

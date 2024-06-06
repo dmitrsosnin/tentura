@@ -58,7 +58,7 @@ class AuthLoginScreen extends StatelessWidget {
                   const Padding(
                     padding: paddingMediumA,
                     child: Text(
-                      'You can add your account by\n'
+                      'You can recover your account by\n'
                       'scanning a QR from your other device\n'
                       'or using a saved seed.',
                       textAlign: TextAlign.center,
@@ -70,29 +70,29 @@ class AuthLoginScreen extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: accounts.length,
                     itemBuilder: (context, i) => AccountListTile(
-                      id: accounts[i],
+                      userId: accounts[i],
                     ),
                     separatorBuilder: (context, index) => const Divider(),
                   ),
 
-                // Create from seed (QR)
+                // Recover from seed (QR)
                 Padding(
                   padding: paddingMediumA,
                   child: OutlinedButton(
-                    child: const Text('Add account by QR'),
-                    onPressed: () async =>
-                        authCubit.addAccount(await QRScanDialog.show(context)),
+                    child: const Text('Recover account by QR'),
+                    onPressed: () async => authCubit
+                        .recoverAccount(await QRScanDialog.show(context)),
                   ),
                 ),
 
-                // Create from seed (clipboard)
+                // Recover from seed (clipboard)
                 Padding(
                   padding: paddingMediumA,
                   child: OutlinedButton(
-                    child: const Text('Add account by seed'),
+                    child: const Text('Recover account by seed'),
                     onPressed: () async {
                       if (await Clipboard.hasStrings() && context.mounted) {
-                        await authCubit.addAccount(
+                        await authCubit.recoverAccount(
                             (await Clipboard.getData(Clipboard.kTextPlain))
                                 ?.text);
                       }

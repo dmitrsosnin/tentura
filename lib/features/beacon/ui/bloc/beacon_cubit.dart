@@ -1,9 +1,10 @@
 import 'dart:typed_data';
-import 'package:flutter/material.dart' show DateTimeRange;
+import 'package:flutter/material.dart';
 
-import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/geo.dart';
+import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/beacon_repository.dart';
@@ -14,16 +15,23 @@ part 'beacon_state.dart';
 
 class BeaconCubit extends Cubit<BeaconState> {
   BeaconCubit({
-    required this.beaconRepository,
-    this.pickImageCase = const PickImageCase(),
-  }) : super(const BeaconState(status: FetchStatus.isLoading)) {
+    required BeaconRepository repository,
+    PickImageCase pickImageCase = const PickImageCase(),
+  })  : _pickImageCase = pickImageCase,
+        _repository = repository,
+        super(const BeaconState(status: FetchStatus.isLoading)) {
     _fetchSubscription.resume();
   }
 
-  final PickImageCase pickImageCase;
-  final BeaconRepository beaconRepository;
+  BeaconCubit.build(BuildContext context)
+      : this(
+          repository: BeaconRepository(context.read<RemoteApiService>()),
+        );
 
-  late final _fetchSubscription = beaconRepository.stream.listen(
+  final PickImageCase _pickImageCase;
+  final BeaconRepository _repository;
+
+  late final _fetchSubscription = _repository.stream.listen(
     (e) => emit(BeaconState(beacons: e.toList())),
     onError: (dynamic e) => emit(state.setError(e.toString())),
     cancelOnError: false,
@@ -37,7 +45,7 @@ class BeaconCubit extends Cubit<BeaconState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    beaconRepository.refetch();
+    _repository.refetch();
   }
 
   Future<void> create({
@@ -47,7 +55,7 @@ class BeaconCubit extends Cubit<BeaconState> {
     Coordinates? coordinates,
     Uint8List? image,
   }) async {
-    final beacon = await beaconRepository.create(
+    final beacon = await _repository.create(
       title: title,
       description: description,
       dateRange: dateRange,
@@ -55,9 +63,9 @@ class BeaconCubit extends Cubit<BeaconState> {
       hasPicture: image != null,
     );
     if (image != null && image.isNotEmpty) {
-      await beaconRepository.remoteApiService.putBeacon(
-        image,
+      await _repository.putBeaconImage(
         beaconId: beacon.id,
+        image: image,
       );
     }
     emit(BeaconState(
@@ -69,7 +77,7 @@ class BeaconCubit extends Cubit<BeaconState> {
   }
 
   Future<void> delete(String beaconId) async {
-    await beaconRepository.delete(beaconId);
+    await _repository.delete(beaconId);
     emit(BeaconState(
       beacons: state.beacons.where((e) => e.id != beaconId).toList(),
     ));
@@ -77,13 +85,12 @@ class BeaconCubit extends Cubit<BeaconState> {
 
   Future<void> toggleEnabled(String beaconId) async {
     final beacon = state.beacons.singleWhere((e) => e.id == beaconId);
-    state.beacons[state.beacons.indexOf(beacon)] =
-        await beaconRepository.setEnabled(
+    state.beacons[state.beacons.indexOf(beacon)] = await _repository.setEnabled(
       isEnabled: !beacon.enabled,
       id: beaconId,
     );
   }
 
   Future<({String path, String name})?> pickImage() =>
-      pickImageCase.pickImage();
+      _pickImageCase.pickImage();
 }

@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/profile_repository.dart';
@@ -17,18 +20,27 @@ part 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState>
     with HydratedMixin<ProfileState> {
   ProfileCubit({
-    required this.id,
-    required this.profileRepository,
-    this.pickImageCase = const PickImageCase(),
-  }) : super(ProfileState(user: User.empty)) {
+    required ProfileRepository repository,
+    String? userId,
+    PickImageCase pickImageCase = const PickImageCase(),
+  })  : id = userId ?? repository.userId,
+        _pickImageCase = pickImageCase,
+        _repository = repository,
+        super(ProfileState(user: User.empty)) {
     hydrate();
   }
+
+  ProfileCubit.build(BuildContext context, [String? userId])
+      : this(
+          userId: userId,
+          repository: ProfileRepository(context.read<RemoteApiService>()),
+        );
 
   @override
   final String id;
 
-  final PickImageCase pickImageCase;
-  final ProfileRepository profileRepository;
+  final PickImageCase _pickImageCase;
+  final ProfileRepository _repository;
 
   @override
   ProfileState? fromJson(Map<String, dynamic> json) =>
@@ -37,7 +49,7 @@ class ProfileCubit extends Cubit<ProfileState>
   @override
   Map<String, dynamic>? toJson(ProfileState state) => state.user.toJson();
 
-  Future<void> fetch() => profileRepository.fetchById(id);
+  Future<void> fetch() => _repository.fetch();
 
   Future<void> update({
     required String title,
@@ -48,8 +60,7 @@ class ProfileCubit extends Cubit<ProfileState>
         description == state.user.description &&
         hasPicture == state.user.has_picture) return;
     emit(ProfileState(
-      user: await profileRepository.update(
-        id: id,
+      user: await _repository.update(
         title: title,
         description: description,
         hasPicture: hasPicture,
@@ -57,8 +68,11 @@ class ProfileCubit extends Cubit<ProfileState>
     ));
   }
 
-  Future<void> delete() => profileRepository.deleteById(id);
+  Future<void> delete() => _repository.delete();
+
+  Future<void> putAvatarImage(Uint8List image) =>
+      _repository.putAvatarImage(image);
 
   Future<({String name, String path})?> pickImage() =>
-      pickImageCase.pickImage();
+      _pickImageCase.pickImage();
 }
