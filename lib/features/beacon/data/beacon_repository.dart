@@ -25,6 +25,9 @@ class BeaconRepository {
       ..vars.user_id = _remoteApiService.userId,
   );
 
+  Stream<bool> get authenticationStatus =>
+      _remoteApiService.authenticationStatus.map((e) => e.hasToken);
+
   Stream<Iterable<Beacon>> get stream => _remoteApiService.gqlClient
       .request(_fetchRequest)
       .map((r) => r.dataOrThrow(label: _label).beacon.map((r) => r as Beacon));

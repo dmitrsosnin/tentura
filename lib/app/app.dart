@@ -18,9 +18,6 @@ import 'package:tentura/features/rating/rating_route.dart';
 import 'package:tentura/features/graph/graph_route.dart';
 
 class App extends StatelessWidget {
-  static final _rootNavigatorKey =
-      GlobalKey<NavigatorState>(debugLabel: 'root');
-
   const App({super.key});
 
   @override
@@ -50,4 +47,7 @@ class App extends StatelessWidget {
           ],
         ),
       );
+
+  static final _rootNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: 'root');
 }

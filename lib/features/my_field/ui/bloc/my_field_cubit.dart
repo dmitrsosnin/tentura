@@ -11,21 +11,18 @@ part 'my_field_state.dart';
 
 class MyFieldCubit extends Cubit<MyFieldState> {
   MyFieldCubit({
-    required this.id,
-    required this.myFieldRepository,
-    bool needFetch = true,
-  }) : super(const MyFieldState()) {
-    if (needFetch) fetch();
+    required MyFieldRepository repository,
+  })  : _repository = repository,
+        super(const MyFieldState()) {
+    _repository.authenticationStatus.firstWhere((e) => e).then((e) => fetch());
   }
 
-  final String id;
-
-  final MyFieldRepository myFieldRepository;
+  final MyFieldRepository _repository;
 
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
-      final beacons = await myFieldRepository.fetchFieldOf(id);
+      final beacons = await _repository.fetchMyField();
       emit(MyFieldState(
         // TBD: remove that ugly 'where' when able filter in request
         beacons: beacons.where((e) => e.enabled).toList(),
@@ -39,7 +36,7 @@ class MyFieldCubit extends Cubit<MyFieldState> {
     required int amount,
     required String beaconId,
   }) async {
-    final beacon = await myFieldRepository.vote(id: beaconId, amount: amount);
+    final beacon = await _repository.vote(id: beaconId, amount: amount);
     return beacon.my_vote ?? 0;
   }
 }

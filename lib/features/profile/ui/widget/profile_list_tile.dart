@@ -21,7 +21,7 @@ class AccountListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => ProfileCubit.build(context, userId),
+        create: (context) => ProfileCubit.dummy(userId: userId),
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) => ListTile(
             leading: AvatarImage(

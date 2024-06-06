@@ -52,6 +52,9 @@ class TenturaApi {
 
   String get userId => _userId;
 
+  Stream<AuthenticationStatus> get authenticationStatus =>
+      _authLink.authenticationStatus;
+
   Future<String> get token => _authLink.token.then((e) => e?.accessToken ?? '');
 
   Future<TenturaApi> init({

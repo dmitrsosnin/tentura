@@ -43,3 +43,31 @@ class ProfileRepository {
   Future<void> putAvatarImage(Uint8List image) =>
       _remoteApiService.putAvatarImage(image);
 }
+
+/// For using hydrated ProfileCubit with no actions
+class ProfileRepositoryDummy implements ProfileRepository {
+  const ProfileRepositoryDummy();
+
+  @override
+  String get userId => throw UnimplementedError();
+
+  @override
+  RemoteApiService get _remoteApiService => throw UnimplementedError();
+
+  @override
+  Future<void> delete() => throw UnimplementedError();
+
+  @override
+  Future<User> fetch() => throw UnimplementedError();
+
+  @override
+  Future<void> putAvatarImage(Uint8List image) => throw UnimplementedError();
+
+  @override
+  Future<User> update({
+    required String title,
+    required String description,
+    required bool hasPicture,
+  }) =>
+      throw UnimplementedError();
+}

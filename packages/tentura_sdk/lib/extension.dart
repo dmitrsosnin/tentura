@@ -1,6 +1,11 @@
 import 'package:ferry/ferry.dart';
+import 'package:fresh_graphql/fresh_graphql.dart';
 
 import 'exception.dart';
+
+extension HasToken on AuthenticationStatus {
+  bool get hasToken => this == AuthenticationStatus.authenticated;
+}
 
 extension ErrorHandler<TData, TVars> on OperationResponse<TData, TVars> {
   bool get hasNoErrors => !hasErrors;

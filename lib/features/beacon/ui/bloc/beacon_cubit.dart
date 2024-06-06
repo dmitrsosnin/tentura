@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:tentura/domain/entity/geo.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
-import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/beacon_repository.dart';
@@ -20,13 +19,10 @@ class BeaconCubit extends Cubit<BeaconState> {
   })  : _pickImageCase = pickImageCase,
         _repository = repository,
         super(const BeaconState(status: FetchStatus.isLoading)) {
-    _fetchSubscription.resume();
+    _repository.authenticationStatus
+        .firstWhere((e) => e)
+        .then((e) => _fetchSubscription.resume());
   }
-
-  BeaconCubit.build(BuildContext context)
-      : this(
-          repository: BeaconRepository(context.read<RemoteApiService>()),
-        );
 
   final PickImageCase _pickImageCase;
   final BeaconRepository _repository;

@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:tentura/data/service/remote_api_service.dart';
@@ -25,9 +24,6 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
       );
     }
   }
-
-  AuthCubit.build(BuildContext context)
-      : this(remoteApiService: context.read<RemoteApiService>());
 
   final RemoteApiService _remoteApiService;
 

@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
 import 'package:collection/collection.dart';
 
-import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
@@ -17,13 +15,10 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     required FavoritesRepository repository,
   })  : _repository = repository,
         super(const FavoritesState(status: FetchStatus.isLoading)) {
-    _fetchSubscription.resume();
+    _repository.authenticationStatus
+        .firstWhere((e) => e)
+        .then((e) => _fetchSubscription.resume());
   }
-
-  FavoritesCubit.build(BuildContext context)
-      : this(
-          repository: FavoritesRepository(context.read<RemoteApiService>()),
-        );
 
   final FavoritesRepository _repository;
 

@@ -1,10 +1,8 @@
 import 'dart:typed_data';
-import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
-import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/profile_repository.dart';
@@ -21,20 +19,22 @@ class ProfileCubit extends Cubit<ProfileState>
     with HydratedMixin<ProfileState> {
   ProfileCubit({
     required ProfileRepository repository,
-    String? userId,
     PickImageCase pickImageCase = const PickImageCase(),
-  })  : id = userId ?? repository.userId,
+  })  : id = repository.userId,
         _pickImageCase = pickImageCase,
         _repository = repository,
         super(ProfileState(user: User.empty)) {
     hydrate();
   }
 
-  ProfileCubit.build(BuildContext context, [String? userId])
-      : this(
-          userId: userId,
-          repository: ProfileRepository(context.read<RemoteApiService>()),
-        );
+  ProfileCubit.dummy({
+    required String userId,
+  })  : id = userId,
+        _pickImageCase = const PickImageCase(),
+        _repository = const ProfileRepositoryDummy(),
+        super(ProfileState(user: User.empty)) {
+    hydrate();
+  }
 
   @override
   final String id;
