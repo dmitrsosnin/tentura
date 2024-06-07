@@ -58,7 +58,7 @@ class DI extends StatelessWidget {
             ],
             child: BlocProvider(
               create: (context) => AuthCubit(
-                remoteApiService: snapshot.data!,
+                remoteApiService: remoteApiService,
               ),
               child: BlocSelector<AuthCubit, AuthState, String>(
                 selector: (state) => state.currentAccount,
