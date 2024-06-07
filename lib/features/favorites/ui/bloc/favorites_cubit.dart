@@ -13,9 +13,10 @@ part 'favorites_state.dart';
 class FavoritesCubit extends Cubit<FavoritesState> {
   FavoritesCubit({
     required FavoritesRepository repository,
+    required Stream<bool> hasTokenChanges,
   })  : _repository = repository,
         super(const FavoritesState(status: FetchStatus.isLoading)) {
-    _repository.authenticationStatus
+    hasTokenChanges
         .firstWhere((e) => e)
         .then((e) => _fetchSubscription.resume());
   }

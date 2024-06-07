@@ -36,53 +36,58 @@ class DI extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FutureBuilder(
         future: _init(),
-        builder: (context, snapshot) => snapshot.hasError
-            ? Center(child: Text(snapshot.error.toString()))
-            : snapshot.hasData
-                ? MultiRepositoryProvider(
-                    providers: [
-                      RepositoryProvider(
-                        create: (context) => GeoRepository(),
-                        lazy: false,
-                      ),
-                      RepositoryProvider.value(value: snapshot.data!),
-                    ],
-                    child: BlocProvider(
-                      create: (context) => AuthCubit(
-                        remoteApiService: context.read<RemoteApiService>(),
-                      ),
-                      child: BlocSelector<AuthCubit, AuthState, String>(
-                        selector: (state) => state.currentAccount,
-                        builder: (context, userId) => MultiBlocProvider(
-                          key: ValueKey(userId),
-                          providers: [
-                            BlocProvider(
-                              create: (context) => ProfileCubit(
-                                repository: ProfileRepository(
-                                  context.read<RemoteApiService>(),
-                                ),
-                              ),
-                            ),
-                            BlocProvider(
-                              create: (context) => BeaconCubit(
-                                repository: BeaconRepository(
-                                  context.read<RemoteApiService>(),
-                                ),
-                              ),
-                            ),
-                            BlocProvider(
-                              create: (context) => FavoritesCubit(
-                                repository: FavoritesRepository(
-                                  context.read<RemoteApiService>(),
-                                ),
-                              ),
-                            ),
-                          ],
-                          child: const App(),
-                        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          }
+          final remoteApiService = snapshot.data;
+          if (remoteApiService == null) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+          return MultiRepositoryProvider(
+            providers: [
+              RepositoryProvider(
+                create: (context) => GeoRepository(),
+                lazy: false,
+              ),
+              RepositoryProvider.value(value: remoteApiService),
+            ],
+            child: BlocProvider(
+              create: (context) => AuthCubit(
+                remoteApiService: snapshot.data!,
+              ),
+              child: BlocSelector<AuthCubit, AuthState, String>(
+                selector: (state) => state.currentAccount,
+                builder: (context, userId) => MultiBlocProvider(
+                  key: ValueKey(userId),
+                  providers: [
+                    BlocProvider(
+                      create: (context) => ProfileCubit(
+                        repository: ProfileRepository(remoteApiService),
                       ),
                     ),
-                  )
-                : const Center(child: CircularProgressIndicator.adaptive()),
+                    BlocProvider(
+                      create: (context) => BeaconCubit(
+                        repository: BeaconRepository(remoteApiService),
+                        hasTokenChanges: remoteApiService.hasTokenChanges,
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => FavoritesCubit(
+                        repository: FavoritesRepository(remoteApiService),
+                        hasTokenChanges: remoteApiService.hasTokenChanges,
+                      ),
+                    ),
+                  ],
+                  child: const App(),
+                ),
+              ),
+            ),
+          );
+        },
       );
 }

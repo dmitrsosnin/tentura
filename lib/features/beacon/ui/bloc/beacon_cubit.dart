@@ -15,11 +15,12 @@ part 'beacon_state.dart';
 class BeaconCubit extends Cubit<BeaconState> {
   BeaconCubit({
     required BeaconRepository repository,
+    required Stream<bool> hasTokenChanges,
     PickImageCase pickImageCase = const PickImageCase(),
   })  : _pickImageCase = pickImageCase,
         _repository = repository,
         super(const BeaconState(status: FetchStatus.isLoading)) {
-    _repository.authenticationStatus
+    hasTokenChanges
         .firstWhere((e) => e)
         .then((e) => _fetchSubscription.resume());
   }
