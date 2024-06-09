@@ -20,6 +20,67 @@ import 'app.dart';
 class DI extends StatelessWidget {
   const DI({super.key});
 
+  @override
+  Widget build(BuildContext context) => FutureBuilder(
+        future: _init(),
+        builder: (context, snapshot) {
+          final remoteApiService = snapshot.data;
+          return remoteApiService == null
+              ? Center(
+                  child: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      snapshot.hasError
+                          ? snapshot.error.toString()
+                          : 'Loading...',
+                      style: Theme.of(context).primaryTextTheme.headlineMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              : MultiRepositoryProvider(
+                  providers: [
+                    RepositoryProvider(
+                      create: (context) => GeoRepository(),
+                      lazy: false,
+                    ),
+                    RepositoryProvider.value(value: remoteApiService),
+                  ],
+                  child: BlocProvider(
+                    create: (context) => AuthCubit(
+                      remoteApiService: remoteApiService,
+                    ),
+                    child: BlocSelector<AuthCubit, AuthState, String>(
+                      selector: (state) => state.currentAccount,
+                      builder: (context, userId) => MultiBlocProvider(
+                        key: ValueKey(userId),
+                        providers: [
+                          BlocProvider(
+                            create: (context) => ProfileCubit(
+                              repository: ProfileRepository(remoteApiService),
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (context) => BeaconCubit(
+                              repository: BeaconRepository(remoteApiService),
+                              hasTokenChanges: remoteApiService.hasTokenChanges,
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (context) => FavoritesCubit(
+                              repository: FavoritesRepository(remoteApiService),
+                              hasTokenChanges: remoteApiService.hasTokenChanges,
+                            ),
+                          ),
+                        ],
+                        child: const App(),
+                      ),
+                    ),
+                  ),
+                );
+        },
+      );
+
   Future<RemoteApiService> _init() async {
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -32,62 +93,4 @@ class DI extends StatelessWidget {
     ).init(storageDirectory: storageDirectory);
     return remoteApiService as RemoteApiService;
   }
-
-  @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: _init(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-          final remoteApiService = snapshot.data;
-          if (remoteApiService == null) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
-          }
-          return MultiRepositoryProvider(
-            providers: [
-              RepositoryProvider(
-                create: (context) => GeoRepository(),
-                lazy: false,
-              ),
-              RepositoryProvider.value(value: remoteApiService),
-            ],
-            child: BlocProvider(
-              create: (context) => AuthCubit(
-                remoteApiService: remoteApiService,
-              ),
-              child: BlocSelector<AuthCubit, AuthState, String>(
-                selector: (state) => state.currentAccount,
-                builder: (context, userId) => MultiBlocProvider(
-                  key: ValueKey(userId),
-                  providers: [
-                    BlocProvider(
-                      create: (context) => ProfileCubit(
-                        repository: ProfileRepository(remoteApiService),
-                      ),
-                    ),
-                    BlocProvider(
-                      create: (context) => BeaconCubit(
-                        repository: BeaconRepository(remoteApiService),
-                        hasTokenChanges: remoteApiService.hasTokenChanges,
-                      ),
-                    ),
-                    BlocProvider(
-                      create: (context) => FavoritesCubit(
-                        repository: FavoritesRepository(remoteApiService),
-                        hasTokenChanges: remoteApiService.hasTokenChanges,
-                      ),
-                    ),
-                  ],
-                  child: const App(),
-                ),
-              ),
-            ),
-          );
-        },
-      );
 }
