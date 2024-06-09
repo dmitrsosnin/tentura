@@ -108,6 +108,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   Future<void> signOut() async {
     try {
       await _remoteApiService.signOut();
+      _remoteApiService.gqlClient.cache.clear();
     } finally {
       emit(AuthState(
         accounts: state.accounts,
@@ -129,6 +130,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
     emit(state.setLoading());
     try {
       await _remoteApiService.delete();
+      _remoteApiService.gqlClient.cache.clear();
       state.accounts.remove(id);
       emit(AuthState(
         accounts: {...state.accounts},
