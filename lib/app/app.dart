@@ -10,6 +10,7 @@ import 'package:tentura/ui/screens/error_screen.dart';
 
 import 'package:tentura/features/home/home_route.dart';
 import 'package:tentura/features/auth/auth_login_route.dart';
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/profile/profile_edit_route.dart';
 import 'package:tentura/features/profile_view/profile_view_route.dart';
 import 'package:tentura/features/beacon_view/beacon_view_route.dart';
@@ -35,6 +36,8 @@ class App extends StatelessWidget {
             SentryNavigatorObserver(),
           ],
           errorBuilder: (context, state) => const ErrorScreen(),
+          redirect: (context, state) =>
+              context.read<AuthCubit>().isAuthenticated ? null : pathAuthLogin,
           routes: [
             buildHomeRoute(parentNavigatorKey: _rootNavigatorKey),
             buildAuthLoginRoute(parentNavigatorKey: _rootNavigatorKey),
