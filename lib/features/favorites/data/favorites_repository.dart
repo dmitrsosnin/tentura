@@ -24,7 +24,7 @@ class FavoritesRepository {
           .beacon_pinned
           .map((r) => r.beacon as Beacon));
 
-  void refetch() =>
+  void fetch() =>
       _remoteApiService.gqlClient.requestController.add(_fetchRequest);
 
   Future<Beacon> pin(String beaconId) => _remoteApiService.gqlClient

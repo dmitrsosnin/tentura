@@ -15,9 +15,13 @@ GoRoute buildMyFieldRoute({
       path: pathHomeField,
       parentNavigatorKey: parentNavigatorKey,
       builder: (context, state) => BlocProvider(
-        create: (context) => MyFieldCubit(
-          repository: MyFieldRepository(context.read<RemoteApiService>()),
-        ),
+        create: (context) {
+          final remoteApiService = context.read<RemoteApiService>();
+          return MyFieldCubit(
+            repository: MyFieldRepository(remoteApiService),
+            hasTokenChanges: remoteApiService.hasTokenChanges,
+          );
+        },
         child: const MyFieldScreen(),
       ),
     );

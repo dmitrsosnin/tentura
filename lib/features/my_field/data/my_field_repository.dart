@@ -7,24 +7,24 @@ import 'gql/_g/beacon_vote_by_id.req.gql.dart';
 class MyFieldRepository {
   static const _label = 'MyField';
 
-  MyFieldRepository(RemoteApiService remoteApiService)
-      : _remoteApiService = remoteApiService;
+  MyFieldRepository(this._remoteApiService);
 
   final RemoteApiService _remoteApiService;
 
-  Stream<bool> get authenticationStatus =>
-      _remoteApiService.authenticationStatus.map((e) => e.hasToken);
+  late final _fetchRequest = GBeaconFetchMyFieldReq(
+    (r) => r.fetchPolicy = FetchPolicy.CacheAndNetwork,
+  );
 
-  Future<Iterable<Beacon>> fetchMyField() => _remoteApiService.gqlClient
-      .request(GBeaconFetchMyFieldReq())
-      .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then(
-        (r) => r
-            .dataOrThrow(label: _label)
-            .scores
-            .where((r) => r.beacon != null)
-            .map<Beacon>((r) => r.beacon! as Beacon),
-      );
+  Stream<Iterable<Beacon>> get stream =>
+      _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
+          .dataOrThrow(label: _label)
+          .scores
+          // TBD: remove that ugly 'where' when able filter in request
+          .where((e) => e.beacon != null && e.beacon!.enabled)
+          .map((r) => r.beacon! as Beacon));
+
+  void fetch() =>
+      _remoteApiService.gqlClient.requestController.add(_fetchRequest);
 
   Future<Beacon> vote({
     required String id,
