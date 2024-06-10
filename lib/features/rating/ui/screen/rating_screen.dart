@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-import 'package:tentura/consts.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import '../bloc/rating_cubit.dart';
@@ -51,6 +49,7 @@ class _RatingScreenState extends State<RatingScreen> {
               onChanged: _cubit.setSearchFilter,
               onTapOutside: (_) => _searchFocusNode.unfocus(),
             ),
+
             // Clear input
             BlocBuilder<RatingCubit, RatingState>(
               buildWhen: (p, c) =>
@@ -67,21 +66,23 @@ class _RatingScreenState extends State<RatingScreen> {
                       },
               ),
             ),
+
             // Toggle sorting by value
             BlocBuilder<RatingCubit, RatingState>(
               buildWhen: (p, c) => p.isSortedByAsc != c.isSortedByAsc,
               builder: (context, state) => IconButton(
-                onPressed: context.read<RatingCubit>().toggleSortingByAsc,
+                onPressed: _cubit.toggleSortingByAsc,
                 icon: state.isSortedByAsc
                     ? const Icon(Icons.keyboard_arrow_up_rounded)
                     : const Icon(Icons.keyboard_arrow_down_rounded),
               ),
             ),
+
             // Toggle sorting by ego
             BlocBuilder<RatingCubit, RatingState>(
               buildWhen: (p, c) => p.isSortedByEgo != c.isSortedByEgo,
               builder: (context, state) => IconButton(
-                onPressed: context.read<RatingCubit>().toggleSortingByEgo,
+                onPressed: _cubit.toggleSortingByEgo,
                 icon: state.isSortedByEgo
                     ? const Icon(Icons.keyboard_arrow_right_rounded)
                     : const Icon(Icons.keyboard_arrow_left_rounded),
@@ -104,20 +105,10 @@ class _RatingScreenState extends State<RatingScreen> {
             padding: paddingMediumH,
             itemCount: state.items.length,
             separatorBuilder: (context, i) => const Divider(),
-            itemBuilder: (context, i) {
-              final item = state.items[i];
-              return GestureDetector(
-                onDoubleTap: () => context.push(Uri(
-                  path: pathProfileView,
-                  queryParameters: {'id': item.user.id},
-                ).toString()),
-                child: RatingListTile(
-                  egoScore: item.egoScore,
-                  userScore: item.userScore,
-                  user: item.user,
-                ),
-              );
-            },
+            itemBuilder: (context, i) => RatingListTile(
+              key: ValueKey(state.items[i]),
+              userRating: state.items[i],
+            ),
           ),
         ),
       );

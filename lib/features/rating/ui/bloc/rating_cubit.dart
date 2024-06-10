@@ -11,31 +11,41 @@ part 'rating_state.dart';
 
 class RatingCubit extends Cubit<RatingState> {
   RatingCubit({
-    required this.userId,
-    required this.ratingRepository,
-    bool fetchOnCreate = true,
-  }) : super(const RatingState()) {
-    if (fetchOnCreate) fetch();
+    required RatingRepository ratingRepository,
+    required Stream<bool> hasTokenChanges,
+  })  : _repository = ratingRepository,
+        super(const RatingState()) {
+    hasTokenChanges
+        .firstWhere((e) => e)
+        .then((e) => _fetchSubscription.resume());
   }
 
-  final String userId;
-  final RatingRepository ratingRepository;
+  final RatingRepository _repository;
 
-  List<UserRating> _items = [];
-
-  Future<void> fetch() async {
-    try {
-      _items = (await ratingRepository.fetchUsersRating())
-          .where((e) => e.user.id != userId)
-          .toList();
+  late final _fetchSubscription = _repository.stream.listen(
+    (e) {
+      _items = e.toList(growable: false);
       emit(state.copyWith(
         status: FetchStatus.isSuccess,
         items: _items,
       ));
       _sort();
-    } catch (e) {
-      emit(state.setError(e));
-    }
+    },
+    onError: (dynamic e) => emit(state.setError(e.toString())),
+    cancelOnError: false,
+  );
+
+  List<UserRating> _items = [];
+
+  @override
+  Future<void> close() async {
+    await _fetchSubscription.cancel();
+    return super.close();
+  }
+
+  Future<void> fetch() async {
+    emit(state.setLoading());
+    _repository.fetch();
   }
 
   void toggleSortingByAsc() {

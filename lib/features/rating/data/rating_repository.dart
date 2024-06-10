@@ -7,20 +7,25 @@ import 'gql/_g/fetch_users_rating.req.gql.dart';
 class RatingRepository {
   static const _label = 'Rating';
 
-  RatingRepository({
-    required this.remoteApiService,
-  });
+  RatingRepository(this._remoteApiService);
 
-  final RemoteApiService remoteApiService;
+  final RemoteApiService _remoteApiService;
 
-  Future<Iterable<UserRating>> fetchUsersRating() => remoteApiService.gqlClient
-      .request(GUsersRatingReq())
-      .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then(
-        (r) => r.dataOrThrow(label: _label).usersStats.map((e) => UserRating(
-              egoScore: e.egoScore,
-              userScore: e.nodeScore,
-              user: e.user! as User,
-            )),
-      );
+  late final _fetchRequest =
+      GUsersRatingReq((r) => r.fetchPolicy = FetchPolicy.CacheAndNetwork);
+
+  Stream<Iterable<UserRating>> get stream =>
+      _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
+          .dataOrThrow(label: _label)
+          .usersStats
+          .where(
+              (e) => e.user != null && e.user!.id != _remoteApiService.userId)
+          .map((e) => UserRating(
+                egoScore: e.egoScore,
+                userScore: e.nodeScore,
+                user: e.user! as User,
+              )));
+
+  void fetch() =>
+      _remoteApiService.gqlClient.requestController.add(_fetchRequest);
 }
