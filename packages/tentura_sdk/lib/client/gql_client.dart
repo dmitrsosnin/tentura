@@ -1,32 +1,12 @@
 import 'dart:isolate';
 import 'package:hive/hive.dart';
 import 'package:ferry/ferry.dart';
-import 'package:ferry/ferry_isolate.dart';
 import 'package:gql_http_link/gql_http_link.dart';
 import 'package:ferry_hive_store/ferry_hive_store.dart';
 
 import 'auth_link.dart';
 
-Future<IsolateClient> buildClient({
-  required Future<String?> Function() getToken,
-  required String serverName,
-  String? storagePath,
-}) async {
-  return IsolateClient.create(
-    _initClientInIsolate,
-    params: (
-      serverName: serverName,
-      storagePath: storagePath,
-    ),
-    messageHandler: (message) async {
-      if (message is GetTokenMessage) {
-        message.replyPort.send(await getToken());
-      }
-    },
-  );
-}
-
-Future<Client> _initClientInIsolate(
+Future<Client> buildClient(
   ({String serverName, String? storagePath}) params,
   SendPort? sendPort,
 ) async {

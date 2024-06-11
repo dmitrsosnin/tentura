@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/data/repository/geo_repository.dart';
@@ -24,15 +25,25 @@ class DI extends StatelessWidget {
   Widget build(BuildContext context) => FutureBuilder(
         future: _init(),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: Text(
+                  snapshot.error.toString(),
+                  style: Theme.of(context).primaryTextTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
           final remoteApiService = snapshot.data;
           return remoteApiService == null
               ? Center(
                   child: Directionality(
                     textDirection: TextDirection.ltr,
                     child: Text(
-                      snapshot.hasError
-                          ? snapshot.error.toString()
-                          : 'Loading...',
+                      'Loading...',
                       style: Theme.of(context).primaryTextTheme.headlineMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -93,6 +104,7 @@ class DI extends StatelessWidget {
       storagePath: storageDirectory.path,
     );
     await remoteApiService.init();
+    FlutterNativeSplash.remove();
     return remoteApiService;
   }
 }

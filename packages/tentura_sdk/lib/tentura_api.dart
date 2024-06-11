@@ -58,10 +58,17 @@ class TenturaApi {
       _authLink.authenticationStatus;
 
   Future<TenturaApi> init() async {
-    _gqlClient = await buildClient(
-      storagePath: storagePath,
-      serverName: serverName,
-      getToken: _getToken,
+    _gqlClient = await IsolateClient.create(
+      buildClient,
+      params: (
+        serverName: serverName,
+        storagePath: storagePath,
+      ),
+      messageHandler: (message) async {
+        if (message is GetTokenMessage) {
+          message.replyPort.send(await _getToken());
+        }
+      },
     );
     return this;
   }
