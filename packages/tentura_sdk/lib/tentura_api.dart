@@ -57,7 +57,7 @@ class TenturaApi {
   Stream<AuthenticationStatus> get authenticationStatus =>
       _authLink.authenticationStatus;
 
-  Future<TenturaApi> init() async {
+  Future<void> init() async {
     _gqlClient = await IsolateClient.create(
       buildClient,
       params: (
@@ -70,7 +70,6 @@ class TenturaApi {
         }
       },
     );
-    return this;
   }
 
   Future<void> dispose() async {

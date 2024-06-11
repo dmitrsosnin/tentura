@@ -93,17 +93,19 @@ class DI extends StatelessWidget {
       );
 
   Future<RemoteApiService> _init() async {
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
     final storageDirectory = await getApplicationDocumentsDirectory();
-    await HydratedBlocStorage.init(storageDirectory);
     final remoteApiService = RemoteApiService(
-      serverName: appLinkBase,
-      jwtExpiresIn: jwtExpiresIn,
       storagePath: storageDirectory.path,
+      jwtExpiresIn: jwtExpiresIn,
+      serverName: appLinkBase,
     );
-    await remoteApiService.init();
+    await Future.wait([
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]),
+      HydratedBlocStorage.init(storageDirectory),
+      remoteApiService.init(),
+    ]);
     FlutterNativeSplash.remove();
     return remoteApiService;
   }
