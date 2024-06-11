@@ -45,7 +45,7 @@ class RatingCubit extends Cubit<RatingState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    _repository.fetch();
+    return _repository.fetch();
   }
 
   void toggleSortingByAsc() {

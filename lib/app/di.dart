@@ -90,7 +90,7 @@ class DI extends StatelessWidget {
     final remoteApiService = await RemoteApiService(
       serverName: appLinkBase,
       jwtExpiresIn: jwtExpiresIn,
-    ).init(storageDirectory: storageDirectory);
+    ).init(storagePath: storageDirectory.path);
     return remoteApiService as RemoteApiService;
   }
 }

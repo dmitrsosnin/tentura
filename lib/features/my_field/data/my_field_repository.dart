@@ -16,21 +16,20 @@ class MyFieldRepository {
   );
 
   Stream<Iterable<Beacon>> get stream =>
-      _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
+      _remoteApiService.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
           .scores
           // TBD: remove that ugly 'where' when able filter in request
           .where((e) => e.beacon != null && e.beacon!.enabled)
           .map((r) => r.beacon! as Beacon));
 
-  void fetch() =>
-      _remoteApiService.gqlClient.requestController.add(_fetchRequest);
+  Future<void> fetch() => _remoteApiService.addRequest(_fetchRequest);
 
   Future<Beacon> vote({
     required String id,
     required int amount,
   }) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(GBeaconVoteByIdReq(
             (b) => b
               ..vars.amount = amount

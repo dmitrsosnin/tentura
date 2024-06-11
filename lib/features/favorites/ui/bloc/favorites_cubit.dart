@@ -37,7 +37,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    _repository.fetch();
+    return _repository.fetch();
   }
 
   Future<Beacon> pin(String beaconId) async {

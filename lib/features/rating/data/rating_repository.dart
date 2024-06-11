@@ -15,7 +15,7 @@ class RatingRepository {
       GUsersRatingReq((r) => r.fetchPolicy = FetchPolicy.CacheAndNetwork);
 
   Stream<Iterable<UserRating>> get stream =>
-      _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
+      _remoteApiService.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
           .usersStats
           .where(
@@ -26,6 +26,5 @@ class RatingRepository {
                 user: e.user! as User,
               )));
 
-  void fetch() =>
-      _remoteApiService.gqlClient.requestController.add(_fetchRequest);
+  Future<void> fetch() => _remoteApiService.addRequest(_fetchRequest);
 }
