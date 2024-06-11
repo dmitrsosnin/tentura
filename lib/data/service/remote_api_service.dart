@@ -6,6 +6,7 @@ class RemoteApiService extends TenturaApi {
   RemoteApiService({
     required super.serverName,
     super.jwtExpiresIn,
+    super.storagePath,
   });
 
   Stream<bool> get hasTokenChanges =>

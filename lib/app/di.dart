@@ -87,10 +87,12 @@ class DI extends StatelessWidget {
     ]);
     final storageDirectory = await getApplicationDocumentsDirectory();
     await HydratedBlocStorage.init(storageDirectory);
-    final remoteApiService = await RemoteApiService(
+    final remoteApiService = RemoteApiService(
       serverName: appLinkBase,
       jwtExpiresIn: jwtExpiresIn,
-    ).init(storagePath: storageDirectory.path);
-    return remoteApiService as RemoteApiService;
+      storagePath: storageDirectory.path,
+    );
+    await remoteApiService.init();
+    return remoteApiService;
   }
 }

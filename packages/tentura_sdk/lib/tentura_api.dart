@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:ferry/ferry.dart';
+import 'package:ferry/ferry_isolate.dart';
 import 'package:fresh_graphql/fresh_graphql.dart';
 
-import 'gql_client.dart';
-import 'image_service.dart';
-import 'token_service.dart';
+import 'client/gql_client.dart';
+import 'service/image_service.dart';
+import 'service/token_service.dart';
 
 class TenturaApi {
   TenturaApi({
     required this.serverName,
-    Duration jwtExpiresIn = const Duration(minutes: 1),
+    this.jwtExpiresIn = const Duration(minutes: 1),
+    this.storagePath = '',
   })  : _imageService = ImageService(
           serverName: serverName,
         ),
@@ -20,8 +22,10 @@ class TenturaApi {
         );
 
   final String serverName;
+  final String storagePath;
+  final Duration jwtExpiresIn;
 
-  late final Client _gqlClient;
+  late final IsolateClient _gqlClient;
 
   late final _authLink = FreshLink.oAuth2(
     tokenStorage: InMemoryTokenStorage(),
@@ -53,13 +57,11 @@ class TenturaApi {
   Stream<AuthenticationStatus> get authenticationStatus =>
       _authLink.authenticationStatus;
 
-  Future<TenturaApi> init({
-    String? storagePath,
-  }) async {
-    _gqlClient = await buildGqlClient(
-      authLink: _authLink,
-      serverName: serverName,
+  Future<TenturaApi> init() async {
+    _gqlClient = await buildClient(
       storagePath: storagePath,
+      serverName: serverName,
+      getToken: _getToken,
     );
     return this;
   }
@@ -77,8 +79,8 @@ class TenturaApi {
   ]) =>
       _gqlClient.request(request, forward);
 
-  Future<void> addRequest(OperationRequest<dynamic, dynamic> request) async =>
-      _gqlClient.requestController.add(request);
+  Future<void> addRequest(OperationRequest<dynamic, dynamic> request) =>
+      _gqlClient.addRequestToRequestController(request);
 
   Future<String> signIn({
     required String seed,
@@ -116,19 +118,19 @@ class TenturaApi {
   // TBD: invalidate jwt on remote server also
   Future<void> signOut() async {
     _userId = '';
-    _gqlClient.cache.clear();
     await _authLink.clearToken();
+    await _gqlClient.clearCache();
   }
 
   // TBD: remove account on remote server
   Future<void> delete() async {
     _userId = '';
-    _gqlClient.cache.clear();
     await _authLink.clearToken();
+    await _gqlClient.clearCache();
   }
 
   Future<void> putAvatarImage(Uint8List image) async => _imageService.putAvatar(
-        token: await _authLink.token.then((e) => e?.accessToken ?? ''),
+        token: await _getToken() ?? '',
         userId: userId,
         image: image,
       );
@@ -138,9 +140,11 @@ class TenturaApi {
     required String beaconId,
   }) async =>
       _imageService.putBeacon(
-        token: await _authLink.token.then((e) => e?.accessToken ?? ''),
+        token: await _getToken() ?? '',
         beaconId: beaconId,
         userId: userId,
         image: image,
       );
+
+  Future<String?> _getToken() => _authLink.token.then((e) => e?.accessToken);
 }

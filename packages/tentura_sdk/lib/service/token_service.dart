@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart';
 
-import 'exception.dart';
+import '../exception.dart';
 
 export 'package:ed25519_edwards/ed25519_edwards.dart' show KeyPair;
 
