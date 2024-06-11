@@ -17,7 +17,7 @@ dependencies:
   go_router: ^14.1.4
   collection: ^1.18.0
   built_value: ^8.9.2
-  flutter_bloc: ^8.1.5
+  flutter_bloc: ^8.1.6
   hydrated_bloc: ^9.1.5
 
   # Platform related

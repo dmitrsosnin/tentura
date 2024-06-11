@@ -6,18 +6,16 @@ import 'gql/_g/graph_fetch.req.gql.dart';
 class GraphRepository {
   static const _label = 'Graph';
 
-  GraphRepository({
-    required this.remoteApiService,
-  });
+  GraphRepository(this._remoteApiService);
 
-  final RemoteApiService remoteApiService;
+  final RemoteApiService _remoteApiService;
 
   Future<GGraphFetchData_gravityGraph> fetch({
     required String focus,
     required bool positiveOnly,
     required int limit,
   }) =>
-      remoteApiService.gqlClient
+      _remoteApiService.gqlClient
           .request(GGraphFetchReq(
             (b) => b.vars
               ..focus = focus
