@@ -12,7 +12,6 @@ dependencies:
   hive: ^2.2.3
   ferry: ^0.16.0
   gql_exec: ^1.0.0+1
-  fresh_graphql: ^0.6.0
   gql_http_link: ^1.1.0
   ed25519_edwards: ^0.3.1
   ferry_hive_store: ^0.5.2

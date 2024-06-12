@@ -11,14 +11,8 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
-  FavoritesCubit({
-    required FavoritesRepository repository,
-    required Stream<bool> hasTokenChanges,
-  })  : _repository = repository,
-        super(const FavoritesState(status: FetchStatus.isLoading)) {
-    hasTokenChanges
-        .firstWhere((e) => e)
-        .then((e) => _fetchSubscription.resume());
+  FavoritesCubit(this._repository) : super(const FavoritesState()) {
+    _fetchSubscription.resume();
   }
 
   final FavoritesRepository _repository;

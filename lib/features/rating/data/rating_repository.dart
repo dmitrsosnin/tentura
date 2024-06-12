@@ -1,7 +1,7 @@
 import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/user.dart';
 
-import '../entity/user_rating.dart';
+import '../domain/entity/user_rating.dart';
 import 'gql/_g/fetch_users_rating.req.gql.dart';
 
 class RatingRepository {

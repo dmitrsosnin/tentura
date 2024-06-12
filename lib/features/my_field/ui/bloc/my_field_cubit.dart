@@ -10,14 +10,8 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'my_field_state.dart';
 
 class MyFieldCubit extends Cubit<MyFieldState> {
-  MyFieldCubit({
-    required MyFieldRepository repository,
-    required Stream<bool> hasTokenChanges,
-  })  : _repository = repository,
-        super(const MyFieldState()) {
-    hasTokenChanges
-        .firstWhere((e) => e)
-        .then((e) => _fetchSubscription.resume());
+  MyFieldCubit(this._repository) : super(const MyFieldState()) {
+    _fetchSubscription.resume();
   }
 
   final MyFieldRepository _repository;
@@ -27,6 +21,12 @@ class MyFieldCubit extends Cubit<MyFieldState> {
     onError: (dynamic e) => emit(state.setError(e.toString())),
     cancelOnError: false,
   );
+
+  @override
+  Future<void> close() {
+    _fetchSubscription.cancel();
+    return super.close();
+  }
 
   Future<void> fetch() async {
     emit(state.setLoading());

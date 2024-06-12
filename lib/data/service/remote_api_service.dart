@@ -8,13 +8,6 @@ class RemoteApiService extends TenturaApi {
     super.jwtExpiresIn,
     super.storagePath,
   });
-
-  Stream<bool> get hasTokenChanges =>
-      authenticationStatus.map((e) => e.hasToken);
-}
-
-extension HasToken on AuthenticationStatus {
-  bool get hasToken => this == AuthenticationStatus.authenticated;
 }
 
 extension ErrorHandler<TData, TVars> on OperationResponse<TData, TVars> {

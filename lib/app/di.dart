@@ -18,83 +18,79 @@ import 'package:tentura/features/favorites/data/favorites_repository.dart';
 
 import 'app.dart';
 
-class DI extends StatelessWidget {
+class DI extends StatefulWidget {
   const DI({super.key});
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: _init(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Directionality(
-                textDirection: TextDirection.ltr,
-                child: Text(
-                  snapshot.error.toString(),
-                  style: Theme.of(context).primaryTextTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
-          final remoteApiService = snapshot.data;
-          return remoteApiService == null
-              ? Center(
-                  child: Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      'Loading...',
-                      style: Theme.of(context).primaryTextTheme.headlineMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              : MultiRepositoryProvider(
-                  providers: [
-                    RepositoryProvider(
-                      create: (context) => GeoRepository(),
-                      lazy: false,
-                    ),
-                    RepositoryProvider.value(value: remoteApiService),
-                  ],
-                  child: BlocProvider(
-                    create: (context) => AuthCubit(
-                      remoteApiService: remoteApiService,
-                    ),
-                    child: BlocSelector<AuthCubit, AuthState, String>(
-                      selector: (state) => state.currentAccount,
-                      builder: (context, userId) => MultiBlocProvider(
-                        key: ValueKey(userId),
-                        providers: [
-                          BlocProvider(
-                            create: (context) => ProfileCubit(
-                              repository: ProfileRepository(remoteApiService),
-                            ),
-                          ),
-                          BlocProvider(
-                            create: (context) => BeaconCubit(
-                              repository: BeaconRepository(remoteApiService),
-                              hasTokenChanges: remoteApiService.hasTokenChanges,
-                            ),
-                          ),
-                          BlocProvider(
-                            create: (context) => FavoritesCubit(
-                              repository: FavoritesRepository(remoteApiService),
-                              hasTokenChanges: remoteApiService.hasTokenChanges,
-                            ),
-                          ),
-                        ],
-                        child: const App(),
-                      ),
-                    ),
-                  ),
-                );
-        },
-      );
+  State<DI> createState() => _DIState();
+}
 
-  Future<RemoteApiService> _init() async {
+class _DIState extends State<DI> {
+  late final RemoteApiService _remoteApiService;
+
+  bool _isInitiating = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  @override
+  void dispose() {
+    _remoteApiService.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => _isInitiating
+      ? Center(
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(
+              'Loading...',
+              style: Theme.of(context).primaryTextTheme.headlineMedium,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        )
+      : MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider(create: (context) => GeoRepository()),
+            RepositoryProvider.value(value: _remoteApiService),
+          ],
+          child: BlocProvider(
+            create: (context) => AuthCubit(_remoteApiService),
+            child: BlocSelector<AuthCubit, AuthState, String>(
+              selector: (state) => state.currentAccount,
+              builder: (context, userId) => MultiBlocProvider(
+                key: ValueKey(userId),
+                providers: [
+                  BlocProvider(
+                    create: (context) => ProfileCubit(
+                      ProfileRepository(_remoteApiService),
+                    ),
+                  ),
+                  BlocProvider(
+                    create: (context) => BeaconCubit(
+                      BeaconRepository(_remoteApiService),
+                    ),
+                  ),
+                  BlocProvider(
+                    create: (context) => FavoritesCubit(
+                      FavoritesRepository(_remoteApiService),
+                    ),
+                  ),
+                ],
+                child: const App(),
+              ),
+            ),
+          ),
+        );
+
+  Future<void> _init() async {
     final storageDirectory = await getApplicationDocumentsDirectory();
-    final remoteApiService = RemoteApiService(
+    _remoteApiService = RemoteApiService(
       storagePath: storageDirectory.path,
       jwtExpiresIn: jwtExpiresIn,
       serverName: appLinkBase,
@@ -104,9 +100,9 @@ class DI extends StatelessWidget {
         DeviceOrientation.portraitUp,
       ]),
       HydratedBlocStorage.init(storageDirectory),
-      remoteApiService.init(),
+      _remoteApiService.init(),
     ]);
     FlutterNativeSplash.remove();
-    return remoteApiService;
+    setState(() => _isInitiating = false);
   }
 }

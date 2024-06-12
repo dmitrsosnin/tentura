@@ -12,9 +12,8 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
   BeaconViewCubit({
     required this.id,
     required this.beaconViewRepository,
-    bool fetchOnStart = true,
   }) : super(BeaconViewState.empty) {
-    if (fetchOnStart) fetch();
+    fetch();
   }
 
   final String id;

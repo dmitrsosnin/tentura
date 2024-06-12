@@ -12,14 +12,10 @@ GoRoute buildRatingRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
     GoRoute(
       path: pathRating,
       parentNavigatorKey: parentNavigatorKey,
-      builder: (context, state) {
-        final remoteApiService = context.read<RemoteApiService>();
-        return BlocProvider(
-          create: (context) => RatingCubit(
-            hasTokenChanges: remoteApiService.hasTokenChanges,
-            ratingRepository: RatingRepository(remoteApiService),
-          ),
-          child: const RatingScreen(),
-        );
-      },
+      builder: (context, state) => BlocProvider(
+        create: (context) => RatingCubit(
+          RatingRepository(context.read<RemoteApiService>()),
+        ),
+        child: const RatingScreen(),
+      ),
     );

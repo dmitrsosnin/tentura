@@ -3,21 +3,15 @@ import 'dart:async';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/rating_repository.dart';
-import '../../entity/user_rating.dart';
+import '../../domain/entity/user_rating.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'rating_state.dart';
 
 class RatingCubit extends Cubit<RatingState> {
-  RatingCubit({
-    required RatingRepository ratingRepository,
-    required Stream<bool> hasTokenChanges,
-  })  : _repository = ratingRepository,
-        super(const RatingState()) {
-    hasTokenChanges
-        .firstWhere((e) => e)
-        .then((e) => _fetchSubscription.resume());
+  RatingCubit(this._repository) : super(const RatingState()) {
+    _fetchSubscription.resume();
   }
 
   final RatingRepository _repository;

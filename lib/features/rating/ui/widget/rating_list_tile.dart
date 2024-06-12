@@ -5,7 +5,7 @@ import 'package:tentura/consts.dart';
 
 import 'package:tentura/ui/widget/avatar_image.dart';
 
-import '../../entity/user_rating.dart';
+import '../../domain/entity/user_rating.dart';
 
 class RatingListTile extends StatelessWidget {
   RatingListTile({
