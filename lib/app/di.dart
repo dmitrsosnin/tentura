@@ -44,16 +44,7 @@ class _DIState extends State<DI> {
 
   @override
   Widget build(BuildContext context) => _isInitiating
-      ? Center(
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: Text(
-              'Loading...',
-              style: Theme.of(context).primaryTextTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        )
+      ? Container()
       : MultiRepositoryProvider(
           providers: [
             RepositoryProvider(create: (context) => GeoRepository()),

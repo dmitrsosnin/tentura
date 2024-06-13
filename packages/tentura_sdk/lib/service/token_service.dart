@@ -25,8 +25,7 @@ class TokenService {
 
   KeyPair? _keyPair;
 
-  bool get hasToken =>
-      _jwt != null && _jwt!.expiresAt.isBefore(DateTime.timestamp());
+  bool _tokenLocked = false;
 
   /// Generate and set new KeyPair and returns its seed
   Future<String> setNewKeyPair() async {
@@ -41,24 +40,47 @@ class TokenService {
     });
   }
 
-  // TBD: prevent next token request if already awaiting
   Future<String> getToken() async {
-    if (!hasToken) await signIn();
+    final validTime = DateTime.timestamp().subtract(jwtExpiresIn);
+
+    if (_jwt == null || _jwt!.expiresAt.isBefore(validTime)) {
+      if (_tokenLocked) {
+        var waitFor = const Duration(milliseconds: 100);
+        while (waitFor < jwtExpiresIn) {
+          await Future<void>.delayed(waitFor);
+          if (_jwt == null) {
+            waitFor *= 2;
+          } else {
+            return _jwt!.accessToken;
+          }
+        }
+        throw TimeoutException('Timeout while refreshing token!');
+      } else {
+        await signIn();
+      }
+    }
     return _jwt!.accessToken;
   }
 
   Future<String> signIn() async {
+    _jwt = null;
+    _tokenLocked = true;
     _jwt = await _fetchJWT('user/login');
+    _tokenLocked = false;
     return _jwt!.id;
   }
 
   Future<String> signUp() async {
+    _jwt = null;
+    _tokenLocked = true;
     _jwt = await _fetchJWT('user/register');
+    _tokenLocked = false;
     return _jwt!.id;
   }
 
   // TBD: invalidate jwt on remote server also
   Future<void> signOut() async {
+    _tokenLocked = false;
     _keyPair = null;
     _jwt = null;
   }
