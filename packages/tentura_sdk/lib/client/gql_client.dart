@@ -12,13 +12,12 @@ Future<Client> buildClient(
   SendPort? sendPort,
 ) async {
   final receivePort = ReceivePort();
-  final tokenStream = receivePort.asBroadcastStream();
   sendPort!.send(InitMessage(receivePort.sendPort));
+  final tokenStream = receivePort.asBroadcastStream();
 
   final link = Link.concat(
     AuthLink(() async {
       sendPort.send(const GetTokenMessage());
-
       return await tokenStream.where((e) => e is String?).first as String?;
     }),
     HttpLink('https://${params.serverName}/v1/graphql'),
