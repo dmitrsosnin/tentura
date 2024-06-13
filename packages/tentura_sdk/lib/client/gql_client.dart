@@ -5,23 +5,31 @@ import 'package:gql_http_link/gql_http_link.dart';
 import 'package:ferry_hive_store/ferry_hive_store.dart';
 
 import 'auth_link.dart';
+import 'message.dart';
 
 Future<Client> buildClient(
   ({String serverName, String? storagePath}) params,
   SendPort? sendPort,
 ) async {
+  final receivePort = ReceivePort();
+  final tokenStream = receivePort.asBroadcastStream();
+  sendPort!.send(InitMessage(receivePort.sendPort));
+
   final link = Link.concat(
     AuthLink(() async {
-      final port = ReceivePort();
-      sendPort!.send(GetTokenMessage(port.sendPort));
-      return await port.first.whenComplete(port.close) as String?;
+      sendPort.send(const GetTokenMessage());
+
+      return await tokenStream.where((e) => e is String?).first as String?;
     }),
     HttpLink('https://${params.serverName}/v1/graphql'),
   );
 
-  if (params.storagePath == null) return Client(link: link);
+  if (params.storagePath == null) {
+    return Client(link: link);
+  } else {
+    Hive.init(params.storagePath);
+  }
 
-  Hive.init(params.storagePath);
   return Client(
     link: link,
     cache: Cache(
@@ -33,10 +41,4 @@ Future<Client> buildClient(
       OperationType.query: FetchPolicy.NoCache,
     },
   );
-}
-
-class GetTokenMessage {
-  const GetTokenMessage(this.replyPort);
-
-  final SendPort replyPort;
 }

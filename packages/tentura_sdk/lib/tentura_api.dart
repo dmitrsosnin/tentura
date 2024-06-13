@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:ferry/ferry.dart';
 import 'package:ferry/ferry_isolate.dart';
 
 import 'client/gql_client.dart';
+import 'client/message.dart';
 import 'service/image_service.dart';
 import 'service/token_service.dart';
 
@@ -27,6 +29,7 @@ class TenturaApi {
   final TokenService _tokenService;
   final ImageService _imageService;
 
+  late final SendPort _replyPort;
   late final IsolateClient _gqlClient;
 
   String _userId = '';
@@ -40,10 +43,11 @@ class TenturaApi {
         serverName: serverName,
         storagePath: storagePath,
       ),
-      messageHandler: (message) async {
-        if (message is GetTokenMessage) {
-          message.replyPort.send(await _tokenService.getToken());
-        }
+      messageHandler: (message) async => switch (message) {
+        final InitMessage m => _replyPort = m.replyPort,
+        final GetTokenMessage _ =>
+          _replyPort.send(await _tokenService.getToken()),
+        _ => null,
       },
     );
   }

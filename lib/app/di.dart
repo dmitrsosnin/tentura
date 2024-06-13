@@ -47,8 +47,12 @@ class _DIState extends State<DI> {
       ? Container()
       : MultiRepositoryProvider(
           providers: [
-            RepositoryProvider(create: (context) => GeoRepository()),
-            RepositoryProvider.value(value: _remoteApiService),
+            RepositoryProvider(
+              create: (context) => GeoRepository(),
+            ),
+            RepositoryProvider.value(
+              value: _remoteApiService,
+            ),
           ],
           child: BlocProvider(
             create: (context) => AuthCubit(_remoteApiService),
