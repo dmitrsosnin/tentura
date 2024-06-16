@@ -104,13 +104,11 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut({bool willEmit = true}) async {
     try {
       await _remoteApiService.signOut();
     } finally {
-      emit(AuthState(
-        accounts: state.accounts,
-      ));
+      if (willEmit) emit(AuthState(accounts: state.accounts));
     }
   }
 

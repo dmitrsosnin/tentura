@@ -19,7 +19,9 @@ import 'package:tentura/features/rating/rating_route.dart';
 import 'package:tentura/features/graph/graph_route.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  App({super.key});
+
+  final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
@@ -37,7 +39,9 @@ class App extends StatelessWidget {
           ],
           errorBuilder: (context, state) => const ErrorScreen(),
           redirect: (context, state) =>
-              context.read<AuthCubit>().isAuthenticated ? null : pathAuthLogin,
+              context.mounted && context.read<AuthCubit>().isAuthenticated
+                  ? null
+                  : pathAuthLogin,
           routes: [
             buildHomeRoute(parentNavigatorKey: _rootNavigatorKey),
             buildAuthLoginRoute(parentNavigatorKey: _rootNavigatorKey),
@@ -50,7 +54,4 @@ class App extends StatelessWidget {
           ],
         ),
       );
-
-  static final _rootNavigatorKey =
-      GlobalKey<NavigatorState>(debugLabel: 'root');
 }

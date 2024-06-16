@@ -84,7 +84,7 @@ class _DIState extends State<DI> {
                     ),
                   ),
                 ],
-                child: const App(),
+                child: App(),
               ),
             ),
           ),

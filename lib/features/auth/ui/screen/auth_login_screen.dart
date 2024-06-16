@@ -72,7 +72,7 @@ class AuthLoginScreen extends StatelessWidget {
                     itemBuilder: (context, i) => AccountListTile(
                       userId: accounts[i],
                     ),
-                    separatorBuilder: (context, index) => const Divider(),
+                    separatorBuilder: (context, i) => const Divider(),
                   ),
 
                 // Recover from seed (QR)
