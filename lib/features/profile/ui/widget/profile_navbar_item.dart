@@ -15,26 +15,52 @@ class ProfileNavBarItem extends StatelessWidget {
         builder: (context, state) {
           final menuController = MenuController();
           final authCubit = context.read<AuthCubit>();
+          final ids = authCubit.state.accounts.keys;
           return MenuAnchor(
             controller: menuController,
             menuChildren: [
-              for (final id in authCubit.state.accounts.keys)
+              for (final id in ids)
                 BlocProvider(
                   create: (context) => ProfileCubit.dummy(userId: id),
                   child: BlocBuilder<ProfileCubit, ProfileState>(
-                    builder: (context, state) => ListTile(
-                      leading: AvatarImage(
-                        userId: state.user.imageId,
-                        size: 40,
-                      ),
-                      title: Text(state.user.title),
-                      onTap: () => authCubit.signIn(state.user.id),
-                    ),
+                    builder: (context, state) {
+                      final isMe = authCubit.checkIfIsMe(state.user.id);
+                      return GestureDetector(
+                        onTap: isMe
+                            ? menuController.close
+                            : () => authCubit.signIn(state.user.id),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: AvatarImage(
+                                userId: state.user.imageId,
+                                size: 40,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                state.user.title,
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (isMe)
+                              const Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Icon(Icons.check),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
             ],
             child: GestureDetector(
-              onLongPress: menuController.open,
+              onLongPress: ids.length > 1 ? menuController.open : null,
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: AvatarImage(
