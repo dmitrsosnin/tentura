@@ -13,6 +13,7 @@ import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/data/beacon_repository.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 import 'package:tentura/features/profile/data/profile_repository.dart';
+import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 import 'package:tentura/features/my_field/ui/bloc/my_field_cubit.dart';
 import 'package:tentura/features/my_field/data/my_field_repository.dart';
 import 'package:tentura/features/favorites/ui/bloc/favorites_cubit.dart';
@@ -56,8 +57,15 @@ class _DIState extends State<DI> {
               value: _remoteApiService,
             ),
           ],
-          child: BlocProvider(
-            create: (context) => AuthCubit(_remoteApiService),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => SettingsCubit(),
+              ),
+              BlocProvider(
+                create: (context) => AuthCubit(_remoteApiService),
+              ),
+            ],
             child: BlocSelector<AuthCubit, AuthState, String>(
               selector: (state) => state.currentAccount,
               builder: (context, userId) => MultiBlocProvider(

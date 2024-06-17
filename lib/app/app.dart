@@ -13,6 +13,7 @@ import 'package:tentura/features/auth/auth_login_route.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/profile/profile_edit_route.dart';
 import 'package:tentura/features/profile_view/profile_view_route.dart';
+import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 import 'package:tentura/features/beacon_view/beacon_view_route.dart';
 import 'package:tentura/features/beacon/beacon_create_route.dart';
 import 'package:tentura/features/rating/rating_route.dart';
@@ -24,34 +25,38 @@ class App extends StatelessWidget {
   final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-        color: const Color(0x00B77EFF),
-        debugShowCheckedModeBanner: false,
-        darkTheme: themeDark,
-        theme: themeLight,
-        title: 'Tentura',
-        routerConfig: GoRouter(
-          debugLogDiagnostics: kDebugMode,
-          initialLocation: pathHomeProfile,
-          navigatorKey: _rootNavigatorKey,
-          observers: [
-            SentryNavigatorObserver(),
-          ],
-          errorBuilder: (context, state) => const ErrorScreen(),
-          redirect: (context, state) =>
-              context.mounted && context.read<AuthCubit>().isAuthenticated
-                  ? null
-                  : pathAuthLogin,
-          routes: [
-            buildHomeRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildAuthLoginRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildProfileViewRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildProfileEditRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildBeaconCreateRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildBeaconViewRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildRatingRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildGraphRoute(parentNavigatorKey: _rootNavigatorKey),
-          ],
+  Widget build(BuildContext context) =>
+      BlocBuilder<SettingsCubit, SettingsState>(
+        builder: (context, state) => MaterialApp.router(
+          color: const Color(0x00B77EFF),
+          title: 'Tentura',
+          theme: themeLight,
+          darkTheme: themeDark,
+          themeMode: state.themeMode,
+          debugShowCheckedModeBanner: false,
+          routerConfig: GoRouter(
+            debugLogDiagnostics: kDebugMode,
+            initialLocation: pathHomeProfile,
+            navigatorKey: _rootNavigatorKey,
+            observers: [
+              SentryNavigatorObserver(),
+            ],
+            errorBuilder: (context, state) => const ErrorScreen(),
+            redirect: (context, state) =>
+                context.mounted && context.read<AuthCubit>().isAuthenticated
+                    ? null
+                    : pathAuthLogin,
+            routes: [
+              buildHomeRoute(parentNavigatorKey: _rootNavigatorKey),
+              buildAuthLoginRoute(parentNavigatorKey: _rootNavigatorKey),
+              buildProfileViewRoute(parentNavigatorKey: _rootNavigatorKey),
+              buildProfileEditRoute(parentNavigatorKey: _rootNavigatorKey),
+              buildBeaconCreateRoute(parentNavigatorKey: _rootNavigatorKey),
+              buildBeaconViewRoute(parentNavigatorKey: _rootNavigatorKey),
+              buildRatingRoute(parentNavigatorKey: _rootNavigatorKey),
+              buildGraphRoute(parentNavigatorKey: _rootNavigatorKey),
+            ],
+          ),
         ),
       );
 }
