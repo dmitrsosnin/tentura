@@ -27,7 +27,7 @@ class ProfileMineMenuButton extends StatelessWidget {
           child: const Text('Show seed'),
           onTap: () => ShowSeedDialog.show(
             context,
-            userId: authCubit.id,
+            userId: authCubit.state.currentAccount,
           ),
         ),
         const PopupMenuDivider(),
