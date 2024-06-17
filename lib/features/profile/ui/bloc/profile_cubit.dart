@@ -24,6 +24,7 @@ class ProfileCubit extends Cubit<ProfileState>
         _pickImageCase = pickImageCase,
         super(ProfileState(user: User.empty)) {
     hydrate();
+    fetch();
   }
 
   ProfileCubit.dummy({
