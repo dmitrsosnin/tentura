@@ -16,7 +16,7 @@ class ProfileRepository {
 
   String get userId => _remoteApiService.userId;
 
-  Future<User> fetch() => _remoteApiService
+  Future<User> fetch() => _remoteApiService.gqlClient
       .request(GUserFetchByIdReq((b) => b.vars.id = _remoteApiService.userId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) => r.dataOrThrow(label: _label).user_by_pk! as User);
@@ -26,7 +26,7 @@ class ProfileRepository {
     required String description,
     required bool hasPicture,
   }) =>
-      _remoteApiService
+      _remoteApiService.gqlClient
           .request(GUserUpdateReq((b) => b.vars
             ..id = _remoteApiService.userId
             ..title = title
@@ -35,7 +35,7 @@ class ProfileRepository {
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then((r) => r.dataOrThrow(label: _label).update_user_by_pk! as User);
 
-  Future<void> delete() => _remoteApiService
+  Future<void> delete() => _remoteApiService.gqlClient
       .request(GUserDeleteByIdReq((b) => b.vars.id = _remoteApiService.userId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) => r.dataOrThrow(label: _label));

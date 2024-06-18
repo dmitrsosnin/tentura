@@ -38,7 +38,7 @@ class BeaconCubit extends Cubit<BeaconState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    return _repository.refetch();
+    return _repository.fetch();
   }
 
   Future<void> create({
