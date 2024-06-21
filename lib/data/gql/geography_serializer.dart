@@ -1,7 +1,6 @@
 import 'package:latlong2/latlong.dart';
 import 'package:built_value/serializer.dart';
 
-// TBD: use Coordinates
 class GeographySerializer implements PrimitiveSerializer<LatLng> {
   @override
   LatLng deserialize(

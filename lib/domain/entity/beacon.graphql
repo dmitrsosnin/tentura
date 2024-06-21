@@ -8,7 +8,8 @@ fragment BeaconFields on beacon {
   updated_at
   is_pinned
   enabled
-  place
+  lat
+  long
   timerange
   has_picture
   comments_count

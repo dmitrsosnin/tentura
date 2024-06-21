@@ -71,11 +71,11 @@ class BeaconInfo extends StatelessWidget {
             ),
 
           // Beacon Geolocation
-          if (beacon.place != null)
+          if (beacon.lat != null && beacon.long != null)
             PlaceNameText(
               coords: (
-                lat: beacon.place!.latitude,
-                long: beacon.place!.longitude,
+                lat: double.parse(beacon.lat!.value),
+                long: double.parse(beacon.long!.value),
               ),
               style: textTheme.bodyLarge,
             ),
