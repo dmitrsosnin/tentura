@@ -1,0 +1,11 @@
+# import '/domain/entity/user.graphql'
+# import '/domain/entity/beacon.graphql'
+
+query ProfileFetchByUserId($user_id: String!) {
+  user_by_pk(id: $user_id) {
+    ...UserFields
+    beacons(where: {_and: {user_id: {_eq: $user_id}, enabled: {_eq: true}}}, order_by: {created_at: desc}) {
+      ...BeaconFields
+    }
+  }
+}

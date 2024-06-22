@@ -1,0 +1,9 @@
+# import '/domain/entity/beacon.graphql'
+
+query BeaconFetchPinnedByUserId($user_id: String!) {
+  beacon_pinned(where: {user_id: {_eq: $user_id}}) {
+    beacon {
+      ...BeaconFields
+    }
+  }
+}

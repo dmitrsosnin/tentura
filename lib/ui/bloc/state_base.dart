@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
-export 'package:hydrated_bloc/hydrated_bloc.dart';
 
 enum FetchStatus { isLoading, isSuccess, isFailure }
 
@@ -11,7 +10,7 @@ extension FetchStatusX on FetchStatus {
   bool get isFailure => this == FetchStatus.isFailure;
 }
 
-base class StateBase extends Equatable {
+abstract base class StateBase with EquatableMixin {
   const StateBase({
     this.status = FetchStatus.isSuccess,
     this.error,
@@ -25,4 +24,24 @@ base class StateBase extends Equatable {
         status,
         error,
       ];
+
+  bool get isLoading => status.isLoading;
+  bool get isNotLoading => !status.isLoading;
+
+  bool get hasError => error != null || status.isFailure;
+  bool get hasNoError => error == null && status.isSuccess;
+
+  StateBase setError(Object error) => copyWith(
+        status: FetchStatus.isFailure,
+        error: error,
+      );
+
+  StateBase setLoading() => copyWith(
+        status: FetchStatus.isLoading,
+      );
+
+  StateBase copyWith({
+    FetchStatus? status,
+    Object? error,
+  });
 }

@@ -1,7 +1,0 @@
-# import '/data/gql/beacon/_fragments.graphql'
-
-mutation BeaconUpdateById($id: String!, $enabled: Boolean!) {
-  update_beacon_by_pk(pk_columns: {id: $id}, _set: {enabled: $enabled}) {
-    ...BeaconFields
-  }
-}

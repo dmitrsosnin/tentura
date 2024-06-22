@@ -1,13 +1,22 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:tentura/app/router.dart';
-import 'package:tentura/data/geolocation_repository.dart';
+import 'package:tentura/data/repository/geo_repository.dart';
 
 class ChooseLocationDialog extends StatefulWidget {
-  final LatLng? center;
+  static Future<Location?> show(
+    BuildContext context, {
+    Coordinates? center,
+  }) =>
+      showDialog<Location>(
+        context: context,
+        builder: (_) => ChooseLocationDialog(center: center),
+      );
+
+  final Coordinates? center;
 
   const ChooseLocationDialog({
     this.center,
@@ -20,6 +29,8 @@ class ChooseLocationDialog extends StatefulWidget {
 
 class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
   final _mapController = MapController();
+
+  late final _geoRepository = context.read<GeoRepository>();
 
   @override
   void dispose() {
@@ -38,20 +49,29 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
         body: FlutterMap(
           mapController: _mapController,
           options: MapOptions(
-            initialZoom: widget.center == null ? 4 : 10,
             maxZoom: 12,
-            initialCenter: widget.center ?? const LatLng(0, 0),
+            initialZoom: widget.center == null ? 4 : 10,
+            initialCenter: LatLng(
+              widget.center?.lat ?? 0,
+              widget.center?.long ?? 0,
+            ),
             interactionOptions: const InteractionOptions(
               flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
             ),
-            onTap: (tapPosition, point) => context.pop(point),
-            onMapReady: () =>
-                GetIt.I<GeolocationRepository>().getMyCoords().then(
-              (value) {
-                if (value == null) return;
-                _mapController.move(value, _mapController.camera.zoom);
-              },
-            ),
+            onTap: (tapPosition, point) async {
+              final coords = (lat: point.latitude, long: point.longitude);
+              final place = await _geoRepository.getPlaceNameByCoords(coords);
+              if (context.mounted) context.pop((coords: coords, place: place));
+            },
+            onMapReady: () {
+              final center = widget.center ?? _geoRepository.myCoordinates;
+              if (center != null) {
+                _mapController.move(
+                  LatLng(center.lat, center.long),
+                  _mapController.camera.zoom,
+                );
+              }
+            },
           ),
           children: [
             TileLayer(

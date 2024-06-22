@@ -66,7 +66,7 @@ class GradientStack extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: Theme.of(context).colorScheme.background,
+                  color: Theme.of(context).colorScheme.surface,
                   width: borderWidth ?? height / 3,
                 ),
               ),

@@ -1,0 +1,11 @@
+# import '/domain/entity/comment.graphql'
+
+query CommentFetchByBeaconId($beacon_id: String!) {
+  comment(where: {beacon_id: {_eq: $beacon_id}}) {
+    ...CommentFields
+    author {
+      title
+      has_picture
+    }
+  }
+}

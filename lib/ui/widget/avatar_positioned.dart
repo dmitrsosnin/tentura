@@ -20,7 +20,7 @@ class AvatarPositioned extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(
               width: 8,
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.surface,
             ),
             shape: BoxShape.circle,
           ),

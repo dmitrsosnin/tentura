@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:tentura/data/repository/image_repository.dart';
+import 'package:tentura/consts.dart';
 
 class BeaconImage extends StatelessWidget {
-  static const _placeholderPath = 'assets/images/image-placeholder.jpg';
+  static String getBeaconUrl({
+    required String userId,
+    required String beaconId,
+    String serverName = appLinkBase,
+  }) =>
+      'https://$serverName/images/$userId/$beaconId.jpg';
 
+  const BeaconImage({
+    required this.authorId,
+    this.beaconId = '',
+    this.boxFit = BoxFit.cover,
+    this.serverName = appLinkBase,
+    this.height,
+    this.width,
+    super.key,
+  });
+
+  final String serverName;
   final String beaconId;
   final String authorId;
   final double? height;
   final double? width;
   final BoxFit boxFit;
 
-  const BeaconImage({
-    required this.authorId,
-    this.beaconId = '',
-    this.height,
-    this.width,
-    this.boxFit = BoxFit.cover,
-    super.key,
-  });
-
   @override
   Widget build(BuildContext context) {
     final placeholder = Image.asset(
-      _placeholderPath,
+      'assets/images/image-placeholder.jpg',
       height: height,
       width: width,
       fit: boxFit,
@@ -37,7 +44,11 @@ class BeaconImage extends StatelessWidget {
             filterQuality: FilterQuality.high,
             placeholder: (context, url) => placeholder,
             errorWidget: (context, url, error) => placeholder,
-            imageUrl: ImageRepository.getBeaconUrl(authorId, beaconId),
+            imageUrl: getBeaconUrl(
+              serverName: serverName,
+              userId: authorId,
+              beaconId: beaconId,
+            ),
           );
   }
 }

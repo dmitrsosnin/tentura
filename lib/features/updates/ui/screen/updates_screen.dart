@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+
+import 'package:tentura/ui/utils/ui_utils.dart';
+
+class UpdatesScreen extends StatelessWidget {
+  const UpdatesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          actions: [
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Not implemented yet...'),
+                  behavior: SnackBarBehavior.floating,
+                  margin: paddingMediumA,
+                  showCloseIcon: true,
+                ));
+              },
+              child: const Text('Mark all as read'),
+            )
+          ],
+        ),
+        body: Center(
+          child: Text(
+            'Nothing here yet',
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+        ),
+      );
+}

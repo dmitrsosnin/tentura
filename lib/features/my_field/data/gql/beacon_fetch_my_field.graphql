@@ -1,0 +1,9 @@
+# import '/domain/entity/beacon.graphql'
+
+query BeaconFetchMyField {
+  scores(where: {score: {gt: 0}, node: {like: "B"}}, hidePersonal: true) {
+    beacon {
+      ...BeaconFields
+    }
+  }
+}

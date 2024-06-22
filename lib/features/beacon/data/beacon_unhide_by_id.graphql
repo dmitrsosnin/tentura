@@ -1,5 +1,0 @@
-mutation BeaconUnhideById($user_id: String!, $beacon_id: String!) {
-  delete_beacon_hidden_by_pk(beacon_id: $beacon_id, user_id: $user_id) {
-    beacon_id
-  }
-}
