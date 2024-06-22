@@ -1,18 +1,18 @@
-import 'dart:io';
 import 'dart:async';
+import 'dart:isolate';
 import 'dart:typed_data';
-import 'package:ferry/ferry.dart';
-import 'package:fresh_graphql/fresh_graphql.dart';
+import 'package:ferry/ferry_isolate.dart';
 
-import 'gql_client.dart';
-import 'image_service.dart';
-import 'token_service.dart';
+import 'client/gql_client.dart';
+import 'client/message.dart';
+import 'service/image_service.dart';
+import 'service/token_service.dart';
 
-//TBD: - cache authRequestToken
 class TenturaApi {
   TenturaApi({
     required this.serverName,
-    Duration jwtExpiresIn = const Duration(minutes: 1),
+    this.jwtExpiresIn = const Duration(minutes: 1),
+    this.storagePath = '',
   })  : _imageService = ImageService(
           serverName: serverName,
         ),
@@ -22,55 +22,38 @@ class TenturaApi {
         );
 
   final String serverName;
+  final String storagePath;
+  final Duration jwtExpiresIn;
 
-  late final Client gqlClient;
-
-  late final _authLink = FreshLink.oAuth2(
-    tokenStorage: InMemoryTokenStorage(),
-    tokenHeader: (token) => {
-      'Authorization': 'Bearer ${token!.accessToken}',
-    },
-    refreshToken: (token, client) async {
-      final jwt = await _tokenService.fetchJWT(
-        keyPair: _keyPair,
-        path: 'user/login',
-      );
-      return OAuth2Token(
-        accessToken: jwt.accessToken,
-        expiresIn: jwt.expiresIn,
-      );
-    },
-    shouldRefresh: (response) => response.errors != null,
-  );
+  late final IsolateClient gqlClient;
 
   final TokenService _tokenService;
   final ImageService _imageService;
 
-  String _userId = '';
+  late final SendPort _replyPort;
 
-  late KeyPair _keyPair;
+  String _userId = '';
 
   String get userId => _userId;
 
-  Stream<AuthenticationStatus> get authenticationStatus =>
-      _authLink.authenticationStatus;
-
-  Future<String> get token => _authLink.token.then((e) => e?.accessToken ?? '');
-
-  Future<TenturaApi> init({
-    Directory? storageDirectory,
-  }) async {
-    gqlClient = await buildGqlClient(
-      authLink: _authLink,
-      serverName: serverName,
-      storageDirectory: storageDirectory,
+  Future<void> init() async {
+    gqlClient = await IsolateClient.create(
+      buildClient,
+      params: (
+        serverName: serverName,
+        storagePath: storagePath,
+      ),
+      messageHandler: (message) async => switch (message) {
+        final InitMessage m => _replyPort = m.replyPort,
+        final GetTokenMessage _ =>
+          _replyPort.send(await _tokenService.getToken()),
+        _ => null,
+      },
     );
-    return this;
   }
 
   Future<void> dispose() async {
     await gqlClient.dispose();
-    await _authLink.dispose();
   }
 
   Future<String> signIn({
@@ -78,48 +61,24 @@ class TenturaApi {
     String? prematureUserId,
   }) async {
     if (prematureUserId != null) _userId = prematureUserId;
-    _keyPair = await _tokenService.keyPairFromSeed(seed);
-    final jwt = await _tokenService.fetchJWT(
-      keyPair: _keyPair,
-      path: 'user/login',
-    );
-    await _authLink.setToken(OAuth2Token(
-      accessToken: jwt.accessToken,
-      expiresIn: jwt.expiresIn,
-    ));
-    return _userId = jwt.id;
+    await _tokenService.setKeyPairFromSeed(seed);
+    return _userId = await _tokenService.signIn();
   }
 
   Future<({String id, String seed})> signUp() async {
-    _keyPair = await _tokenService.generateKeyPair();
-    final jwt = await _tokenService.fetchJWT(
-      keyPair: _keyPair,
-      path: 'user/register',
-    );
-    await _authLink.setToken(OAuth2Token(
-      accessToken: jwt.accessToken,
-      expiresIn: jwt.expiresIn,
-    ));
-    return (
-      id: _userId = jwt.id,
-      seed: await _tokenService.seedFromKeyPair(_keyPair),
-    );
+    final seed = await _tokenService.setNewKeyPair();
+    _userId = await _tokenService.signUp();
+    return (id: _userId, seed: seed);
   }
 
-  // TBD: invalidate jwt on remote server also
   Future<void> signOut() async {
     _userId = '';
-    await _authLink.clearToken();
-  }
-
-  // TBD: remove account on remote server
-  Future<void> delete() async {
-    _userId = '';
-    await _authLink.clearToken();
+    await _tokenService.signOut();
+    await gqlClient.clearCache();
   }
 
   Future<void> putAvatarImage(Uint8List image) async => _imageService.putAvatar(
-        token: await token,
+        token: await _tokenService.getToken(),
         userId: userId,
         image: image,
       );
@@ -129,7 +88,7 @@ class TenturaApi {
     required String beaconId,
   }) async =>
       _imageService.putBeacon(
-        token: await token,
+        token: await _tokenService.getToken(),
         beaconId: beaconId,
         userId: userId,
         image: image,

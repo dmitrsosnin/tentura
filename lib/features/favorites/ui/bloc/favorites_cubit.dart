@@ -11,13 +11,8 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
-  FavoritesCubit({
-    required FavoritesRepository repository,
-  })  : _repository = repository,
-        super(const FavoritesState(status: FetchStatus.isLoading)) {
-    _repository.authenticationStatus
-        .firstWhere((e) => e)
-        .then((e) => _fetchSubscription.resume());
+  FavoritesCubit(this._repository) : super(const FavoritesState()) {
+    _fetchSubscription.resume();
   }
 
   final FavoritesRepository _repository;
@@ -36,7 +31,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    _repository.refetch();
+    return _repository.fetch();
   }
 
   Future<Beacon> pin(String beaconId) async {

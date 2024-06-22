@@ -34,12 +34,12 @@ class _CommentVoteControlState extends State<CommentVoteControl> {
           children: [
             IconButton(
               icon: const Icon(Icons.thumb_up_outlined),
-              onPressed: () => _updateVote(_likeAmount++),
+              onPressed: () => _updateVote(1),
             ),
             Text(_likeAmount.toString()),
             IconButton(
               icon: const Icon(Icons.thumb_down_outlined),
-              onPressed: () => _updateVote(_likeAmount--),
+              onPressed: () => _updateVote(-1),
             ),
           ],
         ),

@@ -17,13 +17,20 @@ part 'graph_state.dart';
 
 class GraphCubit extends Cubit<GraphState> {
   GraphCubit({
-    required this.id,
+    required User me,
     required this.graphRepository,
-    bool fetchOnCreate = true,
-    String focus = '',
-  }) : super(GraphState(focus: focus)) {
-    _fetchLimits = {super.state.focus: 5};
-    if (fetchOnCreate) fetch(focus);
+    String? focus,
+  })  : _egoNode = UserNode(
+          id: me.id,
+          label: 'Me',
+          pinned: true,
+          hasImage: me.has_picture,
+          size: 80,
+        ),
+        super(GraphState(focus: focus ?? '')) {
+    graphController.mutate((m) => m.addNode(_egoNode));
+    _fetchLimits[super.state.focus] = 5;
+    _fetch(state.focus);
   }
 
   final GraphRepository graphRepository;
@@ -31,22 +38,12 @@ class GraphCubit extends Cubit<GraphState> {
   final graphController =
       GraphController<NodeDetails, EdgeDetails<NodeDetails>>();
 
-  final String id;
+  final UserNode _egoNode;
 
   final _users = <String, User>{};
   final _beacons = <String, Beacon>{};
   final _comments = <String, Comment>{};
-
-  late final Map<String, int> _fetchLimits;
-
-  late final _defaultEgo = UserNode(
-    id: id,
-    label: 'Me',
-    pinned: true,
-    size: 80,
-  );
-
-  late NodeDetails _egoNode = _defaultEgo;
+  final _fetchLimits = <String, int>{};
 
   @override
   Future<void> close() {
@@ -57,12 +54,14 @@ class GraphCubit extends Cubit<GraphState> {
   void jumpToEgo() => graphController.jumpToNode(_egoNode);
 
   void togglePositiveOnly() {
-    graphController.clear();
+    graphController
+      ..clear()
+      ..mutate((m) => m.addNode(_egoNode));
     emit(state.copyWith(
       focus: '',
       positiveOnly: !state.positiveOnly,
     ));
-    fetch(state.focus);
+    _fetch(state.focus);
   }
 
   void setFocus(NodeDetails node) {
@@ -70,22 +69,20 @@ class GraphCubit extends Cubit<GraphState> {
     graphController
       ..setPinned(node, true)
       ..jumpToNode(node);
-    fetch(node.id);
+    _fetch(node.id);
   }
 
-  Future<void> fetch(String focus) async {
-    final limit = (_fetchLimits[focus] ?? 0) + 3;
+  Future<void> _fetch(String focus) async {
+    final limit = (_fetchLimits[focus] ?? 0) + 5;
     _fetchLimits[focus] = limit;
     try {
-      await _fetch(focus, limit);
+      await _update(focus, limit);
     } catch (e) {
-      emit(state.copyWith(
-        error: 'No data or got error',
-      ));
+      emit(state.copyWith(error: e));
     }
   }
 
-  Future<void> _fetch(String focus, int limit) async {
+  Future<void> _update(String focus, int limit) async {
     final graph = await graphRepository.fetch(
       focus: focus,
       limit: limit,
@@ -114,15 +111,6 @@ class GraphCubit extends Cubit<GraphState> {
 
     // update graph
     graphController.mutate((mutator) {
-      _egoNode = _buildNodeDetails(
-            node: id,
-            pinned: true,
-            size: 80,
-          ) ??
-          _defaultEgo;
-      if (!mutator.controller.nodes.contains(_egoNode)) {
-        mutator.addNode(_egoNode);
-      }
       for (final e in graph.edges) {
         if (state.positiveOnly && e!.weight < 0) continue;
         final src = _buildNodeDetails(node: e!.src);
@@ -146,7 +134,7 @@ class GraphCubit extends Cubit<GraphState> {
     });
   }
 
-  /// return null if noy in cache
+  /// return null if not in cache
   NodeDetails? _buildNodeDetails({
     required String node,
     double size = 40,

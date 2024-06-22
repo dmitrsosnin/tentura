@@ -12,9 +12,8 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
   ProfileViewCubit({
     required this.id,
     required this.profileViewRepository,
-    bool fetchOnStart = true,
   }) : super(ProfileViewState.empty) {
-    if (fetchOnStart) fetch();
+    fetch();
   }
 
   final String id;

@@ -17,14 +17,14 @@ part 'profile_state.dart';
 //
 class ProfileCubit extends Cubit<ProfileState>
     with HydratedMixin<ProfileState> {
-  ProfileCubit({
-    required ProfileRepository repository,
+  ProfileCubit(
+    this._repository, {
     PickImageCase pickImageCase = const PickImageCase(),
-  })  : id = repository.userId,
+  })  : id = _repository.userId,
         _pickImageCase = pickImageCase,
-        _repository = repository,
         super(ProfileState(user: User.empty)) {
     hydrate();
+    fetch();
   }
 
   ProfileCubit.dummy({

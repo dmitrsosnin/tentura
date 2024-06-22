@@ -3,8 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
-
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 
 import 'data/graph_repository.dart';
 import 'ui/bloc/graph_cubit.dart';
@@ -16,11 +15,9 @@ GoRoute buildGraphRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
       parentNavigatorKey: parentNavigatorKey,
       builder: (context, state) => BlocProvider(
         create: (context) => GraphCubit(
-          id: context.read<AuthCubit>().state.currentAccount,
-          focus: state.uri.queryParameters['focus']!,
-          graphRepository: GraphRepository(
-            remoteApiService: context.read<RemoteApiService>(),
-          ),
+          focus: state.uri.queryParameters['focus'],
+          me: context.read<ProfileCubit>().state.user,
+          graphRepository: GraphRepository(context.read<RemoteApiService>()),
         ),
         child: const GraphScreen(),
       ),

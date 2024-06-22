@@ -1,54 +1,59 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tentura/consts.dart';
 
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
+
+import '../../domain/entity/user_rating.dart';
 
 class RatingListTile extends StatelessWidget {
   RatingListTile({
-    required this.user,
-    required this.egoScore,
-    required this.userScore,
+    required this.userRating,
     this.height = 40,
     this.ratio = 2.5,
-    this.myAvatar,
     super.key,
   });
 
-  final Widget? myAvatar;
   final double ratio;
   final double height;
-  final double egoScore;
-  final double userScore;
-  final User user;
+  final UserRating userRating;
 
   late final _barbellSize = Size(height * ratio, height);
 
   @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: AvatarImage(userId: user.imageId, size: height),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(user.title),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: CustomPaint(
-              size: _barbellSize,
-              painter: _CustomBarbellPainter(userScore, egoScore),
-            ),
-          ),
-          if (myAvatar != null)
+  Widget build(BuildContext context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => context.push(Uri(
+          path: pathProfileView,
+          queryParameters: {'id': userRating.user.id},
+        ).toString()),
+        child: Row(
+          children: [
             Padding(
               padding: const EdgeInsets.all(8),
-              child: myAvatar,
+              child: AvatarImage(
+                userId: userRating.user.imageId,
+                size: height,
+              ),
             ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(userRating.user.title),
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: CustomPaint(
+                size: _barbellSize,
+                painter: _CustomBarbellPainter(
+                  userRating.userScore,
+                  userRating.egoScore,
+                ),
+              ),
+            ),
+          ],
+        ),
       );
 }
 

@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/data/service/remote_api_service.dart';
 
-import 'data/my_field_repository.dart';
-import 'ui/bloc/my_field_cubit.dart';
 import 'ui/screen/my_field_screen.dart';
 
 GoRoute buildMyFieldRoute({
@@ -14,10 +11,5 @@ GoRoute buildMyFieldRoute({
     GoRoute(
       path: pathHomeField,
       parentNavigatorKey: parentNavigatorKey,
-      builder: (context, state) => BlocProvider(
-        create: (context) => MyFieldCubit(
-          repository: MyFieldRepository(context.read<RemoteApiService>()),
-        ),
-        child: const MyFieldScreen(),
-      ),
+      builder: (context, state) => const MyFieldScreen(),
     );

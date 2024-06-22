@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
@@ -62,10 +61,7 @@ class AccountListTile extends StatelessWidget {
             ),
 
             // Log in
-            onTap: () async {
-              await context.read<AuthCubit>().signIn(userId);
-              if (context.mounted) context.go(pathHomeProfile);
-            },
+            onTap: () => context.read<AuthCubit>().signIn(userId),
           ),
         ),
       );

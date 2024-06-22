@@ -10,26 +10,27 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'my_field_state.dart';
 
 class MyFieldCubit extends Cubit<MyFieldState> {
-  MyFieldCubit({
-    required MyFieldRepository repository,
-  })  : _repository = repository,
-        super(const MyFieldState()) {
-    _repository.authenticationStatus.firstWhere((e) => e).then((e) => fetch());
+  MyFieldCubit(this._repository) : super(const MyFieldState()) {
+    _fetchSubscription.resume();
   }
 
   final MyFieldRepository _repository;
 
+  late final _fetchSubscription = _repository.stream.listen(
+    (e) => emit(MyFieldState(beacons: e.toList())),
+    onError: (dynamic e) => emit(state.setError(e.toString())),
+    cancelOnError: false,
+  );
+
+  @override
+  Future<void> close() {
+    _fetchSubscription.cancel();
+    return super.close();
+  }
+
   Future<void> fetch() async {
     emit(state.setLoading());
-    try {
-      final beacons = await _repository.fetchMyField();
-      emit(MyFieldState(
-        // TBD: remove that ugly 'where' when able filter in request
-        beacons: beacons.where((e) => e.enabled).toList(),
-      ));
-    } catch (e) {
-      emit(state.setError(e));
-    }
+    return _repository.fetch();
   }
 
   Future<int> vote({

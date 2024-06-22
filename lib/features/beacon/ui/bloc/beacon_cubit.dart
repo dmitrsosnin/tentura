@@ -13,15 +13,12 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'beacon_state.dart';
 
 class BeaconCubit extends Cubit<BeaconState> {
-  BeaconCubit({
-    required BeaconRepository repository,
+  BeaconCubit(
+    this._repository, {
     PickImageCase pickImageCase = const PickImageCase(),
   })  : _pickImageCase = pickImageCase,
-        _repository = repository,
-        super(const BeaconState(status: FetchStatus.isLoading)) {
-    _repository.authenticationStatus
-        .firstWhere((e) => e)
-        .then((e) => _fetchSubscription.resume());
+        super(const BeaconState()) {
+    _fetchSubscription.resume();
   }
 
   final PickImageCase _pickImageCase;
@@ -41,7 +38,7 @@ class BeaconCubit extends Cubit<BeaconState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    _repository.refetch();
+    return _repository.fetch();
   }
 
   Future<void> create({

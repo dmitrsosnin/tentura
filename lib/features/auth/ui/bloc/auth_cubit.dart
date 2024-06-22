@@ -12,9 +12,8 @@ part 'auth_state.dart';
 //   https://github.com/felangel/bloc/issues/3255
 //
 class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
-  AuthCubit({
-    required RemoteApiService remoteApiService,
-  })  : _remoteApiService = remoteApiService,
+  AuthCubit(RemoteApiService remoteApiService)
+      : _remoteApiService = remoteApiService,
         super(const AuthState()) {
     hydrate();
     if (isAuthenticated) {
@@ -105,13 +104,11 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut({bool willEmit = true}) async {
     try {
       await _remoteApiService.signOut();
     } finally {
-      emit(AuthState(
-        accounts: state.accounts,
-      ));
+      if (willEmit) emit(AuthState(accounts: state.accounts));
     }
   }
 
@@ -122,20 +119,6 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
       accounts: {...state.accounts},
       currentAccount: state.currentAccount,
     ));
-  }
-
-  /// Remove account from remote server and local storage
-  Future<void> deleteAccount(String id) async {
-    emit(state.setLoading());
-    try {
-      await _remoteApiService.delete();
-      state.accounts.remove(id);
-      emit(AuthState(
-        accounts: {...state.accounts},
-      ));
-    } catch (e) {
-      emit(state.setError(e));
-    }
   }
 }
 
