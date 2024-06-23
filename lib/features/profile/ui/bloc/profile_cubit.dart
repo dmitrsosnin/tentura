@@ -49,7 +49,9 @@ class ProfileCubit extends Cubit<ProfileState>
   @override
   Map<String, dynamic>? toJson(ProfileState state) => state.user.toJson();
 
-  Future<void> fetch() => _repository.fetch();
+  Future<void> fetch() async => emit(ProfileState(
+        user: await _repository.fetch(),
+      ));
 
   Future<void> update({
     required String title,
