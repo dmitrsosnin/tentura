@@ -8,7 +8,7 @@ extension type const User(GUserFields i) implements GUserFields {
         ..has_picture = false)
       .build() as User;
 
-  factory User.fromJson(Map<String, Object?> json) =>
+  factory User.fromJson(Map<String, dynamic> json) =>
       GUserFieldsData.fromJson(json)! as User;
 
   String get imageId => i.has_picture ? i.id : '';
