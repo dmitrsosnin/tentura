@@ -100,12 +100,9 @@ class BeaconViewScreen extends StatelessWidget {
                   ),
 
                 // Place
-                if (beacon.place != null)
+                if (beacon.hasCoordinates)
                   PlaceNameText(
-                    coords: (
-                      lat: beacon.place!.latitude,
-                      long: beacon.place!.longitude,
-                    ),
+                    coords: beacon.coordinates!,
                     style: textTheme.bodyLarge,
                   ),
 

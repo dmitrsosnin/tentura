@@ -16,7 +16,7 @@ class ProfileViewRepository {
   final RemoteApiService remoteApiService;
 
   Future<({User user, List<Beacon> beacons})> fetchById(String userId) =>
-      remoteApiService
+      remoteApiService.gqlClient
           .request(GProfileFetchByUserIdReq((b) => b.vars.user_id = userId))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
@@ -33,7 +33,7 @@ class ProfileViewRepository {
     required String userId,
     required int amount,
   }) =>
-      remoteApiService
+      remoteApiService.gqlClient
           .request(GUserVoteByIdReq(
             (b) => b.vars
               ..object = userId

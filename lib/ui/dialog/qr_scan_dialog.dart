@@ -48,6 +48,7 @@ class _QRScanDialogState extends State<QRScanDialog> {
   Widget build(BuildContext context) => Dialog.fullscreen(
         child: Scaffold(
           appBar: AppBar(
+            title: const Text('Scan the QR Code'),
             actions: [
               IconButton(
                 icon: _flashlight
@@ -60,7 +61,7 @@ class _QRScanDialogState extends State<QRScanDialog> {
               ),
             ],
             backgroundColor: Colors.transparent,
-            title: const Text('Scan the QR Code'),
+            foregroundColor: Colors.white,
           ),
           extendBodyBehindAppBar: true,
           body: Stack(

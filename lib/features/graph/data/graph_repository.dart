@@ -15,7 +15,7 @@ class GraphRepository {
     required bool positiveOnly,
     required int limit,
   }) =>
-      _remoteApiService
+      _remoteApiService.gqlClient
           .request(GGraphFetchReq(
             (b) => b.vars
               ..focus = focus

@@ -38,7 +38,7 @@ class BeaconCubit extends Cubit<BeaconState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    return _repository.refetch();
+    return _repository.fetch();
   }
 
   Future<void> create({
@@ -48,13 +48,13 @@ class BeaconCubit extends Cubit<BeaconState> {
     Coordinates? coordinates,
     Uint8List? image,
   }) async {
-    final beacon = await _repository.create(
+    final beacon = await _repository.create(Beacon.empty.copyWith(
       title: title,
       description: description,
       dateRange: dateRange,
       coordinates: coordinates,
       hasPicture: image != null,
-    );
+    ));
     if (image != null && image.isNotEmpty) {
       await _repository.putBeaconImage(
         beaconId: beacon.id,

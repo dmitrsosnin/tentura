@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:typed_data';
-import 'package:ferry/ferry.dart';
 import 'package:ferry/ferry_isolate.dart';
 
 import 'client/gql_client.dart';
@@ -26,18 +25,19 @@ class TenturaApi {
   final String storagePath;
   final Duration jwtExpiresIn;
 
+  late final IsolateClient gqlClient;
+
   final TokenService _tokenService;
   final ImageService _imageService;
 
   late final SendPort _replyPort;
-  late final IsolateClient _gqlClient;
 
   String _userId = '';
 
   String get userId => _userId;
 
   Future<void> init() async {
-    _gqlClient = await IsolateClient.create(
+    gqlClient = await IsolateClient.create(
       buildClient,
       params: (
         serverName: serverName,
@@ -53,19 +53,8 @@ class TenturaApi {
   }
 
   Future<void> dispose() async {
-    await _gqlClient.dispose();
+    await gqlClient.dispose();
   }
-
-  Stream<OperationResponse<TData, TVars>> request<TData, TVars>(
-    OperationRequest<TData, TVars> request, [
-    Stream<OperationResponse<TData, TVars>> Function(
-            OperationRequest<TData, TVars>)?
-        forward,
-  ]) =>
-      _gqlClient.request(request, forward);
-
-  Future<void> addRequest(OperationRequest<dynamic, dynamic> request) =>
-      _gqlClient.addRequestToRequestController(request);
 
   Future<String> signIn({
     required String seed,
@@ -85,7 +74,7 @@ class TenturaApi {
   Future<void> signOut() async {
     _userId = '';
     await _tokenService.signOut();
-    await _gqlClient.clearCache();
+    await gqlClient.clearCache();
   }
 
   Future<void> putAvatarImage(Uint8List image) async => _imageService.putAvatar(

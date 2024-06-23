@@ -19,14 +19,15 @@ class FavoritesRepository {
   );
 
   Stream<Iterable<Beacon>> get stream =>
-      _remoteApiService.request(_fetchRequest).map((r) => r
+      _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
           .beacon_pinned
           .map((r) => r.beacon as Beacon));
 
-  Future<void> fetch() => _remoteApiService.addRequest(_fetchRequest);
+  Future<void> fetch() =>
+      _remoteApiService.gqlClient.addRequestToRequestController(_fetchRequest);
 
-  Future<Beacon> pin(String beaconId) => _remoteApiService
+  Future<Beacon> pin(String beaconId) => _remoteApiService.gqlClient
       .request(GBeaconPinByIdReq((b) => b.vars.beacon_id = beaconId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
@@ -34,7 +35,7 @@ class FavoritesRepository {
             as Beacon,
       );
 
-  Future<Beacon> unpin(String beaconId) => _remoteApiService
+  Future<Beacon> unpin(String beaconId) => _remoteApiService.gqlClient
       .request(GBeaconUnpinByIdReq(
         (b) => b.vars
           ..user_id = _remoteApiService.userId
