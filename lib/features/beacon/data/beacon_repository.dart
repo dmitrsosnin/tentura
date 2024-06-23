@@ -1,11 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart' show DateTimeRange;
-
-import 'package:tentura/data/gql/_g/schema.schema.gql.dart';
-import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/beacon.dart';
-import 'package:tentura/domain/entity/geo.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 
 import 'gql/_g/beacon_create.req.gql.dart';
 import 'gql/_g/beacon_delete_by_id.req.gql.dart';
@@ -32,31 +28,20 @@ class BeaconRepository {
   Future<void> fetch() =>
       _remoteApiService.gqlClient.addRequestToRequestController(_fetchRequest);
 
-  Future<Beacon> create({
-    required String title,
-    bool hasPicture = false,
-    String description = '',
-    DateTimeRange? dateRange,
-    Coordinates? coordinates,
-  }) =>
-      _remoteApiService.gqlClient
-          .request(
-            GBeaconCreateReq((b) => b.vars
-              ..title = title
-              ..description = description
-              ..has_picture = hasPicture
-              ..timerange = dateRange
-              ..lat = coordinates == null
-                  ? null
-                  : (Gfloat8Builder()..value = coordinates.lat.toString())
-              ..long = coordinates == null
-                  ? null
-                  : (Gfloat8Builder()..value = coordinates.long.toString())),
-          )
-          .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then(
-            (r) => r.dataOrThrow(label: _label).insert_beacon_one! as Beacon,
-          );
+  Future<Beacon> create(Beacon beacon) => _remoteApiService.gqlClient
+      .request(
+        GBeaconCreateReq((b) => b.vars
+          ..title = beacon.title
+          ..description = beacon.description
+          ..has_picture = beacon.has_picture
+          ..timerange = beacon.timerange
+          ..lat = beacon.lat?.toBuilder()
+          ..long = beacon.long?.toBuilder()),
+      )
+      .firstWhere((e) => e.dataSource == DataSource.Link)
+      .then(
+        (r) => r.dataOrThrow(label: _label).insert_beacon_one! as Beacon,
+      );
 
   Future<void> delete(String id) => _remoteApiService.gqlClient
       .request(GBeaconDeleteByIdReq((b) => b.vars.id = id))
