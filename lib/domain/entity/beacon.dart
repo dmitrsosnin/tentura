@@ -42,9 +42,10 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
 
   bool get hasCoordinates => lat != null && long != null;
 
-  Coordinates? get coordinates => hasCoordinates
-      ? (lat: double.parse(lat!.value), long: double.parse(long!.value))
-      : null;
+  Coordinates get coordinates => (
+        lat: double.tryParse(lat?.value ?? '.0') ?? 0,
+        long: double.tryParse(long?.value ?? '.0') ?? 0,
+      );
 
   Beacon copyWith({
     String? id,

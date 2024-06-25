@@ -49,13 +49,9 @@ class BeaconTileControl extends StatelessWidget {
           ),
 
           // Share
-          ShareCodeIconButton(
-            header: beacon.id,
-            link: Uri.https(
-              appLinkBase,
-              pathBeaconView,
-              {'id': beacon.id},
-            ),
+          ShareCodeIconButton.id(
+            id: beacon.id,
+            path: pathBeaconView,
           ),
 
           // Favorite
