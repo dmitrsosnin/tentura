@@ -51,13 +51,9 @@ class ProfileViewScreen extends StatelessWidget {
                     ),
 
                     // Share
-                    ShareCodeIconButton(
-                      header: state.user.id,
-                      link: Uri.https(
-                        appLinkBase,
-                        pathProfileView,
-                        {'id': state.user.id},
-                      ),
+                    ShareCodeIconButton.id(
+                      id: user.id,
+                      path: pathProfileView,
                     ),
 
                     // More
