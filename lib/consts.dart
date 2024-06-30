@@ -14,6 +14,8 @@ const jwtExpiresIn = Duration(
 
 final zeroDateTime = DateTime.fromMillisecondsSinceEpoch(0);
 
+const pathIntro = '/intro';
+
 const pathAuthLogin = '/login';
 
 const pathHomeField = '/home/field';
@@ -23,6 +25,7 @@ const pathHomeProfile = '/home/profile';
 const pathHomeFavorites = '/home/favorites';
 
 const pathGraph = '/graph';
+
 const pathRating = '/rating';
 
 const pathProfileView = '/profile/view';

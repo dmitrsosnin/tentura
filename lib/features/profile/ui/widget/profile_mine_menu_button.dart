@@ -5,6 +5,7 @@ import 'package:tentura/consts.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
+import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 import 'package:tentura/features/settings/ui/widget/theme_switch_button.dart';
 
 class ProfileMineMenuButton extends StatelessWidget {
@@ -42,6 +43,13 @@ class ProfileMineMenuButton extends StatelessWidget {
         // Theme
         const PopupMenuItem<void>(
           child: ThemeSwitchButton(),
+        ),
+        const PopupMenuDivider(),
+
+        // Intro
+        PopupMenuItem<void>(
+          onTap: () => context.read<SettingsCubit>().setIntroEnabled(true),
+          child: const Text('Show intro again'),
         ),
         const PopupMenuDivider(),
 
