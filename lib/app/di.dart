@@ -61,6 +61,7 @@ class _DIState extends State<DI> {
             providers: [
               BlocProvider(
                 create: (context) => SettingsCubit(),
+                lazy: false,
               ),
               BlocProvider(
                 create: (context) => AuthCubit(_remoteApiService),

@@ -85,6 +85,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         padding: paddingMediumA,
                         child: Text(
                           _pages[i].title,
+                          textAlign: TextAlign.center,
                           style: _theme.textTheme.displayMedium,
                         ),
                       ),
@@ -94,6 +95,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         padding: paddingMediumA,
                         child: Text(
                           _pages[i].text,
+                          textAlign: TextAlign.center,
                           style: _theme.textTheme.bodyLarge,
                         ),
                       ),

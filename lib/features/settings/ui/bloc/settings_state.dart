@@ -4,7 +4,7 @@ final class SettingsState extends StateBase {
   const SettingsState({
     this.introEnabled = true,
     this.themeMode = ThemeMode.system,
-    super.status = FetchStatus.isLoading,
+    super.status = FetchStatus.isSuccess,
     super.error,
   });
 

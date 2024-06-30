@@ -29,41 +29,38 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final authCubit = context.read<AuthCubit>();
     return BlocBuilder<SettingsCubit, SettingsState>(
-      builder: (context, state) => state.isLoading
-          ? const Center(
-              child: Text('Loading...'),
-            )
-          : MaterialApp.router(
-              color: const Color(0x00B77EFF),
-              title: 'Tentura',
-              theme: themeLight,
-              darkTheme: themeDark,
-              themeMode: state.themeMode,
-              debugShowCheckedModeBanner: false,
-              routerConfig: GoRouter(
-                debugLogDiagnostics: kDebugMode,
-                initialLocation:
-                    state.introEnabled ? pathIntro : pathHomeProfile,
-                navigatorKey: _rootNavigatorKey,
-                observers: [
-                  SentryNavigatorObserver(),
-                ],
-                errorBuilder: (context, state) => const ErrorScreen(),
-                redirect: (context, state) =>
-                    authCubit.state.isAuthenticated ? null : pathAuthLogin,
-                routes: [
-                  buildHomeRoute(parentNavigatorKey: _rootNavigatorKey),
-                  buildIntroRoute(parentNavigatorKey: _rootNavigatorKey),
-                  buildAuthLoginRoute(parentNavigatorKey: _rootNavigatorKey),
-                  buildProfileViewRoute(parentNavigatorKey: _rootNavigatorKey),
-                  buildProfileEditRoute(parentNavigatorKey: _rootNavigatorKey),
-                  buildBeaconCreateRoute(parentNavigatorKey: _rootNavigatorKey),
-                  buildBeaconViewRoute(parentNavigatorKey: _rootNavigatorKey),
-                  buildRatingRoute(parentNavigatorKey: _rootNavigatorKey),
-                  buildGraphRoute(parentNavigatorKey: _rootNavigatorKey),
-                ],
-              ),
-            ),
+      builder: (context, state) => MaterialApp.router(
+        color: const Color(0x00B77EFF),
+        title: 'Tentura',
+        theme: themeLight,
+        darkTheme: themeDark,
+        themeMode: state.themeMode,
+        debugShowCheckedModeBanner: false,
+        routerConfig: GoRouter(
+          debugLogDiagnostics: kDebugMode,
+          initialLocation: state.introEnabled ? pathIntro : pathHomeProfile,
+          navigatorKey: _rootNavigatorKey,
+          observers: [
+            SentryNavigatorObserver(),
+          ],
+          errorBuilder: (context, state) => const ErrorScreen(),
+          redirect: (context, state) => authCubit.state.isAuthenticated ||
+                  anonymousPath.contains(state.matchedLocation)
+              ? null
+              : pathAuthLogin,
+          routes: [
+            buildHomeRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildIntroRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildAuthLoginRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildProfileViewRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildProfileEditRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildBeaconCreateRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildBeaconViewRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildRatingRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildGraphRoute(parentNavigatorKey: _rootNavigatorKey),
+          ],
+        ),
+      ),
     );
   }
 }

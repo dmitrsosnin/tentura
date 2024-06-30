@@ -7,20 +7,16 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'settings_state.dart';
 
-class SettingsCubit extends Cubit<SettingsState>
-    with HydratedMixin<SettingsState> {
-  SettingsCubit() : super(const SettingsState()) {
-    hydrate();
-  }
+class SettingsCubit extends HydratedCubit<SettingsState> {
+  SettingsCubit() : super(const SettingsState());
 
   @override
-  SettingsState fromJson(Map<String, dynamic> json) => SettingsState(
+  SettingsState? fromJson(Map<String, dynamic> json) => SettingsState(
         introEnabled: json['introEnabled'] as bool? ?? true,
-        themeMode: switch (json['themeMode']) {
-          final int i => ThemeMode.values[i],
-          _ => ThemeMode.system,
-        },
-        status: FetchStatus.isSuccess,
+        themeMode: ThemeMode.values.firstWhere(
+          (themeMode) => themeMode.name == json['themeMode'],
+          orElse: () => ThemeMode.system,
+        ),
       );
 
   @override
@@ -30,7 +26,7 @@ class SettingsCubit extends Cubit<SettingsState>
           ? null
           : {
               'introEnabled': state.introEnabled,
-              'themeMode': state.themeMode.index,
+              'themeMode': state.themeMode.name,
             };
 
   void setThemeMode(ThemeMode themeMode) => emit(state.copyWith(

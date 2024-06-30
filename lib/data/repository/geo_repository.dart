@@ -24,14 +24,17 @@ class GeoRepository {
     bool useCache = true,
   }) async {
     if (useCache && cache.containsKey(coords)) return cache[coords];
-
-    final places = await placemarkFromCoordinates(coords.lat, coords.long);
-    return cache[coords] = places.isEmpty
-        ? null
-        : (
-            country: places.first.country,
-            locality: places.first.locality,
-          );
+    try {
+      final places = await placemarkFromCoordinates(coords.lat, coords.long);
+      return cache[coords] = places.isEmpty
+          ? null
+          : (
+              country: places.first.country,
+              locality: places.first.locality,
+            );
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<Coordinates?> getMyCoords({
