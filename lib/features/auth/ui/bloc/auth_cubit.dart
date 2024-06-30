@@ -16,7 +16,7 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
       : _remoteApiService = remoteApiService,
         super(const AuthState()) {
     hydrate();
-    if (isAuthenticated) {
+    if (state.isAuthenticated) {
       _remoteApiService.signIn(
         seed: state.accounts[state.currentAccount]!,
         prematureUserId: state.currentAccount,
@@ -25,10 +25,6 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   }
 
   final RemoteApiService _remoteApiService;
-
-  bool get isAuthenticated => state.currentAccount.isNotEmpty;
-
-  bool get isNotAuthenticated => state.currentAccount.isEmpty;
 
   @override
   AuthState? fromJson(Map<String, dynamic> json) => json.isEmpty

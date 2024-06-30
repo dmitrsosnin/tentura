@@ -7,6 +7,10 @@ const paddingMediumA = EdgeInsets.all(20);
 
 const paddingMediumH = EdgeInsets.symmetric(horizontal: 20);
 
+const paddingLargeV = EdgeInsets.symmetric(vertical: 32);
+
+const paddingMediumV = EdgeInsets.symmetric(vertical: 20);
+
 const paddingSmallV = EdgeInsets.symmetric(vertical: 8);
 
 final _fYMD = DateFormat.yMd();

@@ -14,29 +14,30 @@ class SettingsCubit extends Cubit<SettingsState>
   }
 
   @override
-  SettingsState? fromJson(Map<String, dynamic> json) => json.isEmpty
-      ? null
-      : SettingsState(
-          themeMode: switch (json['themeMode']) {
-            'dark' => ThemeMode.dark,
-            'light' => ThemeMode.light,
-            _ => ThemeMode.system,
-          },
-        );
+  SettingsState fromJson(Map<String, dynamic> json) => SettingsState(
+        introEnabled: json['introEnabled'] as bool? ?? true,
+        themeMode: switch (json['themeMode']) {
+          final int i => ThemeMode.values[i],
+          _ => ThemeMode.system,
+        },
+        status: FetchStatus.isSuccess,
+      );
 
   @override
   Map<String, dynamic>? toJson(SettingsState state) =>
-      state.themeMode == this.state.themeMode
+      state.themeMode == this.state.themeMode &&
+              state.introEnabled == this.state.introEnabled
           ? null
           : {
-              'themeMode': switch (state.themeMode) {
-                ThemeMode.dark => 'dark',
-                ThemeMode.light => 'light',
-                ThemeMode.system => 'system',
-              }
+              'introEnabled': state.introEnabled,
+              'themeMode': state.themeMode.index,
             };
 
   void setThemeMode(ThemeMode themeMode) => emit(state.copyWith(
         themeMode: themeMode,
+      ));
+
+  void setIntroEnabled(bool isEnabled) => emit(state.copyWith(
+        introEnabled: isEnabled,
       ));
 }

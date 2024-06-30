@@ -21,6 +21,10 @@ final class AuthState extends StateBase {
         error,
       ];
 
+  bool get isAuthenticated => currentAccount.isNotEmpty;
+
+  bool get isNotAuthenticated => currentAccount.isEmpty;
+
   @override
   AuthState copyWith({
     String? currentAccount,
