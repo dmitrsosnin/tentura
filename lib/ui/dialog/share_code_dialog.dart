@@ -46,20 +46,18 @@ class ShareCodeDialog extends StatelessWidget {
       ),
 
       // QRCode
-      content: SizedBox.square(
-        dimension: MediaQuery.of(context).size.width / 2,
-        child: QrImageView(
-          data: header,
-          backgroundColor: colorScheme.primaryContainer,
-          dataModuleStyle: QrDataModuleStyle(
-            color: colorScheme.onPrimaryContainer,
-            dataModuleShape: QrDataModuleShape.square,
-          ),
-          eyeStyle: QrEyeStyle(
-            color: colorScheme.onPrimaryContainer,
-            eyeShape: QrEyeShape.square,
-          ),
+      content: QrImageView(
+        data: header,
+        backgroundColor: colorScheme.primaryContainer,
+        dataModuleStyle: QrDataModuleStyle(
+          color: colorScheme.onPrimaryContainer,
+          dataModuleShape: QrDataModuleShape.square,
         ),
+        eyeStyle: QrEyeStyle(
+          color: colorScheme.onPrimaryContainer,
+          eyeShape: QrEyeShape.square,
+        ),
+        size: MediaQuery.of(context).size.width / 2,
       ),
 
       // Buttons
