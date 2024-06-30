@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
@@ -28,57 +28,51 @@ class ShareCodeDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return AlertDialog.adaptive(
-      alignment: Alignment.center,
-      actionsAlignment: MainAxisAlignment.spaceBetween,
-      titlePadding: paddingMediumA,
-      contentPadding: paddingMediumA,
+  Widget build(BuildContext context) => AlertDialog.adaptive(
+        alignment: Alignment.center,
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        titlePadding: paddingMediumA,
+        contentPadding: paddingMediumA,
 
-      // Header
-      title: Text(
-        header,
-        maxLines: 1,
-        overflow: TextOverflow.clip,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headlineLarge,
-      ),
-
-      // QRCode
-      content: QrImageView(
-        data: header,
-        backgroundColor: colorScheme.primaryContainer,
-        dataModuleStyle: QrDataModuleStyle(
-          color: colorScheme.onPrimaryContainer,
-          dataModuleShape: QrDataModuleShape.square,
+        // Header
+        title: Text(
+          header,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headlineLarge,
         ),
-        eyeStyle: QrEyeStyle(
-          color: colorScheme.onPrimaryContainer,
-          eyeShape: QrEyeShape.square,
-        ),
-        size: MediaQuery.of(context).size.width / 2,
-      ),
 
-      // Buttons
-      actions: [
-        Builder(
-          builder: (context) => TextButton(
-            child: const Text('Share Link'),
-            onPressed: () {
-              final box = context.findRenderObject()! as RenderBox;
-              Share.share(
-                link,
-                sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-              );
-            },
+        // QRCode
+        content: PrettyQrView.data(
+          key: ValueKey(header),
+          data: header,
+          decoration: PrettyQrDecoration(
+            shape: PrettyQrSmoothSymbol(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
           ),
         ),
-        TextButton(
-          onPressed: Navigator.of(context).pop,
-          child: const Text('Close'),
-        ),
-      ],
-    );
-  }
+
+        // Buttons
+        actions: [
+          Builder(
+            builder: (context) => TextButton(
+              child: const Text('Share Link'),
+              onPressed: () {
+                final box = context.findRenderObject()! as RenderBox;
+                Share.share(
+                  link,
+                  sharePositionOrigin:
+                      box.localToGlobal(Offset.zero) & box.size,
+                );
+              },
+            ),
+          ),
+          TextButton(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('Close'),
+          ),
+        ],
+      );
 }
