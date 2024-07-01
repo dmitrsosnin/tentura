@@ -19,7 +19,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   late final _fetchSubscription = _repository.stream.listen(
     (e) => emit(FavoritesState(beacons: e.toList())),
-    onError: (dynamic e) => emit(state.setError(e.toString())),
+    onError: (Object e) => emit(state.setError(e.toString())),
     cancelOnError: false,
   );
 

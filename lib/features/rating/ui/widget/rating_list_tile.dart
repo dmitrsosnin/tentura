@@ -116,6 +116,6 @@ class _CustomBarbellPainter extends CustomPainter {
   Color _calcColor(double weight) => weight >= 0.9
       ? Colors.amber[900]!
       : weight >= 0.2
-          ? Colors.amber[weight ~/ 0.1 * 100]!
-          : Colors.amber[weight ~/ 0.01 * 100 + 100]!;
+          ? Colors.amber[weight ~/ 0.1 * 100] ?? Colors.amber[800]!
+          : Colors.amber[weight ~/ 0.01 * 100 + 100] ?? Colors.amber[50]!;
 }
