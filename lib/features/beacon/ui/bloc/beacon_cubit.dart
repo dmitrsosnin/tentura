@@ -26,7 +26,7 @@ class BeaconCubit extends Cubit<BeaconState> {
 
   late final _fetchSubscription = _repository.stream.listen(
     (e) => emit(BeaconState(beacons: e.toList())),
-    onError: (dynamic e) => emit(state.setError(e.toString())),
+    onError: (Object e) => emit(state.setError(e.toString())),
     cancelOnError: false,
   );
 

@@ -27,26 +27,27 @@ class _BeaconPinIconButtonState extends State<BeaconPinIconButton> {
   Widget build(BuildContext context) => _isPinned
       ? IconButton(
           icon: const Icon(Icons.star),
-          onPressed: () => _cubit.unpin(widget.id).then(
-            (beacon) {
-              if (mounted) setState(() => _isPinned = beacon.is_pinned!);
-            },
-            onError: _onError,
-          ),
+          onPressed: () async => _setPin(false),
         )
       : IconButton(
           icon: const Icon(Icons.star_border),
-          onPressed: () => _cubit.pin(widget.id).then(
-            (beacon) {
-              if (mounted) setState(() => _isPinned = beacon.is_pinned!);
-            },
-            onError: _onError,
-          ),
+          onPressed: () async => _setPin(true),
         );
 
-  void _onError(Object e) => showSnackBar(
-        context,
-        isError: true,
-        text: e.toString(),
-      );
+  Future<void> _setPin(bool isPinned) async {
+    try {
+      final beacon = isPinned
+          ? await _cubit.pin(widget.id)
+          : await _cubit.unpin(widget.id);
+      if (mounted) setState(() => _isPinned = beacon.is_pinned!);
+    } catch (e) {
+      if (mounted) {
+        showSnackBar(
+          context,
+          isError: true,
+          text: e.toString(),
+        );
+      }
+    }
+  }
 }

@@ -17,10 +17,14 @@ class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
         super(const AuthState()) {
     hydrate();
     if (state.isAuthenticated) {
-      _remoteApiService.signIn(
-        seed: state.accounts[state.currentAccount]!,
-        prematureUserId: state.currentAccount,
-      );
+      try {
+        _remoteApiService.signIn(
+          seed: state.accounts[state.currentAccount]!,
+          prematureUserId: state.currentAccount,
+        );
+      } catch (e) {
+        emit(state.setError(e));
+      }
     }
   }
 
