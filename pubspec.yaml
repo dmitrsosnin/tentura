@@ -32,7 +32,7 @@ dependencies:
 
   # UI related
   latlong2: ^0.9.1
-  flutter_map: ^7.0.1
+  flutter_map: ^7.0.2
   flutter_svg: ^2.0.10
   dots_indicator: ^3.0.0
   pretty_qr_code: ^3.3.0
