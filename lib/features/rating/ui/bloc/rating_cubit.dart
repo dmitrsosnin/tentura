@@ -25,7 +25,7 @@ class RatingCubit extends Cubit<RatingState> {
       ));
       _sort();
     },
-    onError: (dynamic e) => emit(state.setError(e.toString())),
+    onError: (Object e) => emit(state.setError(e.toString())),
     cancelOnError: false,
   );
 

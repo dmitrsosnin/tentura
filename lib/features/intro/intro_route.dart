@@ -3,13 +3,13 @@ import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
 
-import 'ui/screen/connect_screen.dart';
+import 'ui/screen/intro_screen.dart';
 
-GoRoute buildConnectRoute({
+GoRoute buildIntroRoute({
   GlobalKey<NavigatorState>? parentNavigatorKey,
 }) =>
     GoRoute(
-      path: pathHomeConnect,
+      path: pathIntro,
       parentNavigatorKey: parentNavigatorKey,
-      builder: (context, state) => const ConnectScreen(),
+      builder: (context, state) => const IntroScreen(),
     );

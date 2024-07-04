@@ -2,7 +2,7 @@ name: tentura
 description: 'Social network for communities'
 publish_to: 'none'
 
-version: 0.6.1
+version: 0.6.5
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -32,11 +32,11 @@ dependencies:
 
   # UI related
   latlong2: ^0.9.1
-  qr_flutter: ^4.1.0
-  flutter_map: ^7.0.1
-  # flutter_svg: ^2.0.10
-  # pretty_qr_code: ^3.3.0
-  # vector_graphics: ^1.1.11
+  flutter_map: ^7.0.2
+  flutter_svg: ^2.0.10
+  dots_indicator: ^3.0.0
+  pretty_qr_code: ^3.3.0
+  vector_graphics: ^1.1.11
   cached_network_image: ^3.3.1
   flutter_native_splash: ^2.4.0
   force_directed_graphview: ^0.6.2
@@ -45,7 +45,7 @@ dependencies:
   # logger: ^2.3.0
   # logging: ^1.2.0
   # sentry_link: ^0.4.0
-  sentry_flutter: ^8.2.0
+  sentry_flutter: ^8.3.0
   # sentry_logging: ^7.8.0
   # logging_appenders: ^1.1.0
 
@@ -61,13 +61,14 @@ dev_dependencies:
   bloc_test: ^9.1.7
   build_runner: ^2.4.11
   ferry_generator: ^0.10.0
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^6.0.0
   flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/intro/
 
 sentry:
   upload_debug_symbols: true

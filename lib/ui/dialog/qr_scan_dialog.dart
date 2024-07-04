@@ -17,8 +17,10 @@ class QRScanDialog extends StatefulWidget {
 
 class _QRScanDialogState extends State<QRScanDialog> {
   final _controller = MobileScannerController();
-  bool _flashlight = false;
+
+  bool _torchEnabled = false;
   bool _hasResult = false;
+
   late Rect _scanWindow;
 
   @override
@@ -36,6 +38,7 @@ class _QRScanDialogState extends State<QRScanDialog> {
       width: scanAreaSize,
       height: scanAreaSize,
     );
+    _controller.updateScanWindow(_scanWindow);
   }
 
   @override
@@ -51,13 +54,13 @@ class _QRScanDialogState extends State<QRScanDialog> {
             title: const Text('Scan the QR Code'),
             actions: [
               IconButton(
-                icon: _flashlight
+                icon: _torchEnabled
                     ? const Icon(Icons.flashlight_off_outlined)
                     : const Icon(Icons.flashlight_on_outlined),
-                onPressed: () => setState(() {
-                  _flashlight = !_flashlight;
-                  _controller.toggleTorch();
-                }),
+                onPressed: () async {
+                  await _controller.toggleTorch();
+                  setState(() => _torchEnabled = !_torchEnabled);
+                },
               ),
             ],
             backgroundColor: Colors.transparent,
