@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 import 'package:tentura/consts.dart';
 
@@ -28,6 +29,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
 }) {
   final theme = Theme.of(context);
   ScaffoldMessenger.of(context).clearSnackBars();
+  if (isError) if (kDebugMode) print(text);
   return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     behavior: isFloating ? SnackBarBehavior.floating : null,
     margin: isFloating ? const EdgeInsets.all(16) : null,

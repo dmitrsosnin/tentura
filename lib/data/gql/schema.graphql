@@ -13,62 +13,12 @@ directive @cached(
   refresh: Boolean! = false
 ) on QUERY
 
-type Address {
-  ISO31662lvl15: String
-  ISO31662lvl4: String
-  city: String
-  city_district: String
-  commercial: String
-  country: String
-  country_code: String
-  region: String
-  state: String
-  suburb: String
-}
-
 """
 columns and relationships of "beacon"
 """
 type beacon {
   """An object relationship"""
   author: user!
-
-  """An array relationship"""
-  beacon_hiddens(
-    """distinct select on columns"""
-    distinct_on: [beacon_hidden_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [beacon_hidden_order_by!]
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): [beacon_hidden!]!
-
-  """An aggregate relationship"""
-  beacon_hiddens_aggregate(
-    """distinct select on columns"""
-    distinct_on: [beacon_hidden_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [beacon_hidden_order_by!]
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): beacon_hidden_aggregate!
-  beacon_in_my_field(hidePersonal: Boolean, limit: Int, where: NodeScoreWhereInput): [NodeScore!]!
 
   """An array relationship"""
   beacon_pinneds(
@@ -142,16 +92,12 @@ type beacon {
     where: comment_bool_exp
   ): comment_aggregate!
   comments_count: Int!
+  context: String
   created_at: timestamptz!
   description: String!
   enabled: Boolean!
   has_picture: Boolean!
   id: String!
-
-  """
-  A computed field, executes function "beacon_get_is_hidden"
-  """
-  is_hidden: Boolean
 
   """
   A computed field, executes function "beacon_get_is_pinned"
@@ -388,19 +334,17 @@ input beacon_bool_exp {
   _not: beacon_bool_exp
   _or: [beacon_bool_exp!]
   author: user_bool_exp
-  beacon_hiddens: beacon_hidden_bool_exp
-  beacon_hiddens_aggregate: beacon_hidden_aggregate_bool_exp
   beacon_pinneds: beacon_pinned_bool_exp
   beacon_pinneds_aggregate: beacon_pinned_aggregate_bool_exp
   comments: comment_bool_exp
   comments_aggregate: comment_aggregate_bool_exp
   comments_count: Int_comparison_exp
+  context: String_comparison_exp
   created_at: timestamptz_comparison_exp
   description: String_comparison_exp
   enabled: Boolean_comparison_exp
   has_picture: Boolean_comparison_exp
   id: String_comparison_exp
-  is_hidden: Boolean_comparison_exp
   is_pinned: Boolean_comparison_exp
   lat: float8_comparison_exp
   long: float8_comparison_exp
@@ -424,232 +368,6 @@ enum beacon_constraint {
 }
 
 """
-columns and relationships of "beacon_hidden"
-"""
-type beacon_hidden {
-  """An object relationship"""
-  beacon: beacon!
-  beacon_id: String!
-  hidden_until: timestamptz!
-
-  """An object relationship"""
-  user: user!
-  user_id: String!
-}
-
-"""
-aggregated selection of "beacon_hidden"
-"""
-type beacon_hidden_aggregate {
-  aggregate: beacon_hidden_aggregate_fields
-  nodes: [beacon_hidden!]!
-}
-
-input beacon_hidden_aggregate_bool_exp {
-  count: beacon_hidden_aggregate_bool_exp_count
-}
-
-input beacon_hidden_aggregate_bool_exp_count {
-  arguments: [beacon_hidden_select_column!]
-  distinct: Boolean
-  filter: beacon_hidden_bool_exp
-  predicate: Int_comparison_exp!
-}
-
-"""
-aggregate fields of "beacon_hidden"
-"""
-type beacon_hidden_aggregate_fields {
-  count(columns: [beacon_hidden_select_column!], distinct: Boolean): Int!
-  max: beacon_hidden_max_fields
-  min: beacon_hidden_min_fields
-}
-
-"""
-order by aggregate values of table "beacon_hidden"
-"""
-input beacon_hidden_aggregate_order_by {
-  count: order_by
-  max: beacon_hidden_max_order_by
-  min: beacon_hidden_min_order_by
-}
-
-"""
-input type for inserting array relation for remote table "beacon_hidden"
-"""
-input beacon_hidden_arr_rel_insert_input {
-  data: [beacon_hidden_insert_input!]!
-
-  """upsert condition"""
-  on_conflict: beacon_hidden_on_conflict
-}
-
-"""
-Boolean expression to filter rows from the table "beacon_hidden". All fields are combined with a logical 'AND'.
-"""
-input beacon_hidden_bool_exp {
-  _and: [beacon_hidden_bool_exp!]
-  _not: beacon_hidden_bool_exp
-  _or: [beacon_hidden_bool_exp!]
-  beacon: beacon_bool_exp
-  beacon_id: String_comparison_exp
-  hidden_until: timestamptz_comparison_exp
-  user: user_bool_exp
-  user_id: String_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "beacon_hidden"
-"""
-enum beacon_hidden_constraint {
-  """
-  unique or primary key constraint on columns "beacon_id", "user_id"
-  """
-  beacon_hidden_pkey
-}
-
-"""
-input type for inserting data into table "beacon_hidden"
-"""
-input beacon_hidden_insert_input {
-  beacon: beacon_obj_rel_insert_input
-  beacon_id: String
-  hidden_until: timestamptz
-  user: user_obj_rel_insert_input
-  user_id: String
-}
-
-"""aggregate max on columns"""
-type beacon_hidden_max_fields {
-  beacon_id: String
-  hidden_until: timestamptz
-  user_id: String
-}
-
-"""
-order by max() on columns of table "beacon_hidden"
-"""
-input beacon_hidden_max_order_by {
-  beacon_id: order_by
-  hidden_until: order_by
-  user_id: order_by
-}
-
-"""aggregate min on columns"""
-type beacon_hidden_min_fields {
-  beacon_id: String
-  hidden_until: timestamptz
-  user_id: String
-}
-
-"""
-order by min() on columns of table "beacon_hidden"
-"""
-input beacon_hidden_min_order_by {
-  beacon_id: order_by
-  hidden_until: order_by
-  user_id: order_by
-}
-
-"""
-response of any mutation on the table "beacon_hidden"
-"""
-type beacon_hidden_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [beacon_hidden!]!
-}
-
-"""
-on_conflict condition type for table "beacon_hidden"
-"""
-input beacon_hidden_on_conflict {
-  constraint: beacon_hidden_constraint!
-  update_columns: [beacon_hidden_update_column!]! = []
-  where: beacon_hidden_bool_exp
-}
-
-"""Ordering options when selecting data from "beacon_hidden"."""
-input beacon_hidden_order_by {
-  beacon: beacon_order_by
-  beacon_id: order_by
-  hidden_until: order_by
-  user: user_order_by
-  user_id: order_by
-}
-
-"""primary key columns input for table: beacon_hidden"""
-input beacon_hidden_pk_columns_input {
-  beacon_id: String!
-  user_id: String!
-}
-
-"""
-select columns of table "beacon_hidden"
-"""
-enum beacon_hidden_select_column {
-  """column name"""
-  beacon_id
-
-  """column name"""
-  hidden_until
-
-  """column name"""
-  user_id
-}
-
-"""
-input type for updating data in table "beacon_hidden"
-"""
-input beacon_hidden_set_input {
-  beacon_id: String
-  hidden_until: timestamptz
-  user_id: String
-}
-
-"""
-Streaming cursor of the table "beacon_hidden"
-"""
-input beacon_hidden_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: beacon_hidden_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input beacon_hidden_stream_cursor_value_input {
-  beacon_id: String
-  hidden_until: timestamptz
-  user_id: String
-}
-
-"""
-update columns of table "beacon_hidden"
-"""
-enum beacon_hidden_update_column {
-  """column name"""
-  beacon_id
-
-  """column name"""
-  hidden_until
-
-  """column name"""
-  user_id
-}
-
-input beacon_hidden_updates {
-  """sets the columns of the filtered rows to the given values"""
-  _set: beacon_hidden_set_input
-
-  """filter the rows which have to be updated"""
-  where: beacon_hidden_bool_exp!
-}
-
-"""
 input type for incrementing numeric columns in table "beacon"
 """
 input beacon_inc_input {
@@ -663,10 +381,10 @@ input type for inserting data into table "beacon"
 """
 input beacon_insert_input {
   author: user_obj_rel_insert_input
-  beacon_hiddens: beacon_hidden_arr_rel_insert_input
   beacon_pinneds: beacon_pinned_arr_rel_insert_input
   comments: comment_arr_rel_insert_input
   comments_count: Int
+  context: String
   created_at: timestamptz
   description: String
   enabled: Boolean
@@ -684,6 +402,7 @@ input beacon_insert_input {
 """aggregate max on columns"""
 type beacon_max_fields {
   comments_count: Int
+  context: String
   created_at: timestamptz
   description: String
   id: String
@@ -704,6 +423,7 @@ order by max() on columns of table "beacon"
 """
 input beacon_max_order_by {
   comments_count: order_by
+  context: order_by
   created_at: order_by
   description: order_by
   id: order_by
@@ -717,6 +437,7 @@ input beacon_max_order_by {
 """aggregate min on columns"""
 type beacon_min_fields {
   comments_count: Int
+  context: String
   created_at: timestamptz
   description: String
   id: String
@@ -737,6 +458,7 @@ order by min() on columns of table "beacon"
 """
 input beacon_min_order_by {
   comments_count: order_by
+  context: order_by
   created_at: order_by
   description: order_by
   id: order_by
@@ -780,16 +502,15 @@ input beacon_on_conflict {
 """Ordering options when selecting data from "beacon"."""
 input beacon_order_by {
   author: user_order_by
-  beacon_hiddens_aggregate: beacon_hidden_aggregate_order_by
   beacon_pinneds_aggregate: beacon_pinned_aggregate_order_by
   comments_aggregate: comment_aggregate_order_by
   comments_count: order_by
+  context: order_by
   created_at: order_by
   description: order_by
   enabled: order_by
   has_picture: order_by
   id: order_by
-  is_hidden: order_by
   is_pinned: order_by
   lat: order_by
   long: order_by
@@ -1024,6 +745,9 @@ enum beacon_select_column {
   comments_count
 
   """column name"""
+  context
+
+  """column name"""
   created_at
 
   """column name"""
@@ -1172,6 +896,7 @@ input type for updating data in table "beacon"
 """
 input beacon_set_input {
   comments_count: Int
+  context: String
   created_at: timestamptz
   description: String
   enabled: Boolean
@@ -1262,6 +987,7 @@ input beacon_stream_cursor_input {
 """Initial value of the column from where the streaming should start"""
 input beacon_stream_cursor_value_input {
   comments_count: Int
+  context: String
   created_at: timestamptz
   description: String
   enabled: Boolean
@@ -1302,6 +1028,9 @@ update columns of table "beacon"
 enum beacon_update_column {
   """column name"""
   comments_count
+
+  """column name"""
+  context
 
   """column name"""
   created_at
@@ -1831,19 +1560,6 @@ enum cursor_ordering {
   DESC
 }
 
-type Edge {
-  dest: String!
-  src: String!
-  weight: Float!
-}
-
-type Features {
-  bbox: [Float]
-  geometry: Geometry
-  properties: Properties
-  type: String
-}
-
 scalar float8
 
 """
@@ -1861,18 +1577,6 @@ input float8_comparison_exp {
   _nin: [float8!]
 }
 
-type Geometry {
-  coordinates: [Float]
-  type: String
-}
-
-type GravityGraph {
-  beacons: [NodeScore]!
-  comments: [NodeScore]!
-  edges: [Edge]!
-  users: [NodeScore]!
-}
-
 """
 Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
 """
@@ -1886,6 +1590,346 @@ input Int_comparison_exp {
   _lte: Int
   _neq: Int
   _nin: [Int!]
+}
+
+input mr_graph_args {
+  context: String
+  count: Int
+  focus: String
+  index: Int
+  positive_only: Boolean
+  src: String
+}
+
+input mr_mutual_scores_args {
+  context: String
+  src: String
+}
+
+input mr_node_score_args {
+  context: String
+  dst: String
+  src: String
+}
+
+input mr_scores_args {
+  context: String
+  count: Int
+  gt: float8
+  gte: float8
+  hide_personal: Boolean
+  index: Int
+  kind: String
+  lt: float8
+  lte: float8
+  src: String
+}
+
+"""
+columns and relationships of "mr_t_edge"
+"""
+type mr_t_edge {
+  """An object relationship"""
+  Beacon: beacon
+
+  """An object relationship"""
+  Comment: comment
+
+  """An object relationship"""
+  User: user
+  dst: String
+  score: float8
+  src: String
+}
+
+type mr_t_edge_aggregate {
+  aggregate: mr_t_edge_aggregate_fields
+  nodes: [mr_t_edge!]!
+}
+
+"""
+aggregate fields of "mr_t_edge"
+"""
+type mr_t_edge_aggregate_fields {
+  avg: mr_t_edge_avg_fields
+  count(columns: [mr_t_edge_select_column!], distinct: Boolean): Int!
+  max: mr_t_edge_max_fields
+  min: mr_t_edge_min_fields
+  stddev: mr_t_edge_stddev_fields
+  stddev_pop: mr_t_edge_stddev_pop_fields
+  stddev_samp: mr_t_edge_stddev_samp_fields
+  sum: mr_t_edge_sum_fields
+  var_pop: mr_t_edge_var_pop_fields
+  var_samp: mr_t_edge_var_samp_fields
+  variance: mr_t_edge_variance_fields
+}
+
+"""aggregate avg on columns"""
+type mr_t_edge_avg_fields {
+  score: Float
+}
+
+"""
+Boolean expression to filter rows from the table "mr_t_edge". All fields are combined with a logical 'AND'.
+"""
+input mr_t_edge_bool_exp {
+  Beacon: beacon_bool_exp
+  Comment: comment_bool_exp
+  User: user_bool_exp
+  _and: [mr_t_edge_bool_exp!]
+  _not: mr_t_edge_bool_exp
+  _or: [mr_t_edge_bool_exp!]
+  dst: String_comparison_exp
+  score: float8_comparison_exp
+  src: String_comparison_exp
+}
+
+"""aggregate max on columns"""
+type mr_t_edge_max_fields {
+  dst: String
+  score: float8
+  src: String
+}
+
+"""aggregate min on columns"""
+type mr_t_edge_min_fields {
+  dst: String
+  score: float8
+  src: String
+}
+
+"""Ordering options when selecting data from "mr_t_edge"."""
+input mr_t_edge_order_by {
+  Beacon: beacon_order_by
+  Comment: comment_order_by
+  User: user_order_by
+  dst: order_by
+  score: order_by
+  src: order_by
+}
+
+"""
+select columns of table "mr_t_edge"
+"""
+enum mr_t_edge_select_column {
+  """column name"""
+  dst
+
+  """column name"""
+  score
+
+  """column name"""
+  src
+}
+
+"""aggregate stddev on columns"""
+type mr_t_edge_stddev_fields {
+  score: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type mr_t_edge_stddev_pop_fields {
+  score: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type mr_t_edge_stddev_samp_fields {
+  score: Float
+}
+
+"""
+Streaming cursor of the table "mr_t_edge"
+"""
+input mr_t_edge_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: mr_t_edge_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input mr_t_edge_stream_cursor_value_input {
+  dst: String
+  score: float8
+  src: String
+}
+
+"""aggregate sum on columns"""
+type mr_t_edge_sum_fields {
+  score: float8
+}
+
+"""aggregate var_pop on columns"""
+type mr_t_edge_var_pop_fields {
+  score: Float
+}
+
+"""aggregate var_samp on columns"""
+type mr_t_edge_var_samp_fields {
+  score: Float
+}
+
+"""aggregate variance on columns"""
+type mr_t_edge_variance_fields {
+  score: Float
+}
+
+"""
+columns and relationships of "mr_t_mutual_score"
+"""
+type mr_t_mutual_score {
+  """An object relationship"""
+  User: user
+  dst: String
+  dst_score: float8
+  src: String
+  src_score: float8
+}
+
+type mr_t_mutual_score_aggregate {
+  aggregate: mr_t_mutual_score_aggregate_fields
+  nodes: [mr_t_mutual_score!]!
+}
+
+"""
+aggregate fields of "mr_t_mutual_score"
+"""
+type mr_t_mutual_score_aggregate_fields {
+  avg: mr_t_mutual_score_avg_fields
+  count(columns: [mr_t_mutual_score_select_column!], distinct: Boolean): Int!
+  max: mr_t_mutual_score_max_fields
+  min: mr_t_mutual_score_min_fields
+  stddev: mr_t_mutual_score_stddev_fields
+  stddev_pop: mr_t_mutual_score_stddev_pop_fields
+  stddev_samp: mr_t_mutual_score_stddev_samp_fields
+  sum: mr_t_mutual_score_sum_fields
+  var_pop: mr_t_mutual_score_var_pop_fields
+  var_samp: mr_t_mutual_score_var_samp_fields
+  variance: mr_t_mutual_score_variance_fields
+}
+
+"""aggregate avg on columns"""
+type mr_t_mutual_score_avg_fields {
+  dst_score: Float
+  src_score: Float
+}
+
+"""
+Boolean expression to filter rows from the table "mr_t_mutual_score". All fields are combined with a logical 'AND'.
+"""
+input mr_t_mutual_score_bool_exp {
+  User: user_bool_exp
+  _and: [mr_t_mutual_score_bool_exp!]
+  _not: mr_t_mutual_score_bool_exp
+  _or: [mr_t_mutual_score_bool_exp!]
+  dst: String_comparison_exp
+  dst_score: float8_comparison_exp
+  src: String_comparison_exp
+  src_score: float8_comparison_exp
+}
+
+"""aggregate max on columns"""
+type mr_t_mutual_score_max_fields {
+  dst: String
+  dst_score: float8
+  src: String
+  src_score: float8
+}
+
+"""aggregate min on columns"""
+type mr_t_mutual_score_min_fields {
+  dst: String
+  dst_score: float8
+  src: String
+  src_score: float8
+}
+
+"""Ordering options when selecting data from "mr_t_mutual_score"."""
+input mr_t_mutual_score_order_by {
+  User: user_order_by
+  dst: order_by
+  dst_score: order_by
+  src: order_by
+  src_score: order_by
+}
+
+"""
+select columns of table "mr_t_mutual_score"
+"""
+enum mr_t_mutual_score_select_column {
+  """column name"""
+  dst
+
+  """column name"""
+  dst_score
+
+  """column name"""
+  src
+
+  """column name"""
+  src_score
+}
+
+"""aggregate stddev on columns"""
+type mr_t_mutual_score_stddev_fields {
+  dst_score: Float
+  src_score: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type mr_t_mutual_score_stddev_pop_fields {
+  dst_score: Float
+  src_score: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type mr_t_mutual_score_stddev_samp_fields {
+  dst_score: Float
+  src_score: Float
+}
+
+"""
+Streaming cursor of the table "mr_t_mutual_score"
+"""
+input mr_t_mutual_score_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: mr_t_mutual_score_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input mr_t_mutual_score_stream_cursor_value_input {
+  dst: String
+  dst_score: float8
+  src: String
+  src_score: float8
+}
+
+"""aggregate sum on columns"""
+type mr_t_mutual_score_sum_fields {
+  dst_score: float8
+  src_score: float8
+}
+
+"""aggregate var_pop on columns"""
+type mr_t_mutual_score_var_pop_fields {
+  dst_score: Float
+  src_score: Float
+}
+
+"""aggregate var_samp on columns"""
+type mr_t_mutual_score_var_samp_fields {
+  dst_score: Float
+  src_score: Float
+}
+
+"""aggregate variance on columns"""
+type mr_t_mutual_score_variance_fields {
+  dst_score: Float
+  src_score: Float
 }
 
 """mutation root"""
@@ -1902,19 +1946,6 @@ type mutation_root {
   delete single row from the table: "beacon"
   """
   delete_beacon_by_pk(id: String!): beacon
-
-  """
-  delete data from the table: "beacon_hidden"
-  """
-  delete_beacon_hidden(
-    """filter the rows which have to be deleted"""
-    where: beacon_hidden_bool_exp!
-  ): beacon_hidden_mutation_response
-
-  """
-  delete single row from the table: "beacon_hidden"
-  """
-  delete_beacon_hidden_by_pk(beacon_id: String!, user_id: String!): beacon_hidden
 
   """
   delete data from the table: "beacon_pinned"
@@ -1954,6 +1985,19 @@ type mutation_root {
   delete single row from the table: "user"
   """
   delete_user_by_pk(id: String!): user
+
+  """
+  delete data from the table: "user_context"
+  """
+  delete_user_context(
+    """filter the rows which have to be deleted"""
+    where: user_context_bool_exp!
+  ): user_context_mutation_response
+
+  """
+  delete single row from the table: "user_context"
+  """
+  delete_user_context_by_pk(context_name: String!, user_id: String!): user_context
 
   """
   delete data from the table: "vote_beacon"
@@ -2004,28 +2048,6 @@ type mutation_root {
     """upsert condition"""
     on_conflict: beacon_on_conflict
   ): beacon_mutation_response
-
-  """
-  insert data into the table: "beacon_hidden"
-  """
-  insert_beacon_hidden(
-    """the rows to be inserted"""
-    objects: [beacon_hidden_insert_input!]!
-
-    """upsert condition"""
-    on_conflict: beacon_hidden_on_conflict
-  ): beacon_hidden_mutation_response
-
-  """
-  insert a single row into the table: "beacon_hidden"
-  """
-  insert_beacon_hidden_one(
-    """the row to be inserted"""
-    object: beacon_hidden_insert_input!
-
-    """upsert condition"""
-    on_conflict: beacon_hidden_on_conflict
-  ): beacon_hidden
 
   """
   insert a single row into the table: "beacon"
@@ -2092,6 +2114,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: user_on_conflict
   ): user_mutation_response
+
+  """
+  insert data into the table: "user_context"
+  """
+  insert_user_context(
+    """the rows to be inserted"""
+    objects: [user_context_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: user_context_on_conflict
+  ): user_context_mutation_response
+
+  """
+  insert a single row into the table: "user_context"
+  """
+  insert_user_context_one(
+    """the row to be inserted"""
+    object: user_context_insert_input!
+
+    """upsert condition"""
+    on_conflict: user_context_on_conflict
+  ): user_context
 
   """
   insert a single row into the table: "user"
@@ -2169,7 +2213,6 @@ type mutation_root {
     """upsert condition"""
     on_conflict: vote_user_on_conflict
   ): vote_user
-  putEdge(dest: String!, src: String!, weight: Float!): Edge!
 
   """
   update data of the table: "beacon"
@@ -2196,34 +2239,6 @@ type mutation_root {
     _set: beacon_set_input
     pk_columns: beacon_pk_columns_input!
   ): beacon
-
-  """
-  update data of the table: "beacon_hidden"
-  """
-  update_beacon_hidden(
-    """sets the columns of the filtered rows to the given values"""
-    _set: beacon_hidden_set_input
-
-    """filter the rows which have to be updated"""
-    where: beacon_hidden_bool_exp!
-  ): beacon_hidden_mutation_response
-
-  """
-  update single row of the table: "beacon_hidden"
-  """
-  update_beacon_hidden_by_pk(
-    """sets the columns of the filtered rows to the given values"""
-    _set: beacon_hidden_set_input
-    pk_columns: beacon_hidden_pk_columns_input!
-  ): beacon_hidden
-
-  """
-  update multiples rows of table: "beacon_hidden"
-  """
-  update_beacon_hidden_many(
-    """updates to execute, in order"""
-    updates: [beacon_hidden_updates!]!
-  ): [beacon_hidden_mutation_response]
 
   """
   update multiples rows of table: "beacon"
@@ -2308,6 +2323,34 @@ type mutation_root {
     _set: user_set_input
     pk_columns: user_pk_columns_input!
   ): user
+
+  """
+  update data of the table: "user_context"
+  """
+  update_user_context(
+    """sets the columns of the filtered rows to the given values"""
+    _set: user_context_set_input
+
+    """filter the rows which have to be updated"""
+    where: user_context_bool_exp!
+  ): user_context_mutation_response
+
+  """
+  update single row of the table: "user_context"
+  """
+  update_user_context_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: user_context_set_input
+    pk_columns: user_context_pk_columns_input!
+  ): user_context
+
+  """
+  update multiples rows of table: "user_context"
+  """
+  update_user_context_many(
+    """updates to execute, in order"""
+    updates: [user_context_updates!]!
+  ): [user_context_mutation_response]
 
   """
   update multiples rows of table: "user"
@@ -2420,32 +2463,6 @@ type mutation_root {
   ): [vote_user_mutation_response]
 }
 
-type MutualScore {
-  ego: String!
-  egoScore: Float!
-  node: String!
-  nodeScore: Float!
-  user: user
-}
-
-input NodeInput {
-  like: String
-}
-
-type NodeScore {
-  beacon: beacon
-  comment: comment
-  ego: String!
-  node: String!
-  score: Float!
-  user: user
-}
-
-input NodeScoreWhereInput {
-  node: NodeInput
-  score: ScoreInput
-}
-
 """column ordering options"""
 enum order_by {
   """in ascending order, nulls last"""
@@ -2465,20 +2482,6 @@ enum order_by {
 
   """in descending order, nulls last"""
   desc_nulls_last
-}
-
-type Properties {
-  address: Address
-  addresstype: String
-  category: String
-  display_name: String
-  importance: Float
-  name: String
-  osm_id: Int
-  osm_type: String
-  place_id: Int
-  place_rank: Int
-  type: String
 }
 
 type query_root {
@@ -2524,49 +2527,6 @@ type query_root {
 
   """fetch data from the table: "beacon" using primary key columns"""
   beacon_by_pk(id: String!): beacon
-
-  """
-  fetch data from the table: "beacon_hidden"
-  """
-  beacon_hidden(
-    """distinct select on columns"""
-    distinct_on: [beacon_hidden_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [beacon_hidden_order_by!]
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): [beacon_hidden!]!
-
-  """
-  fetch aggregated fields from the table: "beacon_hidden"
-  """
-  beacon_hidden_aggregate(
-    """distinct select on columns"""
-    distinct_on: [beacon_hidden_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [beacon_hidden_order_by!]
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): beacon_hidden_aggregate!
-
-  """fetch data from the table: "beacon_hidden" using primary key columns"""
-  beacon_hidden_by_pk(beacon_id: String!, user_id: String!): beacon_hidden
 
   """
   fetch data from the table: "beacon_pinned"
@@ -2653,12 +2613,318 @@ type query_root {
 
   """fetch data from the table: "comment" using primary key columns"""
   comment_by_pk(id: String!): comment
-  edge(dest: String!, src: String!): Edge
-  edges(src: String!): [Edge!]!
-  getPlaceName(lat: Float!, long: Float!): ReverseGeocodingOutput
-  gravityGraph(ego: String!, focus: String, limit: Int, positiveOnly: Boolean): GravityGraph!
-  score(ego: String!, node: String!): NodeScore
-  scores(ego: String!, hidePersonal: Boolean, limit: Int, where: NodeScoreWhereInput): [NodeScore!]!
+  mr_calculate(
+    """distinct select on columns"""
+    distinct_on: [Result_enum_name!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Result_order_by!]
+
+    """filter the rows returned"""
+    where: Result_bool_exp_bool_exp
+  ): [Result!]!
+
+  """
+  execute function "mr_graph" which returns "mr_t_edge"
+  """
+  mr_graph(
+    """
+    input parameters for function "mr_graph"
+    """
+    args: mr_graph_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "mr_graph" and query aggregates on result of table type "mr_t_edge"
+  """
+  mr_graph_aggregate(
+    """
+    input parameters for function "mr_graph_aggregate"
+    """
+    args: mr_graph_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+  mr_init(
+    """distinct select on columns"""
+    distinct_on: [Result_enum_name!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Result_order_by!]
+
+    """filter the rows returned"""
+    where: Result_bool_exp_bool_exp
+  ): [Result!]!
+
+  """
+  execute function "mr_mutual_scores" which returns "mr_t_mutual_score"
+  """
+  mr_mutual_scores(
+    """
+    input parameters for function "mr_mutual_scores"
+    """
+    args: mr_mutual_scores_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): [mr_t_mutual_score!]!
+
+  """
+  execute function "mr_mutual_scores" and query aggregates on result of table type "mr_t_mutual_score"
+  """
+  mr_mutual_scores_aggregate(
+    """
+    input parameters for function "mr_mutual_scores_aggregate"
+    """
+    args: mr_mutual_scores_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): mr_t_mutual_score_aggregate!
+
+  """
+  execute function "mr_node_score" which returns "mr_t_edge"
+  """
+  mr_node_score(
+    """
+    input parameters for function "mr_node_score"
+    """
+    args: mr_node_score_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "mr_node_score" and query aggregates on result of table type "mr_t_edge"
+  """
+  mr_node_score_aggregate(
+    """
+    input parameters for function "mr_node_score_aggregate"
+    """
+    args: mr_node_score_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+
+  """
+  execute function "mr_scores" which returns "mr_t_edge"
+  """
+  mr_scores(
+    """
+    input parameters for function "mr_scores"
+    """
+    args: mr_scores_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "mr_scores" and query aggregates on result of table type "mr_t_edge"
+  """
+  mr_scores_aggregate(
+    """
+    input parameters for function "mr_scores_aggregate"
+    """
+    args: mr_scores_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+
+  """
+  fetch data from the table: "mr_t_edge"
+  """
+  mr_t_edge(
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  fetch aggregated fields from the table: "mr_t_edge"
+  """
+  mr_t_edge_aggregate(
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+
+  """
+  fetch data from the table: "mr_t_mutual_score"
+  """
+  mr_t_mutual_score(
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): [mr_t_mutual_score!]!
+
+  """
+  fetch aggregated fields from the table: "mr_t_mutual_score"
+  """
+  mr_t_mutual_score_aggregate(
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): mr_t_mutual_score_aggregate!
 
   """
   fetch data from the table: "user"
@@ -2702,7 +2968,49 @@ type query_root {
 
   """fetch data from the table: "user" using primary key columns"""
   user_by_pk(id: String!): user
-  usersStats(ego: String!): [MutualScore!]!
+
+  """
+  fetch data from the table: "user_context"
+  """
+  user_context(
+    """distinct select on columns"""
+    distinct_on: [user_context_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_context_order_by!]
+
+    """filter the rows returned"""
+    where: user_context_bool_exp
+  ): [user_context!]!
+
+  """
+  fetch aggregated fields from the table: "user_context"
+  """
+  user_context_aggregate(
+    """distinct select on columns"""
+    distinct_on: [user_context_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_context_order_by!]
+
+    """filter the rows returned"""
+    where: user_context_bool_exp
+  ): user_context_aggregate!
+
+  """fetch data from the table: "user_context" using primary key columns"""
+  user_context_by_pk(context_name: String!, user_id: String!): user_context
 
   """
   fetch data from the table: "vote_beacon"
@@ -2834,17 +3142,34 @@ type query_root {
   vote_user_by_pk(object: String!, subject: String!): vote_user
 }
 
-type ReverseGeocodingOutput {
-  features: [Features]
-  licence: String
-  type: String
+type Result {
+  is_ok: Boolean!
+  message: String!
 }
 
-input ScoreInput {
-  gt: Float
-  gte: Float
-  lt: Float
-  lte: Float
+"""
+Boolean expression to filter rows from the logical model for "Result". All fields are combined with a logical 'AND'.
+"""
+input Result_bool_exp_bool_exp {
+  _and: [Result_bool_exp_bool_exp!]
+  _not: Result_bool_exp_bool_exp
+  _or: [Result_bool_exp_bool_exp!]
+  is_ok: Boolean_comparison_exp
+  message: String_comparison_exp
+}
+
+enum Result_enum_name {
+  """column name"""
+  is_ok
+
+  """column name"""
+  message
+}
+
+"""Ordering options when selecting data from "Result"."""
+input Result_order_by {
+  is_ok: order_by
+  message: order_by
 }
 
 """
@@ -2943,63 +3268,6 @@ type subscription_root {
 
   """fetch data from the table: "beacon" using primary key columns"""
   beacon_by_pk(id: String!): beacon
-
-  """
-  fetch data from the table: "beacon_hidden"
-  """
-  beacon_hidden(
-    """distinct select on columns"""
-    distinct_on: [beacon_hidden_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [beacon_hidden_order_by!]
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): [beacon_hidden!]!
-
-  """
-  fetch aggregated fields from the table: "beacon_hidden"
-  """
-  beacon_hidden_aggregate(
-    """distinct select on columns"""
-    distinct_on: [beacon_hidden_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [beacon_hidden_order_by!]
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): beacon_hidden_aggregate!
-
-  """fetch data from the table: "beacon_hidden" using primary key columns"""
-  beacon_hidden_by_pk(beacon_id: String!, user_id: String!): beacon_hidden
-
-  """
-  fetch data from the table in a streaming manner: "beacon_hidden"
-  """
-  beacon_hidden_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [beacon_hidden_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): [beacon_hidden!]!
 
   """
   fetch data from the table: "beacon_pinned"
@@ -3128,6 +3396,346 @@ type subscription_root {
     """filter the rows returned"""
     where: comment_bool_exp
   ): [comment!]!
+  mr_calculate(
+    """distinct select on columns"""
+    distinct_on: [Result_enum_name!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Result_order_by!]
+
+    """filter the rows returned"""
+    where: Result_bool_exp_bool_exp
+  ): [Result!]!
+
+  """
+  execute function "mr_graph" which returns "mr_t_edge"
+  """
+  mr_graph(
+    """
+    input parameters for function "mr_graph"
+    """
+    args: mr_graph_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "mr_graph" and query aggregates on result of table type "mr_t_edge"
+  """
+  mr_graph_aggregate(
+    """
+    input parameters for function "mr_graph_aggregate"
+    """
+    args: mr_graph_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+  mr_init(
+    """distinct select on columns"""
+    distinct_on: [Result_enum_name!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Result_order_by!]
+
+    """filter the rows returned"""
+    where: Result_bool_exp_bool_exp
+  ): [Result!]!
+
+  """
+  execute function "mr_mutual_scores" which returns "mr_t_mutual_score"
+  """
+  mr_mutual_scores(
+    """
+    input parameters for function "mr_mutual_scores"
+    """
+    args: mr_mutual_scores_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): [mr_t_mutual_score!]!
+
+  """
+  execute function "mr_mutual_scores" and query aggregates on result of table type "mr_t_mutual_score"
+  """
+  mr_mutual_scores_aggregate(
+    """
+    input parameters for function "mr_mutual_scores_aggregate"
+    """
+    args: mr_mutual_scores_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): mr_t_mutual_score_aggregate!
+
+  """
+  execute function "mr_node_score" which returns "mr_t_edge"
+  """
+  mr_node_score(
+    """
+    input parameters for function "mr_node_score"
+    """
+    args: mr_node_score_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "mr_node_score" and query aggregates on result of table type "mr_t_edge"
+  """
+  mr_node_score_aggregate(
+    """
+    input parameters for function "mr_node_score_aggregate"
+    """
+    args: mr_node_score_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+
+  """
+  execute function "mr_scores" which returns "mr_t_edge"
+  """
+  mr_scores(
+    """
+    input parameters for function "mr_scores"
+    """
+    args: mr_scores_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "mr_scores" and query aggregates on result of table type "mr_t_edge"
+  """
+  mr_scores_aggregate(
+    """
+    input parameters for function "mr_scores_aggregate"
+    """
+    args: mr_scores_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+
+  """
+  fetch data from the table: "mr_t_edge"
+  """
+  mr_t_edge(
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  fetch aggregated fields from the table: "mr_t_edge"
+  """
+  mr_t_edge_aggregate(
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+
+  """
+  fetch data from the table in a streaming manner: "mr_t_edge"
+  """
+  mr_t_edge_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [mr_t_edge_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  fetch data from the table: "mr_t_mutual_score"
+  """
+  mr_t_mutual_score(
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): [mr_t_mutual_score!]!
+
+  """
+  fetch aggregated fields from the table: "mr_t_mutual_score"
+  """
+  mr_t_mutual_score_aggregate(
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): mr_t_mutual_score_aggregate!
+
+  """
+  fetch data from the table in a streaming manner: "mr_t_mutual_score"
+  """
+  mr_t_mutual_score_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [mr_t_mutual_score_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): [mr_t_mutual_score!]!
 
   """
   fetch data from the table: "user"
@@ -3171,6 +3779,63 @@ type subscription_root {
 
   """fetch data from the table: "user" using primary key columns"""
   user_by_pk(id: String!): user
+
+  """
+  fetch data from the table: "user_context"
+  """
+  user_context(
+    """distinct select on columns"""
+    distinct_on: [user_context_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_context_order_by!]
+
+    """filter the rows returned"""
+    where: user_context_bool_exp
+  ): [user_context!]!
+
+  """
+  fetch aggregated fields from the table: "user_context"
+  """
+  user_context_aggregate(
+    """distinct select on columns"""
+    distinct_on: [user_context_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_context_order_by!]
+
+    """filter the rows returned"""
+    where: user_context_bool_exp
+  ): user_context_aggregate!
+
+  """fetch data from the table: "user_context" using primary key columns"""
+  user_context_by_pk(context_name: String!, user_id: String!): user_context
+
+  """
+  fetch data from the table in a streaming manner: "user_context"
+  """
+  user_context_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [user_context_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: user_context_bool_exp
+  ): [user_context!]!
 
   """
   fetch data from the table in a streaming manner: "user"
@@ -3396,42 +4061,6 @@ input tstzrange_comparison_exp {
 columns and relationships of "user"
 """
 type user {
-  """An array relationship"""
-  beacon_hiddens(
-    """distinct select on columns"""
-    distinct_on: [beacon_hidden_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [beacon_hidden_order_by!]
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): [beacon_hidden!]!
-
-  """An aggregate relationship"""
-  beacon_hiddens_aggregate(
-    """distinct select on columns"""
-    distinct_on: [beacon_hidden_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [beacon_hidden_order_by!]
-
-    """filter the rows returned"""
-    where: beacon_hidden_bool_exp
-  ): beacon_hidden_aggregate!
-
   """An array relationship"""
   beacon_pinneds(
     """distinct select on columns"""
@@ -3737,8 +4366,6 @@ input user_bool_exp {
   _and: [user_bool_exp!]
   _not: user_bool_exp
   _or: [user_bool_exp!]
-  beacon_hiddens: beacon_hidden_bool_exp
-  beacon_hiddens_aggregate: beacon_hidden_aggregate_bool_exp
   beacon_pinneds: beacon_pinned_bool_exp
   beacon_pinneds_aggregate: beacon_pinned_aggregate_bool_exp
   beacons: beacon_bool_exp
@@ -3779,10 +4406,162 @@ enum user_constraint {
 }
 
 """
+columns and relationships of "user_context"
+"""
+type user_context {
+  context_name: String!
+  user_id: String!
+}
+
+"""
+aggregated selection of "user_context"
+"""
+type user_context_aggregate {
+  aggregate: user_context_aggregate_fields
+  nodes: [user_context!]!
+}
+
+"""
+aggregate fields of "user_context"
+"""
+type user_context_aggregate_fields {
+  count(columns: [user_context_select_column!], distinct: Boolean): Int!
+  max: user_context_max_fields
+  min: user_context_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "user_context". All fields are combined with a logical 'AND'.
+"""
+input user_context_bool_exp {
+  _and: [user_context_bool_exp!]
+  _not: user_context_bool_exp
+  _or: [user_context_bool_exp!]
+  context_name: String_comparison_exp
+  user_id: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "user_context"
+"""
+enum user_context_constraint {
+  """
+  unique or primary key constraint on columns "context_name", "user_id"
+  """
+  user_context_pkey
+}
+
+"""
+input type for inserting data into table "user_context"
+"""
+input user_context_insert_input {
+  context_name: String
+  user_id: String
+}
+
+"""aggregate max on columns"""
+type user_context_max_fields {
+  context_name: String
+  user_id: String
+}
+
+"""aggregate min on columns"""
+type user_context_min_fields {
+  context_name: String
+  user_id: String
+}
+
+"""
+response of any mutation on the table "user_context"
+"""
+type user_context_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [user_context!]!
+}
+
+"""
+on_conflict condition type for table "user_context"
+"""
+input user_context_on_conflict {
+  constraint: user_context_constraint!
+  update_columns: [user_context_update_column!]! = []
+  where: user_context_bool_exp
+}
+
+"""Ordering options when selecting data from "user_context"."""
+input user_context_order_by {
+  context_name: order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: user_context"""
+input user_context_pk_columns_input {
+  context_name: String!
+  user_id: String!
+}
+
+"""
+select columns of table "user_context"
+"""
+enum user_context_select_column {
+  """column name"""
+  context_name
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "user_context"
+"""
+input user_context_set_input {
+  context_name: String
+  user_id: String
+}
+
+"""
+Streaming cursor of the table "user_context"
+"""
+input user_context_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: user_context_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input user_context_stream_cursor_value_input {
+  context_name: String
+  user_id: String
+}
+
+"""
+update columns of table "user_context"
+"""
+enum user_context_update_column {
+  """column name"""
+  context_name
+
+  """column name"""
+  user_id
+}
+
+input user_context_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: user_context_set_input
+
+  """filter the rows which have to be updated"""
+  where: user_context_bool_exp!
+}
+
+"""
 input type for inserting data into table "user"
 """
 input user_insert_input {
-  beacon_hiddens: beacon_hidden_arr_rel_insert_input
   beacon_pinneds: beacon_pinned_arr_rel_insert_input
   beacons: beacon_arr_rel_insert_input
   comments: comment_arr_rel_insert_input
@@ -3861,7 +4640,6 @@ input user_on_conflict {
 
 """Ordering options when selecting data from "user"."""
 input user_order_by {
-  beacon_hiddens_aggregate: beacon_hidden_aggregate_order_by
   beacon_pinneds_aggregate: beacon_pinned_aggregate_order_by
   beacons_aggregate: beacon_aggregate_order_by
   comments_aggregate: comment_aggregate_order_by

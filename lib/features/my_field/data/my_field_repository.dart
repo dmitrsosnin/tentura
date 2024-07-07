@@ -11,17 +11,15 @@ class MyFieldRepository {
 
   final RemoteApiService _remoteApiService;
 
-  late final _fetchRequest = GBeaconFetchMyFieldReq(
-    (r) => r.fetchPolicy = FetchPolicy.CacheAndNetwork,
-  );
+  late final _fetchRequest = GBeaconFetchMyFieldReq((r) => r
+    ..fetchPolicy = FetchPolicy.CacheAndNetwork
+    ..vars.src = _remoteApiService.userId);
 
   Stream<Iterable<Beacon>> get stream =>
       _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
-          .scores
-          // TBD: remove that ugly 'where' when able filter in request
-          .where((e) => e.beacon != null && e.beacon!.enabled)
-          .map((r) => r.beacon! as Beacon));
+          .mr_scores
+          .map((r) => r.Beacon! as Beacon));
 
   Future<void> fetch() =>
       _remoteApiService.gqlClient.addRequestToRequestController(_fetchRequest);

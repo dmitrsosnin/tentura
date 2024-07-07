@@ -11,19 +11,20 @@ class RatingRepository {
 
   final RemoteApiService _remoteApiService;
 
-  late final _fetchRequest =
-      GUsersRatingReq((r) => r.fetchPolicy = FetchPolicy.CacheAndNetwork);
+  late final _fetchRequest = GUsersRatingReq((r) => r
+    ..fetchPolicy = FetchPolicy.CacheAndNetwork
+    ..vars.src = _remoteApiService.userId);
 
   Stream<Iterable<UserRating>> get stream =>
       _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
-          .usersStats
+          .mr_mutual_scores
           .where(
-              (e) => e.user != null && e.user!.id != _remoteApiService.userId)
+              (e) => e.User != null && e.User!.id != _remoteApiService.userId)
           .map((e) => UserRating(
-                egoScore: e.egoScore,
-                userScore: e.nodeScore,
-                user: e.user! as User,
+                egoScore: double.parse(e.src_score!.value),
+                userScore: double.parse(e.dst_score!.value),
+                user: e.User! as User,
               )));
 
   Future<void> fetch() =>

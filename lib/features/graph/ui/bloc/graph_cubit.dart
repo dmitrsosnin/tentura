@@ -90,38 +90,30 @@ class GraphCubit extends Cubit<GraphState> {
     );
 
     // update cache
-    for (final e in graph.users) {
-      final user = e?.user;
-      if (user != null) {
-        _users.putIfAbsent(user.id, () => user as User);
-      }
-    }
-    for (final e in graph.beacons) {
-      final beacon = e?.beacon;
-      if (beacon != null) {
-        _beacons.putIfAbsent(beacon.id, () => beacon as Beacon);
-      }
-    }
-    for (final e in graph.comments) {
-      final comment = e?.comment;
-      if (comment != null) {
-        _comments.putIfAbsent(comment.id, () => comment as Comment);
+    for (final e in graph) {
+      if (e.User != null) {
+        _users.putIfAbsent(e.User!.id, () => e.User! as User);
+      } else if (e.Beacon != null) {
+        _beacons.putIfAbsent(e.Beacon!.id, () => e.Beacon! as Beacon);
       }
     }
 
     // update graph
     graphController.mutate((mutator) {
-      for (final e in graph.edges) {
-        if (state.positiveOnly && e!.weight < 0) continue;
-        final src = _buildNodeDetails(node: e!.src);
+      for (final e in graph) {
+        if (e.score == null || e.src == null || e.dst == null) continue;
+        final score = double.tryParse(e.score?.value ?? '');
+        if (score == null) continue;
+        if (state.positiveOnly && score < 0) continue;
+        final src = _buildNodeDetails(node: e.src!);
         if (src == null) continue;
-        final dst = _buildNodeDetails(node: e.dest);
+        final dst = _buildNodeDetails(node: e.dst!);
         if (dst == null) continue;
         final edge = EdgeDetails<NodeDetails>(
           source: src,
           destination: dst,
           strokeWidth: (src == _egoNode || dst == _egoNode) ? 6 : 4,
-          color: e.weight < 0
+          color: score < 0
               ? Colors.redAccent
               : src == _egoNode || dst == _egoNode
                   ? Colors.amberAccent

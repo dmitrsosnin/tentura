@@ -7,6 +7,7 @@ fragment BeaconFields on beacon {
   created_at
   updated_at
   is_pinned
+  context
   enabled
   lat
   long

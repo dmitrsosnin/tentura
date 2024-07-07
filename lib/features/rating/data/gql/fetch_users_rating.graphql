@@ -1,10 +1,10 @@
 # import '/domain/entity/user.graphql'
 
-query UsersRating {
-  usersStats {
-    egoScore
-    nodeScore
-    user {
+query UsersRating($src: String!, $context: String) {
+  mr_mutual_scores(args: {src: $src, context: $context}) {
+    src_score
+    dst_score
+    User {
       ...UserFields
     }
   }
