@@ -1,9 +1,0 @@
-# import '/domain/entity/beacon.graphql'
-
-query BeaconFetchMyField($src: String!, $context: String) {
-  mr_scores(args: {src: $src, kind: "B", gt: "0", hide_personal: true, context: $context}, where: {Beacon: {enabled: {_eq: true}}}) {
-    Beacon {
-      ...BeaconFields
-    }
-  }
-}

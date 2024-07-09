@@ -1,0 +1,11 @@
+# import '/domain/entity/user.graphql'
+
+query RatingFetch {
+  rating {
+    src_score
+    dst_score
+    User {
+      ...UserFields
+    }
+  }
+}

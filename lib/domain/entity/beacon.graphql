@@ -15,6 +15,7 @@ fragment BeaconFields on beacon {
   has_picture
   comments_count
   my_vote
+  score
   author {
     ...UserFields
   }

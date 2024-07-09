@@ -110,6 +110,7 @@ type beacon {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
   timerange: tstzrange
   title: String!
   updated_at: timestamptz!
@@ -315,6 +316,7 @@ type beacon_avg_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -349,6 +351,7 @@ input beacon_bool_exp {
   lat: float8_comparison_exp
   long: float8_comparison_exp
   my_vote: Int_comparison_exp
+  score: float8_comparison_exp
   timerange: tstzrange_comparison_exp
   title: String_comparison_exp
   updated_at: timestamptz_comparison_exp
@@ -413,6 +416,7 @@ type beacon_max_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
   title: String
   updated_at: timestamptz
   user_id: String
@@ -448,6 +452,7 @@ type beacon_min_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
   title: String
   updated_at: timestamptz
   user_id: String
@@ -515,6 +520,7 @@ input beacon_order_by {
   lat: order_by
   long: order_by
   my_vote: order_by
+  score: order_by
   timerange: order_by
   title: order_by
   updated_at: order_by
@@ -920,6 +926,7 @@ type beacon_stddev_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -941,6 +948,7 @@ type beacon_stddev_pop_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -962,6 +970,7 @@ type beacon_stddev_samp_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -1011,6 +1020,7 @@ type beacon_sum_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -1087,6 +1097,7 @@ type beacon_var_pop_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -1108,6 +1119,7 @@ type beacon_var_samp_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -1129,6 +1141,7 @@ type beacon_variance_fields {
   A computed field, executes function "beacon_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -1577,6 +1590,12 @@ input float8_comparison_exp {
   _nin: [float8!]
 }
 
+input graph_args {
+  context: String
+  focus: String
+  positive_only: Boolean
+}
+
 """
 Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
 """
@@ -1590,39 +1609,6 @@ input Int_comparison_exp {
   _lte: Int
   _neq: Int
   _nin: [Int!]
-}
-
-input mr_graph_args {
-  context: String
-  count: Int
-  focus: String
-  index: Int
-  positive_only: Boolean
-  src: String
-}
-
-input mr_mutual_scores_args {
-  context: String
-  src: String
-}
-
-input mr_node_score_args {
-  context: String
-  dst: String
-  src: String
-}
-
-input mr_scores_args {
-  context: String
-  count: Int
-  gt: float8
-  gte: float8
-  hide_personal: Boolean
-  index: Int
-  kind: String
-  lt: float8
-  lte: float8
-  src: String
 }
 
 """
@@ -1787,6 +1773,9 @@ type mr_t_mutual_score {
   src_score: float8
 }
 
+"""
+aggregated selection of "mr_t_mutual_score"
+"""
 type mr_t_mutual_score_aggregate {
   aggregate: mr_t_mutual_score_aggregate_fields
   nodes: [mr_t_mutual_score!]!
@@ -2463,6 +2452,10 @@ type mutation_root {
   ): [vote_user_mutation_response]
 }
 
+input my_field_args {
+  context: String
+}
+
 """column ordering options"""
 enum order_by {
   """in ascending order, nulls last"""
@@ -2613,6 +2606,56 @@ type query_root {
 
   """fetch data from the table: "comment" using primary key columns"""
   comment_by_pk(id: String!): comment
+
+  """
+  execute function "graph" which returns "mr_t_edge"
+  """
+  graph(
+    """
+    input parameters for function "graph"
+    """
+    args: graph_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "graph" and query aggregates on result of table type "mr_t_edge"
+  """
+  graph_aggregate(
+    """
+    input parameters for function "graph_aggregate"
+    """
+    args: graph_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
   mr_calculate(
     """distinct select on columns"""
     distinct_on: [Result_enum_name!]
@@ -2629,56 +2672,6 @@ type query_root {
     """filter the rows returned"""
     where: Result_bool_exp_bool_exp
   ): [Result!]!
-
-  """
-  execute function "mr_graph" which returns "mr_t_edge"
-  """
-  mr_graph(
-    """
-    input parameters for function "mr_graph"
-    """
-    args: mr_graph_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): [mr_t_edge!]!
-
-  """
-  execute function "mr_graph" and query aggregates on result of table type "mr_t_edge"
-  """
-  mr_graph_aggregate(
-    """
-    input parameters for function "mr_graph_aggregate"
-    """
-    args: mr_graph_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): mr_t_edge_aggregate!
   mr_init(
     """distinct select on columns"""
     distinct_on: [Result_enum_name!]
@@ -2695,18 +2688,9 @@ type query_root {
     """filter the rows returned"""
     where: Result_bool_exp_bool_exp
   ): [Result!]!
-
-  """
-  execute function "mr_mutual_scores" which returns "mr_t_mutual_score"
-  """
-  mr_mutual_scores(
-    """
-    input parameters for function "mr_mutual_scores"
-    """
-    args: mr_mutual_scores_args!
-
+  mr_reset(
     """distinct select on columns"""
-    distinct_on: [mr_t_mutual_score_select_column!]
+    distinct_on: [Result_enum_name!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -2715,136 +2699,11 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [mr_t_mutual_score_order_by!]
+    order_by: [Result_order_by!]
 
     """filter the rows returned"""
-    where: mr_t_mutual_score_bool_exp
-  ): [mr_t_mutual_score!]!
-
-  """
-  execute function "mr_mutual_scores" and query aggregates on result of table type "mr_t_mutual_score"
-  """
-  mr_mutual_scores_aggregate(
-    """
-    input parameters for function "mr_mutual_scores_aggregate"
-    """
-    args: mr_mutual_scores_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_mutual_score_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_mutual_score_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_mutual_score_bool_exp
-  ): mr_t_mutual_score_aggregate!
-
-  """
-  execute function "mr_node_score" which returns "mr_t_edge"
-  """
-  mr_node_score(
-    """
-    input parameters for function "mr_node_score"
-    """
-    args: mr_node_score_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): [mr_t_edge!]!
-
-  """
-  execute function "mr_node_score" and query aggregates on result of table type "mr_t_edge"
-  """
-  mr_node_score_aggregate(
-    """
-    input parameters for function "mr_node_score_aggregate"
-    """
-    args: mr_node_score_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): mr_t_edge_aggregate!
-
-  """
-  execute function "mr_scores" which returns "mr_t_edge"
-  """
-  mr_scores(
-    """
-    input parameters for function "mr_scores"
-    """
-    args: mr_scores_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): [mr_t_edge!]!
-
-  """
-  execute function "mr_scores" and query aggregates on result of table type "mr_t_edge"
-  """
-  mr_scores_aggregate(
-    """
-    input parameters for function "mr_scores_aggregate"
-    """
-    args: mr_scores_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): mr_t_edge_aggregate!
+    where: Result_bool_exp_bool_exp
+  ): [Result!]!
 
   """
   fetch data from the table: "mr_t_edge"
@@ -2910,6 +2769,96 @@ type query_root {
   fetch aggregated fields from the table: "mr_t_mutual_score"
   """
   mr_t_mutual_score_aggregate(
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): mr_t_mutual_score_aggregate!
+
+  """
+  execute function "my_field" which returns "mr_t_edge"
+  """
+  my_field(
+    """
+    input parameters for function "my_field"
+    """
+    args: my_field_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "my_field" and query aggregates on result of table type "mr_t_edge"
+  """
+  my_field_aggregate(
+    """
+    input parameters for function "my_field_aggregate"
+    """
+    args: my_field_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+
+  """
+  execute function "rating" which returns "mr_t_mutual_score"
+  """
+  rating(
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): [mr_t_mutual_score!]!
+
+  """
+  execute function "rating" and query aggregates on result of table type "mr_t_mutual_score"
+  """
+  rating_aggregate(
     """distinct select on columns"""
     distinct_on: [mr_t_mutual_score_select_column!]
 
@@ -3396,6 +3345,56 @@ type subscription_root {
     """filter the rows returned"""
     where: comment_bool_exp
   ): [comment!]!
+
+  """
+  execute function "graph" which returns "mr_t_edge"
+  """
+  graph(
+    """
+    input parameters for function "graph"
+    """
+    args: graph_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "graph" and query aggregates on result of table type "mr_t_edge"
+  """
+  graph_aggregate(
+    """
+    input parameters for function "graph_aggregate"
+    """
+    args: graph_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
   mr_calculate(
     """distinct select on columns"""
     distinct_on: [Result_enum_name!]
@@ -3412,56 +3411,6 @@ type subscription_root {
     """filter the rows returned"""
     where: Result_bool_exp_bool_exp
   ): [Result!]!
-
-  """
-  execute function "mr_graph" which returns "mr_t_edge"
-  """
-  mr_graph(
-    """
-    input parameters for function "mr_graph"
-    """
-    args: mr_graph_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): [mr_t_edge!]!
-
-  """
-  execute function "mr_graph" and query aggregates on result of table type "mr_t_edge"
-  """
-  mr_graph_aggregate(
-    """
-    input parameters for function "mr_graph_aggregate"
-    """
-    args: mr_graph_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): mr_t_edge_aggregate!
   mr_init(
     """distinct select on columns"""
     distinct_on: [Result_enum_name!]
@@ -3478,18 +3427,9 @@ type subscription_root {
     """filter the rows returned"""
     where: Result_bool_exp_bool_exp
   ): [Result!]!
-
-  """
-  execute function "mr_mutual_scores" which returns "mr_t_mutual_score"
-  """
-  mr_mutual_scores(
-    """
-    input parameters for function "mr_mutual_scores"
-    """
-    args: mr_mutual_scores_args!
-
+  mr_reset(
     """distinct select on columns"""
-    distinct_on: [mr_t_mutual_score_select_column!]
+    distinct_on: [Result_enum_name!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3498,136 +3438,11 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [mr_t_mutual_score_order_by!]
+    order_by: [Result_order_by!]
 
     """filter the rows returned"""
-    where: mr_t_mutual_score_bool_exp
-  ): [mr_t_mutual_score!]!
-
-  """
-  execute function "mr_mutual_scores" and query aggregates on result of table type "mr_t_mutual_score"
-  """
-  mr_mutual_scores_aggregate(
-    """
-    input parameters for function "mr_mutual_scores_aggregate"
-    """
-    args: mr_mutual_scores_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_mutual_score_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_mutual_score_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_mutual_score_bool_exp
-  ): mr_t_mutual_score_aggregate!
-
-  """
-  execute function "mr_node_score" which returns "mr_t_edge"
-  """
-  mr_node_score(
-    """
-    input parameters for function "mr_node_score"
-    """
-    args: mr_node_score_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): [mr_t_edge!]!
-
-  """
-  execute function "mr_node_score" and query aggregates on result of table type "mr_t_edge"
-  """
-  mr_node_score_aggregate(
-    """
-    input parameters for function "mr_node_score_aggregate"
-    """
-    args: mr_node_score_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): mr_t_edge_aggregate!
-
-  """
-  execute function "mr_scores" which returns "mr_t_edge"
-  """
-  mr_scores(
-    """
-    input parameters for function "mr_scores"
-    """
-    args: mr_scores_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): [mr_t_edge!]!
-
-  """
-  execute function "mr_scores" and query aggregates on result of table type "mr_t_edge"
-  """
-  mr_scores_aggregate(
-    """
-    input parameters for function "mr_scores_aggregate"
-    """
-    args: mr_scores_args!
-
-    """distinct select on columns"""
-    distinct_on: [mr_t_edge_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [mr_t_edge_order_by!]
-
-    """filter the rows returned"""
-    where: mr_t_edge_bool_exp
-  ): mr_t_edge_aggregate!
+    where: Result_bool_exp_bool_exp
+  ): [Result!]!
 
   """
   fetch data from the table: "mr_t_edge"
@@ -3736,6 +3551,96 @@ type subscription_root {
     """filter the rows returned"""
     where: mr_t_mutual_score_bool_exp
   ): [mr_t_mutual_score!]!
+
+  """
+  execute function "my_field" which returns "mr_t_edge"
+  """
+  my_field(
+    """
+    input parameters for function "my_field"
+    """
+    args: my_field_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): [mr_t_edge!]!
+
+  """
+  execute function "my_field" and query aggregates on result of table type "mr_t_edge"
+  """
+  my_field_aggregate(
+    """
+    input parameters for function "my_field_aggregate"
+    """
+    args: my_field_args!
+
+    """distinct select on columns"""
+    distinct_on: [mr_t_edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_edge_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_edge_bool_exp
+  ): mr_t_edge_aggregate!
+
+  """
+  execute function "rating" which returns "mr_t_mutual_score"
+  """
+  rating(
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): [mr_t_mutual_score!]!
+
+  """
+  execute function "rating" and query aggregates on result of table type "mr_t_mutual_score"
+  """
+  rating_aggregate(
+    """distinct select on columns"""
+    distinct_on: [mr_t_mutual_score_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mr_t_mutual_score_order_by!]
+
+    """filter the rows returned"""
+    where: mr_t_mutual_score_bool_exp
+  ): mr_t_mutual_score_aggregate!
 
   """
   fetch data from the table: "user"
@@ -4178,6 +4083,7 @@ type user {
   """
   my_vote: Int
   public_key: String!
+  score: float8
   title: String!
   updated_at: timestamptz!
 
@@ -4357,6 +4263,7 @@ type user_avg_fields {
   A computed field, executes function "user_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -4378,6 +4285,7 @@ input user_bool_exp {
   id: String_comparison_exp
   my_vote: Int_comparison_exp
   public_key: String_comparison_exp
+  score: float8_comparison_exp
   title: String_comparison_exp
   updated_at: timestamptz_comparison_exp
   voteUsersBySubject: vote_user_bool_exp
@@ -4589,6 +4497,7 @@ type user_max_fields {
   """
   my_vote: Int
   public_key: String
+  score: float8
   title: String
   updated_at: timestamptz
 }
@@ -4604,6 +4513,7 @@ type user_min_fields {
   """
   my_vote: Int
   public_key: String
+  score: float8
   title: String
   updated_at: timestamptz
 }
@@ -4649,6 +4559,7 @@ input user_order_by {
   id: order_by
   my_vote: order_by
   public_key: order_by
+  score: order_by
   title: order_by
   updated_at: order_by
   voteUsersBySubject_aggregate: vote_user_aggregate_order_by
@@ -4707,6 +4618,7 @@ type user_stddev_fields {
   A computed field, executes function "user_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """aggregate stddev_pop on columns"""
@@ -4715,6 +4627,7 @@ type user_stddev_pop_fields {
   A computed field, executes function "user_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """aggregate stddev_samp on columns"""
@@ -4723,6 +4636,7 @@ type user_stddev_samp_fields {
   A computed field, executes function "user_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -4753,6 +4667,7 @@ type user_sum_fields {
   A computed field, executes function "user_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """
@@ -4795,6 +4710,7 @@ type user_var_pop_fields {
   A computed field, executes function "user_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """aggregate var_samp on columns"""
@@ -4803,6 +4719,7 @@ type user_var_samp_fields {
   A computed field, executes function "user_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """aggregate variance on columns"""
@@ -4811,6 +4728,7 @@ type user_variance_fields {
   A computed field, executes function "user_get_my_vote"
   """
   my_vote: Int
+  score: float8
 }
 
 """

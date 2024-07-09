@@ -1,18 +1,23 @@
 # import '/domain/entity/user.graphql'
 # import '/domain/entity/beacon.graphql'
 
-query GraphFetch($src: String!,
-                 $focus: String!,
-                 $context: String,
-                 $positive_only: Boolean,
-                 $index: Int,
-                 $count: Int) {
-  mr_graph(args: {src: $src,
-                  focus: $focus,
-                  context: $context,
-                  positive_only: $positive_only,
-                  index: $index,
-                  count: $count}) {
+query GraphFetch(
+  $focus: String,
+  $context: String,
+  $positive_only: Boolean = true,
+  $offset: Int = 0,
+  $limit: Int = 5
+) {
+  graph(
+    args: {
+      focus: $focus,
+      context: $context,
+      positive_only: $positive_only
+    },
+    order_by: {score: desc},
+    offset: $offset,
+    limit: $limit
+  ) {
     src
     dst
     score

@@ -10,7 +10,7 @@ class GraphRepository {
 
   final RemoteApiService _remoteApiService;
 
-  Future<Iterable<GGraphFetchData_mr_graph>> fetch({
+  Future<Iterable<GGraphFetchData_graph>> fetch({
     required String focus,
     required bool positiveOnly,
     required int limit,
@@ -19,9 +19,9 @@ class GraphRepository {
           .request(GGraphFetchReq(
             (b) => b.vars
               ..focus = focus
-              ..count = limit
+              ..limit = limit
               ..positive_only = positiveOnly,
           ))
           .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then((r) => r.dataOrThrow(label: _label).mr_graph);
+          .then((r) => r.dataOrThrow(label: _label).graph);
 }

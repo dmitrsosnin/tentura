@@ -1,7 +1,7 @@
 import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 
-import 'gql/_g/beacon_fetch_my_field.req.gql.dart';
+import 'gql/_g/my_field_fetch.req.gql.dart';
 import 'gql/_g/beacon_vote_by_id.req.gql.dart';
 
 class MyFieldRepository {
@@ -11,14 +11,13 @@ class MyFieldRepository {
 
   final RemoteApiService _remoteApiService;
 
-  late final _fetchRequest = GBeaconFetchMyFieldReq((r) => r
-    ..fetchPolicy = FetchPolicy.CacheAndNetwork
-    ..vars.src = _remoteApiService.userId);
+  late final _fetchRequest =
+      GMyFieldFetchReq((r) => r.fetchPolicy = FetchPolicy.CacheAndNetwork);
 
   Stream<Iterable<Beacon>> get stream =>
       _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
-          .mr_scores
+          .my_field
           .map((r) => r.Beacon! as Beacon));
 
   Future<void> fetch() =>
