@@ -18,7 +18,7 @@ class MyFieldRepository {
       _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
           .dataOrThrow(label: _label)
           .my_field
-          .map((r) => r.Beacon! as Beacon));
+          .map((r) => r.beacon! as Beacon));
 
   Future<void> fetch() =>
       _remoteApiService.gqlClient.addRequestToRequestController(_fetchRequest);

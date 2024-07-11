@@ -19,11 +19,11 @@ class RatingRepository {
           .dataOrThrow(label: _label)
           .rating
           .where(
-              (e) => e.User != null && e.User!.id != _remoteApiService.userId)
+              (e) => e.user != null && e.user!.id != _remoteApiService.userId)
           .map((e) => UserRating(
                 egoScore: double.parse(e.src_score!.value),
                 userScore: double.parse(e.dst_score!.value),
-                user: e.User! as User,
+                user: e.user! as User,
               )));
 
   Future<void> fetch() =>

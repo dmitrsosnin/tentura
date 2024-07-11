@@ -4,7 +4,7 @@ query RatingFetch {
   rating {
     src_score
     dst_score
-    User {
+    user {
       ...UserFields
     }
   }

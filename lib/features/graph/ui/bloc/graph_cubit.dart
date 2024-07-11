@@ -91,10 +91,10 @@ class GraphCubit extends Cubit<GraphState> {
 
     // update cache
     for (final e in graph) {
-      if (e.User != null) {
-        _users.putIfAbsent(e.User!.id, () => e.User! as User);
-      } else if (e.Beacon != null) {
-        _beacons.putIfAbsent(e.Beacon!.id, () => e.Beacon! as Beacon);
+      if (e.user != null) {
+        _users.putIfAbsent(e.user!.id, () => e.user! as User);
+      } else if (e.beacon != null) {
+        _beacons.putIfAbsent(e.beacon!.id, () => e.beacon! as Beacon);
       }
     }
 

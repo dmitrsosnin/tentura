@@ -21,10 +21,10 @@ query GraphFetch(
     src
     dst
     score
-    User {
+    user {
       ...UserFields
     }
-    Beacon {
+    beacon {
       ...BeaconFields
     }
   }
