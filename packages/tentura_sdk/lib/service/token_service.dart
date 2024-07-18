@@ -10,23 +10,31 @@ import '../exception.dart';
 
 typedef JWT = ({String id, String accessToken, DateTime expiresAt});
 
+final _jwtEmpty = (
+  id: '',
+  accessToken: '',
+  expiresAt: DateTime.fromMillisecondsSinceEpoch(0)
+);
+
 /// Set KeyPair before fetchJWT
 class TokenService {
   static const _jwtHeader = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.';
 
   TokenService({
     required this.serverName,
-    required this.jwtExpiresIn,
+    this.jwtExpiresIn = const Duration(minutes: 1),
   });
 
   final String serverName;
   final Duration jwtExpiresIn;
 
-  JWT? _jwt;
+  JWT _jwt = _jwtEmpty;
 
   KeyPair? _keyPair;
 
   bool _tokenLocked = false;
+
+  bool get hasValidToken => DateTime.timestamp().isBefore(_jwt.expiresAt);
 
   /// Generate and set new KeyPair and returns its seed
   Future<String> setNewKeyPair() async {
@@ -42,50 +50,58 @@ class TokenService {
   }
 
   Future<GetTokenResponse> getToken() async {
-    final validTime = DateTime.timestamp().subtract(jwtExpiresIn);
+    if (hasValidToken) return GetTokenResponse(value: _jwt.accessToken);
 
-    if (_jwt == null || _jwt!.expiresAt.isBefore(validTime)) {
-      if (_tokenLocked) {
-        var waitFor = const Duration(milliseconds: 100);
-        while (waitFor < jwtExpiresIn) {
-          await Future<void>.delayed(waitFor);
-          if (_jwt == null) {
-            waitFor *= 2;
-          } else {
-            return GetTokenResponse(value: _jwt!.accessToken);
-          }
-        }
-        return GetTokenResponse(
-          error: TimeoutException('Timeout while refreshing token!'),
-        );
-      } else {
+    if (!_tokenLocked) {
+      try {
         await signIn();
+        return GetTokenResponse(value: _jwt.accessToken);
+      } catch (e) {
+        return GetTokenResponse(error: e as Exception);
       }
     }
-    return GetTokenResponse(value: _jwt!.accessToken);
+
+    for (var i = 0; i < 5; i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      if (!_tokenLocked && hasValidToken) {
+        return GetTokenResponse(value: _jwt.accessToken);
+      }
+    }
+
+    return GetTokenResponse(
+      error: TimeoutException('Timeout while refreshing token!'),
+    );
   }
 
+  /// Returns id of actual account
   Future<String> signIn() async {
-    _jwt = null;
+    _jwt = _jwtEmpty;
     _tokenLocked = true;
-    _jwt = await _fetchJWT('user/login');
-    _tokenLocked = false;
-    return _jwt!.id;
+    try {
+      _jwt = await _fetchJWT('user/login');
+    } finally {
+      _tokenLocked = false;
+    }
+    return _jwt.id;
   }
 
+  /// Returns id of actual account
   Future<String> signUp() async {
-    _jwt = null;
+    _jwt = _jwtEmpty;
     _tokenLocked = true;
-    _jwt = await _fetchJWT('user/register');
-    _tokenLocked = false;
-    return _jwt!.id;
+    try {
+      _jwt = await _fetchJWT('user/register');
+    } finally {
+      _tokenLocked = false;
+    }
+    return _jwt.id;
   }
 
   // TBD: invalidate jwt on remote server also
   Future<void> signOut() async {
-    _tokenLocked = false;
     _keyPair = null;
-    _jwt = null;
+    _jwt = _jwtEmpty;
+    _tokenLocked = false;
   }
 
   Future<JWT> _fetchJWT(String path) async {

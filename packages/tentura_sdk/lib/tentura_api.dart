@@ -12,6 +12,7 @@ class TenturaApi {
   TenturaApi({
     required this.serverName,
     this.jwtExpiresIn = const Duration(minutes: 1),
+    this.userAgent = 'Tentura client',
     this.storagePath = '',
   })  : _imageService = ImageService(
           serverName: serverName,
@@ -21,6 +22,7 @@ class TenturaApi {
           jwtExpiresIn: jwtExpiresIn,
         );
 
+  final String userAgent;
   final String serverName;
   final String storagePath;
   final Duration jwtExpiresIn;
@@ -40,6 +42,7 @@ class TenturaApi {
     gqlClient = await IsolateClient.create(
       buildClient,
       params: (
+        userAgent: userAgent,
         serverName: serverName,
         storagePath: storagePath,
       ),
