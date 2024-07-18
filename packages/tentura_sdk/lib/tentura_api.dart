@@ -45,7 +45,7 @@ class TenturaApi {
       ),
       messageHandler: (message) async => switch (message) {
         final InitMessage m => _replyPort = m.replyPort,
-        final GetTokenMessage _ =>
+        final GetTokenRequest _ =>
           _replyPort.send(await _tokenService.getToken()),
         _ => null,
       },
@@ -78,7 +78,7 @@ class TenturaApi {
   }
 
   Future<void> putAvatarImage(Uint8List image) async => _imageService.putAvatar(
-        token: await _tokenService.getToken(),
+        token: (await _tokenService.getToken()).valueOrException,
         userId: userId,
         image: image,
       );
@@ -88,7 +88,7 @@ class TenturaApi {
     required String beaconId,
   }) async =>
       _imageService.putBeacon(
-        token: await _tokenService.getToken(),
+        token: (await _tokenService.getToken()).valueOrException,
         beaconId: beaconId,
         userId: userId,
         image: image,

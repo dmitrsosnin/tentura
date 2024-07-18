@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 
 import 'package:tentura/consts.dart';
 
+import '../bloc/state_base.dart';
+
 const paddingMediumA = EdgeInsets.all(20);
 
 const paddingMediumH = EdgeInsets.symmetric(horizontal: 20);
@@ -50,6 +52,16 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
     ),
   ));
 }
+
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarError(
+  BuildContext context,
+  StateBase state,
+) =>
+    showSnackBar(
+      context,
+      isError: true,
+      text: state.error?.toString(),
+    );
 
 sealed class ScreenSize {
   static ScreenSize get(Size size) => switch (size.height) {

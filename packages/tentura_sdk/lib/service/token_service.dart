@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart';
+import 'package:tentura_sdk/client/message.dart';
 
 import '../exception.dart';
 
@@ -40,7 +41,7 @@ class TokenService {
     });
   }
 
-  Future<String> getToken() async {
+  Future<GetTokenResponse> getToken() async {
     final validTime = DateTime.timestamp().subtract(jwtExpiresIn);
 
     if (_jwt == null || _jwt!.expiresAt.isBefore(validTime)) {
@@ -51,15 +52,17 @@ class TokenService {
           if (_jwt == null) {
             waitFor *= 2;
           } else {
-            return _jwt!.accessToken;
+            return GetTokenResponse(value: _jwt!.accessToken);
           }
         }
-        throw TimeoutException('Timeout while refreshing token!');
+        return GetTokenResponse(
+          error: TimeoutException('Timeout while refreshing token!'),
+        );
       } else {
         await signIn();
       }
     }
-    return _jwt!.accessToken;
+    return GetTokenResponse(value: _jwt!.accessToken);
   }
 
   Future<String> signIn() async {
