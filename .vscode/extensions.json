@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "felixangelov.bloc",
+        "apollographql.vscode-apollo",
+    ]
+}

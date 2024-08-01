@@ -7,6 +7,7 @@ class RemoteApiService extends TenturaApi {
     required super.serverName,
     super.jwtExpiresIn,
     super.storagePath,
+    super.userAgent,
   });
 }
 

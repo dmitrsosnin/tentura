@@ -28,6 +28,7 @@ class GraphCubit extends Cubit<GraphState> {
           size: 80,
         ),
         super(GraphState(focus: focus ?? '')) {
+    _users[me.id] = me;
     graphController.mutate((m) => m.addNode(_egoNode));
     _fetchLimits[super.state.focus] = 5;
     _fetch(state.focus);
@@ -79,6 +80,7 @@ class GraphCubit extends Cubit<GraphState> {
       await _update(focus, limit);
     } catch (e) {
       emit(state.copyWith(error: e));
+      rethrow;
     }
   }
 
@@ -101,14 +103,11 @@ class GraphCubit extends Cubit<GraphState> {
     // update graph
     graphController.mutate((mutator) {
       for (final e in graph) {
-        if (e.score == null || e.src == null || e.dst == null) continue;
-        final score = double.tryParse(e.score?.value ?? '');
+        final score = double.tryParse(e.score!.value);
         if (score == null) continue;
         if (state.positiveOnly && score < 0) continue;
         final src = _buildNodeDetails(node: e.src!);
-        if (src == null) continue;
         final dst = _buildNodeDetails(node: e.dst!);
-        if (dst == null) continue;
         final edge = EdgeDetails<NodeDetails>(
           source: src,
           destination: dst,
@@ -126,40 +125,42 @@ class GraphCubit extends Cubit<GraphState> {
     });
   }
 
-  /// return null if not in cache
-  NodeDetails? _buildNodeDetails({
+  NodeDetails _buildNodeDetails({
     required String node,
     double size = 40,
     bool pinned = false,
-  }) =>
-      switch (switch (node.substring(0, 1)) {
-        'U' => _users[node],
-        'B' => _beacons[node],
-        'C' => _comments[node],
-        _ => throw Exception('Wrong id type'),
-      }) {
-        final User n => UserNode(
-            id: n.id,
-            label: n.title,
-            hasImage: n.has_picture,
-            pinned: pinned,
-            size: size,
-          ),
-        final Beacon n => BeaconNode(
-            id: n.id,
-            userId: n.author.id,
-            hasImage: n.has_picture,
-            label: n.title,
-            pinned: pinned,
-            size: size,
-          ),
-        final Comment n => CommentNode(
-            id: n.id,
-            userId: n.author.id,
-            beaconId: n.beacon_id,
-            pinned: pinned,
-            size: size,
-          ),
-        _ => null,
-      };
+  }) {
+    final user = _users[node];
+    if (user != null) {
+      return UserNode(
+        id: user.id,
+        label: user.title,
+        hasImage: user.has_picture,
+        pinned: pinned,
+        size: size,
+      );
+    }
+    final beacon = _beacons[node];
+    if (beacon != null) {
+      return BeaconNode(
+        id: beacon.id,
+        userId: beacon.author.id,
+        hasImage: beacon.has_picture,
+        label: beacon.title,
+        pinned: pinned,
+        size: size,
+      );
+    }
+    final comment = _comments[node];
+    if (comment != null) {
+      return CommentNode(
+        id: comment.id,
+        userId: comment.author.id,
+        beaconId: comment.beacon_id,
+        pinned: pinned,
+        size: size,
+      );
+    }
+    throw Exception('$node not cached!');
+  }
 }

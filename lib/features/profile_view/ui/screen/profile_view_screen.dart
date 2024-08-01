@@ -6,9 +6,9 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
-import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
+import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 
 import '../cubit/profile_view_cubit.dart';
 
@@ -51,10 +51,7 @@ class ProfileViewScreen extends StatelessWidget {
                     ),
 
                     // Share
-                    ShareCodeIconButton.id(
-                      id: user.id,
-                      path: pathProfileView,
-                    ),
+                    ShareCodeIconButton.id(user.id),
 
                     // More
                     PopupMenuButton(
