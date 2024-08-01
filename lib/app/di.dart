@@ -12,6 +12,8 @@ import 'package:tentura/data/service/hydrated_bloc_storage.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/data/beacon_repository.dart';
+import 'package:tentura/features/context/data/context_repository.dart';
+import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 import 'package:tentura/features/profile/data/profile_repository.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
@@ -91,6 +93,11 @@ class _DIState extends State<DI> {
                   BlocProvider(
                     create: (context) => MyFieldCubit(
                       MyFieldRepository(_remoteApiService),
+                    ),
+                  ),
+                  BlocProvider(
+                    create: (context) => ContextCubit(
+                      ContextRepository(_remoteApiService),
                     ),
                   ),
                 ],
