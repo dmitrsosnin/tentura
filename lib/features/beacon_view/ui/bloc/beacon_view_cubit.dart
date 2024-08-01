@@ -11,26 +11,34 @@ part 'beacon_view_state.dart';
 class BeaconViewCubit extends Cubit<BeaconViewState> {
   BeaconViewCubit({
     required this.beaconViewRepository,
-    bool? initiallyExpanded,
-    String? focusCommentId,
-    String? id,
-  }) : super(BeaconViewState(
-          beacon: Beacon.empty.copyWith(id: id),
-          focusCommentId: focusCommentId ?? '',
-          initiallyExpanded: initiallyExpanded ?? false,
-        )) {
+    required String id,
+    bool initiallyExpanded = false,
+  }) : super(switch (id) {
+          _ when id.startsWith('B') => BeaconViewState(
+              beacon: Beacon.empty.copyWith(id: id),
+              initiallyExpanded: initiallyExpanded,
+            ),
+          _ when id.startsWith('C') => BeaconViewState(
+              beacon: Beacon.empty,
+              focusCommentId: id,
+              initiallyExpanded: true,
+            ),
+          _ => BeaconViewState(
+              beacon: Beacon.empty,
+              status: FetchStatus.isFailure,
+              error: 'Wrong id!',
+            ),
+        }) {
     fetch(fetchComments: state.initiallyExpanded);
   }
 
   final BeaconViewRepository beaconViewRepository;
 
   Future<void> fetch({bool fetchComments = true}) async {
+    if (state.beacon.id.isEmpty && state.focusCommentId.isEmpty) return;
     emit(state.setLoading());
     try {
-      if (state.beacon.id.isEmpty && state.focusCommentId.isEmpty) {
-        // Error when no both id set
-        emit(state.setError('Wrong object id!'));
-      } else if (state.focusCommentId.isNotEmpty) {
+      if (state.focusCommentId.isNotEmpty) {
         // Show Beacon with one Comment
         final (beacon, comment) =
             await beaconViewRepository.fetchCommentById(state.focusCommentId);

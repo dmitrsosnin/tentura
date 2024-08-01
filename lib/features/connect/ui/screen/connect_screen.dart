@@ -95,7 +95,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
         context.push(Uri(
           path: pathBeaconView,
           queryParameters: {
-            'comment_id': code,
+            'id': code,
             'expanded': 'true',
           },
         ).toString());

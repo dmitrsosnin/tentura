@@ -23,12 +23,12 @@ dependencies:
   # Platform related
   hive: ^2.2.3
   geocoding: ^3.0.0
-  share_plus: ^9.0.0
+  share_plus: ^10.0.0
   geolocator: ^12.0.0
   image_picker: ^1.1.2
-  path_provider: ^2.1.3
+  path_provider: ^2.1.4
   mobile_scanner: ^5.1.1
-  package_info_plus: ^8.0.0
+  package_info_plus: ^8.0.1
   flutter_secure_storage: ^9.2.2
 
   # UI related
@@ -46,7 +46,7 @@ dependencies:
   # logger: ^2.4.0
   # logging: ^1.2.0
   # sentry_link: ^0.4.0
-  sentry_flutter: 8.3.0
+  sentry_flutter: ^8.5.0
   # sentry_logging: ^7.8.0
   # logging_appenders: ^1.1.0
 

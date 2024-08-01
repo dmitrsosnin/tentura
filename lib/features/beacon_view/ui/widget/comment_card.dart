@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/comment.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
-import 'package:tentura/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 
 import 'comment_vote_control.dart';
 
@@ -61,17 +61,7 @@ class CommentCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             // Share
-            ShareCodeIconButton(
-              header: comment.id,
-              link: Uri.https(
-                appLinkBase,
-                pathBeaconView,
-                {
-                  'comment_id': comment.id,
-                  'expanded': 'true',
-                },
-              ),
-            ),
+            ShareCodeIconButton.id(comment.id),
             // Vote
             if (!isMine)
               Container(

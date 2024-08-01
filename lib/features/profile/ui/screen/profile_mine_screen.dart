@@ -6,11 +6,11 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
-import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_mine_control.dart';
+import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 
 import '../bloc/profile_cubit.dart';
 import '../widget/profile_mine_menu_button.dart';
@@ -58,10 +58,7 @@ class ProfileMineScreen extends StatelessWidget {
                   ),
 
                   // Share
-                  ShareCodeIconButton.id(
-                    id: user.id,
-                    path: pathProfileView,
-                  ),
+                  ShareCodeIconButton.id(user.id),
 
                   // More
                   const ProfileMineMenuButton(),
