@@ -3,13 +3,13 @@ part of 'context_cubit.dart';
 final class ContextState extends StateBase {
   const ContextState({
     this.contexts = const {},
-    this.lastAdded,
+    this.lastAdded = '',
     super.status,
     super.error,
   });
 
   final Set<String> contexts;
-  final String? lastAdded;
+  final String lastAdded;
 
   @override
   List<Object?> get props => [

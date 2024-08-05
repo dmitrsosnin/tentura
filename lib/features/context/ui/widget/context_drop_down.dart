@@ -20,11 +20,7 @@ class ContextDropDown extends StatelessWidget {
           hint: const Text('Set context'),
           isExpanded: true,
           items: [
-            const DropdownMenuItem(
-              child: Text('All contexts'),
-            ),
             DropdownMenuItem(
-              value: '_',
               child: TextButton(
                 child: const Text('Add new context'),
                 onPressed: () async {
@@ -35,6 +31,10 @@ class ContextDropDown extends StatelessWidget {
                   }
                 },
               ),
+            ),
+            const DropdownMenuItem(
+              value: '',
+              child: Text('All contexts'),
             ),
             for (final e in state.contexts)
               DropdownMenuItem(
