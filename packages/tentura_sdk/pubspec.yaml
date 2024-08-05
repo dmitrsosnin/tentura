@@ -2,19 +2,19 @@ name: tentura_sdk
 description: Dart package for using Tentura server API
 publish_to: none
 
-version: 0.0.1+0
+version: 0.0.1
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
 
 dependencies:
-  http: ^1.2.1
+  http: ^1.2.2
   hive: ^2.2.3
   ferry: ^0.16.0
-  gql_exec: ^1.0.0+1
+  gql_exec: ^1.0.0
   gql_http_link: ^1.1.0
   ed25519_edwards: ^0.3.1
   ferry_hive_store: ^0.5.2
 
 dev_dependencies:
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^6.0.0

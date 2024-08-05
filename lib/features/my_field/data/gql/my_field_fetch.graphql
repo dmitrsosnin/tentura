@@ -1,6 +1,6 @@
 # import '/domain/entity/beacon.graphql'
 
-query MyFieldFetch($context: String = "") {
+query MyFieldFetch($context: String) {
   my_field(
     args: {context: $context},
     where: {beacon: {enabled: {_eq: true}}},
