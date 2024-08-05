@@ -2,6 +2,8 @@ import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/context_repository.dart';
 
+export 'package:flutter_bloc/flutter_bloc.dart';
+
 part 'context_state.dart';
 
 class ContextCubit extends Cubit<ContextState> {
@@ -32,7 +34,11 @@ class ContextCubit extends Cubit<ContextState> {
     try {
       final context = await _repository.add(contextName);
       emit(state.copyWith(
-        contexts: {context, ...state.contexts},
+        lastAdded: context,
+        contexts: {
+          context,
+          ...state.contexts,
+        },
       ));
     } catch (e) {
       emit(state.setError(e));
@@ -46,6 +52,8 @@ class ContextCubit extends Cubit<ContextState> {
       emit(state.copyWith(
         contexts: {...state.contexts},
       ));
-    } catch (e) {}
+    } catch (e) {
+      emit(state.setError(e));
+    }
   }
 }
