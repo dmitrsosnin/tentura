@@ -19,13 +19,7 @@ class ProfileViewScreen extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: BlocConsumer<ProfileViewCubit, ProfileViewState>(
           listenWhen: (p, c) => c.hasError,
-          listener: (context, state) {
-            showSnackBar(
-              context,
-              isError: true,
-              text: state.error?.toString(),
-            );
-          },
+          listener: showSnackBarError,
           buildWhen: (p, c) => c.hasNoError,
           builder: (context, state) {
             if (state.isLoading) {

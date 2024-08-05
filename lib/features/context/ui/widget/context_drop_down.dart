@@ -46,10 +46,6 @@ class ContextDropDown extends StatelessWidget {
           value: state.lastAdded,
         ),
         listenWhen: (p, c) => c.hasError,
-        listener: (context, state) => showSnackBar(
-          context,
-          isError: true,
-          text: state.error?.toString() ?? 'Unknown error!',
-        ),
+        listener: showSnackBarError,
       );
 }

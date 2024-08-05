@@ -13,13 +13,7 @@ class MyFieldScreen extends StatelessWidget {
         minimum: paddingMediumH,
         child: BlocConsumer<MyFieldCubit, MyFieldState>(
           listenWhen: (p, c) => c.hasError,
-          listener: (context, state) {
-            showSnackBar(
-              context,
-              isError: true,
-              text: state.error?.toString(),
-            );
-          },
+          listener: showSnackBarError,
           buildWhen: (p, c) => c.hasNoError,
           builder: (context, state) {
             final decoration = BoxDecoration(
