@@ -38,13 +38,7 @@ class BeaconViewScreen extends StatelessWidget {
       bottomSheet: const NewCommentInput(),
       body: BlocConsumer<BeaconViewCubit, BeaconViewState>(
         listenWhen: (p, c) => c.hasError,
-        listener: (context, state) {
-          showSnackBar(
-            context,
-            isError: true,
-            text: state.error?.toString(),
-          );
-        },
+        listener: showSnackBarError,
         buildWhen: (p, c) => c.status.isSuccess,
         builder: (context, state) {
           final beacon = state.beacon;

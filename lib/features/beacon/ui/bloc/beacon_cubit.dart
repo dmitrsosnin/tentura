@@ -47,12 +47,14 @@ class BeaconCubit extends Cubit<BeaconState> {
     DateTimeRange? dateRange,
     Coordinates? coordinates,
     Uint8List? image,
+    String? context,
   }) async {
     final beacon = await _repository.create(Beacon.empty.copyWith(
       title: title,
-      description: description,
+      context: context,
       dateRange: dateRange,
       coordinates: coordinates,
+      description: description,
       hasPicture: image != null,
     ));
     if (image != null && image.isNotEmpty) {

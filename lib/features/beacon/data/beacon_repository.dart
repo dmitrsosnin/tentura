@@ -35,6 +35,7 @@ class BeaconRepository {
           ..description = beacon.description
           ..has_picture = beacon.has_picture
           ..timerange = beacon.timerange
+          ..context = beacon.context
           ..lat = beacon.lat?.toBuilder()
           ..long = beacon.long?.toBuilder()),
       )

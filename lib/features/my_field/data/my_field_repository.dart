@@ -11,17 +11,19 @@ class MyFieldRepository {
 
   final RemoteApiService _remoteApiService;
 
-  late final _fetchRequest =
-      GMyFieldFetchReq((r) => r.fetchPolicy = FetchPolicy.CacheAndNetwork);
-
-  Stream<Iterable<Beacon>> get stream =>
-      _remoteApiService.gqlClient.request(_fetchRequest).map((r) => r
-          .dataOrThrow(label: _label)
-          .my_field
-          .map((r) => r.beacon! as Beacon));
-
-  Future<void> fetch() =>
-      _remoteApiService.gqlClient.addRequestToRequestController(_fetchRequest);
+  Future<Iterable<Beacon>> fetch({
+    required String context,
+  }) =>
+      _remoteApiService.gqlClient
+          .request(GMyFieldFetchReq((r) => r.vars.context = context))
+          .firstWhere((e) => e.dataSource == DataSource.Link)
+          .then(
+            (r) => r
+                .dataOrThrow(label: _label)
+                .my_field
+                .nonNulls
+                .map<Beacon>((e) => e.beacon! as Beacon),
+          );
 
   Future<Beacon> vote({
     required String id,

@@ -32,11 +32,7 @@ class AuthLoginScreen extends StatelessWidget {
             );
 
           default:
-            showSnackBar(
-              context,
-              isError: true,
-              text: state.error?.toString() ?? 'Unknown error!',
-            );
+            showSnackBarError(context, state);
         }
       },
       buildWhen: (p, c) => c.hasNoError,

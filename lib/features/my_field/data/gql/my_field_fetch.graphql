@@ -2,10 +2,9 @@
 
 query MyFieldFetch($context: String = "") {
   my_field(
-    args: {context: $context},
-    where: {beacon: {enabled: {_eq: true}}},
-    order_by: {score: desc}
-  ) {
+      args: {context: $context},
+      where: {beacon: {enabled: {_eq: true}}},
+      order_by: {beacon: {score: desc}}) {
     beacon {
       ...BeaconFields
     }

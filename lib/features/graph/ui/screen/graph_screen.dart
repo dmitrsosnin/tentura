@@ -36,13 +36,7 @@ class GraphScreen extends StatelessWidget {
         ),
         body: BlocListener<GraphCubit, GraphState>(
           listenWhen: (p, c) => c.status.isFailure,
-          listener: (context, state) {
-            showSnackBar(
-              context,
-              isError: true,
-              text: state.error?.toString() ?? 'Undescribed error',
-            );
-          },
+          listener: showSnackBarError,
           child: const GraphBody(),
         ),
       );

@@ -64,6 +64,10 @@ class BeaconInfo extends StatelessWidget {
               style: textTheme.bodyLarge,
             ),
 
+          // Beacon Context
+          if (beacon.context != null && beacon.context!.isNotEmpty)
+            Text('${beacon.context!} (context)'),
+
           // Beacon Timerange
           if (beacon.timerange != null)
             Text(

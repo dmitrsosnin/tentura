@@ -60,7 +60,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarError(
     showSnackBar(
       context,
       isError: true,
-      text: state.error?.toString(),
+      text: state.error?.toString() ?? 'Unknown error!',
     );
 
 sealed class ScreenSize {

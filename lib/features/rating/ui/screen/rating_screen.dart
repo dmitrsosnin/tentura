@@ -93,13 +93,7 @@ class _RatingScreenState extends State<RatingScreen> {
         ),
         body: BlocConsumer<RatingCubit, RatingState>(
           listenWhen: (p, c) => c.hasError,
-          listener: (context, state) {
-            showSnackBar(
-              context,
-              isError: true,
-              text: state.error?.toString(),
-            );
-          },
+          listener: showSnackBarError,
           buildWhen: (p, c) => c.hasNoError,
           builder: (context, state) => ListView.separated(
             padding: paddingMediumH,
