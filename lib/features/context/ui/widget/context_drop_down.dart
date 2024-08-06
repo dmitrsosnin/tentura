@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import '../bloc/context_cubit.dart';
@@ -16,7 +16,7 @@ class ContextDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocConsumer<ContextCubit, ContextState>(
-        builder: (context, state) => DropdownButtonFormField<String>(
+        builder: (context, state) => DropdownButton<String>(
           hint: const Text('Set context'),
           isExpanded: true,
           items: [
@@ -27,7 +27,7 @@ class ContextDropDown extends StatelessWidget {
                   final newContext = await ContextAddDialog.show(context);
                   if (newContext != null && context.mounted) {
                     await context.read<ContextCubit>().add(newContext);
-                    if (context.mounted) context.pop();
+                    if (context.mounted) Navigator.of(context).pop();
                   }
                 },
               ),
