@@ -30,11 +30,13 @@ class ContextCubit extends Cubit<ContextState> {
     return _repository.fetch();
   }
 
+  void select(String? context) => emit(state.copyWith(selected: context));
+
   Future<void> add(String contextName) async {
     try {
       final context = await _repository.add(contextName);
       emit(state.copyWith(
-        lastAdded: context,
+        selected: context,
         contexts: {
           context,
           ...state.contexts,

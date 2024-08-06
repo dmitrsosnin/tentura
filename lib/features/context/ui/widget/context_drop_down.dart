@@ -42,8 +42,11 @@ class ContextDropDown extends StatelessWidget {
                 child: Text(e),
               ),
           ],
-          onChanged: onChanged,
-          value: state.lastAdded,
+          onChanged: (value) {
+            context.read<ContextCubit>().select(value);
+            onChanged?.call(value);
+          },
+          value: state.selected,
         ),
         listenWhen: (p, c) => c.hasError,
         listener: showSnackBarError,

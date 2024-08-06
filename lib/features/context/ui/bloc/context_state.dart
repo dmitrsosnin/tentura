@@ -3,32 +3,32 @@ part of 'context_cubit.dart';
 final class ContextState extends StateBase {
   const ContextState({
     this.contexts = const {},
-    this.lastAdded = '',
+    this.selected = '',
     super.status,
     super.error,
   });
 
   final Set<String> contexts;
-  final String lastAdded;
+  final String selected;
 
   @override
   List<Object?> get props => [
         status,
         error,
         contexts,
-        lastAdded,
+        selected,
       ];
 
   @override
   ContextState copyWith({
     Set<String>? contexts,
-    String? lastAdded,
+    String? selected,
     FetchStatus? status,
     Object? error,
   }) =>
       ContextState(
         contexts: contexts ?? this.contexts,
-        lastAdded: lastAdded ?? this.lastAdded,
+        selected: selected ?? this.selected,
         status: status ?? this.status,
         error: error ?? this.error,
       );

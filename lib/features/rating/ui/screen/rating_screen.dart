@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
+import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
+
 import '../bloc/rating_cubit.dart';
 import '../widget/rating_list_tile.dart';
 
@@ -89,15 +91,28 @@ class _RatingScreenState extends State<RatingScreen> {
               ),
             ),
           ],
+
+          // Title
           title: const Text('Rating'),
+
+          // Context selector
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(40),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8),
+              child: ContextDropDown(onChanged: _cubit.fetch),
+            ),
+          ),
         ),
+
+        // Rating List
         body: BlocConsumer<RatingCubit, RatingState>(
           listenWhen: (p, c) => c.hasError,
           listener: showSnackBarError,
           buildWhen: (p, c) => c.hasNoError,
           builder: (context, state) => ListView.separated(
-            padding: paddingMediumH,
             itemCount: state.items.length,
+            padding: paddingMediumH,
             separatorBuilder: (context, i) => const Divider(),
             itemBuilder: (context, i) => RatingListTile(
               key: ValueKey(state.items[i]),

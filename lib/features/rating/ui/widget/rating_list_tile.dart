@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tentura/consts.dart';
 
+import 'package:tentura/consts.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
 import '../../domain/entity/user_rating.dart';
