@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
 
-GoRoute buildBeaconViewRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
+GoRoute buildAppLinkViewRoute({
+  GlobalKey<NavigatorState>? parentNavigatorKey,
+}) =>
     GoRoute(
       path: pathSharedView,
       parentNavigatorKey: parentNavigatorKey,

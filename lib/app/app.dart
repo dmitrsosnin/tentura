@@ -17,6 +17,7 @@ import 'package:tentura/features/profile_view/profile_view_route.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 import 'package:tentura/features/beacon_view/beacon_view_route.dart';
 import 'package:tentura/features/beacon/beacon_create_route.dart';
+import 'package:tentura/features/app_link/app_link_route.dart';
 import 'package:tentura/features/rating/rating_route.dart';
 import 'package:tentura/features/graph/graph_route.dart';
 
@@ -52,6 +53,7 @@ class App extends StatelessWidget {
             buildHomeRoute(parentNavigatorKey: _rootNavigatorKey),
             buildIntroRoute(parentNavigatorKey: _rootNavigatorKey),
             buildAuthLoginRoute(parentNavigatorKey: _rootNavigatorKey),
+            buildAppLinkViewRoute(parentNavigatorKey: _rootNavigatorKey),
             buildProfileViewRoute(parentNavigatorKey: _rootNavigatorKey),
             buildProfileEditRoute(parentNavigatorKey: _rootNavigatorKey),
             buildBeaconCreateRoute(parentNavigatorKey: _rootNavigatorKey),
