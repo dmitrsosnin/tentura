@@ -21,14 +21,16 @@ class ErrorScreen extends StatelessWidget {
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
               padding: paddingMediumA,
               child: Text(
-                (error ?? GoRouterState.of(context).error).toString(),
+                error?.toString() ?? 'Unknown error',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.error,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             FilledButton(

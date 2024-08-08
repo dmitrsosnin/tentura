@@ -18,13 +18,17 @@ class MyFieldCubit extends Cubit<MyFieldState> {
 
   Future<void> fetch([String? contextName]) async {
     emit(state.setLoading());
-    final beacons = await _repository.fetch(
-      context: contextName ?? state.context,
-    );
-    emit(MyFieldState(
-      context: contextName ?? state.context,
-      beacons: beacons.toList(),
-    ));
+    try {
+      final beacons = await _repository.fetch(
+        context: contextName ?? state.context,
+      );
+      emit(MyFieldState(
+        context: contextName ?? state.context,
+        beacons: beacons.toList(),
+      ));
+    } catch (e) {
+      emit(state.setError(e));
+    }
   }
 
   Future<int> vote({
