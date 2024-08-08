@@ -7,7 +7,8 @@ GoRoute buildAppLinkViewRoute({
   GlobalKey<NavigatorState>? parentNavigatorKey,
 }) =>
     GoRoute(
-      path: pathSharedView,
+      name: 'appLink',
+      path: pathAppLinkView,
       parentNavigatorKey: parentNavigatorKey,
       redirect: (context, state) => switch (state.uri.queryParameters['id']) {
         final String id when id.startsWith('U') => Uri(

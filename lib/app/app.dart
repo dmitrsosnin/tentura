@@ -7,6 +7,7 @@ import 'package:tentura/consts.dart';
 import 'package:tentura/ui/theme_dark.dart';
 import 'package:tentura/ui/theme_light.dart';
 import 'package:tentura/ui/screens/error_screen.dart';
+import 'package:tentura/ui/widget/platform_route_push_observer.dart';
 
 import 'package:tentura/features/home/home_route.dart';
 import 'package:tentura/features/intro/intro_route.dart';
@@ -28,23 +29,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = context.read<AuthCubit>();
     return BlocBuilder<SettingsCubit, SettingsState>(
-      builder: (context, state) => MaterialApp.router(
-        color: const Color(0x00B77EFF),
-        title: 'Tentura',
-        theme: themeLight,
-        darkTheme: themeDark,
-        themeMode: state.themeMode,
-        debugShowCheckedModeBanner: false,
-        routerConfig: GoRouter(
+      builder: (context, state) {
+        final authCubit = context.read<AuthCubit>();
+        final router = GoRouter(
           debugLogDiagnostics: kDebugMode,
           initialLocation: state.introEnabled ? pathIntro : pathHomeProfile,
           navigatorKey: _rootNavigatorKey,
           observers: [
             SentryNavigatorObserver(),
           ],
-          errorBuilder: (context, state) => const ErrorScreen(),
+          errorBuilder: (context, state) => ErrorScreen(error: state.error),
           redirect: (context, state) => authCubit.state.isAuthenticated ||
                   anonymousPath.contains(state.matchedLocation)
               ? null
@@ -61,8 +56,21 @@ class App extends StatelessWidget {
             buildRatingRoute(parentNavigatorKey: _rootNavigatorKey),
             buildGraphRoute(parentNavigatorKey: _rootNavigatorKey),
           ],
-        ),
-      ),
+        );
+        return MaterialApp.router(
+          color: const Color(0x00B77EFF),
+          title: 'Tentura',
+          theme: themeLight,
+          darkTheme: themeDark,
+          themeMode: state.themeMode,
+          debugShowCheckedModeBanner: false,
+          routerConfig: router,
+          builder: (context, child) => PlatformRoutePushObserver(
+            router: router,
+            child: child,
+          ),
+        );
+      },
     );
   }
 }
