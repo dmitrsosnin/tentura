@@ -64,6 +64,7 @@ class ProfileViewScreen extends StatelessWidget {
                 ],
                 floating: true,
                 expandedHeight: GradientStack.defaultHeight,
+                leading: BackButton(onPressed: context.pop),
 
                 // Avatar
                 flexibleSpace: FlexibleSpaceBar(

@@ -40,7 +40,4 @@ const anonymousPath = [
   pathIntro,
   pathAuthLogin,
   pathAppLinkView,
-  // TBD: show with AppLink
-  // pathBeaconView,
-  // pathProfileView,
 ];
