@@ -74,7 +74,7 @@ class BeaconTile extends StatelessWidget {
                 icon: const Icon(Icons.comment_outlined),
                 label: Text(
                   beacon.comments_count.toString(),
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: textTheme.bodyLarge,
                 ),
               ),
 
