@@ -24,8 +24,6 @@ class _AppLinkRouterState extends State<AppLinkRouter>
     with WidgetsBindingObserver {
   static WidgetsBinding get _binding => WidgetsBinding.instance;
 
-  String _currentPath = '';
-
   @override
   void initState() {
     _binding.addObserver(this);
@@ -44,24 +42,9 @@ class _AppLinkRouterState extends State<AppLinkRouter>
   @override
   Future<bool> didPushRouteInformation(RouteInformation routeInformation) {
     if (routeInformation.uri.path == pathAppLinkView) {
-      _currentPath = replaceAppLinkPath(routeInformation.uri);
-      widget.router.push(_currentPath);
+      widget.router.push(replaceAppLinkPath(routeInformation.uri));
       return SynchronousFuture(true);
     }
-    _currentPath = routeInformation.uri.path;
     return SynchronousFuture(false);
-  }
-
-  @override
-  Future<bool> didPopRoute() {
-    // Back
-    if (widget.router.canPop()) return SynchronousFuture(false);
-
-    // Exit if Home
-    if (_currentPath.startsWith('/home/')) return SynchronousFuture(false);
-
-    // Back to Home
-    widget.router.go(pathHomeConnect);
-    return SynchronousFuture(true);
   }
 }

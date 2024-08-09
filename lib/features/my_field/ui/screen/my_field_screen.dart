@@ -15,7 +15,9 @@ class MyFieldScreen extends StatelessWidget {
         minimum: const EdgeInsets.only(left: 20, right: 20, top: 20),
         child: Column(
           children: [
-            ContextDropDown(onChanged: context.read<MyFieldCubit>().fetch),
+            ContextDropDown(
+              onChanged: context.read<MyFieldCubit>().fetch,
+            ),
             Expanded(
               child: BlocConsumer<MyFieldCubit, MyFieldState>(
                 listenWhen: (p, c) => c.hasError,
@@ -29,15 +31,12 @@ class MyFieldScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                  return RefreshIndicator.adaptive(
-                    onRefresh: context.read<MyFieldCubit>().fetch,
-                    child: ListView.builder(
-                      itemCount: state.beacons.length,
-                      itemBuilder: (context, i) => Container(
-                        decoration: decoration,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: BeaconTile(beacon: state.beacons[i]),
-                      ),
+                  return ListView.builder(
+                    itemCount: state.beacons.length,
+                    itemBuilder: (context, i) => Container(
+                      decoration: decoration,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: BeaconTile(beacon: state.beacons[i]),
                     ),
                   );
                 },

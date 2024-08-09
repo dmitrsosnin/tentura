@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
@@ -26,7 +27,10 @@ class BeaconViewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Beacon'),
-        leading: BackButton(onPressed: context.pop),
+        leading: BackButton(
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go(pathHomeConnect),
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: BlocSelector<BeaconViewCubit, BeaconViewState, FetchStatus>(
