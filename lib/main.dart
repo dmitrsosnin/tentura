@@ -12,6 +12,10 @@ Future<void> main() async {
   await SentryFlutter.init(
     (options) => options
       ..dsn = const String.fromEnvironment('SENTRY_URL')
+      ..ignoreErrors = [
+        'SocketException',
+        'AuthenticationNotFoundException',
+      ]
       ..tracesSampleRate = 1.0,
     appRunner: () => runApp(const DI()),
   );
