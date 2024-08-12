@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:tentura/domain/entity/beacon.dart';
-import 'package:tentura/domain/entity/comment.dart';
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
@@ -30,8 +30,7 @@ class GraphCubit extends Cubit<GraphState> {
         super(GraphState(focus: focus ?? '')) {
     _users[me.id] = me;
     graphController.mutate((m) => m.addNode(_egoNode));
-    _fetchLimits[super.state.focus] = 5;
-    _fetch(state.focus);
+    _fetch();
   }
 
   final GraphRepository graphRepository;
@@ -43,7 +42,6 @@ class GraphCubit extends Cubit<GraphState> {
 
   final _users = <String, User>{};
   final _beacons = <String, Beacon>{};
-  final _comments = <String, Comment>{};
   final _fetchLimits = <String, int>{};
 
   @override
@@ -54,78 +52,96 @@ class GraphCubit extends Cubit<GraphState> {
 
   void jumpToEgo() => graphController.jumpToNode(_egoNode);
 
-  void togglePositiveOnly() {
+  void setFocus(NodeDetails node) {
+    if (state.focus != node.id) {
+      emit(state.copyWith(focus: node.id));
+      graphController
+        ..setPinned(node, true)
+        ..jumpToNode(node);
+    }
+    _fetch();
+  }
+
+  void setContext(String? context) {
     graphController
       ..clear()
       ..mutate((m) => m.addNode(_egoNode));
     emit(state.copyWith(
+      context: context,
       focus: '',
-      positiveOnly: !state.positiveOnly,
     ));
-    _fetch(state.focus);
+    _fetchLimits.clear();
+    _fetch();
   }
 
-  void setFocus(NodeDetails node) {
-    emit(state.copyWith(focus: node.id));
+  void togglePositiveOnly() {
+    emit(state.copyWith(
+      positiveOnly: !state.positiveOnly,
+      focus: '',
+    ));
     graphController
-      ..setPinned(node, true)
-      ..jumpToNode(node);
-    _fetch(node.id);
+      ..clear()
+      ..mutate((m) => m.addNode(_egoNode));
+    _fetchLimits.clear();
+    _fetch();
   }
 
-  Future<void> _fetch(String focus) async {
-    final limit = (_fetchLimits[focus] ?? 0) + 5;
-    _fetchLimits[focus] = limit;
+  Future<void> _fetch() async {
     try {
-      await _update(focus, limit);
+      final (users, beacon) = await graphRepository.fetch(
+        positiveOnly: state.positiveOnly,
+        context: state.context,
+        focus: state.focus,
+        limit: _fetchLimits[state.focus] = (_fetchLimits[state.focus] ?? 0) + 5,
+      );
+
+      for (final e in users) {
+        if (e.user != null) {
+          _users.putIfAbsent(e.user!.id, () => e.user! as User);
+        }
+      }
+      if (beacon != null) _beacons.putIfAbsent(beacon.id, () => beacon);
+
+      final graph = users
+          .map((e) => e.src == null || e.dst == null || e.score == null
+              ? null
+              : (
+                  src: e.src!,
+                  dst: e.dst!,
+                  score: double.parse(e.score!.value),
+                ))
+          .nonNulls;
+
+      if (graph.isNotEmpty) _updateGraph(graph);
     } catch (e) {
       emit(state.copyWith(error: e));
-      rethrow;
     }
   }
 
-  Future<void> _update(String focus, int limit) async {
-    final graph = await graphRepository.fetch(
-      focus: focus,
-      limit: limit,
-      positiveOnly: state.positiveOnly,
-    );
+  void _updateGraph(Iterable<({String src, String dst, double score})> graph) =>
+      graphController.mutate((mutator) {
+        for (final e in graph) {
+          if (state.positiveOnly && e.score < 0) continue;
+          final src = _buildNodeDetails(node: e.src);
+          final dst = _buildNodeDetails(node: e.dst);
+          if (src == null || dst == null) continue;
+          final edge = EdgeDetails<NodeDetails>(
+            source: src,
+            destination: dst,
+            strokeWidth: (src == _egoNode || dst == _egoNode) ? 6 : 4,
+            color: e.score < 0
+                ? Colors.redAccent
+                : src == _egoNode || dst == _egoNode
+                    ? Colors.amberAccent
+                    : Colors.cyanAccent,
+          );
+          if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
+          if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
+          if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
+        }
+      });
 
-    // update cache
-    for (final e in graph) {
-      if (e.user != null) {
-        _users.putIfAbsent(e.user!.id, () => e.user! as User);
-      } else if (e.beacon != null) {
-        _beacons.putIfAbsent(e.beacon!.id, () => e.beacon! as Beacon);
-      }
-    }
-
-    // update graph
-    graphController.mutate((mutator) {
-      for (final e in graph) {
-        final score = double.tryParse(e.score!.value);
-        if (score == null) continue;
-        if (state.positiveOnly && score < 0) continue;
-        final src = _buildNodeDetails(node: e.src!);
-        final dst = _buildNodeDetails(node: e.dst!);
-        final edge = EdgeDetails<NodeDetails>(
-          source: src,
-          destination: dst,
-          strokeWidth: (src == _egoNode || dst == _egoNode) ? 6 : 4,
-          color: score < 0
-              ? Colors.redAccent
-              : src == _egoNode || dst == _egoNode
-                  ? Colors.amberAccent
-                  : Colors.cyanAccent,
-        );
-        if (!mutator.controller.nodes.contains(src)) mutator.addNode(src);
-        if (!mutator.controller.nodes.contains(dst)) mutator.addNode(dst);
-        if (!mutator.controller.edges.contains(edge)) mutator.addEdge(edge);
-      }
-    });
-  }
-
-  NodeDetails _buildNodeDetails({
+  NodeDetails? _buildNodeDetails({
     required String node,
     double size = 40,
     bool pinned = false,
@@ -151,16 +167,7 @@ class GraphCubit extends Cubit<GraphState> {
         size: size,
       );
     }
-    final comment = _comments[node];
-    if (comment != null) {
-      return CommentNode(
-        id: comment.id,
-        userId: comment.author.id,
-        beaconId: comment.beacon_id,
-        pinned: pinned,
-        size: size,
-      );
-    }
-    throw Exception('$node not cached!');
+    if (kDebugMode) print('$node not cached!');
+    return null;
   }
 }
