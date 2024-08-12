@@ -2,18 +2,18 @@
 # import '/domain/entity/beacon.graphql'
 
 query GraphFetch(
-  $focus: String,
-  $context: String,
-  $positive_only: Boolean = true,
-  $offset: Int = 0,
-  $limit: Int = 5
-) {
+    $focus: String!,
+    $context: String,
+    $positive_only: Boolean = true,
+    $offset: Int = 0,
+    $limit: Int = 10
+  ) {
   graph(
     args: {
       focus: $focus,
       context: $context,
       positive_only: $positive_only
-    },
+      },
     order_by: {score: desc},
     offset: $offset,
     limit: $limit
@@ -24,8 +24,8 @@ query GraphFetch(
     user {
       ...UserFields
     }
-    beacon {
-      ...BeaconFields
-    }
+  }
+  beacon_by_pk(id: $focus) {
+    ...BeaconFields
   }
 }
