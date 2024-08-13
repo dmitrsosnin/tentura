@@ -6,9 +6,9 @@ import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
-import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
+import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/features/favorites/ui/widget/beacon_pin_icon_button.dart';
 
 import 'beacon_vote_control.dart';
@@ -74,7 +74,7 @@ class BeaconTile extends StatelessWidget {
                 icon: const Icon(Icons.comment_outlined),
                 label: Text(
                   beacon.comments_count.toString(),
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: textTheme.bodyLarge,
                 ),
               ),
 
@@ -90,10 +90,7 @@ class BeaconTile extends StatelessWidget {
               ),
 
               // Share
-              ShareCodeIconButton.id(
-                id: beacon.id,
-                path: pathBeaconView,
-              ),
+              ShareCodeIconButton.id(beacon.id),
 
               // Favorite
               BeaconPinIconButton(

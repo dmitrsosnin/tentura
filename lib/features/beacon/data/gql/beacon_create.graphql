@@ -1,7 +1,7 @@
 # import '/domain/entity/beacon.graphql'
 
-mutation BeaconCreate($title: String!, $description: String!, $timerange: tstzrange, $has_picture: Boolean!, $lat: float8, $long: float8) {
-  insert_beacon_one(object: {title: $title, description: $description, timerange: $timerange, has_picture: $has_picture, lat: $lat, long: $long}) {
+mutation BeaconCreate($title: String!, $description: String!, $timerange: tstzrange, $has_picture: Boolean!, $lat: float8, $long: float8, $context: String) {
+  insert_beacon_one(object: {title: $title, description: $description, timerange: $timerange, has_picture: $has_picture, lat: $lat, long: $long, context: $context}) {
     ...BeaconFields
   }
 }

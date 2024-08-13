@@ -11,15 +11,12 @@ class ShareCodeIconButton extends StatelessWidget {
     super.key,
   });
 
-  ShareCodeIconButton.id({
-    required String id,
-    required String path,
-    Key? key,
-  }) : this(
+  ShareCodeIconButton.id(String id, {Key? key})
+      : this(
           header: id,
           link: Uri.https(
             appLinkBase,
-            path,
+            pathAppLinkView,
             {'id': id},
           ),
           key: key,

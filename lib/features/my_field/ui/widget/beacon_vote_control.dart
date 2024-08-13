@@ -19,7 +19,7 @@ class BeaconVoteControl extends StatefulWidget {
 }
 
 class _BeaconVoteControlState extends State<BeaconVoteControl> {
-  late final _colorScheme = Theme.of(context).colorScheme;
+  late final _theme = Theme.of(context);
   late final _myFieldCubit = context.read<MyFieldCubit>();
 
   late int _likeAmount = widget.votes ?? 0;
@@ -28,7 +28,7 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
-          color: _colorScheme.secondaryContainer,
+          color: _theme.colorScheme.secondaryContainer,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -40,7 +40,13 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
             ),
 
             // Amount
-            Text(_likeAmount.toString()),
+            Text(
+              _likeAmount.toString(),
+              maxLines: 1,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              style: _theme.textTheme.bodyLarge,
+            ),
 
             // Dislike Button
             IconButton(

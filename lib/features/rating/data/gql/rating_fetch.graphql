@@ -1,0 +1,11 @@
+# import '/domain/entity/user.graphql'
+
+query RatingFetch($context: String = "") {
+  rating(args: {context: $context}) {
+    src_score
+    dst_score
+    user {
+      ...UserFields
+    }
+  }
+}

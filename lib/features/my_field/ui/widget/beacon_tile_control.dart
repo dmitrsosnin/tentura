@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/beacon.dart';
-import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
+import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/features/favorites/ui/widget/beacon_pin_icon_button.dart';
 
 import 'beacon_vote_control.dart';
@@ -49,10 +49,7 @@ class BeaconTileControl extends StatelessWidget {
           ),
 
           // Share
-          ShareCodeIconButton.id(
-            id: beacon.id,
-            path: pathBeaconView,
-          ),
+          ShareCodeIconButton.id(beacon.id),
 
           // Favorite
           BeaconPinIconButton(

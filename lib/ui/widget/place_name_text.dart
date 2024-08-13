@@ -28,6 +28,9 @@ class PlaceNameText extends StatelessWidget {
         place == null
             ? coords.toString()
             : '${place.locality}, ${place.country}',
+        maxLines: 1,
+        textAlign: TextAlign.left,
+        overflow: TextOverflow.ellipsis,
         style: style,
       );
 }

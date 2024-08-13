@@ -7,6 +7,7 @@ fragment BeaconFields on beacon {
   created_at
   updated_at
   is_pinned
+  context
   enabled
   lat
   long
@@ -14,6 +15,7 @@ fragment BeaconFields on beacon {
   has_picture
   comments_count
   my_vote
+  score
   author {
     ...UserFields
   }

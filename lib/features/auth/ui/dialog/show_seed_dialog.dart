@@ -60,9 +60,10 @@ class ShowSeedDialog extends StatelessWidget {
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: seed));
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Seed copied to clipboard!'),
-                ));
+                showSnackBar(
+                  context,
+                  text: 'Seed copied to clipboard!',
+                );
               }
             },
           ),

@@ -12,6 +12,7 @@ class TenturaApi {
   TenturaApi({
     required this.serverName,
     this.jwtExpiresIn = const Duration(minutes: 1),
+    this.userAgent = 'Tentura client',
     this.storagePath = '',
   })  : _imageService = ImageService(
           serverName: serverName,
@@ -21,6 +22,7 @@ class TenturaApi {
           jwtExpiresIn: jwtExpiresIn,
         );
 
+  final String userAgent;
   final String serverName;
   final String storagePath;
   final Duration jwtExpiresIn;
@@ -40,12 +42,13 @@ class TenturaApi {
     gqlClient = await IsolateClient.create(
       buildClient,
       params: (
+        userAgent: userAgent,
         serverName: serverName,
         storagePath: storagePath,
       ),
       messageHandler: (message) async => switch (message) {
         final InitMessage m => _replyPort = m.replyPort,
-        final GetTokenMessage _ =>
+        final GetTokenRequest _ =>
           _replyPort.send(await _tokenService.getToken()),
         _ => null,
       },
@@ -78,7 +81,7 @@ class TenturaApi {
   }
 
   Future<void> putAvatarImage(Uint8List image) async => _imageService.putAvatar(
-        token: await _tokenService.getToken(),
+        token: (await _tokenService.getToken()).valueOrException,
         userId: userId,
         image: image,
       );
@@ -88,7 +91,7 @@ class TenturaApi {
     required String beaconId,
   }) async =>
       _imageService.putBeacon(
-        token: await _tokenService.getToken(),
+        token: (await _tokenService.getToken()).valueOrException,
         beaconId: beaconId,
         userId: userId,
         image: image,
