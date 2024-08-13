@@ -10,14 +10,11 @@ class UpdatesScreen extends StatelessWidget {
         appBar: AppBar(
           actions: [
             TextButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Not implemented yet...'),
-                  behavior: SnackBarBehavior.floating,
-                  margin: paddingMediumA,
-                  showCloseIcon: true,
-                ));
-              },
+              onPressed: () => showSnackBar(
+                context,
+                isFloating: true,
+                text: 'Not implemented yet...',
+              ),
               child: const Text('Mark all as read'),
             )
           ],

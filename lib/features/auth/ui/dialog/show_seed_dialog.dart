@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
@@ -25,13 +25,14 @@ class ShowSeedDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final seed = context.read<AuthCubit>().state.accounts[userId]!;
+    final seed = context.read<AuthCubit>().state.accounts[userId] ?? '';
     return AlertDialog.adaptive(
       alignment: Alignment.center,
       actionsAlignment: MainAxisAlignment.spaceBetween,
       titlePadding: paddingMediumA,
       contentPadding: paddingMediumA,
+
+      // Header
       title: Text(
         userId,
         maxLines: 1,
@@ -39,21 +40,19 @@ class ShowSeedDialog extends StatelessWidget {
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.headlineLarge,
       ),
-      content: SizedBox.square(
-        dimension: MediaQuery.of(context).size.width / 2,
-        child: QrImageView(
-          data: seed,
-          backgroundColor: colorScheme.primaryContainer,
-          dataModuleStyle: QrDataModuleStyle(
-            color: colorScheme.onPrimaryContainer,
-            dataModuleShape: QrDataModuleShape.square,
-          ),
-          eyeStyle: QrEyeStyle(
-            color: colorScheme.onPrimaryContainer,
-            eyeShape: QrEyeShape.square,
+
+      // QRCode
+      content: PrettyQrView.data(
+        key: ValueKey(seed),
+        data: seed,
+        decoration: PrettyQrDecoration(
+          shape: PrettyQrSmoothSymbol(
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
       ),
+
+      // Buttons
       actions: [
         Builder(
           builder: (context) => TextButton(
@@ -61,9 +60,10 @@ class ShowSeedDialog extends StatelessWidget {
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: seed));
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Seed copied to clipboard!'),
-                ));
+                showSnackBar(
+                  context,
+                  text: 'Seed copied to clipboard!',
+                );
               }
             },
           ),

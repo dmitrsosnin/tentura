@@ -1,31 +1,31 @@
 # import '/domain/entity/user.graphql'
 # import '/domain/entity/beacon.graphql'
-# import '/domain/entity/comment.graphql'
 
-query GraphFetch($focus: String, $positiveOnly: Boolean, $limit: Int) {
-  gravityGraph(focus: $focus, positiveOnly: $positiveOnly, limit: $limit) {
-    edges {
-      src
-      dest
-      weight
+query GraphFetch(
+    $focus: String!,
+    $context: String,
+    $positive_only: Boolean = true,
+    $offset: Int = 0,
+    $limit: Int = 10
+  ) {
+  graph(
+    args: {
+      focus: $focus,
+      context: $context,
+      positive_only: $positive_only
+      },
+    order_by: {score: desc},
+    offset: $offset,
+    limit: $limit
+  ) {
+    src
+    dst
+    score
+    user {
+      ...UserFields
     }
-    users {
-      user {
-        ...UserFields
-      }
-      score
-    }
-    beacons {
-      beacon {
-        ...BeaconFields
-      }
-      score
-    }
-    comments {
-      comment {
-        ...CommentFields
-      }
-      score
-    }
+  }
+  beacon_by_pk(id: $focus) {
+    ...BeaconFields
   }
 }

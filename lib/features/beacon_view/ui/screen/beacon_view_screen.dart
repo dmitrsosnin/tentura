@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/user.dart';
-import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
+import 'package:tentura/ui/widget/linear_pi_active.dart';
 import 'package:tentura/ui/widget/place_name_text.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
@@ -15,33 +18,42 @@ import '../widget/comment_card.dart';
 import '../widget/new_comment_input.dart';
 
 class BeaconViewScreen extends StatelessWidget {
-  const BeaconViewScreen({
-    required this.isExpanded,
-    super.key,
-  });
-
-  final bool isExpanded;
+  const BeaconViewScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Beacon'),
+  Widget build(BuildContext context) {
+    final authCubit = context.read<AuthCubit>();
+    final beaconViewCubit = context.read<BeaconViewCubit>();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Beacon'),
+        leading: BackButton(
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go(pathHomeConnect),
         ),
-        bottomSheet: const NewCommentInput(),
-        body: BlocConsumer<BeaconViewCubit, BeaconViewState>(
-          listenWhen: (p, c) => c.hasError,
-          listener: (context, state) {
-            showSnackBar(
-              context,
-              isError: true,
-              text: state.error?.toString(),
-            );
-          },
-          builder: (context, state) {
-            final beacon = state.beacon;
-            final author = beacon.author as User;
-            final textTheme = Theme.of(context).textTheme;
-            return ListView(
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(4),
+          child: BlocSelector<BeaconViewCubit, BeaconViewState, FetchStatus>(
+            selector: (state) => state.status,
+            builder: (context, status) => status.isLoading
+                ? const LinearPiActive()
+                : const SizedBox(height: 4),
+          ),
+        ),
+      ),
+      bottomSheet: const NewCommentInput(),
+      body: BlocConsumer<BeaconViewCubit, BeaconViewState>(
+        listenWhen: (p, c) => c.hasError,
+        listener: showSnackBarError,
+        buildWhen: (p, c) => c.status.isSuccess,
+        builder: (context, state) {
+          final beacon = state.beacon;
+          final author = beacon.author as User;
+          final textTheme = Theme.of(context).textTheme;
+          return RefreshIndicator.adaptive(
+            key: ValueKey(state.comments),
+            onRefresh: beaconViewCubit.fetch,
+            child: ListView(
               padding: paddingMediumA,
               children: [
                 // User row (Avatar and Name)
@@ -102,36 +114,49 @@ class BeaconViewScreen extends StatelessWidget {
                 // Place
                 if (beacon.hasCoordinates)
                   PlaceNameText(
-                    coords: beacon.coordinates!,
+                    coords: beacon.coordinates,
                     style: textTheme.bodyLarge,
                   ),
 
                 // Buttons Row
-                if (context.read<AuthCubit>().checkIfIsNotMe(author.id))
+                if (authCubit.checkIfIsNotMe(author.id))
                   Padding(
                     padding: paddingSmallV,
                     child: BeaconTileControl(beacon: beacon),
                   ),
 
-                // Comments
-                if (beacon.comments_count > 0)
+                // Comments ExpansionTile
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 64),
+                  child: ExpansionTile(
+                    key: ValueKey(state.comments),
+                    maintainState: true,
+                    title: const Text('Comments'),
+                    initiallyExpanded: state.initiallyExpanded,
+                    onExpansionChanged: (isExpanded) =>
+                        isExpanded && state.comments.isEmpty
+                            ? beaconViewCubit.fetch()
+                            : null,
+                    children: state.comments
+                        .map((e) => CommentCard(comment: e))
+                        .toList(growable: false),
+                  ),
+                ),
+
+                // Show All Button
+                if (state.hasFocusedComment)
                   Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 64),
-                    child: ExpansionTile(
-                      key: ValueKey(state.comments),
-                      initiallyExpanded: isExpanded,
-                      title: const Text('Comments'),
-                      trailing: state.status.isLoading
-                          ? const CircularProgressIndicator.adaptive()
-                          : null,
-                      children: [
-                        for (final c in state.comments) CommentCard(comment: c),
-                      ],
+                    child: FilledButton(
+                      onPressed: beaconViewCubit.showAll,
+                      child: const Text('Show all'),
                     ),
                   ),
               ],
-            );
-          },
-        ),
-      );
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

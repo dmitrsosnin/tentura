@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
 
-import 'ui/connect_screen.dart';
+import 'ui/screen/connect_screen.dart';
 
 GoRoute buildConnectRoute({
   GlobalKey<NavigatorState>? parentNavigatorKey,

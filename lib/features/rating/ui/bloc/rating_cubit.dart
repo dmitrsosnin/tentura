@@ -11,35 +11,28 @@ part 'rating_state.dart';
 
 class RatingCubit extends Cubit<RatingState> {
   RatingCubit(this._repository) : super(const RatingState()) {
-    _fetchSubscription.resume();
+    fetch();
   }
 
   final RatingRepository _repository;
 
-  late final _fetchSubscription = _repository.stream.listen(
-    (e) {
-      _items = e.toList(growable: false);
+  List<UserRating> _items = [];
+
+  Future<void> fetch([String? contextName]) async {
+    emit(state.setLoading());
+    try {
+      final rating = await _repository.fetch(
+        context: contextName ?? state.context,
+      );
+      _items = rating.toList(growable: false);
       emit(state.copyWith(
         status: FetchStatus.isSuccess,
         items: _items,
       ));
       _sort();
-    },
-    onError: (dynamic e) => emit(state.setError(e.toString())),
-    cancelOnError: false,
-  );
-
-  List<UserRating> _items = [];
-
-  @override
-  Future<void> close() async {
-    await _fetchSubscription.cancel();
-    return super.close();
-  }
-
-  Future<void> fetch() async {
-    emit(state.setLoading());
-    return _repository.fetch();
+    } catch (e) {
+      emit(state.setError(e));
+    }
   }
 
   void toggleSortingByAsc() {
@@ -52,10 +45,11 @@ class RatingCubit extends Cubit<RatingState> {
     _sort();
   }
 
-  void setSearchFilter(String f) => emit(state.copyWith(
-        searchFilter: f,
+  void setSearchFilter(String filter) => emit(state.copyWith(
+        searchFilter: filter,
         items: _items
-            .where((e) => e.user.title.toLowerCase().contains(f.toLowerCase()))
+            .where((e) =>
+                e.user.title.toLowerCase().contains(filter.toLowerCase()))
             .toList(),
       ));
 

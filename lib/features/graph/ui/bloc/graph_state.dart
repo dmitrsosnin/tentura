@@ -5,11 +5,13 @@ final class GraphState extends StateBase {
     required this.focus,
     this.isAnimated = true,
     this.positiveOnly = true,
+    this.context = '',
     super.status,
     super.error,
   });
 
   final String focus;
+  final String context;
   final bool isAnimated;
   final bool positiveOnly;
 
@@ -17,6 +19,7 @@ final class GraphState extends StateBase {
   List<Object?> get props => [
         positiveOnly,
         isAnimated,
+        context,
         status,
         focus,
         error,
@@ -25,6 +28,7 @@ final class GraphState extends StateBase {
   @override
   GraphState copyWith({
     String? focus,
+    String? context,
     bool? isAnimated,
     bool? positiveOnly,
     FetchStatus? status,
@@ -32,6 +36,7 @@ final class GraphState extends StateBase {
   }) =>
       GraphState(
         focus: focus ?? this.focus,
+        context: context ?? this.context,
         isAnimated: isAnimated ?? this.isAnimated,
         positiveOnly: positiveOnly ?? this.positiveOnly,
         status: status ?? (error == null ? this.status : FetchStatus.isFailure),

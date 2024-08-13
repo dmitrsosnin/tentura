@@ -3,9 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/widget/share_code_icon_button.dart';
-
 import 'package:tentura/domain/entity/beacon.dart';
+
+import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 
 import '../bloc/beacon_cubit.dart';
 import '../dialog/beacon_delete_dialog.dart';
@@ -50,14 +50,7 @@ class BeaconMineControl extends StatelessWidget {
           ),
 
           // Share
-          ShareCodeIconButton(
-            header: beacon.id,
-            link: Uri.https(
-              appLinkBase,
-              pathBeaconView,
-              {'id': beacon.id},
-            ),
-          ),
+          ShareCodeIconButton.id(beacon.id),
 
           // Menu
           PopupMenuButton<void>(

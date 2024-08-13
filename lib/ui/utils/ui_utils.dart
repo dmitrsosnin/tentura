@@ -1,11 +1,18 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 import 'package:tentura/consts.dart';
+
+import '../bloc/state_base.dart';
 
 const paddingMediumA = EdgeInsets.all(20);
 
 const paddingMediumH = EdgeInsets.symmetric(horizontal: 20);
+
+const paddingLargeV = EdgeInsets.symmetric(vertical: 32);
+
+const paddingMediumV = EdgeInsets.symmetric(vertical: 20);
 
 const paddingSmallV = EdgeInsets.symmetric(vertical: 8);
 
@@ -24,6 +31,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
 }) {
   final theme = Theme.of(context);
   ScaffoldMessenger.of(context).clearSnackBars();
+  if (isError) if (kDebugMode) print(text);
   return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     behavior: isFloating ? SnackBarBehavior.floating : null,
     margin: isFloating ? const EdgeInsets.all(16) : null,
@@ -44,6 +52,16 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
     ),
   ));
 }
+
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarError(
+  BuildContext context,
+  StateBase state,
+) =>
+    showSnackBar(
+      context,
+      isError: true,
+      text: state.error?.toString() ?? 'Unknown error!',
+    );
 
 sealed class ScreenSize {
   static ScreenSize get(Size size) => switch (size.height) {

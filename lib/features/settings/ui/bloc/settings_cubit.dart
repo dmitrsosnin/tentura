@@ -7,36 +7,33 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'settings_state.dart';
 
-class SettingsCubit extends Cubit<SettingsState>
-    with HydratedMixin<SettingsState> {
-  SettingsCubit() : super(const SettingsState()) {
-    hydrate();
-  }
+class SettingsCubit extends HydratedCubit<SettingsState> {
+  SettingsCubit() : super(const SettingsState());
 
   @override
-  SettingsState? fromJson(Map<String, dynamic> json) => json.isEmpty
-      ? null
-      : SettingsState(
-          themeMode: switch (json['themeMode']) {
-            'dark' => ThemeMode.dark,
-            'light' => ThemeMode.light,
-            _ => ThemeMode.system,
-          },
-        );
+  SettingsState? fromJson(Map<String, dynamic> json) => SettingsState(
+        introEnabled: json['introEnabled'] as bool? ?? true,
+        themeMode: ThemeMode.values.firstWhere(
+          (themeMode) => themeMode.name == json['themeMode'],
+          orElse: () => ThemeMode.system,
+        ),
+      );
 
   @override
   Map<String, dynamic>? toJson(SettingsState state) =>
-      state.themeMode == this.state.themeMode
+      state.themeMode == this.state.themeMode &&
+              state.introEnabled == this.state.introEnabled
           ? null
           : {
-              'themeMode': switch (state.themeMode) {
-                ThemeMode.dark => 'dark',
-                ThemeMode.light => 'light',
-                ThemeMode.system => 'system',
-              }
+              'introEnabled': state.introEnabled,
+              'themeMode': state.themeMode.name,
             };
 
   void setThemeMode(ThemeMode themeMode) => emit(state.copyWith(
         themeMode: themeMode,
+      ));
+
+  void setIntroEnabled(bool isEnabled) => emit(state.copyWith(
+        introEnabled: isEnabled,
       ));
 }

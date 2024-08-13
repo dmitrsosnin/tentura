@@ -15,12 +15,11 @@ GoRoute buildBeaconViewRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
       builder: (context, state) => BlocProvider(
         create: (context) => BeaconViewCubit(
           id: state.uri.queryParameters['id'] ?? '',
+          initiallyExpanded: state.uri.queryParameters['expanded'] == 'true',
           beaconViewRepository: BeaconViewRepository(
-            remoteApiService: context.read<RemoteApiService>(),
+            context.read<RemoteApiService>(),
           ),
         ),
-        child: state.uri.queryParameters['expanded'] == 'true'
-            ? const BeaconViewScreen(isExpanded: true)
-            : const BeaconViewScreen(isExpanded: false),
+        child: const BeaconViewScreen(),
       ),
     );

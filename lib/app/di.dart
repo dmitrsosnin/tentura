@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:tentura/consts.dart';
@@ -11,6 +12,8 @@ import 'package:tentura/data/service/hydrated_bloc_storage.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/data/beacon_repository.dart';
+import 'package:tentura/features/context/data/context_repository.dart';
+import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 import 'package:tentura/features/profile/data/profile_repository.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
@@ -61,6 +64,7 @@ class _DIState extends State<DI> {
             providers: [
               BlocProvider(
                 create: (context) => SettingsCubit(),
+                lazy: false,
               ),
               BlocProvider(
                 create: (context) => AuthCubit(_remoteApiService),
@@ -91,6 +95,11 @@ class _DIState extends State<DI> {
                       MyFieldRepository(_remoteApiService),
                     ),
                   ),
+                  BlocProvider(
+                    create: (context) => ContextCubit(
+                      ContextRepository(_remoteApiService),
+                    ),
+                  ),
                 ],
                 child: App(),
               ),
@@ -100,7 +109,9 @@ class _DIState extends State<DI> {
 
   Future<void> _init() async {
     final storageDirectory = await getApplicationDocumentsDirectory();
+    final packageInfo = await PackageInfo.fromPlatform();
     _remoteApiService = RemoteApiService(
+      userAgent: 'Tentura (${packageInfo.version})',
       storagePath: storageDirectory.path,
       jwtExpiresIn: jwtExpiresIn,
       serverName: appLinkBase,

@@ -64,16 +64,30 @@ class BeaconInfo extends StatelessWidget {
               style: textTheme.bodyLarge,
             ),
 
+          // Beacon Context
+          if (beacon.context != null && beacon.context!.isNotEmpty)
+            Text(
+              '${beacon.context!} (context)',
+              maxLines: 1,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.bodyLarge,
+            ),
+
           // Beacon Timerange
           if (beacon.timerange != null)
             Text(
               '${fYMD(beacon.timerange?.start)} - ${fYMD(beacon.timerange?.end)}',
+              maxLines: 1,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.bodyLarge,
             ),
 
           // Beacon Geolocation
           if (beacon.hasCoordinates)
             PlaceNameText(
-              coords: beacon.coordinates!,
+              coords: beacon.coordinates,
               style: textTheme.bodyLarge,
             ),
         ],

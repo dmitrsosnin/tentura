@@ -1,0 +1,5 @@
+mutation ContextDelete($user_id: String!, $context_name: String!) {
+  delete_user_context_by_pk(user_id: $user_id, context_name: $context_name) {
+    context_name
+  }
+}
