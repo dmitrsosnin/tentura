@@ -29,6 +29,7 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
     String? description,
     DateTimeRange? dateRange,
     Coordinates? coordinates,
+    String? context,
   }) =>
       empty.copyWith(
         title: title,
@@ -36,6 +37,7 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
         description: description,
         coordinates: coordinates,
         dateRange: dateRange,
+        context: context,
       );
 
   String get imageId => i.has_picture ? i.id : '';
@@ -53,6 +55,7 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
     String? description,
     String? authorId,
     bool? hasPicture,
+    String? context,
     bool? isPinned,
     bool? enabled,
     int? myVote,
@@ -64,16 +67,19 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
             ..id = id ?? this.id
             ..title = title ?? this.title
             ..description = description ?? this.description
+            ..context = context ?? this.context
             ..enabled = enabled ?? this.enabled
             ..is_pinned = isPinned ?? is_pinned
             ..has_picture = hasPicture ?? has_picture
             ..comments_count = commentsCount ?? comments_count
             ..timerange = dateRange ?? timerange
             ..my_vote = myVote ?? my_vote
-            ..lat =
-                (Gfloat8Builder()..value = (coordinates?.lat ?? lat).toString())
-            ..long = (Gfloat8Builder()
-              ..value = (coordinates?.long ?? long).toString())
+            ..lat = (coordinates == null
+                ? lat?.toBuilder()
+                : (Gfloat8Builder()..value = coordinates.lat.toString()))
+            ..long = (coordinates == null
+                ? long?.toBuilder()
+                : (Gfloat8Builder()..value = coordinates.long.toString()))
             ..created_at = created_at
             ..updated_at = updated_at
             ..author = (GBeaconFieldsData_authorBuilder()

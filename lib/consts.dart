@@ -34,10 +34,10 @@ const pathProfileEdit = '/profile/edit';
 const pathBeaconView = '/beacon/view';
 const pathBeaconCreate = '/beacon/create';
 
+const pathAppLinkView = '/shared/view';
+
 const anonymousPath = [
   pathIntro,
   pathAuthLogin,
-  // TBD: show with AppLink
-  // pathBeaconView,
-  // pathProfileView,
+  pathAppLinkView,
 ];

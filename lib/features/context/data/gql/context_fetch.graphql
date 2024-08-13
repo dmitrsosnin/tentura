@@ -1,0 +1,5 @@
+query ContextFetch {
+  user_context {
+    context_name
+  }
+}

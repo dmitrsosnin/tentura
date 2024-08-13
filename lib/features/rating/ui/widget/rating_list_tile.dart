@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tentura/consts.dart';
 
+import 'package:tentura/consts.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
 import '../../domain/entity/user_rating.dart';
@@ -109,13 +109,13 @@ class _CustomBarbellPainter extends CustomPainter {
   ) =>
       min(
         maxRadius,
-        (maxRadius - minRadius) * weight * 10 + minRadius,
+        (maxRadius - minRadius) * weight + minRadius,
       );
 
   // TBD: normalization
   Color _calcColor(double weight) => weight >= 0.9
       ? Colors.amber[900]!
-      : weight >= 0.2
-          ? Colors.amber[weight ~/ 0.1 * 100] ?? Colors.amber[800]!
-          : Colors.amber[weight ~/ 0.01 * 100 + 100] ?? Colors.amber[50]!;
+      : weight < 0.1
+          ? Colors.amber[50]!
+          : Colors.amber[weight ~/ 0.1 * 100]!;
 }

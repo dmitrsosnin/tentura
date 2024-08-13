@@ -8,6 +8,8 @@ import 'package:tentura/domain/entity/geo.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/dialog/choose_location_dialog.dart';
 
+import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
+
 import '../bloc/beacon_cubit.dart';
 
 class BeaconCreateScreen extends StatefulWidget {
@@ -30,6 +32,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
   DateTimeRange? _dateRange;
   Coordinates? _coordinates;
   Uint8List? _image;
+  String? _context;
 
   @override
   void dispose() {
@@ -53,8 +56,9 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                     await _beaconCubit.create(
                       title: _titleController.text,
                       description: _descriptionController.text,
-                      dateRange: _dateRange,
                       coordinates: _coordinates,
+                      dateRange: _dateRange,
+                      context: _context,
                       image: _image,
                     );
                     if (context.mounted) context.pop();
@@ -116,6 +120,11 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                 maxLength: descriptionLength,
                 maxLines: null,
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
+              ),
+
+              // Context
+              ContextDropDown(
+                onChanged: (value) => _context = value,
               ),
 
               // Location

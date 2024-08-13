@@ -14,8 +14,7 @@ GoRoute buildBeaconViewRoute({GlobalKey<NavigatorState>? parentNavigatorKey}) =>
       parentNavigatorKey: parentNavigatorKey,
       builder: (context, state) => BlocProvider(
         create: (context) => BeaconViewCubit(
-          id: state.uri.queryParameters['id'],
-          focusCommentId: state.uri.queryParameters['comment_id'],
+          id: state.uri.queryParameters['id'] ?? '',
           initiallyExpanded: state.uri.queryParameters['expanded'] == 'true',
           beaconViewRepository: BeaconViewRepository(
             context.read<RemoteApiService>(),

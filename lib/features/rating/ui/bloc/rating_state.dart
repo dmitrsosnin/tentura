@@ -3,6 +3,7 @@ part of 'rating_cubit.dart';
 final class RatingState extends StateBase {
   const RatingState({
     this.items = const [],
+    this.context = '',
     this.searchFilter = '',
     this.isSortedByAsc = false,
     this.isSortedByEgo = false,
@@ -10,6 +11,7 @@ final class RatingState extends StateBase {
     super.error,
   });
 
+  final String context;
   final String searchFilter;
   final bool isSortedByAsc;
   final bool isSortedByEgo;
@@ -23,6 +25,7 @@ final class RatingState extends StateBase {
         items.length,
         items.firstOrNull,
         items.lastOrNull,
+        context,
         status,
         error,
         items,
@@ -32,6 +35,7 @@ final class RatingState extends StateBase {
   RatingState copyWith({
     List<UserRating>? items,
     String? searchFilter,
+    String? context,
     bool? isSortedByAsc,
     bool? isSortedByEgo,
     FetchStatus? status,
@@ -39,6 +43,7 @@ final class RatingState extends StateBase {
   }) =>
       RatingState(
         items: items ?? this.items,
+        context: context ?? this.context,
         searchFilter: searchFilter ?? this.searchFilter,
         isSortedByAsc: isSortedByAsc ?? this.isSortedByAsc,
         isSortedByEgo: isSortedByEgo ?? this.isSortedByEgo,
