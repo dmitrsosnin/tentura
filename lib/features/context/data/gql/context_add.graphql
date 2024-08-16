@@ -1,4 +1,4 @@
-mutation ContextAdd($context_name: String!) {
+mutation ContextAdd($user_id: String!, $context_name: String!) {
   insert_user_context_one(object: {context_name: $context_name}) {
     context_name
   }

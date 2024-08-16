@@ -1,19 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/widget/avatar_image.dart';
-import 'package:tentura/ui/widget/gradient_stack.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
+import 'package:tentura/ui/widget/gradient_stack.dart';
+import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
 import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 
+import '../../data/profile_view_repository.dart';
 import '../cubit/profile_view_cubit.dart';
 
-class ProfileViewScreen extends StatelessWidget {
-  const ProfileViewScreen({super.key});
+@RoutePage()
+class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
+  const ProfileViewScreen({
+    @queryParam this.id = '',
+    super.key,
+  });
+
+  final String id;
+
+  @override
+  Widget wrappedRoute(BuildContext context) => BlocProvider(
+        create: (context) => ProfileViewCubit(
+          profileViewRepository: ProfileViewRepository(
+            remoteApiService: context.read<RemoteApiService>(),
+          ),
+          id: id,
+        ),
+        child: this,
+      );
 
   @override
   Widget build(BuildContext context) =>
@@ -38,7 +57,7 @@ class ProfileViewScreen extends StatelessWidget {
                   // Graph View
                   IconButton(
                     icon: const Icon(Icons.hub_outlined),
-                    onPressed: () => context.push(Uri(
+                    onPressed: () => context.router.pushNamed(Uri(
                       path: pathGraph,
                       queryParameters: {'focus': state.user.id},
                     ).toString()),
@@ -64,11 +83,7 @@ class ProfileViewScreen extends StatelessWidget {
                 ],
                 floating: true,
                 expandedHeight: GradientStack.defaultHeight,
-                leading: BackButton(
-                  onPressed: () => context.canPop()
-                      ? context.pop()
-                      : context.go(pathHomeConnect),
-                ),
+                leading: const AutoLeadingButton(),
 
                 // Avatar
                 flexibleSpace: FlexibleSpaceBar(

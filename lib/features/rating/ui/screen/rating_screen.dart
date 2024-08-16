@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 
 import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 
+import '../../data/rating_repository.dart';
 import '../bloc/rating_cubit.dart';
 import '../widget/rating_list_tile.dart';
 
-class RatingScreen extends StatefulWidget {
+@RoutePage()
+class RatingScreen extends StatefulWidget implements AutoRouteWrapper {
   const RatingScreen({super.key});
 
   @override
   State<RatingScreen> createState() => _RatingScreenState();
+
+  @override
+  Widget wrappedRoute(BuildContext context) => BlocProvider(
+        create: (context) => RatingCubit(
+          RatingRepository(context.read<RemoteApiService>()),
+        ),
+        child: this,
+      );
 }
 
 class _RatingScreenState extends State<RatingScreen> {

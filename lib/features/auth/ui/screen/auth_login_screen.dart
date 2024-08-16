@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
@@ -8,6 +9,7 @@ import 'package:tentura/features/profile/ui/widget/profile_list_tile.dart';
 
 import '../bloc/auth_cubit.dart';
 
+@RoutePage()
 class AuthLoginScreen extends StatelessWidget {
   const AuthLoginScreen({super.key});
 

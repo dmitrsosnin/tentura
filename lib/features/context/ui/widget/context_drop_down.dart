@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
@@ -29,7 +30,7 @@ class ContextDropDown extends StatelessWidget {
                 final newContext = await ContextAddDialog.show(context);
                 if (newContext != null) {
                   await cubit.add(newContext);
-                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) await context.maybePop();
                 }
               },
             ),

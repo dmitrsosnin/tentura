@@ -15,9 +15,9 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'graph_state.dart';
 
 class GraphCubit extends Cubit<GraphState> {
-  GraphCubit({
+  GraphCubit(
+    this.graphRepository, {
     required User me,
-    required this.graphRepository,
     String? focus,
   })  : _egoNode = UserNode(
           id: me.id,

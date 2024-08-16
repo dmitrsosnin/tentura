@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
 
@@ -18,7 +18,7 @@ class ProfileMineMenuButton extends StatelessWidget {
       itemBuilder: (context) => <PopupMenuEntry<void>>[
         // Rating
         PopupMenuItem<void>(
-          onTap: () => context.push(pathRating),
+          onTap: () => context.router.pushNamed(pathRating),
           child: const Text('View rating'),
         ),
         const PopupMenuDivider(),
@@ -35,7 +35,7 @@ class ProfileMineMenuButton extends StatelessWidget {
 
         // Edit
         PopupMenuItem<void>(
-          onTap: () => context.push(pathProfileEdit),
+          onTap: () => context.router.pushNamed(pathProfileEdit),
           child: const Text('Edit profile'),
         ),
         const PopupMenuDivider(),

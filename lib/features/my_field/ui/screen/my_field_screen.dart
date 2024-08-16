@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
@@ -7,6 +8,7 @@ import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 import '../bloc/my_field_cubit.dart';
 import '../widget/beacon_tile.dart';
 
+@RoutePage()
 class MyFieldScreen extends StatelessWidget {
   const MyFieldScreen({super.key});
 

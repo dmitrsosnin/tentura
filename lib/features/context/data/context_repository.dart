@@ -23,7 +23,9 @@ class ContextRepository {
       _remoteApiService.gqlClient.addRequestToRequestController(_fetchRequest);
 
   Future<String> add(String contextName) => _remoteApiService.gqlClient
-      .request(GContextAddReq((b) => b.vars.context_name = contextName))
+      .request(GContextAddReq((b) => b.vars
+        ..user_id = _remoteApiService.userId
+        ..context_name = contextName))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) =>
           r.dataOrThrow(label: _label).insert_user_context_one!.context_name);

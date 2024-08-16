@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/comment.dart';
@@ -28,7 +28,7 @@ class CommentCard extends StatelessWidget {
       children: [
         const Divider(),
         GestureDetector(
-          onTap: () => context.push(Uri(
+          onTap: () => context.router.pushNamed(Uri(
             path: pathProfileView,
             queryParameters: {'id': comment.author.id},
           ).toString()),

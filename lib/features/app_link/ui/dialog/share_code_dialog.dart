@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
@@ -70,7 +71,7 @@ class ShareCodeDialog extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: Navigator.of(context).pop,
+            onPressed: context.maybePop,
             child: const Text('Close'),
           ),
         ],

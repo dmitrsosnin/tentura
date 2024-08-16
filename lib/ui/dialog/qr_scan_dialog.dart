@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
@@ -76,8 +77,7 @@ class _QRScanDialogState extends State<QRScanDialog> {
                   if (_hasResult || captured.barcodes.isEmpty) return;
                   if (context.mounted) {
                     _hasResult = true;
-                    Navigator.of(context)
-                        .pop<String?>(captured.barcodes.first.rawValue);
+                    context.maybePop(captured.barcodes.first.rawValue);
                   }
                 },
               ),

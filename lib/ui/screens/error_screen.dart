@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
@@ -34,7 +34,7 @@ class ErrorScreen extends StatelessWidget {
               ),
             ),
             FilledButton(
-              onPressed: () => context.go(pathHomeField),
+              onPressed: () => context.navigateNamedTo(pathHomeField),
               child: const Text('Go to Home'),
             ),
           ],

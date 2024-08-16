@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
@@ -15,6 +15,7 @@ import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart'
 import '../bloc/profile_cubit.dart';
 import '../widget/profile_mine_menu_button.dart';
 
+@RoutePage()
 class ProfileMineScreen extends StatelessWidget {
   const ProfileMineScreen({super.key});
 
@@ -51,7 +52,7 @@ class ProfileMineScreen extends StatelessWidget {
                   // Graph View
                   IconButton(
                     icon: const Icon(Icons.hub_outlined),
-                    onPressed: () => context.push(Uri(
+                    onPressed: () => context.router.pushNamed(Uri(
                       path: pathGraph,
                       queryParameters: {'focus': user.id},
                     ).toString()),
@@ -113,7 +114,7 @@ class ProfileMineScreen extends StatelessWidget {
                           ),
                           FilledButton(
                             onPressed: () async {
-                              await context.push(pathBeaconCreate);
+                              await context.router.pushNamed(pathBeaconCreate);
                               await beaconCubit.fetch();
                             },
                             child: const Text('Create'),

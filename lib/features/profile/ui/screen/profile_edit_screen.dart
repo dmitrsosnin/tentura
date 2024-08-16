@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:tentura/consts.dart';
@@ -11,6 +11,7 @@ import 'package:tentura/ui/widget/avatar_positioned.dart';
 
 import '../bloc/profile_cubit.dart';
 
+@RoutePage()
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({super.key});
 
@@ -179,7 +180,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         description: _descriptionController.text,
         hasPicture: _hasPicture,
       );
-      if (mounted) context.pop();
+      if (mounted) await context.maybePop();
     } catch (e) {
       if (mounted) {
         await showAdaptiveDialog<void>(

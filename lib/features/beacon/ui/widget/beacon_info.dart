@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/beacon.dart';
@@ -19,7 +19,7 @@ class BeaconInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
-      onTap: () => context.push(Uri(
+      onTap: () => context.router.pushNamed(Uri(
         path: pathBeaconView,
         queryParameters: {'id': beacon.id},
       ).toString()),

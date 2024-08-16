@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
 class ContextRemoveDialog extends StatelessWidget {
   static Future<bool?> show(BuildContext context) => showDialog<bool>(
@@ -13,11 +14,11 @@ class ContextRemoveDialog extends StatelessWidget {
         title: const Text('Are you shure?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => context.maybePop(true),
             child: const Text('Yes'),
           ),
           TextButton(
-            onPressed: Navigator.of(context).pop,
+            onPressed: context.maybePop,
             child: const Text('Cancel'),
           ),
         ],

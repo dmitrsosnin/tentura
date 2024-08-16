@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 
+@RoutePage()
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
 
@@ -82,17 +83,17 @@ class _ConnectScreenState extends State<ConnectScreen> {
     if (code.length == idLength) {
       if (kDebugMode) print(code);
       if (code.startsWith('B')) {
-        context.push(Uri(
+        context.router.pushNamed(Uri(
           path: pathBeaconView,
           queryParameters: {'id': code},
         ).toString());
       } else if (code.startsWith('U')) {
-        context.push(Uri(
+        context.router.pushNamed(Uri(
           path: pathProfileView,
           queryParameters: {'id': code},
         ).toString());
       } else if (code.startsWith('C')) {
-        context.push(Uri(
+        context.router.pushNamed(Uri(
           path: pathBeaconView,
           queryParameters: {
             'id': code,

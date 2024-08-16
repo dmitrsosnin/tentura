@@ -9,8 +9,8 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'beacon_view_state.dart';
 
 class BeaconViewCubit extends Cubit<BeaconViewState> {
-  BeaconViewCubit({
-    required this.beaconViewRepository,
+  BeaconViewCubit(
+    this.beaconViewRepository, {
     required String id,
     bool initiallyExpanded = false,
   }) : super(switch (id) {

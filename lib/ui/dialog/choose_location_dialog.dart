@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -61,7 +61,9 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
             onTap: (tapPosition, point) async {
               final coords = (lat: point.latitude, long: point.longitude);
               final place = await _geoRepository.getPlaceNameByCoords(coords);
-              if (context.mounted) context.pop((coords: coords, place: place));
+              if (context.mounted) {
+                await context.maybePop((coords: coords, place: place));
+              }
             },
             onMapReady: () {
               final center = widget.center ?? _geoRepository.myCoordinates;

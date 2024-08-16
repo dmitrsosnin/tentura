@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
+@RoutePage()
 class UpdatesScreen extends StatelessWidget {
   const UpdatesScreen({super.key});
 

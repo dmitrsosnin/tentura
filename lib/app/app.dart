@@ -1,76 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/theme_dark.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/ui/theme_light.dart';
-import 'package:tentura/ui/screens/error_screen.dart';
+import 'package:tentura/ui/theme_dark.dart';
 
-import 'package:tentura/features/home/home_route.dart';
-import 'package:tentura/features/intro/intro_route.dart';
-import 'package:tentura/features/auth/auth_login_route.dart';
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/profile/profile_edit_route.dart';
-import 'package:tentura/features/beacon/beacon_create_route.dart';
-import 'package:tentura/features/beacon_view/beacon_view_route.dart';
-import 'package:tentura/features/profile_view/profile_view_route.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
-import 'package:tentura/features/app_link/ui/widget/app_link_router.dart';
-import 'package:tentura/features/app_link/app_link_route.dart';
-import 'package:tentura/features/rating/rating_route.dart';
-import 'package:tentura/features/graph/graph_route.dart';
 
 class App extends StatelessWidget {
-  App({super.key});
+  const App({
+    required this.router,
+    super.key,
+  });
 
-  final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+  final RootRouter router;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, SettingsState>(
-      builder: (context, state) {
-        final authCubit = context.read<AuthCubit>();
-        final router = GoRouter(
-          debugLogDiagnostics: kDebugMode,
-          initialLocation: state.introEnabled ? pathIntro : pathHomeProfile,
-          navigatorKey: _rootNavigatorKey,
-          observers: [
-            SentryNavigatorObserver(),
-          ],
-          errorBuilder: (context, state) => ErrorScreen(error: state.error),
-          redirect: (context, state) => authCubit.state.isAuthenticated ||
-                  anonymousPath.contains(state.matchedLocation)
-              ? null
-              : pathAuthLogin,
-          routes: [
-            buildHomeRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildIntroRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildAuthLoginRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildAppLinkViewRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildProfileViewRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildProfileEditRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildBeaconCreateRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildBeaconViewRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildRatingRoute(parentNavigatorKey: _rootNavigatorKey),
-            buildGraphRoute(parentNavigatorKey: _rootNavigatorKey),
-          ],
-        );
-        return MaterialApp.router(
-          color: const Color(0x00B77EFF),
+  Widget build(BuildContext context) =>
+      BlocBuilder<SettingsCubit, SettingsState>(
+        buildWhen: (p, c) => p.themeMode != c.themeMode,
+        builder: (context, state) => MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          color: const Color(0x003A1E5C),
+          routerConfig: router.config(
+            deepLinkBuilder: (deepLink) {
+              if (kDebugMode) print('DeepLinkBuilder: $deepLink');
+              return deepLink;
+            },
+            deepLinkTransformer: (Uri uri) => SynchronousFuture(uri.replace(
+              path: switch (uri.queryParameters['id']) {
+                final String id when id.startsWith('U') => pathProfileView,
+                final String id when id.startsWith('B') => pathBeaconView,
+                final String id when id.startsWith('C') => pathBeaconView,
+                _ => pathHomeConnect,
+              },
+            )),
+            navigatorObservers: () => [
+              SentryNavigatorObserver(),
+            ],
+            reevaluateListenable: router.reevaluateListenable,
+          ),
           title: 'Tentura',
           theme: themeLight,
           darkTheme: themeDark,
           themeMode: state.themeMode,
-          debugShowCheckedModeBanner: false,
-          builder: (context, child) => AppLinkRouter(
-            router: router,
-            child: child ?? const SizedBox.shrink(),
-          ),
-          routerConfig: router,
-        );
-      },
-    );
-  }
+        ),
+      );
 }

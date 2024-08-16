@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_handler/share_handler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/data/repository/geo_repository.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/data/service/hydrated_bloc_storage.dart';
@@ -32,6 +35,18 @@ class DI extends StatefulWidget {
 }
 
 class _DIState extends State<DI> {
+  final _router = RootRouter();
+
+  final _subscription = ShareHandlerPlatform.instance.sharedMediaStream.listen(
+    (e) {
+      if (kDebugMode) {
+        print('Stream: ${e.content}');
+        // ignore: avoid_print
+        e.attachments?.forEach(print);
+      }
+    },
+  );
+
   late final RemoteApiService _remoteApiService;
 
   bool _isInitiating = true;
@@ -45,6 +60,8 @@ class _DIState extends State<DI> {
   @override
   void dispose() {
     _remoteApiService.dispose();
+    _subscription.cancel();
+    _router.dispose();
     super.dispose();
   }
 
@@ -53,27 +70,18 @@ class _DIState extends State<DI> {
       ? Container()
       : MultiRepositoryProvider(
           providers: [
-            RepositoryProvider(
-              create: (context) => GeoRepository(),
-            ),
-            RepositoryProvider.value(
-              value: _remoteApiService,
-            ),
+            RepositoryProvider.value(value: _remoteApiService),
+            RepositoryProvider(create: (_) => GeoRepository()),
           ],
           child: MultiBlocProvider(
             providers: [
-              BlocProvider(
-                create: (context) => SettingsCubit(),
-                lazy: false,
-              ),
-              BlocProvider(
-                create: (context) => AuthCubit(_remoteApiService),
-              ),
+              BlocProvider(create: (_) => SettingsCubit()),
+              BlocProvider(create: (_) => AuthCubit(_remoteApiService)),
             ],
             child: BlocSelector<AuthCubit, AuthState, String>(
               selector: (state) => state.currentAccount,
               builder: (context, userId) => MultiBlocProvider(
-                key: ValueKey(userId),
+                // key: ValueKey(userId),
                 providers: [
                   BlocProvider(
                     create: (context) => ProfileCubit(
@@ -101,7 +109,11 @@ class _DIState extends State<DI> {
                     ),
                   ),
                 ],
-                child: App(),
+                child: App(
+                  router: _router
+                    ..authCubit = context.read<AuthCubit>()
+                    ..settingsCubit = context.read<SettingsCubit>(),
+                ),
               ),
             ),
           ),
@@ -123,6 +135,19 @@ class _DIState extends State<DI> {
       HydratedBlocStorage.init(storageDirectory),
       _remoteApiService.init(),
     ]);
+    //
+    await ShareHandlerPlatform.instance.getInitialSharedMedia().then(
+      (e) {
+        if (e != null) {
+          if (kDebugMode) {
+            print('Initial Future: ${e.content}');
+            // ignore: avoid_print
+            e.attachments?.forEach(print);
+          }
+        }
+      },
+    );
+    //
     FlutterNativeSplash.remove();
     setState(() => _isInitiating = false);
   }

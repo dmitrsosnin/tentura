@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/geo.dart';
@@ -12,6 +12,7 @@ import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 
 import '../bloc/beacon_cubit.dart';
 
+@RoutePage()
 class BeaconCreateScreen extends StatefulWidget {
   const BeaconCreateScreen({super.key});
 
@@ -61,7 +62,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                       context: _context,
                       image: _image,
                     );
-                    if (context.mounted) context.pop();
+                    if (context.mounted) await context.maybePop();
                   } catch (e) {
                     if (context.mounted) {
                       showSnackBar(

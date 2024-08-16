@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/beacon.dart';
@@ -23,7 +23,7 @@ class BeaconTileControl extends StatelessWidget {
         children: [
           // Comments count
           TextButton.icon(
-            onPressed: () => context.push(Uri(
+            onPressed: () => context.router.pushNamed(Uri(
               path: pathBeaconView,
               queryParameters: {
                 'id': beacon.id,
@@ -42,7 +42,7 @@ class BeaconTileControl extends StatelessWidget {
             icon: const Icon(Icons.hub_outlined),
             onPressed: (beacon.my_vote ?? -1) < 0
                 ? null
-                : () => context.push(Uri(
+                : () => context.router.pushNamed(Uri(
                       path: pathGraph,
                       queryParameters: {'focus': beacon.id},
                     ).toString()),

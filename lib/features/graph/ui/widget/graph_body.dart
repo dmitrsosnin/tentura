@@ -1,6 +1,6 @@
 import 'package:nil/nil.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
 import 'package:tentura/consts.dart';
@@ -96,7 +96,7 @@ class GraphBodyState extends State<GraphBody>
         key: ValueKey(node),
         nodeDetails: node,
         onTap: () => _cubit.setFocus(node),
-        onDoubleTap: () => context.push(switch (node) {
+        onDoubleTap: () => context.router.pushNamed(switch (node) {
           final UserNode node => Uri(
               path: pathProfileView,
               queryParameters: {'id': node.id},

@@ -1,24 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/consts.dart';
-import 'package:tentura/domain/entity/user.dart';
-import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
-import 'package:tentura/ui/widget/linear_pi_active.dart';
 import 'package:tentura/ui/widget/place_name_text.dart';
+import 'package:tentura/ui/widget/linear_pi_active.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
+import 'package:tentura/domain/entity/user.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/my_field/ui/widget/beacon_tile_control.dart';
 
+import '../../data/beacon_view_repository.dart';
 import '../bloc/beacon_view_cubit.dart';
 import '../widget/comment_card.dart';
 import '../widget/new_comment_input.dart';
 
-class BeaconViewScreen extends StatelessWidget {
-  const BeaconViewScreen({super.key});
+@RoutePage()
+class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
+  const BeaconViewScreen({
+    @queryParam this.id = '',
+    @queryParam this.initiallyExpanded = true,
+    super.key,
+  });
+
+  final String id;
+  final bool initiallyExpanded;
+
+  @override
+  Widget wrappedRoute(BuildContext context) => BlocProvider(
+        create: (context) => BeaconViewCubit(
+          BeaconViewRepository(context.read<RemoteApiService>()),
+          initiallyExpanded: initiallyExpanded,
+          id: id,
+        ),
+        child: this,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +46,7 @@ class BeaconViewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Beacon'),
-        leading: BackButton(
-          onPressed: () =>
-              context.canPop() ? context.pop() : context.go(pathHomeConnect),
-        ),
+        leading: const AutoLeadingButton(),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: BlocSelector<BeaconViewCubit, BeaconViewState, FetchStatus>(
