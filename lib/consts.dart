@@ -13,23 +13,3 @@ const jwtExpiresIn = Duration(
 );
 
 final zeroDateTime = DateTime.fromMillisecondsSinceEpoch(0);
-
-const pathIntro = '/intro';
-const pathAuthLogin = '/login';
-const pathHomeField = '/home/field';
-const pathHomeConnect = '/home/connect';
-const pathHomeUpdates = '/home/updates';
-const pathHomeProfile = '/home/profile';
-const pathHomeFavorites = '/home/favorites';
-const pathAppLinkView = '/shared/view';
-const pathProfileView = '/profile/view';
-const pathProfileEdit = '/profile/edit';
-const pathBeaconCreate = '/beacon/create';
-const pathBeaconView = '/beacon/view';
-const pathRating = '/rating';
-const pathGraph = '/graph';
-
-const anonymousPaths = [
-  pathIntro,
-  pathAuthLogin,
-];

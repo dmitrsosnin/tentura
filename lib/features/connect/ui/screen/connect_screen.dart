@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 
@@ -80,39 +79,36 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   void _goWithCode(String? code) {
     if (code == null || code.isEmpty) return;
-    if (code.length == idLength) {
-      if (kDebugMode) print(code);
-      if (code.startsWith('B')) {
-        context.router.pushNamed(Uri(
-          path: pathBeaconView,
-          queryParameters: {'id': code},
-        ).toString());
-      } else if (code.startsWith('U')) {
-        context.router.pushNamed(Uri(
-          path: pathProfileView,
-          queryParameters: {'id': code},
-        ).toString());
-      } else if (code.startsWith('C')) {
-        context.router.pushNamed(Uri(
-          path: pathBeaconView,
-          queryParameters: {
-            'id': code,
-            'expanded': 'true',
-          },
-        ).toString());
-      } else {
-        showSnackBar(
-          context,
-          isError: true,
-          text: 'Wrong code prefix!',
-        );
-      }
-    } else {
+    if (code.length != idLength) {
       showSnackBar(
         context,
         isError: true,
         text: 'Wrong code length!',
       );
+    }
+    switch (code[0]) {
+      case 'U':
+        context.pushRoute(ProfileViewRoute(
+          id: code,
+        ));
+
+      case 'B':
+        context.pushRoute(BeaconViewRoute(
+          id: code,
+          initiallyExpanded: false,
+        ));
+
+      case 'C':
+        context.pushRoute(BeaconViewRoute(
+          id: code,
+        ));
+
+      default:
+        showSnackBar(
+          context,
+          isError: true,
+          text: 'Wrong code prefix!',
+        );
     }
   }
 }

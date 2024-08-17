@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/domain/entity/comment.dart';
+import 'package:tentura/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 
 import 'comment_vote_control.dart';
 
@@ -28,10 +27,9 @@ class CommentCard extends StatelessWidget {
       children: [
         const Divider(),
         GestureDetector(
-          onTap: () => context.router.pushNamed(Uri(
-            path: pathProfileView,
-            queryParameters: {'id': comment.author.id},
-          ).toString()),
+          onTap: () => context.pushRoute(ProfileViewRoute(
+            id: comment.author.id,
+          )),
           child: Row(
             children: [
               // Avatar

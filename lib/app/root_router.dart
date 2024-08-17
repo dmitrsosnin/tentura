@@ -2,12 +2,20 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/consts.dart';
-
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 
 import 'root_router.gr.dart';
+
+export 'package:auto_route/auto_route.dart';
+
+export 'root_router.gr.dart';
+
+const pathRoot = '/';
+const pathConnect = '/connect';
+const pathBeaconView = '/beacon/view';
+const pathProfileView = '/profile/view';
+const pathAppLinkView = '/shared/view';
 
 @AutoRouterConfig()
 class RootRouter extends RootStackRouter {
@@ -25,20 +33,8 @@ class RootRouter extends RootStackRouter {
     super.dispose();
   }
 
-  // @override
-  // late final List<AutoRouteGuard> guards = [
-  //   AutoRouteGuard.redirect(
-  //     (resolver) {
-  //       if (settingsCubit.state.introEnabled) return const IntroRoute();
-  //       if (anonymousPaths.contains(resolver.routeName)) return null;
-  //       if (authCubit.state.isAuthenticated) return null;
-  //       return const AuthLoginRoute();
-  //     },
-  //   ),
-  // ];
-
-  // @override
-  // RouteType get defaultRouteType => const RouteType.adaptive();
+  @override
+  RouteType get defaultRouteType => const RouteType.adaptive();
 
   @override
   List<AutoRoute> get routes => [
@@ -55,29 +51,24 @@ class RootRouter extends RootStackRouter {
             ),
           ],
           initial: true,
-          path: '/',
+          path: pathRoot,
           page: HomeRoute.page,
           children: [
             AutoRoute(
               page: MyFieldRoute.page,
-              // path: 'home/my_field',
             ),
             AutoRoute(
               page: FavoritesRoute.page,
-              // path: 'home/favorites',
             ),
             AutoRoute(
               page: ConnectRoute.page,
-              // path: 'home/connect',
             ),
             AutoRoute(
               page: UpdatesRoute.page,
-              // path: 'home/updates',
             ),
             AutoRoute(
-              page: ProfileMineRoute.page,
-              // path: 'home/profile',
               initial: true,
+              page: ProfileMineRoute.page,
             ),
           ],
         ),
@@ -90,7 +81,6 @@ class RootRouter extends RootStackRouter {
             ),
           ],
           page: IntroRoute.page,
-          // path: pathIntro,
         ),
         AutoRoute(
           guards: [
@@ -100,7 +90,6 @@ class RootRouter extends RootStackRouter {
             ),
           ],
           page: AuthLoginRoute.page,
-          // path: pathAuthLogin,
         ),
         AutoRoute(
           page: ProfileViewRoute.page,
@@ -115,11 +104,9 @@ class RootRouter extends RootStackRouter {
         ),
         AutoRoute(
           page: ProfileEditRoute.page,
-          path: pathProfileEdit,
         ),
         AutoRoute(
           page: BeaconCreateRoute.page,
-          path: pathBeaconCreate,
         ),
         AutoRoute(
           page: BeaconViewRoute.page,
@@ -127,15 +114,13 @@ class RootRouter extends RootStackRouter {
         ),
         AutoRoute(
           page: RatingRoute.page,
-          path: pathRating,
         ),
         AutoRoute(
           page: GraphRoute.page,
-          path: pathGraph,
         ),
         RedirectRoute(
           path: '*',
-          redirectTo: '/',
+          redirectTo: pathRoot,
         ),
       ];
 }

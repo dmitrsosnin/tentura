@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
@@ -19,10 +18,7 @@ class BeaconInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
-      onTap: () => context.router.pushNamed(Uri(
-        path: pathBeaconView,
-        queryParameters: {'id': beacon.id},
-      ).toString()),
+      onTap: () => context.pushRoute(BeaconViewRoute(id: beacon.id)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

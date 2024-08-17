@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'package:tentura/consts.dart';
 import 'package:tentura/app/root_router.dart';
 import 'package:tentura/ui/theme_light.dart';
 import 'package:tentura/ui/theme_dark.dart';
@@ -29,14 +28,17 @@ class App extends StatelessWidget {
               if (kDebugMode) print('DeepLinkBuilder: $deepLink');
               return deepLink;
             },
-            deepLinkTransformer: (Uri uri) => SynchronousFuture(uri.replace(
-              path: switch (uri.queryParameters['id']) {
-                final String id when id.startsWith('U') => pathProfileView,
-                final String id when id.startsWith('B') => pathBeaconView,
-                final String id when id.startsWith('C') => pathBeaconView,
-                _ => pathHomeConnect,
-              },
-            )),
+            deepLinkTransformer: (Uri uri) => uri.path == pathAppLinkView
+                ? SynchronousFuture(uri.replace(
+                    path: switch (uri.queryParameters['id']) {
+                      final String id when id.startsWith('U') =>
+                        pathProfileView,
+                      final String id when id.startsWith('B') => pathBeaconView,
+                      final String id when id.startsWith('C') => pathBeaconView,
+                      _ => pathConnect,
+                    },
+                  ))
+                : SynchronousFuture(uri),
             navigatorObservers: () => [
               SentryNavigatorObserver(),
             ],

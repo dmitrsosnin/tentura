@@ -1,8 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
 import '../../domain/entity/user_rating.dart';
@@ -24,10 +23,11 @@ class RatingListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: () => context.router.pushNamed(Uri(
-          path: pathProfileView,
-          queryParameters: {'id': userRating.user.id},
-        ).toString()),
+        onTap: () => context.pushRoute(
+          ProfileViewRoute(
+            id: userRating.user.id,
+          ),
+        ),
         child: Row(
           children: [
             Padding(

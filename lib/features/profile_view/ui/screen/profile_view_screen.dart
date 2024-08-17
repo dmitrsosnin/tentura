@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
+import 'package:tentura/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
-import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 
 import '../../data/profile_view_repository.dart';
 import '../cubit/profile_view_cubit.dart';
@@ -57,10 +56,9 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                   // Graph View
                   IconButton(
                     icon: const Icon(Icons.hub_outlined),
-                    onPressed: () => context.router.pushNamed(Uri(
-                      path: pathGraph,
-                      queryParameters: {'focus': state.user.id},
-                    ).toString()),
+                    onPressed: () => context.pushRoute(
+                      GraphRoute(focus: user.id),
+                    ),
                   ),
 
                   // Share

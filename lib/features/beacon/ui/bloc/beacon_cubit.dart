@@ -63,6 +63,7 @@ class BeaconCubit extends Cubit<BeaconState> {
         image: image,
       );
     }
+    // TBD: update GQL cache
     emit(BeaconState(
       beacons: [
         beacon,

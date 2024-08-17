@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
-import 'package:tentura/features/app_link/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/features/favorites/ui/widget/beacon_pin_icon_button.dart';
 
 import 'beacon_vote_control.dart';
@@ -23,13 +22,9 @@ class BeaconTileControl extends StatelessWidget {
         children: [
           // Comments count
           TextButton.icon(
-            onPressed: () => context.router.pushNamed(Uri(
-              path: pathBeaconView,
-              queryParameters: {
-                'id': beacon.id,
-                'expanded': 'true',
-              },
-            ).toString()),
+            onPressed: () => context.pushRoute(
+              BeaconViewRoute(id: beacon.id),
+            ),
             icon: const Icon(Icons.comment_outlined),
             label: Text(
               beacon.comments_count.toString(),
@@ -42,10 +37,9 @@ class BeaconTileControl extends StatelessWidget {
             icon: const Icon(Icons.hub_outlined),
             onPressed: (beacon.my_vote ?? -1) < 0
                 ? null
-                : () => context.router.pushNamed(Uri(
-                      path: pathGraph,
-                      queryParameters: {'focus': beacon.id},
-                    ).toString()),
+                : () => context.pushRoute(
+                      GraphRoute(focus: beacon.id),
+                    ),
           ),
 
           // Share
