@@ -29,8 +29,8 @@ class ContextDropDown extends StatelessWidget {
               onPressed: () async {
                 final newContext = await ContextAddDialog.show(context);
                 if (newContext != null) {
-                  await cubit.add(newContext);
                   if (context.mounted) await context.maybePop();
+                  await cubit.add(newContext);
                 }
               },
             ),
@@ -50,6 +50,7 @@ class ContextDropDown extends StatelessWidget {
                     icon: const Icon(Icons.delete_forever),
                     onPressed: () async {
                       if (await ContextRemoveDialog.show(context) ?? false) {
+                        if (context.mounted) await context.maybePop();
                         await cubit.delete(e);
                       }
                     },
