@@ -125,7 +125,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
 
               // Context
               ContextDropDown(
-                onChanged: (value) => _context = value,
+                onChanged: (value) async => _context = value,
               ),
 
               // Location

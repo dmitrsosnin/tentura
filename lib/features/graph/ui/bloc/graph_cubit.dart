@@ -60,14 +60,14 @@ class GraphCubit extends Cubit<GraphState> {
     _fetch();
   }
 
-  void setContext(String? context) {
+  Future<void> setContext(String? context) {
     emit(state.copyWith(
       context: context,
       focus: '',
     ));
     graphController.clear();
     _fetchLimits.clear();
-    _fetch();
+    return _fetch();
   }
 
   void togglePositiveOnly() {

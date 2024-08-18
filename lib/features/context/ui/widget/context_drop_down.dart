@@ -9,11 +9,11 @@ import '../dialog/context_remove_dialog.dart';
 
 class ContextDropDown extends StatelessWidget {
   const ContextDropDown({
-    this.onChanged,
+    required this.onChanged,
     super.key,
   });
 
-  final void Function(String?)? onChanged;
+  final Future<void> Function(String?) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +31,7 @@ class ContextDropDown extends StatelessWidget {
                 if (newContext != null) {
                   if (context.mounted) await context.maybePop();
                   await cubit.add(newContext);
+                  await onChanged(newContext);
                 }
               },
             ),
@@ -52,6 +53,7 @@ class ContextDropDown extends StatelessWidget {
                       if (await ContextRemoveDialog.show(context) ?? false) {
                         if (context.mounted) await context.maybePop();
                         await cubit.delete(e);
+                        await onChanged('');
                       }
                     },
                   ),
@@ -59,9 +61,9 @@ class ContextDropDown extends StatelessWidget {
               ),
             ),
         ],
-        onChanged: (value) {
+        onChanged: (value) async {
           cubit.select(value);
-          onChanged?.call(value);
+          await onChanged(value);
         },
         value: state.selected,
       ),
