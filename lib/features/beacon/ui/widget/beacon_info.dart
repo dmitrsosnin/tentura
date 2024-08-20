@@ -18,7 +18,9 @@ class BeaconInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
-      onTap: () => context.pushRoute(BeaconViewRoute(id: beacon.id)),
+      onTap: context.routeData.name == BeaconViewRoute.name
+          ? null
+          : () => context.pushRoute(BeaconViewRoute(id: beacon.id)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

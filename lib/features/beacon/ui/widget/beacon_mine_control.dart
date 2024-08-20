@@ -23,7 +23,10 @@ class BeaconMineControl extends StatelessWidget {
           // Comments count
           TextButton.icon(
             onPressed: () => context.pushRoute(
-              BeaconViewRoute(id: beacon.id),
+              BeaconViewRoute(
+                id: beacon.id,
+                initiallyExpanded: true,
+              ),
             ),
             icon: const Icon(Icons.comment_outlined),
             label: Text(

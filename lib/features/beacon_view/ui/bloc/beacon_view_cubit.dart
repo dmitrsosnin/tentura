@@ -12,40 +12,37 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
   BeaconViewCubit(
     this.beaconViewRepository, {
     required String id,
-    bool initiallyExpanded = false,
+    bool fetchCommentsOnStart = false,
   }) : super(switch (id) {
           _ when id.startsWith('B') => BeaconViewState(
               beacon: Beacon.empty.copyWith(id: id),
-              initiallyExpanded: initiallyExpanded,
             ),
           _ when id.startsWith('C') => BeaconViewState(
               beacon: Beacon.empty,
               focusCommentId: id,
-              initiallyExpanded: true,
             ),
           _ => BeaconViewState(
               beacon: Beacon.empty,
+              error: 'Wrong id: $id',
               status: FetchStatus.isFailure,
-              error: 'Wrong id!',
             ),
         }) {
-    fetch(fetchComments: state.initiallyExpanded);
+    fetch(fetchComments: fetchCommentsOnStart || state.hasFocusedComment);
   }
 
   final BeaconViewRepository beaconViewRepository;
 
   Future<void> fetch({bool fetchComments = true}) async {
-    if (state.beacon.id.isEmpty && state.focusCommentId.isEmpty) return;
+    if (state.beacon.id.isEmpty && state.hasNoFocusedComment) return;
     emit(state.setLoading());
     try {
-      if (state.focusCommentId.isNotEmpty) {
+      if (state.hasFocusedComment) {
         // Show Beacon with one Comment
         final (beacon, comment) =
             await beaconViewRepository.fetchCommentById(state.focusCommentId);
         emit(state.copyWith(
           beacon: beacon,
           comments: [comment],
-          initiallyExpanded: true,
           status: FetchStatus.isSuccess,
         ));
       } else {
@@ -59,7 +56,6 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
         if (fetchComments) {
           emit(state.setLoading());
           emit(state.copyWith(
-            initiallyExpanded: true,
             status: FetchStatus.isSuccess,
             comments: List.of(
               await beaconViewRepository

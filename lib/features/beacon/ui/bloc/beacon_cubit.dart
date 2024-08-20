@@ -87,6 +87,17 @@ class BeaconCubit extends Cubit<BeaconState> {
     );
   }
 
+  Future<int> vote({
+    required int amount,
+    required String beaconId,
+  }) async {
+    final beacon = await _repository.vote(
+      id: beaconId,
+      amount: amount,
+    );
+    return beacon.my_vote ?? 0;
+  }
+
   Future<({String path, String name})?> pickImage() =>
       _pickImageCase.pickImage();
 }

@@ -25,7 +25,7 @@ class App extends StatelessWidget {
           color: const Color(0x003A1E5C),
           routerConfig: router.config(
             deepLinkBuilder: (deepLink) {
-              if (kDebugMode) print('DeepLinkBuilder: $deepLink');
+              if (kDebugMode) print('DeepLinkBuilder: ${deepLink.uri}');
               return deepLink;
             },
             deepLinkTransformer: (Uri uri) => uri.path == pathAppLinkView

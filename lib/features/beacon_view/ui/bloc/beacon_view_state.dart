@@ -5,7 +5,6 @@ final class BeaconViewState extends StateBase {
     required this.beacon,
     this.focusCommentId = '',
     this.comments = const [],
-    this.initiallyExpanded = false,
     super.status,
     super.error,
   });
@@ -13,7 +12,6 @@ final class BeaconViewState extends StateBase {
   final Beacon beacon;
   final String focusCommentId;
   final List<Comment> comments;
-  final bool initiallyExpanded;
 
   @override
   List<Object?> get props => [
@@ -22,10 +20,10 @@ final class BeaconViewState extends StateBase {
         beacon,
         comments,
         focusCommentId,
-        initiallyExpanded,
       ];
 
   bool get hasFocusedComment => focusCommentId.isNotEmpty;
+  bool get hasNoFocusedComment => focusCommentId.isEmpty;
 
   @override
   BeaconViewState copyWith({
@@ -34,7 +32,6 @@ final class BeaconViewState extends StateBase {
     Beacon? beacon,
     String? focusCommentId,
     List<Comment>? comments,
-    bool? initiallyExpanded,
   }) =>
       BeaconViewState(
         error: error ?? this.error,
@@ -42,13 +39,11 @@ final class BeaconViewState extends StateBase {
         beacon: beacon ?? this.beacon,
         comments: comments ?? this.comments,
         focusCommentId: focusCommentId ?? this.focusCommentId,
-        initiallyExpanded: initiallyExpanded ?? this.initiallyExpanded,
       );
 
   @override
   BeaconViewState setError(Object error) => BeaconViewState(
         status: FetchStatus.isFailure,
-        initiallyExpanded: initiallyExpanded,
         focusCommentId: focusCommentId,
         comments: comments,
         beacon: beacon,
@@ -58,7 +53,6 @@ final class BeaconViewState extends StateBase {
   @override
   BeaconViewState setLoading() => BeaconViewState(
         status: FetchStatus.isLoading,
-        initiallyExpanded: initiallyExpanded,
         focusCommentId: focusCommentId,
         comments: comments,
         beacon: beacon,

@@ -38,6 +38,7 @@ class RootRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
+        // Home
         AutoRoute(
           guards: [
             AutoRouteGuard.redirect(
@@ -54,24 +55,31 @@ class RootRouter extends RootStackRouter {
           path: pathRoot,
           page: HomeRoute.page,
           children: [
+            // Field
             AutoRoute(
               page: MyFieldRoute.page,
             ),
+            // Favorites
             AutoRoute(
               page: FavoritesRoute.page,
             ),
+            // Connect
             AutoRoute(
               page: ConnectRoute.page,
             ),
+            // Updates
             AutoRoute(
               page: UpdatesRoute.page,
             ),
+            // Profile
             AutoRoute(
               initial: true,
               page: ProfileMineRoute.page,
             ),
           ],
         ),
+
+        // Intro
         AutoRoute(
           guards: [
             AutoRouteGuard.redirect(
@@ -82,6 +90,8 @@ class RootRouter extends RootStackRouter {
           ],
           page: IntroRoute.page,
         ),
+
+        // Login
         AutoRoute(
           guards: [
             AutoRouteGuard.redirect(
@@ -91,6 +101,8 @@ class RootRouter extends RootStackRouter {
           ],
           page: AuthLoginRoute.page,
         ),
+
+        // Profile
         AutoRoute(
           page: ProfileViewRoute.page,
           path: pathProfileView,
@@ -105,6 +117,8 @@ class RootRouter extends RootStackRouter {
         AutoRoute(
           page: ProfileEditRoute.page,
         ),
+
+        //Beacon
         AutoRoute(
           page: BeaconCreateRoute.page,
         ),
@@ -112,12 +126,18 @@ class RootRouter extends RootStackRouter {
           page: BeaconViewRoute.page,
           path: pathBeaconView,
         ),
+
+        // Rating
         AutoRoute(
           page: RatingRoute.page,
         ),
+
+        // Graph
         AutoRoute(
           page: GraphRoute.page,
         ),
+
+        // default
         RedirectRoute(
           path: '*',
           redirectTo: pathRoot,

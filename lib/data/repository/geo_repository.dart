@@ -45,8 +45,10 @@ class GeoRepository {
     if (await _checkLocationPermission()) {
       try {
         final position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.lowest,
-          timeLimit: timeLimit,
+          locationSettings: LocationSettings(
+            accuracy: LocationAccuracy.lowest,
+            timeLimit: timeLimit,
+          ),
         );
         return (lat: position.latitude, long: position.longitude);
       } catch (e) {

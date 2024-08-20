@@ -88,20 +88,13 @@ class _ConnectScreenState extends State<ConnectScreen> {
     }
     switch (code[0]) {
       case 'U':
-        context.pushRoute(ProfileViewRoute(
-          id: code,
-        ));
+        context.pushRoute(ProfileViewRoute(id: code));
 
       case 'B':
-        context.pushRoute(BeaconViewRoute(
-          id: code,
-          initiallyExpanded: false,
-        ));
+        context.pushRoute(BeaconViewRoute(id: code));
 
       case 'C':
-        context.pushRoute(BeaconViewRoute(
-          id: code,
-        ));
+        context.pushRoute(BeaconViewRoute(id: code));
 
       default:
         showSnackBar(

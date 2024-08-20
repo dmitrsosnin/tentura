@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
-import '../bloc/my_field_cubit.dart';
+import '../bloc/beacon_cubit.dart';
 
 class BeaconVoteControl extends StatefulWidget {
   const BeaconVoteControl({
@@ -20,7 +20,7 @@ class BeaconVoteControl extends StatefulWidget {
 
 class _BeaconVoteControlState extends State<BeaconVoteControl> {
   late final _theme = Theme.of(context);
-  late final _myFieldCubit = context.read<MyFieldCubit>();
+  late final _beaconCubit = context.read<BeaconCubit>();
 
   late int _likeAmount = widget.votes ?? 0;
 
@@ -62,7 +62,7 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
     _likeAmount += add;
     setState(() {});
     try {
-      _likeAmount = await _myFieldCubit.vote(
+      _likeAmount = await _beaconCubit.vote(
         beaconId: widget.id,
         amount: _likeAmount,
       );
