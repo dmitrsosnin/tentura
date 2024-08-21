@@ -14,7 +14,7 @@ dependencies:
   nil: ^1.1.1
   intl: ^0.19.0
   equatable: ^2.0.5
-  auto_route: ^9.2.1
+  auto_route: ^9.2.2
   collection: ^1.18.0
   built_value: ^8.9.2
   flutter_bloc: ^8.1.6
@@ -28,7 +28,7 @@ dependencies:
   image_picker: ^1.1.2
   path_provider: ^2.1.4
   share_handler: ^0.0.21
-  mobile_scanner: ^5.2.0
+  mobile_scanner: ^5.2.1
   package_info_plus: ^8.0.2
   flutter_secure_storage: ^9.2.2
 
