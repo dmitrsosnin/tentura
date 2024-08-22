@@ -98,6 +98,6 @@ class BeaconCubit extends Cubit<BeaconState> {
     return beacon.my_vote ?? 0;
   }
 
-  Future<({String path, String name})?> pickImage() =>
+  Future<({String name, Uint8List bytes})?> pickImage() =>
       _pickImageCase.pickImage();
 }

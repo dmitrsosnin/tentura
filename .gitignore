@@ -33,6 +33,7 @@ migrate_working_dir/
 .pub/
 /build/
 pubspec.lock
+pubspec_overrides.yaml
 
 # Symbolication related
 app.*.symbols
@@ -53,3 +54,5 @@ app.*.map.json
 
 # Misc
 temp/
+packages/hydrated_bloc
+packages/flutter_secure_storage_web

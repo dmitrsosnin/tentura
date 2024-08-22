@@ -16,19 +16,19 @@ class ContextRepository {
   );
 
   Stream<Iterable<String>> get stream =>
-      _remoteApiService.gqlClient.request(_fetchRequest).map((r) =>
+      _remoteApiService.request(_fetchRequest).map((r) =>
           r.dataOrThrow(label: _label).user_context.map((r) => r.context_name));
 
   Future<void> fetch() =>
-      _remoteApiService.gqlClient.addRequestToRequestController(_fetchRequest);
+      _remoteApiService.addRequestToRequestController(_fetchRequest);
 
-  Future<String> add(String contextName) => _remoteApiService.gqlClient
+  Future<String> add(String contextName) => _remoteApiService
       .request(GContextAddReq((b) => b.vars.context_name = contextName))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) =>
           r.dataOrThrow(label: _label).insert_user_context_one!.context_name);
 
-  Future<String> delete(String contextName) => _remoteApiService.gqlClient
+  Future<String> delete(String contextName) => _remoteApiService
       .request(GContextDeleteReq((b) => b.vars
         ..user_id = _remoteApiService.userId
         ..context_name = contextName))

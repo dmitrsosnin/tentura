@@ -6,9 +6,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'app/di.dart';
 
 Future<void> main() async {
-  FlutterNativeSplash.preserve(
-    widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
-  );
   await SentryFlutter.init(
     (options) => options
       ..dsn = const String.fromEnvironment('SENTRY_URL')
@@ -17,6 +14,11 @@ Future<void> main() async {
         'AuthenticationNotFoundException',
       ]
       ..tracesSampleRate = 1.0,
-    appRunner: () => runApp(const DI()),
+    appRunner: () {
+      FlutterNativeSplash.preserve(
+        widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
+      );
+      runApp(const DI());
+    },
   );
 }

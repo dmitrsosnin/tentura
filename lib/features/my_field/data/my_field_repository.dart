@@ -13,7 +13,7 @@ class MyFieldRepository {
   Future<Iterable<Beacon>> fetch({
     required String context,
   }) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(GMyFieldFetchReq((r) => r.vars.context = context))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(

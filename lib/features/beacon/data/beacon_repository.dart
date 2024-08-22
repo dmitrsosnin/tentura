@@ -22,14 +22,14 @@ class BeaconRepository {
       ..vars.user_id = _remoteApiService.userId,
   );
 
-  Stream<Iterable<Beacon>> get stream => _remoteApiService.gqlClient
+  Stream<Iterable<Beacon>> get stream => _remoteApiService
       .request(_fetchRequest)
       .map((r) => r.dataOrThrow(label: _label).beacon.map((r) => r as Beacon));
 
   Future<void> fetch() =>
-      _remoteApiService.gqlClient.addRequestToRequestController(_fetchRequest);
+      _remoteApiService.addRequestToRequestController(_fetchRequest);
 
-  Future<Beacon> create(Beacon beacon) => _remoteApiService.gqlClient
+  Future<Beacon> create(Beacon beacon) => _remoteApiService
       .request(
         GBeaconCreateReq((b) => b.vars
           ..title = beacon.title
@@ -45,7 +45,7 @@ class BeaconRepository {
         (r) => r.dataOrThrow(label: _label).insert_beacon_one! as Beacon,
       );
 
-  Future<void> delete(String id) => _remoteApiService.gqlClient
+  Future<void> delete(String id) => _remoteApiService
       .request(GBeaconDeleteByIdReq((b) => b.vars.id = id))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) => r.dataOrThrow(label: _label));
@@ -54,7 +54,7 @@ class BeaconRepository {
     required String id,
     required bool isEnabled,
   }) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(GBeaconUpdateByIdReq(
             (b) => b
               ..vars.id = id
@@ -67,7 +67,7 @@ class BeaconRepository {
     required String id,
     required int amount,
   }) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(GBeaconVoteByIdReq(
             (b) => b
               ..vars.amount = amount

@@ -10,11 +10,12 @@
             "type": "dart",
             "toolArgs": [
                 // "--enable-impeller",
-                "--flavor",
-                "prod",
+                // "--flavor",
+                // "prod",
                 "--dart-define",
                 "APP_LINK_BASE=tentura.intersubjective.space",
             ],
+            "args": ["--web-browser-flag=--disable-web-security"]
         },
         {
             "name": "tentura-stage",

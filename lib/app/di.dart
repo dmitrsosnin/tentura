@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_handler/share_handler.dart';
+// import 'package:share_handler/share_handler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -37,15 +37,15 @@ class DI extends StatefulWidget {
 class _DIState extends State<DI> {
   final _router = RootRouter();
 
-  final _subscription = ShareHandlerPlatform.instance.sharedMediaStream.listen(
-    (e) {
-      if (kDebugMode) {
-        print('Stream: ${e.content}');
-        // ignore: avoid_print
-        e.attachments?.forEach(print);
-      }
-    },
-  );
+  // final _subscription = ShareHandlerPlatform.instance.sharedMediaStream.listen(
+  //   (e) {
+  //     if (kDebugMode) {
+  //       print('Stream: ${e.content}');
+  //       // ignore: avoid_print
+  //       e.attachments?.forEach(print);
+  //     }
+  //   },
+  // );
 
   late final RemoteApiService _remoteApiService;
 
@@ -60,7 +60,7 @@ class _DIState extends State<DI> {
   @override
   void dispose() {
     _remoteApiService.dispose();
-    _subscription.cancel();
+    // _subscription.cancel();
     _router.dispose();
     super.dispose();
   }
@@ -81,7 +81,6 @@ class _DIState extends State<DI> {
             child: BlocSelector<AuthCubit, AuthState, String>(
               selector: (state) => state.currentAccount,
               builder: (context, userId) => MultiBlocProvider(
-                // key: ValueKey(userId),
                 providers: [
                   BlocProvider(
                     create: (context) => ProfileCubit(
@@ -120,11 +119,11 @@ class _DIState extends State<DI> {
         );
 
   Future<void> _init() async {
-    final storageDirectory = await getApplicationDocumentsDirectory();
     final packageInfo = await PackageInfo.fromPlatform();
     _remoteApiService = RemoteApiService(
       userAgent: 'Tentura (${packageInfo.version})',
-      storagePath: storageDirectory.path,
+      storagePath:
+          kIsWeb ? '' : (await getApplicationDocumentsDirectory()).path,
       jwtExpiresIn: jwtExpiresIn,
       serverName: appLinkBase,
     );
@@ -132,21 +131,21 @@ class _DIState extends State<DI> {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
       ]),
-      HydratedBlocStorage.init(storageDirectory),
+      HydratedBlocStorage.init(),
       _remoteApiService.init(),
     ]);
     //
-    await ShareHandlerPlatform.instance.getInitialSharedMedia().then(
-      (e) {
-        if (e != null) {
-          if (kDebugMode) {
-            print('Initial Future: ${e.content}');
-            // ignore: avoid_print
-            e.attachments?.forEach(print);
-          }
-        }
-      },
-    );
+    // await ShareHandlerPlatform.instance.getInitialSharedMedia().then(
+    //   (e) {
+    //     if (e != null) {
+    //       if (kDebugMode) {
+    //         print('Initial Future: ${e.content}');
+    //         // ignore: avoid_print
+    //         e.attachments?.forEach(print);
+    //       }
+    //     }
+    //   },
+    // );
     //
     FlutterNativeSplash.remove();
     setState(() => _isInitiating = false);

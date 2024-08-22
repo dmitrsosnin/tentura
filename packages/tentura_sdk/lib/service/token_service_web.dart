@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart';
@@ -38,15 +37,13 @@ class TokenService {
 
   /// Generate and set new KeyPair and returns its seed
   Future<String> setNewKeyPair() async {
-    _keyPair = await Isolate.run(generateKey);
-    return Isolate.run(() => base64UrlEncode(seed(_keyPair!.privateKey)));
+    _keyPair = generateKey();
+    return base64UrlEncode(seed(_keyPair!.privateKey));
   }
 
   Future<void> setKeyPairFromSeed(String seed) async {
-    _keyPair = await Isolate.run(() {
-      final privateKey = newKeyFromSeed(base64Decode(seed));
-      return KeyPair(privateKey, public(privateKey));
-    });
+    final privateKey = newKeyFromSeed(base64Decode(seed));
+    _keyPair = KeyPair(privateKey, public(privateKey));
   }
 
   Future<GetTokenResponse> getToken() async {

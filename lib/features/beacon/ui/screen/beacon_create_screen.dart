@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
@@ -214,7 +213,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                   final newImage = await _beaconCubit.pickImage();
                   if (newImage != null) {
                     _imageController.text = newImage.name;
-                    _image = await File(newImage.path).readAsBytes();
+                    _image = newImage.bytes;
                     setState(() {});
                   }
                 },
