@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:hive/hive.dart';
 import 'package:ferry/ferry.dart';
 import 'package:gql_http_link/gql_http_link.dart';
-import 'package:ferry_hive_store/ferry_hive_store.dart';
 
 import '../service/image_service.dart';
 import '../service/token_service_web.dart';
@@ -48,14 +46,6 @@ class TenturaApi {
           },
         ),
       ),
-      cache: Cache(
-        store: HiveStore(
-          await Hive.openBox<Map<dynamic, dynamic>>('graphql_cache'),
-        ),
-      ),
-      defaultFetchPolicies: {
-        OperationType.query: FetchPolicy.NoCache,
-      },
     );
   }
 
