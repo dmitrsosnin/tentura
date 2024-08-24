@@ -56,6 +56,12 @@ dependencies:
   tentura_sdk:
     path: packages/tentura_sdk
 
+dependency_overrides:
+  hydrated_bloc:
+    path: packages/hydrated_bloc
+  flutter_secure_storage_web:
+    path: packages/flutter_secure_storage_web
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

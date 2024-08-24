@@ -54,5 +54,5 @@ app.*.map.json
 
 # Misc
 temp/
-packages/hydrated_bloc
-packages/flutter_secure_storage_web
+# packages/hydrated_bloc
+# packages/flutter_secure_storage_web
