@@ -4,8 +4,9 @@ import 'dart:typed_data';
 import 'package:ferry/ferry.dart';
 import 'package:ferry/ferry_isolate.dart';
 
-import 'client/gql_client.dart';
+import 'consts.dart';
 import 'client/message.dart';
+import 'client/gql_client.dart';
 import 'service/image_service.dart';
 import 'service/token_service.dart';
 
@@ -44,7 +45,10 @@ class TenturaApi {
       buildClient,
       params: (
         userAgent: userAgent,
-        serverUrl: 'https://$serverName/v1/graphql',
+        serverUrl: Uri.https(
+          serverName,
+          pathGraphQLEndpoint,
+        ).toString(),
         storagePath: storagePath,
       ),
       messageHandler: (message) async => switch (message) {

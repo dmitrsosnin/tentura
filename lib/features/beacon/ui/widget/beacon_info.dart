@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:tentura/app/root_router.dart';
 import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/ui/dialog/choose_location_dialog.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
 import 'package:tentura/ui/widget/place_name_text.dart';
@@ -64,18 +66,25 @@ class BeaconInfo extends StatelessWidget {
 
           // Beacon Context
           if (beacon.context != null && beacon.context!.isNotEmpty)
-            Text(
-              '${beacon.context!} (context)',
-              maxLines: 1,
-              textAlign: TextAlign.left,
-              overflow: TextOverflow.ellipsis,
-              style: textTheme.bodyLarge,
+            TextButton.icon(
+              icon: const Icon(Icons.add_circle_outline),
+              iconAlignment: IconAlignment.end,
+              label: Text(
+                'Context: ${beacon.context!}',
+                maxLines: 1,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.bodyLarge,
+              ),
+              // TBD: add context
+              onPressed: () {},
             ),
 
           // Beacon Timerange
           if (beacon.timerange != null)
             Text(
-              '${fYMD(beacon.timerange?.start)} - ${fYMD(beacon.timerange?.end)}',
+              '${fYMD(beacon.timerange?.start)}'
+              ' - ${fYMD(beacon.timerange?.end)}',
               maxLines: 1,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
@@ -84,9 +93,19 @@ class BeaconInfo extends StatelessWidget {
 
           // Beacon Geolocation
           if (beacon.hasCoordinates)
-            PlaceNameText(
-              coords: beacon.coordinates,
-              style: textTheme.bodyLarge,
+            TextButton.icon(
+              icon: const Icon(Icons.open_in_new),
+              iconAlignment: IconAlignment.end,
+              label: kIsWeb
+                  ? const Text('Show place on the map')
+                  : PlaceNameText(
+                      coords: beacon.coordinates,
+                      style: textTheme.bodyLarge,
+                    ),
+              onPressed: () => ChooseLocationDialog.show(
+                context,
+                center: beacon.coordinates,
+              ),
             ),
         ],
       ),

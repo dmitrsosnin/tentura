@@ -3,9 +3,10 @@ import 'dart:typed_data';
 import 'package:ferry/ferry.dart';
 import 'package:gql_http_link/gql_http_link.dart';
 
+import 'consts.dart';
+import 'client/auth_link.dart';
 import '../service/image_service.dart';
 import '../service/token_service_web.dart';
-import 'client/auth_link.dart';
 
 class TenturaApi {
   TenturaApi({
@@ -40,7 +41,10 @@ class TenturaApi {
       link: Link.concat(
         AuthLink(() => _tokenService.getToken().then((v) => v.value)),
         HttpLink(
-          'https://$serverName/v1/graphql',
+          Uri.https(
+            serverName,
+            pathGraphQLEndpoint,
+          ).toString(),
           defaultHeaders: {
             'accept': 'application/json',
           },

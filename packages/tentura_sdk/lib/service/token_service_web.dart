@@ -4,8 +4,9 @@ import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart';
 
-import '../client/message.dart';
+import '../consts.dart';
 import '../exception.dart';
+import '../client/message.dart';
 
 typedef JWT = ({String id, String accessToken, DateTime expiresAt});
 
@@ -75,7 +76,7 @@ class TokenService {
     _jwt = _jwtEmpty;
     _tokenLocked = true;
     try {
-      _jwt = await _fetchJWT('user/login');
+      _jwt = await _fetchJWT(pathLogin);
     } finally {
       _tokenLocked = false;
     }
@@ -87,7 +88,7 @@ class TokenService {
     _jwt = _jwtEmpty;
     _tokenLocked = true;
     try {
-      _jwt = await _fetchJWT('user/register');
+      _jwt = await _fetchJWT(pathRegister);
     } finally {
       _tokenLocked = false;
     }

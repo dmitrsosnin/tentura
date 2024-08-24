@@ -5,20 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "tentura",
+            "name": "tentura (debug)",
             "request": "launch",
             "type": "dart",
             "toolArgs": [
-                // "--enable-impeller",
-                // "--flavor",
-                // "prod",
+                "--enable-impeller",
+                "--flavor",
+                "prod",
+                "--dart-define",
+                "APP_LINK_BASE=tentura.intersubjective.space",
+            ],
+        },
+        {
+            "name": "tentura-web (debug)",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
                 "--dart-define",
                 "APP_LINK_BASE=tentura.intersubjective.space",
             ],
             "args": ["--web-browser-flag=--disable-web-security"]
         },
         {
-            "name": "tentura-stage",
+            "name": "tentura-stage (debug)",
             "request": "launch",
             "type": "dart",
             "toolArgs": [
