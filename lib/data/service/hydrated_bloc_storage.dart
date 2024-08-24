@@ -1,7 +1,8 @@
-import 'dart:io';
 import 'dart:math';
 import 'dart:convert';
-import 'dart:typed_data';
+import 'package:hive/hive.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -20,10 +21,12 @@ class HydratedBlocStorage {
 
   static const _keyCipherKey = 'kCipherKey';
 
-  static Future<void> init(Directory storageDirectory) async {
+  static Future<void> init() async {
     HydratedBloc.storage = await HydratedStorage.build(
-      encryptionCipher: HydratedAesCipher(await _getCipherKey()),
-      storageDirectory: storageDirectory,
+      encryptionCipher: HiveAesCipher(await _getCipherKey()),
+      storageDirectory: kIsWeb
+          ? HydratedStorage.webStorageDirectory
+          : (await getApplicationDocumentsDirectory()).path,
     );
   }
 

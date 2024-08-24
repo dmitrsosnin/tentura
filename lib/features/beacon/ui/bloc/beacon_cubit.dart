@@ -63,6 +63,7 @@ class BeaconCubit extends Cubit<BeaconState> {
         image: image,
       );
     }
+    // TBD: update GQL cache
     emit(BeaconState(
       beacons: [
         beacon,
@@ -86,6 +87,17 @@ class BeaconCubit extends Cubit<BeaconState> {
     );
   }
 
-  Future<({String path, String name})?> pickImage() =>
+  Future<int> vote({
+    required int amount,
+    required String beaconId,
+  }) async {
+    final beacon = await _repository.vote(
+      id: beaconId,
+      amount: amount,
+    );
+    return beacon.my_vote ?? 0;
+  }
+
+  Future<({String name, Uint8List bytes})?> pickImage() =>
       _pickImageCase.pickImage();
 }

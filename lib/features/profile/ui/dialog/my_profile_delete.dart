@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/consts.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
@@ -34,7 +33,9 @@ class MyProfileDeleteDialog extends StatelessWidget {
                 await profileCubit.delete();
                 await authCubit.signOut();
                 authCubit.removeAccount(myId);
-                if (context.mounted) context.go(pathAuthLogin);
+                if (context.mounted) {
+                  await context.maybePop();
+                }
               } catch (e) {
                 if (context.mounted) {
                   showSnackBar(
@@ -42,14 +43,14 @@ class MyProfileDeleteDialog extends StatelessWidget {
                     isError: true,
                     text: e.toString(),
                   );
-                  context.pop();
+                  await context.maybePop();
                 }
               }
             },
             child: const Text('Delete'),
           ),
           TextButton(
-            onPressed: context.pop,
+            onPressed: context.maybePop,
             child: const Text('Cancel'),
           ),
         ],

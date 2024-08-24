@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
-import 'package:tentura/features/my_field/ui/widget/beacon_tile.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 
 import '../bloc/favorites_cubit.dart';
 
+@RoutePage()
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
 

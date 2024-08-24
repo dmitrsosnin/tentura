@@ -15,7 +15,7 @@ class BeaconViewRepository {
 
   final RemoteApiService _remoteApiService;
 
-  Future<Beacon> fetchBeaconById(String beaconId) => _remoteApiService.gqlClient
+  Future<Beacon> fetchBeaconById(String beaconId) => _remoteApiService
       .request(GBeaconFetchByIdReq((b) => b.vars.id = beaconId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then(
@@ -23,7 +23,7 @@ class BeaconViewRepository {
       );
 
   Future<Iterable<Comment>> fetchCommentsByBeaconId(String beaconId) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(
               GCommentFetchByBeaconIdReq((b) => b.vars.beacon_id = beaconId))
           .firstWhere((e) => e.dataSource == DataSource.Link)
@@ -35,7 +35,7 @@ class BeaconViewRepository {
           );
 
   Future<(Beacon, Comment)> fetchCommentById(String commentId) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(GCommentFetchByIdReq((b) => b.vars.id = commentId))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then((r) => r.dataOrThrow(label: _label).comment_by_pk!)
@@ -45,7 +45,7 @@ class BeaconViewRepository {
     required String beaconId,
     required String text,
   }) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(GCommentCreateReq(
             (b) => b.vars
               ..beacon_id = beaconId
@@ -60,7 +60,7 @@ class BeaconViewRepository {
     required String commentId,
     required int amount,
   }) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(GCommentVoteByIdReq(
             (b) => b
               ..vars.amount = amount

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 
 import '../dialog/share_code_dialog.dart';
 

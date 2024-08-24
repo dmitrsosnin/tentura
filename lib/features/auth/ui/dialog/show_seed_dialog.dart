@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
@@ -69,7 +70,7 @@ class ShowSeedDialog extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: Navigator.of(context).pop,
+          onPressed: context.maybePop,
           child: const Text('Close'),
         ),
       ],

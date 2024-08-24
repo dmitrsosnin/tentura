@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
@@ -18,7 +17,7 @@ class ProfileMineMenuButton extends StatelessWidget {
       itemBuilder: (context) => <PopupMenuEntry<void>>[
         // Rating
         PopupMenuItem<void>(
-          onTap: () => context.push(pathRating),
+          onTap: () => context.pushRoute(const RatingRoute()),
           child: const Text('View rating'),
         ),
         const PopupMenuDivider(),
@@ -35,7 +34,7 @@ class ProfileMineMenuButton extends StatelessWidget {
 
         // Edit
         PopupMenuItem<void>(
-          onTap: () => context.push(pathProfileEdit),
+          onTap: () => context.pushRoute(const ProfileEditRoute()),
           child: const Text('Edit profile'),
         ),
         const PopupMenuDivider(),

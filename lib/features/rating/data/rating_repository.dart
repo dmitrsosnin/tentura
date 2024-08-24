@@ -14,7 +14,7 @@ class RatingRepository {
   Future<Iterable<UserRating>> fetch({
     required String context,
   }) =>
-      _remoteApiService.gqlClient
+      _remoteApiService
           .request(GRatingFetchReq((r) => r.vars.context = context))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(

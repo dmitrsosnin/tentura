@@ -75,6 +75,6 @@ class ProfileCubit extends Cubit<ProfileState>
   Future<void> putAvatarImage(Uint8List image) =>
       _repository.putAvatarImage(image);
 
-  Future<({String name, String path})?> pickImage() =>
+  Future<({String name, Uint8List bytes})?> pickImage() =>
       _pickImageCase.pickImage();
 }

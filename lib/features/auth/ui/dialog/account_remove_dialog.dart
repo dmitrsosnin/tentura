@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 import '../bloc/auth_cubit.dart';
 
@@ -28,12 +28,12 @@ class AccountRemoveDialog extends StatelessWidget {
           TextButton(
             onPressed: () {
               context.read<AuthCubit>().removeAccount(id);
-              context.pop();
+              context.maybePop();
             },
             child: const Text('Remove'),
           ),
           TextButton(
-            onPressed: context.pop,
+            onPressed: context.maybePop,
             child: const Text('Cancel'),
           ),
         ],
