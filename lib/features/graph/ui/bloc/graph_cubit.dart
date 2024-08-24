@@ -15,9 +15,9 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'graph_state.dart';
 
 class GraphCubit extends Cubit<GraphState> {
-  GraphCubit({
+  GraphCubit(
+    this.graphRepository, {
     required User me,
-    required this.graphRepository,
     String? focus,
   })  : _egoNode = UserNode(
           id: me.id,
@@ -60,14 +60,14 @@ class GraphCubit extends Cubit<GraphState> {
     _fetch();
   }
 
-  void setContext(String? context) {
+  Future<void> setContext(String? context) {
     emit(state.copyWith(
       context: context,
       focus: '',
     ));
     graphController.clear();
     _fetchLimits.clear();
-    _fetch();
+    return _fetch();
   }
 
   void togglePositiveOnly() {

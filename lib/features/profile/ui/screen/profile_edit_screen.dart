@@ -1,6 +1,6 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:tentura/consts.dart';
@@ -11,6 +11,7 @@ import 'package:tentura/ui/widget/avatar_positioned.dart';
 
 import '../bloc/profile_cubit.dart';
 
+@RoutePage()
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({super.key});
 
@@ -33,7 +34,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
   late bool _hasPicture = _profile.has_picture;
 
-  String _imagePath = '';
+  Uint8List? _imageBytes;
 
   @override
   void dispose() {
@@ -68,7 +69,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             children: [
               // Avatar
               AvatarPositioned(
-                child: _imagePath.isEmpty
+                child: _imageBytes == null
                     ? AvatarImage(
                         size: AvatarPositioned.childSize,
                         userId: _hasPicture ? _profile.imageId : '',
@@ -78,12 +79,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                         ),
-                        child: Image.file(
-                          File(_imagePath),
+                        child: Image.memory(
+                          _imageBytes!,
                           fit: BoxFit.cover,
                         ),
                       ),
               ),
+
               // Upload\Remove Picture Button
               Positioned(
                 top: 225,
@@ -94,7 +96,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         icon: const Icon(Icons.highlight_remove_outlined),
                         onPressed: () => setState(() {
                           _hasPicture = false;
-                          _imagePath = '';
+                          _imageBytes = null;
                         }),
                       )
                     : IconButton.filledTonal(
@@ -105,7 +107,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           if (image != null) {
                             setState(() {
                               _hasPicture = true;
-                              _imagePath = image.path;
+                              _imageBytes = image.bytes;
                             });
                           }
                         },
@@ -113,6 +115,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               ),
             ],
           ),
+
           // Username
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -139,6 +142,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               ),
             ),
           ),
+
           // User Description
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -166,10 +170,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   Future<void> _onSavePressed() async {
     if (!_formKey.currentState!.validate()) return;
     try {
-      if (_imagePath.isNotEmpty) {
-        await _profileCubit.putAvatarImage(
-          await File(_imagePath).readAsBytes(),
-        );
+      if (_imageBytes != null) {
+        await _profileCubit.putAvatarImage(_imageBytes!);
         await CachedNetworkImage.evictFromCache(
           AvatarImage.getAvatarUrl(userId: _profile.id),
         );
@@ -179,7 +181,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         description: _descriptionController.text,
         hasPicture: _hasPicture,
       );
-      if (mounted) context.pop();
+      if (mounted) await context.maybePop();
     } catch (e) {
       if (mounted) {
         await showAdaptiveDialog<void>(

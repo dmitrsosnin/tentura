@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:typed_data';
+import 'package:ferry/ferry.dart';
 import 'package:ferry/ferry_isolate.dart';
 
-import 'client/gql_client.dart';
+import 'consts.dart';
 import 'client/message.dart';
+import 'client/gql_client.dart';
 import 'service/image_service.dart';
 import 'service/token_service.dart';
 
@@ -27,7 +29,7 @@ class TenturaApi {
   final String storagePath;
   final Duration jwtExpiresIn;
 
-  late final IsolateClient gqlClient;
+  late final IsolateClient _gqlClient;
 
   final TokenService _tokenService;
   final ImageService _imageService;
@@ -39,11 +41,14 @@ class TenturaApi {
   String get userId => _userId;
 
   Future<void> init() async {
-    gqlClient = await IsolateClient.create(
+    _gqlClient = await IsolateClient.create(
       buildClient,
       params: (
         userAgent: userAgent,
-        serverName: serverName,
+        serverUrl: Uri.https(
+          serverName,
+          pathGraphQLEndpoint,
+        ).toString(),
         storagePath: storagePath,
       ),
       messageHandler: (message) async => switch (message) {
@@ -56,7 +61,7 @@ class TenturaApi {
   }
 
   Future<void> dispose() async {
-    await gqlClient.dispose();
+    await _gqlClient.dispose();
   }
 
   Future<String> signIn({
@@ -77,7 +82,7 @@ class TenturaApi {
   Future<void> signOut() async {
     _userId = '';
     await _tokenService.signOut();
-    await gqlClient.clearCache();
+    await _gqlClient.clearCache();
   }
 
   Future<void> putAvatarImage(Uint8List image) async => _imageService.putAvatar(
@@ -96,4 +101,17 @@ class TenturaApi {
         userId: userId,
         image: image,
       );
+
+  Stream<OperationResponse<TData, TVars>> request<TData, TVars>(
+    OperationRequest<TData, TVars> request, [
+    Stream<OperationResponse<TData, TVars>> Function(
+            OperationRequest<TData, TVars>)?
+        forward,
+  ]) =>
+      _gqlClient.request(request);
+
+  Future<void> addRequestToRequestController<TData, TVars>(
+    OperationRequest<TData, TVars> request,
+  ) =>
+      _gqlClient.addRequestToRequestController(request);
 }

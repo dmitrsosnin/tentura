@@ -10,7 +10,7 @@ import 'message.dart';
 Future<Client> buildClient(
   ({
     String userAgent,
-    String serverName,
+    String serverUrl,
     String? storagePath,
   }) params,
   SendPort? sendPort,
@@ -28,7 +28,7 @@ Future<Client> buildClient(
       return response.value;
     }),
     HttpLink(
-      'https://${params.serverName}/v1/graphql',
+      params.serverUrl,
       defaultHeaders: {
         'accept': 'application/json',
         'user-agent': params.userAgent,

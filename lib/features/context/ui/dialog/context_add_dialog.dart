@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
 class ContextAddDialog extends StatefulWidget {
   static Future<String?> show(BuildContext context) => showDialog<String>(
@@ -29,11 +30,11 @@ class _ContextAddDialogState extends State<ContextAddDialog> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(_controller.text.trim()),
+            onPressed: () => context.maybePop(_controller.text.trim()),
             child: const Text('Ok'),
           ),
           TextButton(
-            onPressed: Navigator.of(context).pop,
+            onPressed: context.maybePop,
             child: const Text('Cancel'),
           ),
         ],

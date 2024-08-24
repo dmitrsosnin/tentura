@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/consts.dart';
+import 'package:tentura/app/root_router.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
+import 'package:tentura/ui/dialog/share_code_dialog.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
 import 'package:tentura/features/auth/ui/dialog/account_remove_dialog.dart';
-import 'package:tentura/features/app_link/ui/dialog/share_code_dialog.dart';
 
 import '../bloc/profile_cubit.dart';
 

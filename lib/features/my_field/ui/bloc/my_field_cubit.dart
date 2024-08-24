@@ -30,15 +30,4 @@ class MyFieldCubit extends Cubit<MyFieldState> {
       emit(state.setError(e));
     }
   }
-
-  Future<int> vote({
-    required int amount,
-    required String beaconId,
-  }) async {
-    final beacon = await _repository.vote(
-      id: beaconId,
-      amount: amount,
-    );
-    return beacon.my_vote ?? 0;
-  }
 }

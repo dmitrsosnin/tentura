@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:vector_graphics/vector_graphics.dart';
@@ -7,6 +8,7 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 
+@RoutePage()
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
 
