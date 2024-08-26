@@ -9,7 +9,7 @@
             "request": "launch",
             "type": "dart",
             "toolArgs": [
-                "--enable-impeller",
+                // "--enable-impeller",
                 "--flavor",
                 "prod",
                 "--dart-define",

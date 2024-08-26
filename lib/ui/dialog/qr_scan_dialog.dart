@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
@@ -16,13 +19,48 @@ class QRScanDialog extends StatefulWidget {
   State<QRScanDialog> createState() => _QRScanDialogState();
 }
 
-class _QRScanDialogState extends State<QRScanDialog> {
-  final _controller = MobileScannerController();
+class _QRScanDialogState extends State<QRScanDialog>
+    with WidgetsBindingObserver {
+  final _controller = MobileScannerController(
+    formats: [BarcodeFormat.qrCode],
+  );
+
+  StreamSubscription<BarcodeCapture>? _subscription;
 
   bool _torchEnabled = false;
   bool _hasResult = false;
 
   late Rect _scanWindow;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _subscription = _controller.barcodes.listen(_handleBarcode);
+    unawaited(_controller.start());
+    WakelockPlus.enable();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_controller.value.isInitialized) return;
+
+    switch (state) {
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        return;
+
+      case AppLifecycleState.resumed:
+        _subscription = _controller.barcodes.listen(_handleBarcode);
+        unawaited(_controller.start());
+
+      case AppLifecycleState.inactive:
+        unawaited(_subscription?.cancel());
+        _subscription = null;
+        unawaited(_controller.stop());
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -39,12 +77,16 @@ class _QRScanDialogState extends State<QRScanDialog> {
       width: scanAreaSize,
       height: scanAreaSize,
     );
-    _controller.updateScanWindow(_scanWindow);
+    if (!kIsWeb) _controller.updateScanWindow(_scanWindow);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_subscription?.cancel());
+    unawaited(WakelockPlus.disable());
+    unawaited(_controller.dispose());
+    _subscription = null;
     super.dispose();
   }
 
@@ -73,19 +115,20 @@ class _QRScanDialogState extends State<QRScanDialog> {
               MobileScanner(
                 controller: _controller,
                 scanWindow: _scanWindow,
-                onDetect: (BarcodeCapture captured) {
-                  if (_hasResult || captured.barcodes.isEmpty) return;
-                  if (context.mounted) {
-                    _hasResult = true;
-                    context.maybePop(captured.barcodes.first.rawValue);
-                  }
-                },
               ),
               CustomPaint(painter: _ScannerOverlay(frame: _scanWindow)),
             ],
           ),
         ),
       );
+
+  void _handleBarcode(BarcodeCapture captured) {
+    if (_hasResult || captured.barcodes.isEmpty) return;
+    if (context.mounted) {
+      _hasResult = true;
+      context.maybePop(captured.barcodes.first.rawValue);
+    }
+  }
 }
 
 class _ScannerOverlay extends CustomPainter {
