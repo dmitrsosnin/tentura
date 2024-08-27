@@ -3,6 +3,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/data/repository/geo_repository.dart';
@@ -48,8 +49,9 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: const Text('Tap to choose location'),
             forceMaterialTransparency: true,
+            foregroundColor: Colors.black,
+            title: const Text('Tap to choose location'),
           ),
           extendBodyBehindAppBar: true,
           body: FlutterMap(
@@ -88,8 +90,11 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://$osmLinkBase/{z}/{x}/{y}.png',
                 userAgentPackageName: appLinkBase,
+                urlTemplate: 'https://$osmLinkBase/{z}/{x}/{y}.png',
+                tileProvider: CancellableNetworkTileProvider(
+                  silenceExceptions: true,
+                ),
               ),
               if (widget.center != null)
                 MarkerLayer(

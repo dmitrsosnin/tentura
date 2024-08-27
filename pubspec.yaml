@@ -44,6 +44,7 @@ dependencies:
   cached_network_image: ^3.4.0
   flutter_native_splash: ^2.4.0
   force_directed_graphview: ^0.6.2
+  flutter_map_cancellable_tile_provider: ^3.0.0
 
   # Logging & etc
   # logger: ^2.4.0
