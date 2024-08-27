@@ -14,66 +14,69 @@ class ShowSeedDialog extends StatelessWidget {
   }) =>
       showDialog(
         context: context,
-        builder: (context) => ShowSeedDialog(userId: userId),
+        useRootNavigator: false,
+        builder: (context) => ShowSeedDialog(
+          seed: context.read<AuthCubit>().state.accounts[userId] ?? '',
+          userId: userId,
+        ),
       );
 
   const ShowSeedDialog({
     required this.userId,
+    required this.seed,
     super.key,
   });
 
+  final String seed;
   final String userId;
 
   @override
-  Widget build(BuildContext context) {
-    final seed = context.read<AuthCubit>().state.accounts[userId] ?? '';
-    return AlertDialog.adaptive(
-      alignment: Alignment.center,
-      actionsAlignment: MainAxisAlignment.spaceBetween,
-      titlePadding: paddingMediumA,
-      contentPadding: paddingMediumA,
+  Widget build(BuildContext context) => AlertDialog.adaptive(
+        alignment: Alignment.center,
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        titlePadding: paddingMediumA,
+        contentPadding: paddingMediumA,
 
-      // Header
-      title: Text(
-        userId,
-        maxLines: 1,
-        overflow: TextOverflow.clip,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headlineLarge,
-      ),
+        // Header
+        title: Text(
+          userId,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
 
-      // QRCode
-      content: PrettyQrView.data(
-        key: ValueKey(seed),
-        data: seed,
-        decoration: PrettyQrDecoration(
-          shape: PrettyQrSmoothSymbol(
-            color: Theme.of(context).colorScheme.secondary,
+        // QRCode
+        content: PrettyQrView.data(
+          key: ValueKey(seed),
+          data: seed,
+          decoration: PrettyQrDecoration(
+            shape: PrettyQrSmoothSymbol(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
           ),
         ),
-      ),
 
-      // Buttons
-      actions: [
-        Builder(
-          builder: (context) => TextButton(
-            child: const Text('Copy to clipboard'),
-            onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: seed));
-              if (context.mounted) {
-                showSnackBar(
-                  context,
-                  text: 'Seed copied to clipboard!',
-                );
-              }
-            },
+        // Buttons
+        actions: [
+          Builder(
+            builder: (context) => TextButton(
+              child: const Text('Copy to clipboard'),
+              onPressed: () async {
+                await Clipboard.setData(ClipboardData(text: seed));
+                if (context.mounted) {
+                  showSnackBar(
+                    context,
+                    text: 'Seed copied to clipboard!',
+                  );
+                }
+              },
+            ),
           ),
-        ),
-        TextButton(
-          onPressed: context.maybePop,
-          child: const Text('Close'),
-        ),
-      ],
-    );
-  }
+          TextButton(
+            onPressed: context.maybePop,
+            child: const Text('Close'),
+          ),
+        ],
+      );
 }

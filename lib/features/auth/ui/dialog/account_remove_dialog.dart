@@ -10,6 +10,7 @@ class AccountRemoveDialog extends StatelessWidget {
   }) =>
       showDialog(
         context: context,
+        useRootNavigator: false,
         builder: (context) => AccountRemoveDialog(id: id),
       );
 
@@ -21,7 +22,7 @@ class AccountRemoveDialog extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => AlertDialog.adaptive(
         content: const Text('Are you sure you want to remove this account?'),
         title: Text(id),
         actions: [

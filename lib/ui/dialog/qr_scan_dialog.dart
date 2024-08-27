@@ -10,6 +10,8 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 class QRScanDialog extends StatefulWidget {
   static Future<String?> show(BuildContext context) => showDialog<String>(
         context: context,
+        useSafeArea: false,
+        useRootNavigator: false,
         builder: (context) => const QRScanDialog(),
       );
 

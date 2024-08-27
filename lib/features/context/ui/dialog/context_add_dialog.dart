@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 class ContextAddDialog extends StatefulWidget {
   static Future<String?> show(BuildContext context) => showDialog<String>(
         context: context,
+        useRootNavigator: false,
         builder: (context) => const ContextAddDialog(),
       );
 
@@ -23,7 +24,7 @@ class _ContextAddDialogState extends State<ContextAddDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => AlertDialog.adaptive(
         title: const Text('Adding a new context'),
         content: TextField(
           controller: _controller,

@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/dialog/error_dialog.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
@@ -184,9 +184,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       if (mounted) await context.maybePop();
     } catch (e) {
       if (mounted) {
-        await showAdaptiveDialog<void>(
-          context: context,
-          builder: (_) => ErrorDialog(error: e),
+        showSnackBar(
+          context,
+          isError: true,
+          text: e.toString(),
         );
       }
     }

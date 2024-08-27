@@ -52,7 +52,7 @@ class GeoRepository {
             timeLimit: timeLimit,
           ),
         );
-        return (lat: position.latitude, long: position.longitude);
+        return _myCoords = (lat: position.latitude, long: position.longitude);
       } catch (e) {
         if (kDebugMode) print(e);
       }

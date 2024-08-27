@@ -10,13 +10,14 @@ import '../bloc/profile_cubit.dart';
 class MyProfileDeleteDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showDialog<void>(
         context: context,
+        useRootNavigator: false,
         builder: (context) => const MyProfileDeleteDialog(),
       );
 
   const MyProfileDeleteDialog({super.key});
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => AlertDialog.adaptive(
         title: const Text(
           'Are you sure you want to delete your profile?',
         ),
