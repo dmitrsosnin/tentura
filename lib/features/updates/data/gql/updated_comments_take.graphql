@@ -1,0 +1,9 @@
+# import '/domain/entity/comment.graphql'
+
+mutation UpdatedCommentsFetch {
+  updates(args: {prefix: "C"}) {
+    comment {
+      ...CommentFields
+    }
+  }
+}

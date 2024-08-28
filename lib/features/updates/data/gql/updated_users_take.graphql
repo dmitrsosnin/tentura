@@ -1,0 +1,9 @@
+# import '/domain/entity/user.graphql'
+
+mutation UpdatedUsersTake {
+  updates(args: {prefix: "U"}) {
+    user {
+      ...UserFields
+    }
+  }
+}

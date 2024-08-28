@@ -1,0 +1,9 @@
+# import '/domain/entity/beacon.graphql'
+
+mutation UpdatedBeaconsFetch {
+  updates(args: {prefix: "B"}) {
+    beacon {
+      ...BeaconFields
+    }
+  }
+}

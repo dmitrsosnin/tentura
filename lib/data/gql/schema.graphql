@@ -1295,6 +1295,31 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [vote_user_updates!]!
   ): [vote_user_mutation_response]
+
+  """
+  execute VOLATILE function "updates" which returns "edge"
+  """
+  updates(
+    """
+    input parameters for function "updates"
+    """
+    args: updates_args!
+
+    """distinct select on columns"""
+    distinct_on: [edge_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [edge_order_by!]
+
+    """filter the rows returned"""
+    where: edge_bool_exp
+  ): [edge!]!
 }
 
 """
@@ -2225,6 +2250,10 @@ input tstzrange_comparison_exp {
   _lte: tstzrange
   _neq: tstzrange
   _nin: [tstzrange!]
+}
+
+input updates_args {
+  prefix: String
 }
 
 """
