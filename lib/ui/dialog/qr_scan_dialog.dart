@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
@@ -40,7 +39,6 @@ class _QRScanDialogState extends State<QRScanDialog>
     WidgetsBinding.instance.addObserver(this);
     _subscription = _controller.barcodes.listen(_handleBarcode);
     unawaited(_controller.start());
-    WakelockPlus.enable();
   }
 
   @override
@@ -86,7 +84,6 @@ class _QRScanDialogState extends State<QRScanDialog>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     unawaited(_subscription?.cancel());
-    unawaited(WakelockPlus.disable());
     unawaited(_controller.dispose());
     _subscription = null;
     super.dispose();

@@ -7,8 +7,15 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'settings_state.dart';
 
-class SettingsCubit extends HydratedCubit<SettingsState> {
-  SettingsCubit() : super(const SettingsState());
+///
+/// If code obfuscation is needed then visit
+///   https://github.com/felangel/bloc/issues/3255
+///
+class SettingsCubit extends Cubit<SettingsState>
+    with HydratedMixin<SettingsState> {
+  SettingsCubit() : super(const SettingsState()) {
+    hydrate();
+  }
 
   @override
   SettingsState? fromJson(Map<String, dynamic> json) => SettingsState(

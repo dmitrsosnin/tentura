@@ -7,10 +7,10 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'auth_state.dart';
 
-//
-// If code obfuscation is needed then visit
-//   https://github.com/felangel/bloc/issues/3255
-//
+///
+/// If code obfuscation is needed then visit
+///   https://github.com/felangel/bloc/issues/3255
+///
 class AuthCubit extends Cubit<AuthState> with HydratedMixin<AuthState> {
   AuthCubit(RemoteApiService remoteApiService)
       : _remoteApiService = remoteApiService,

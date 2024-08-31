@@ -11,9 +11,7 @@ class ContextRepository {
 
   final RemoteApiService _remoteApiService;
 
-  late final _fetchRequest = GContextFetchReq(
-    (b) => b.fetchPolicy = FetchPolicy.CacheAndNetwork,
-  );
+  final _fetchRequest = GContextFetchReq();
 
   Stream<Iterable<String>> get stream =>
       _remoteApiService.request(_fetchRequest).map((r) =>

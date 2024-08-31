@@ -13,9 +13,7 @@ class FavoritesRepository {
   final RemoteApiService _remoteApiService;
 
   late final _fetchRequest = GBeaconFetchPinnedByUserIdReq(
-    (r) => r
-      ..fetchPolicy = FetchPolicy.CacheAndNetwork
-      ..vars.user_id = _remoteApiService.userId,
+    (r) => r.vars.user_id = _remoteApiService.userId,
   );
 
   Stream<Iterable<Beacon>> get stream =>

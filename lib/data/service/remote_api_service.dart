@@ -1,6 +1,6 @@
 import 'package:tentura_sdk/tentura_sdk.dart';
 
-export 'package:tentura_sdk/tentura_sdk.dart' show DataSource, FetchPolicy;
+export 'package:tentura_sdk/tentura_sdk.dart' show DataSource;
 
 class RemoteApiService extends TenturaApi {
   RemoteApiService({

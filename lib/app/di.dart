@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
 // import 'package:share_handler/share_handler.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/app/root_router.dart';
 import 'package:tentura/data/repository/geo_repository.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
-import 'package:tentura/data/service/hydrated_bloc_storage.dart';
+import 'package:tentura/data/service/hydrated_storage.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
@@ -119,19 +116,16 @@ class _DIState extends State<DI> {
         );
 
   Future<void> _init() async {
-    final packageInfo = await PackageInfo.fromPlatform();
     _remoteApiService = RemoteApiService(
-      userAgent: 'Tentura (${packageInfo.version})',
-      storagePath:
-          kIsWeb ? '' : (await getApplicationDocumentsDirectory()).path,
       jwtExpiresIn: jwtExpiresIn,
       serverName: appLinkBase,
+      userAgent: 'Tentura',
     );
     await Future.wait([
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
       ]),
-      HydratedBlocStorage.init(),
+      HydratedStorage().init(),
       _remoteApiService.init(),
     ]);
     //
