@@ -40,9 +40,11 @@ class ProfileNavBarItem extends StatelessWidget {
                     builder: (context, state) {
                       final isMe = authCubit.checkIfIsMe(state.user.id);
                       return GestureDetector(
-                        onTap: isMe
-                            ? menuController.close
-                            : () => authCubit.signIn(state.user.id),
+                        onTap: () async {
+                          menuController.close();
+                          if (isMe) return;
+                          await authCubit.signIn(state.user.id);
+                        },
                         child: Row(
                           children: [
                             Padding(
