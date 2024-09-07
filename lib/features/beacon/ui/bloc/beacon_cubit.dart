@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:tentura/domain/entity/geo.dart';
@@ -12,16 +11,11 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'beacon_state.dart';
 
-class BeaconCubit extends Cubit<BeaconState> {
-  BeaconCubit(
-    this._repository, {
-    PickImageCase pickImageCase = const PickImageCase(),
-  })  : _pickImageCase = pickImageCase,
-        super(const BeaconState()) {
+class BeaconCubit extends Cubit<BeaconState> with PickImageCase {
+  BeaconCubit(this._repository) : super(const BeaconState()) {
     _fetchSubscription.resume();
   }
 
-  final PickImageCase _pickImageCase;
   final BeaconRepository _repository;
 
   late final _fetchSubscription = _repository.stream.listen(
@@ -97,7 +91,4 @@ class BeaconCubit extends Cubit<BeaconState> {
     );
     return beacon.my_vote ?? 0;
   }
-
-  Future<({String name, Uint8List bytes})?> pickImage() =>
-      _pickImageCase.pickImage();
 }

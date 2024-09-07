@@ -7,18 +7,29 @@ import 'package:tentura/consts.dart';
 import 'package:tentura/app/root_router.dart';
 import 'package:tentura/data/repository/geo_repository.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
-import 'package:tentura/data/service/hydrated_storage.dart';
+import 'package:tentura/data/service/local_secure_storage.dart';
 
+import 'package:tentura/features/auth/data/repository/auth_repository.dart';
+import 'package:tentura/features/auth/domain/use_case/auth_case.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/data/beacon_repository.dart';
+
 import 'package:tentura/features/context/data/context_repository.dart';
 import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
+import 'package:tentura/features/profile/data/repository/profile_local_repository.dart';
+
+import 'package:tentura/features/profile/data/repository/profile_remote_repository.dart';
+import 'package:tentura/features/profile/domain/use_case/profile_case.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
-import 'package:tentura/features/profile/data/profile_repository.dart';
+
+import 'package:tentura/features/settings/data/settings_repository.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
+
 import 'package:tentura/features/my_field/ui/bloc/my_field_cubit.dart';
 import 'package:tentura/features/my_field/data/my_field_repository.dart';
+
 import 'package:tentura/features/favorites/ui/bloc/favorites_cubit.dart';
 import 'package:tentura/features/favorites/data/favorites_repository.dart';
 
@@ -34,6 +45,8 @@ class DI extends StatefulWidget {
 class _DIState extends State<DI> {
   final _router = RootRouter();
 
+  final _localSecureStorage = LocalSecureStorage();
+
   // final _subscription = ShareHandlerPlatform.instance.sharedMediaStream.listen(
   //   (e) {
   //     if (kDebugMode) {
@@ -46,6 +59,10 @@ class _DIState extends State<DI> {
 
   late final RemoteApiService _remoteApiService;
 
+  late final SettingsCubit _settingsCubit;
+
+  late final AuthCubit _authCubit;
+
   bool _isInitiating = true;
 
   @override
@@ -56,6 +73,8 @@ class _DIState extends State<DI> {
 
   @override
   void dispose() {
+    _authCubit.close();
+    _settingsCubit.close();
     _remoteApiService.dispose();
     // _subscription.cancel();
     _router.dispose();
@@ -67,21 +86,30 @@ class _DIState extends State<DI> {
       ? Container()
       : MultiRepositoryProvider(
           providers: [
-            RepositoryProvider.value(value: _remoteApiService),
             RepositoryProvider(create: (_) => GeoRepository()),
+            RepositoryProvider.value(value: _remoteApiService),
+            RepositoryProvider.value(value: _localSecureStorage),
           ],
           child: MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => SettingsCubit()),
-              BlocProvider(create: (_) => AuthCubit(_remoteApiService)),
+              BlocProvider.value(value: _authCubit),
+              BlocProvider.value(value: _settingsCubit),
             ],
             child: BlocSelector<AuthCubit, AuthState, String>(
-              selector: (state) => state.currentAccount,
-              builder: (context, userId) => MultiBlocProvider(
+              selector: (state) => state.currentAccountId,
+              builder: (context, accountId) => MultiBlocProvider(
+                key: ValueKey(accountId),
                 providers: [
                   BlocProvider(
                     create: (context) => ProfileCubit(
-                      ProfileRepository(_remoteApiService),
+                      ProfileCase(
+                        profileLocalRepository:
+                            ProfileLocalRepository(_localSecureStorage),
+                        profileRemoteRepository:
+                            ProfileRemoteRepository(_remoteApiService),
+                      ),
+                      id: accountId,
+                      fromCache: false,
                     ),
                   ),
                   BlocProvider(
@@ -125,9 +153,15 @@ class _DIState extends State<DI> {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
       ]),
-      HydratedStorage().init(),
       _remoteApiService.init(),
     ]);
+    _settingsCubit = await SettingsCubit.hydrated(
+      SettingsRepository(_localSecureStorage),
+    );
+    _authCubit = await AuthCubit.hydrated(AuthCase(
+      authRepository: AuthRepository(_localSecureStorage),
+      remoteApiService: _remoteApiService,
+    ));
     //
     // await ShareHandlerPlatform.instance.getInitialSharedMedia().then(
     //   (e) {

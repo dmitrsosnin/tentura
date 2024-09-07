@@ -14,9 +14,17 @@ sealed class ResponseMessage<T extends Object> extends Message {
   ResponseMessage({this.value, this.error});
 
   final T? value;
-  final Exception? error;
+  final Object? error;
 
-  T get valueOrException => value == null ? throw error ?? Exception() : value!;
+  T get valueOrException {
+    if (value != null) return value!;
+    // ignore: only_throw_errors
+    throw switch (error) {
+      final Error e => e,
+      final Exception e => e,
+      _ => Exception(error),
+    };
+  }
 }
 
 // GetToken

@@ -176,11 +176,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           AvatarImage.getAvatarUrl(userId: _profile.id),
         );
       }
-      await _profileCubit.update(
+      await _profileCubit.update(_profile.copyWith(
         title: _nameController.text,
         description: _descriptionController.text,
         hasPicture: _hasPicture,
-      );
+      ));
       if (mounted) await context.maybePop();
     } catch (e) {
       if (mounted) {

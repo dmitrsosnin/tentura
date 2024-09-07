@@ -1,5 +1,5 @@
 import 'package:ferry/ferry.dart' show Link, NextLink;
-import 'package:gql_exec/gql_exec.dart' show Request, Response, HttpLinkHeaders;
+import 'package:gql_exec/gql_exec.dart' show HttpLinkHeaders, Request, Response;
 
 class AuthLink extends Link {
   const AuthLink(this._getToken);

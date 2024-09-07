@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/domain/entity/exception.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/profile/ui/widget/profile_list_tile.dart';
 
@@ -33,6 +34,13 @@ class AuthLoginScreen extends StatelessWidget {
               text: 'There is no correct seed!',
             );
 
+          case IdIsWrongException:
+            showSnackBar(
+              context,
+              isError: true,
+              text: 'Account ID is wrong!',
+            );
+
           default:
             showSnackBarError(context, state);
         }
@@ -40,7 +48,7 @@ class AuthLoginScreen extends StatelessWidget {
       buildWhen: (p, c) => c.hasNoError,
       builder: (context, state) {
         final authCubit = context.read<AuthCubit>();
-        final accounts = state.accounts.keys.toList();
+        final accounts = state.accounts.map((e) => e.id).toList();
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -78,8 +86,8 @@ class AuthLoginScreen extends StatelessWidget {
                   padding: paddingMediumA,
                   child: OutlinedButton(
                     child: const Text('Recover account by QR'),
-                    onPressed: () async => authCubit
-                        .recoverAccount(await QRScanDialog.show(context)),
+                    onPressed: () async =>
+                        authCubit.addAccount(await QRScanDialog.show(context)),
                   ),
                 ),
 
@@ -90,7 +98,7 @@ class AuthLoginScreen extends StatelessWidget {
                     child: const Text('Recover account by seed'),
                     onPressed: () async {
                       if (await Clipboard.hasStrings() && context.mounted) {
-                        await authCubit.recoverAccount(
+                        await authCubit.addAccount(
                             (await Clipboard.getData(Clipboard.kTextPlain))
                                 ?.text);
                       }

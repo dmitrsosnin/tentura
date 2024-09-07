@@ -16,7 +16,7 @@ class ShowSeedDialog extends StatelessWidget {
         context: context,
         useRootNavigator: false,
         builder: (context) => ShowSeedDialog(
-          seed: context.read<AuthCubit>().state.accounts[userId] ?? '',
+          seed: context.read<AuthCubit>().getSeedByAccountId(userId),
           userId: userId,
         ),
       );
