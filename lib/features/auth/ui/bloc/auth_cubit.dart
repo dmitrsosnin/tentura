@@ -44,7 +44,7 @@ class AuthCubit extends Cubit<AuthState> {
   bool checkIfIsNotMe(String id) => id != state.currentAccountId;
 
   String getSeedByAccountId(String id) =>
-      state.accounts.firstWhereOrNull((e) => e.id == id)?.id ?? '';
+      state.accounts.firstWhereOrNull((e) => e.id == id)?.seed ?? '';
 
   Future<void> addAccount(String? seed) async {
     if (seed == null) return;
