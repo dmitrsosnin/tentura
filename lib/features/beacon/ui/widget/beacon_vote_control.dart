@@ -7,12 +7,12 @@ import '../bloc/beacon_cubit.dart';
 class BeaconVoteControl extends StatefulWidget {
   const BeaconVoteControl({
     required this.id,
-    this.votes,
+    required this.votes,
     super.key,
   });
 
   final String id;
-  final int? votes;
+  final int votes;
 
   @override
   State<BeaconVoteControl> createState() => _BeaconVoteControlState();
@@ -22,7 +22,7 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
   late final _theme = Theme.of(context);
   late final _beaconCubit = context.read<BeaconCubit>();
 
-  late int _likeAmount = widget.votes ?? 0;
+  late int _likeAmount = widget.votes;
 
   @override
   Widget build(BuildContext context) => Container(

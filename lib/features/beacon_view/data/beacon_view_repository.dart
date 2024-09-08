@@ -9,7 +9,7 @@ import 'gql/_g/comment_vote_by_id.req.gql.dart';
 import 'gql/_g/comment_create.req.gql.dart';
 
 class BeaconViewRepository {
-  static const _label = 'Comment';
+  static const _label = 'BeaconView';
 
   BeaconViewRepository(this._remoteApiService);
 

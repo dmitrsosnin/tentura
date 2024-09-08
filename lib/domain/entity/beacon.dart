@@ -14,6 +14,7 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
         ..enabled = false
         ..has_picture = false
         ..comments_count = 0
+        ..my_vote = 0
         ..created_at = zeroDateTime
         ..updated_at = zeroDateTime
         ..author = (GBeaconFieldsData_authorBuilder()
@@ -23,22 +24,7 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
           ..has_picture = false))
       .build() as Beacon;
 
-  factory Beacon.model({
-    String? title,
-    bool? hasPicture,
-    String? description,
-    DateTimeRange? dateRange,
-    Coordinates? coordinates,
-    String? context,
-  }) =>
-      empty.copyWith(
-        title: title,
-        hasPicture: hasPicture,
-        description: description,
-        coordinates: coordinates,
-        dateRange: dateRange,
-        context: context,
-      );
+  int get myVote => my_vote ?? 0;
 
   String get imageId => i.has_picture ? i.id : '';
 
