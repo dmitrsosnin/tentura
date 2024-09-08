@@ -4,6 +4,7 @@ fragment CommentFields on comment {
   created_at
   content
   my_vote
+  score
   author {
     id
     title
