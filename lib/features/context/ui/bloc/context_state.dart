@@ -8,6 +8,7 @@ final class ContextState extends StateBase {
     super.error,
   });
 
+  // TBD: use Entity
   final Set<String> contexts;
   final String selected;
 

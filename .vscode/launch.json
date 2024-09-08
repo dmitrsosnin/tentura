@@ -8,6 +8,7 @@
             "name": "tentura (debug)",
             "request": "launch",
             "type": "dart",
+            "flutterMode": "debug",
             "toolArgs": [
                 // "--enable-impeller",
                 "--flavor",
@@ -20,6 +21,7 @@
             "name": "tentura-web (debug)",
             "request": "launch",
             "type": "dart",
+            "flutterMode": "debug",
             "toolArgs": [
                 "--dart-define",
                 "APP_LINK_BASE=tentura.intersubjective.space",
@@ -30,6 +32,7 @@
             "name": "tentura-stage (debug)",
             "request": "launch",
             "type": "dart",
+            "flutterMode": "debug",
             "toolArgs": [
                 // "--enable-impeller",
                 "--flavor",

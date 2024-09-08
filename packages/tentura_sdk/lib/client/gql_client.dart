@@ -34,5 +34,8 @@ Future<Client> buildClient(
         },
       ),
     ),
+    defaultFetchPolicies: {
+      OperationType.query: FetchPolicy.NoCache,
+    },
   );
 }

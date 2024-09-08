@@ -11,19 +11,17 @@ part 'my_field_state.dart';
 
 class MyFieldCubit extends Cubit<MyFieldState> {
   MyFieldCubit(this._repository) : super(const MyFieldState()) {
-    fetch();
+    fetch('');
   }
 
   final MyFieldRepository _repository;
 
-  Future<void> fetch([String? contextName]) async {
+  Future<void> fetch(String contextName) async {
     emit(state.setLoading());
     try {
-      final beacons = await _repository.fetch(
-        context: contextName ?? state.context,
-      );
+      final beacons = await _repository.fetch(context: contextName);
       emit(MyFieldState(
-        context: contextName ?? state.context,
+        context: contextName,
         beacons: beacons.toList(),
       ));
     } catch (e) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
+
+import '../bloc/context_cubit.dart';
 
 class ContextAddDialog extends StatefulWidget {
   static Future<String?> show(BuildContext context) => showDialog<String>(
@@ -31,11 +32,18 @@ class _ContextAddDialogState extends State<ContextAddDialog> {
         ),
         actions: [
           TextButton(
-            onPressed: () => context.maybePop(_controller.text.trim()),
+            onPressed: () async {
+              final newContext = _controller.text.trim();
+              await context.read<ContextCubit>().add(
+                    name: newContext,
+                    select: true,
+                  );
+              if (context.mounted) Navigator.of(context).pop(newContext);
+            },
             child: const Text('Ok'),
           ),
           TextButton(
-            onPressed: context.maybePop,
+            onPressed: Navigator.of(context).pop,
             child: const Text('Cancel'),
           ),
         ],

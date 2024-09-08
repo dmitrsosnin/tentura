@@ -31,7 +31,7 @@ dependencies:
   path_provider: ^2.1.4
   # drift_flutter: ^0.2.0
   # share_handler: ^0.0.21
-  mobile_scanner: ^5.2.1
+  mobile_scanner: ^5.2.2
   flutter_secure_storage: ^9.2.2
 
   # UI related
@@ -41,7 +41,7 @@ dependencies:
   dots_indicator: ^3.0.0
   pretty_qr_code: ^3.3.0
   vector_graphics: ^1.1.11
-  cached_network_image: ^3.4.0
+  cached_network_image: ^3.4.1
   flutter_native_splash: ^2.4.0
   force_directed_graphview: ^0.6.2
   flutter_map_cancellable_tile_provider: ^3.0.0

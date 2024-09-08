@@ -1,25 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
+
+import '../bloc/context_cubit.dart';
 
 class ContextRemoveDialog extends StatelessWidget {
-  static Future<bool?> show(BuildContext context) => showDialog<bool>(
+  static Future<bool?> show(
+    BuildContext context, {
+    required String contextName,
+  }) =>
+      showDialog<bool>(
         context: context,
         useRootNavigator: false,
-        builder: (context) => const ContextRemoveDialog(),
+        builder: (context) => ContextRemoveDialog(contextName: contextName),
       );
 
-  const ContextRemoveDialog({super.key});
+  const ContextRemoveDialog({
+    required this.contextName,
+    super.key,
+  });
+
+  final String contextName;
 
   @override
   Widget build(BuildContext context) => AlertDialog.adaptive(
-        title: const Text('Are you shure?'),
+        title: const Text('Are you sure?'),
+        content: Text('Context $contextName will be deleted!'),
         actions: [
           TextButton(
-            onPressed: () => context.maybePop(true),
+            onPressed: () async {
+              final isCurrent =
+                  await context.read<ContextCubit>().delete(contextName);
+              if (context.mounted) Navigator.of(context).pop(isCurrent);
+            },
             child: const Text('Yes'),
           ),
           TextButton(
-            onPressed: context.maybePop,
+            onPressed: Navigator.of(context).pop,
             child: const Text('Cancel'),
           ),
         ],

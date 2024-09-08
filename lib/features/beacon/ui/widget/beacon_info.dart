@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:tentura/app/root_router.dart';
 import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
 import 'package:tentura/ui/dialog/choose_location_dialog.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
@@ -76,8 +77,18 @@ class BeaconInfo extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: textTheme.bodyLarge,
               ),
-              // TBD: add context
-              onPressed: () {},
+              onPressed: () async {
+                final hasAdded = await context.read<ContextCubit>().add(
+                      name: beacon.context!,
+                      select: false,
+                    );
+                if (context.mounted && hasAdded) {
+                  showSnackBar(
+                    context,
+                    text: 'Context ${beacon.context} has been added.',
+                  );
+                }
+              },
             ),
 
           // Beacon Timerange
