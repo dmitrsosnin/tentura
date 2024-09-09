@@ -21,17 +21,13 @@ class BeaconTileControl extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Comments count
-          TextButton.icon(
+          IconButton(
+            icon: const Icon(Icons.comment_outlined),
             onPressed: () => context.pushRoute(
               BeaconViewRoute(
                 id: beacon.id,
                 initiallyExpanded: true,
               ),
-            ),
-            icon: const Icon(Icons.comment_outlined),
-            label: Text(
-              beacon.comments_count.toString(),
-              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
 
@@ -40,9 +36,7 @@ class BeaconTileControl extends StatelessWidget {
             icon: const Icon(Icons.hub_outlined),
             onPressed: (beacon.my_vote ?? -1) < 0
                 ? null
-                : () => context.pushRoute(
-                      GraphRoute(focus: beacon.id),
-                    ),
+                : () => context.pushRoute(GraphRoute(focus: beacon.id)),
           ),
 
           // Share
@@ -52,12 +46,13 @@ class BeaconTileControl extends StatelessWidget {
           BeaconPinIconButton(
             id: beacon.id,
             isPinned: beacon.is_pinned,
+            key: ValueKey(beacon),
           ),
 
           // Like\Dislike
           BeaconVoteControl(
             id: beacon.id,
-            votes: beacon.my_vote,
+            votes: beacon.myVote,
           ),
         ],
       );

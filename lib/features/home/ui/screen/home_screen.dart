@@ -47,14 +47,3 @@ class HomeScreen extends StatelessWidget {
         ],
       );
 }
-
-// GestureDetector(
-//   onHorizontalDragEnd: (details) =>
-//       switch (details.primaryVelocity ?? 0) {
-//     // swipe to left
-//     < 0 when i + 1 < _routes.length => context.go(_routes[i + 1]),
-//     // swipe to right
-//     > 0 when i > 0 => context.go(_routes[i - 1]),
-//     _ => null,
-//   },
-// )

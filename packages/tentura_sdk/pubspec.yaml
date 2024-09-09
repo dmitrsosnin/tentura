@@ -9,12 +9,10 @@ environment:
 
 dependencies:
   http: ^1.2.2
-  hive: ^2.2.3
   ferry: ^0.16.0
   gql_exec: ^1.0.0
   gql_http_link: ^1.1.0
   ed25519_edwards: ^0.3.1
-  ferry_hive_store: ^0.5.2
 
 dev_dependencies:
   very_good_analysis: ^6.0.0

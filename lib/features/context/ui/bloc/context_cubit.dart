@@ -14,7 +14,7 @@ class ContextCubit extends Cubit<ContextState> {
   final ContextRepository _repository;
 
   late final _fetchSubscription = _repository.stream.listen(
-    (e) => emit(ContextState(contexts: e.toSet())),
+    (e) => emit(state.copyWith(contexts: e.toSet())),
     onError: (Object e) => emit(state.setError(e.toString())),
     cancelOnError: false,
   );
@@ -27,17 +27,32 @@ class ContextCubit extends Cubit<ContextState> {
 
   Future<void> fetch() async {
     emit(state.setLoading());
-    return _repository.fetch();
+    try {
+      await _repository.fetch();
+    } catch (e) {
+      emit(state.setError(e));
+    }
   }
 
-  void select(String? contextName) => emit(state.copyWith(
-        selected: contextName,
-      ));
+  String select(String contextName) {
+    emit(ContextState(
+      selected: contextName,
+      contexts: state.contexts,
+    ));
+    return contextName;
+  }
 
-  Future<void> add(String contextName) async {
+  Future<bool> add({
+    required String name,
+    required bool select,
+  }) async {
+    if (state.contexts.contains(name)) return false;
     try {
-      final context = await _repository.add(contextName);
-      emit(state.copyWith(
+      final context = await _repository.add(name);
+      if (context == null) {
+        throw Exception('Could not add context [$name]');
+      }
+      emit(ContextState(
         selected: context,
         contexts: {
           context,
@@ -47,17 +62,22 @@ class ContextCubit extends Cubit<ContextState> {
     } catch (e) {
       emit(state.setError(e));
     }
+    return true;
   }
 
-  Future<void> delete(String contextName) async {
+  /// Returns `true` if current context deleted
+  Future<bool> delete(String contextName) async {
+    final isCurrent = state.selected == contextName;
     try {
-      final context = await _repository.delete(contextName);
-      state.contexts.remove(context);
-      emit(state.copyWith(
-          contexts: Set.from(state.contexts),
-          selected: state.selected == context ? '' : null));
+      await _repository.delete(contextName);
+      state.contexts.remove(contextName);
+      emit(ContextState(
+        contexts: {...state.contexts},
+        selected: isCurrent ? '' : state.selected,
+      ));
     } catch (e) {
       emit(state.setError(e));
     }
+    return isCurrent;
   }
 }

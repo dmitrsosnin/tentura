@@ -10,7 +10,7 @@ part 'beacon_view_state.dart';
 
 class BeaconViewCubit extends Cubit<BeaconViewState> {
   BeaconViewCubit(
-    this.beaconViewRepository, {
+    this._beaconViewRepository, {
     required String id,
     bool fetchCommentsOnStart = false,
   }) : super(switch (id) {
@@ -30,7 +30,7 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
     fetch(fetchComments: fetchCommentsOnStart || state.hasFocusedComment);
   }
 
-  final BeaconViewRepository beaconViewRepository;
+  final BeaconViewRepository _beaconViewRepository;
 
   Future<void> fetch({bool fetchComments = true}) async {
     if (state.beacon.id.isEmpty && state.hasNoFocusedComment) return;
@@ -39,7 +39,7 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
       if (state.hasFocusedComment) {
         // Show Beacon with one Comment
         final (beacon, comment) =
-            await beaconViewRepository.fetchCommentById(state.focusCommentId);
+            await _beaconViewRepository.fetchCommentById(state.focusCommentId);
         emit(state.copyWith(
           beacon: beacon,
           comments: [comment],
@@ -49,7 +49,8 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
         // show Beacon with all Comments
         if (state.beacon.title.isEmpty) {
           emit(state.copyWith(
-            beacon: await beaconViewRepository.fetchBeaconById(state.beacon.id),
+            beacon:
+                await _beaconViewRepository.fetchBeaconById(state.beacon.id),
             status: FetchStatus.isSuccess,
           ));
         }
@@ -58,7 +59,7 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
           emit(state.copyWith(
             status: FetchStatus.isSuccess,
             comments: List.of(
-              await beaconViewRepository
+              await _beaconViewRepository
                   .fetchCommentsByBeaconId(state.beacon.id),
               growable: false,
             ),
@@ -71,16 +72,14 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
   }
 
   Future<void> showAll() async {
-    emit(state.copyWith(
-      focusCommentId: '',
-    ));
+    emit(state.copyWith(focusCommentId: ''));
     return fetch();
   }
 
   Future<void> addComment(String text) async {
     emit(state.setLoading());
     try {
-      final comment = await beaconViewRepository.addComment(
+      final comment = await _beaconViewRepository.addComment(
         beaconId: state.beacon.id,
         text: text,
       );
@@ -97,7 +96,7 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
     required String commentId,
     required int amount,
   }) =>
-      beaconViewRepository.voteForComment(
+      _beaconViewRepository.voteForComment(
         commentId: commentId,
         amount: amount,
       );

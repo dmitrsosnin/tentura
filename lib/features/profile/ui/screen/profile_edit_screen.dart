@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/ui/dialog/error_dialog.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
@@ -176,17 +176,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           AvatarImage.getAvatarUrl(userId: _profile.id),
         );
       }
-      await _profileCubit.update(
+      await _profileCubit.update(_profile.copyWith(
         title: _nameController.text,
         description: _descriptionController.text,
         hasPicture: _hasPicture,
-      );
+      ));
       if (mounted) await context.maybePop();
     } catch (e) {
       if (mounted) {
-        await showAdaptiveDialog<void>(
-          context: context,
-          builder: (_) => ErrorDialog(error: e),
+        showSnackBar(
+          context,
+          isError: true,
+          text: e.toString(),
         );
       }
     }

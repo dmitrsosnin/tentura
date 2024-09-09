@@ -24,21 +24,27 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           color: const Color(0x003A1E5C),
           routerConfig: router.config(
-            deepLinkBuilder: (deepLink) {
-              if (kDebugMode) print('DeepLinkBuilder: ${deepLink.uri}');
-              return deepLink;
-            },
-            deepLinkTransformer: (Uri uri) => uri.path == pathAppLinkView
-                ? SynchronousFuture(uri.replace(
-                    path: switch (uri.queryParameters['id']) {
-                      final String id when id.startsWith('U') =>
-                        pathProfileView,
-                      final String id when id.startsWith('B') => pathBeaconView,
-                      final String id when id.startsWith('C') => pathBeaconView,
-                      _ => pathConnect,
-                    },
-                  ))
-                : SynchronousFuture(uri),
+            deepLinkBuilder: kDebugMode
+                ? (deepLink) {
+                    // ignore: avoid_print
+                    print('DeepLinkBuilder: ${deepLink.uri}');
+                    return deepLink;
+                  }
+                : null,
+            deepLinkTransformer: (uri) =>
+                SynchronousFuture(uri.path == pathAppLinkView
+                    ? uri.replace(
+                        path: switch (uri.queryParameters['id']) {
+                          final String id when id.startsWith('U') =>
+                            pathProfileView,
+                          final String id when id.startsWith('B') =>
+                            pathBeaconView,
+                          final String id when id.startsWith('C') =>
+                            pathBeaconView,
+                          _ => pathConnect,
+                        },
+                      )
+                    : uri),
             navigatorObservers: () => [
               SentryNavigatorObserver(),
             ],

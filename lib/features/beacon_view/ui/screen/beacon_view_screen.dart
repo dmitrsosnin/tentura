@@ -62,8 +62,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
         listener: showSnackBarError,
         buildWhen: (p, c) => c.status.isSuccess,
         builder: (context, state) {
-          final beacon = state.beacon;
-          final author = beacon.author as User;
+          final author = state.beacon.author as User;
           final textTheme = Theme.of(context).textTheme;
           return RefreshIndicator.adaptive(
             onRefresh: beaconViewCubit.fetch,
@@ -91,13 +90,16 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                 ),
 
                 // Beacon Info
-                BeaconInfo(beacon: beacon),
+                BeaconInfo(beacon: state.beacon),
 
                 // Buttons Row
                 if (authCubit.checkIfIsNotMe(author.id))
                   Padding(
                     padding: paddingSmallV,
-                    child: BeaconTileControl(beacon: beacon),
+                    child: BeaconTileControl(
+                      beacon: state.beacon,
+                      key: ValueKey(state.beacon),
+                    ),
                   ),
 
                 // Comments ExpansionTile

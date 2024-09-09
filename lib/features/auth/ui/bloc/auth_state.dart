@@ -2,38 +2,39 @@ part of 'auth_cubit.dart';
 
 final class AuthState extends StateBase {
   const AuthState({
-    this.currentAccount = '',
+    this.currentAccountId = '',
     this.accounts = const {},
     super.status,
     super.error,
   });
 
-  final String currentAccount;
-
-  // id:seed(base64)
-  final Map<String, String> accounts;
+  final String currentAccountId;
+  final Set<Account> accounts;
 
   @override
   List<Object?> get props => [
-        currentAccount,
+        currentAccountId,
         accounts,
         status,
         error,
       ];
 
-  bool get isAuthenticated => currentAccount.isNotEmpty;
+  bool get isAuthenticated => currentAccountId.isNotEmpty;
 
-  bool get isNotAuthenticated => currentAccount.isEmpty;
+  bool get isNotAuthenticated => currentAccountId.isEmpty;
+
+  Account? get currentAccount =>
+      accounts.singleWhereOrNull((e) => e.id == currentAccountId);
 
   @override
   AuthState copyWith({
-    String? currentAccount,
-    Map<String, String>? accounts,
+    String? currentAccountId,
+    Set<Account>? accounts,
     FetchStatus? status,
     Object? error,
   }) =>
       AuthState(
-        currentAccount: currentAccount ?? this.currentAccount,
+        currentAccountId: currentAccountId ?? this.currentAccountId,
         accounts: accounts ?? this.accounts,
         status: status ?? this.status,
         error: error ?? this.error,
@@ -42,7 +43,7 @@ final class AuthState extends StateBase {
   @override
   AuthState setError(Object error) => AuthState(
         accounts: accounts,
-        currentAccount: currentAccount,
+        currentAccountId: currentAccountId,
         status: FetchStatus.isFailure,
         error: error,
       );
@@ -50,7 +51,7 @@ final class AuthState extends StateBase {
   @override
   AuthState setLoading() => AuthState(
         accounts: accounts,
-        currentAccount: currentAccount,
+        currentAccountId: currentAccountId,
         status: FetchStatus.isLoading,
       );
 }

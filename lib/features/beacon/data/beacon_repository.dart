@@ -17,9 +17,7 @@ class BeaconRepository {
   final RemoteApiService _remoteApiService;
 
   late final _fetchRequest = GBeaconsFetchByUserIdReq(
-    (b) => b
-      ..fetchPolicy = FetchPolicy.CacheAndNetwork
-      ..vars.user_id = _remoteApiService.userId,
+    (b) => b.vars.user_id = _remoteApiService.userId,
   );
 
   Stream<Iterable<Beacon>> get stream => _remoteApiService

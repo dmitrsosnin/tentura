@@ -6,7 +6,7 @@ import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
 
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
-import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
+// import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 
 import '../../data/graph_repository.dart';
 import '../bloc/graph_cubit.dart';
@@ -61,13 +61,14 @@ class GraphScreen extends StatelessWidget implements AutoRouteWrapper {
         title: const Text('Graph view'),
 
         // Context selector
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(40),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8),
-            child: ContextDropDown(onChanged: cubit.setContext),
-          ),
-        ),
+        // (hidden for now)
+        // bottom: PreferredSize(
+        //   preferredSize: const Size.fromHeight(40),
+        //   child: Padding(
+        //     padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8),
+        //     child: ContextDropDown(onChanged: cubit.setContext),
+        //   ),
+        // ),
       ),
 
       // Graph

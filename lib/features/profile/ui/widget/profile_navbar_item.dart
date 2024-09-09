@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:tentura/data/service/local_secure_storage.dart';
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
+import '../../data/repository/profile_local_repository.dart';
+import '../../data/repository/profile_remote_repository.dart';
+import '../../domain/use_case/profile_case.dart';
 import '../bloc/profile_cubit.dart';
 
 class ProfileNavBarItem extends StatelessWidget {
@@ -15,20 +20,31 @@ class ProfileNavBarItem extends StatelessWidget {
         builder: (context, state) {
           final menuController = MenuController();
           final authCubit = context.read<AuthCubit>();
-          final ids = authCubit.state.accounts.keys;
+          final ids = authCubit.state.accounts.map((e) => e.id);
+          // TBD: use GetIt
+          final profileCase = ProfileCase(
+            profileLocalRepository: ProfileLocalRepository(
+              context.read<LocalSecureStorage>(),
+            ),
+            profileRemoteRepository: ProfileRemoteRepository(
+              context.read<RemoteApiService>(),
+            ),
+          );
           return MenuAnchor(
             controller: menuController,
             menuChildren: [
               for (final id in ids)
                 BlocProvider(
-                  create: (context) => ProfileCubit.dummy(userId: id),
+                  create: (context) => ProfileCubit(profileCase, id: id),
                   child: BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) {
                       final isMe = authCubit.checkIfIsMe(state.user.id);
                       return GestureDetector(
-                        onTap: isMe
-                            ? menuController.close
-                            : () => authCubit.signIn(state.user.id),
+                        onTap: () async {
+                          menuController.close();
+                          if (isMe) return;
+                          await authCubit.signIn(state.user.id);
+                        },
                         child: Row(
                           children: [
                             Padding(

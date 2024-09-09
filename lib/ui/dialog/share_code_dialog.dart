@@ -13,6 +13,7 @@ class ShareCodeDialog extends StatelessWidget {
   }) =>
       showDialog(
         context: context,
+        useRootNavigator: false,
         builder: (context) => ShareCodeDialog(
           header: header,
           link: link.toString(),

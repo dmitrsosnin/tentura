@@ -11,9 +11,7 @@ class ContextRepository {
 
   final RemoteApiService _remoteApiService;
 
-  late final _fetchRequest = GContextFetchReq(
-    (b) => b.fetchPolicy = FetchPolicy.CacheAndNetwork,
-  );
+  final _fetchRequest = GContextFetchReq();
 
   Stream<Iterable<String>> get stream =>
       _remoteApiService.request(_fetchRequest).map((r) =>
@@ -22,17 +20,17 @@ class ContextRepository {
   Future<void> fetch() =>
       _remoteApiService.addRequestToRequestController(_fetchRequest);
 
-  Future<String> add(String contextName) => _remoteApiService
+  Future<String?> add(String contextName) => _remoteApiService
       .request(GContextAddReq((b) => b.vars.context_name = contextName))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) =>
-          r.dataOrThrow(label: _label).insert_user_context_one!.context_name);
+          r.dataOrThrow(label: _label).insert_user_context_one?.context_name);
 
-  Future<String> delete(String contextName) => _remoteApiService
+  Future<String?> delete(String contextName) => _remoteApiService
       .request(GContextDeleteReq((b) => b.vars
         ..user_id = _remoteApiService.userId
         ..context_name = contextName))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) =>
-          r.dataOrThrow(label: _label).delete_user_context_by_pk!.context_name);
+          r.dataOrThrow(label: _label).delete_user_context_by_pk?.context_name);
 }

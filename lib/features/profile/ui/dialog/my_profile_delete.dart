@@ -10,13 +10,14 @@ import '../bloc/profile_cubit.dart';
 class MyProfileDeleteDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showDialog<void>(
         context: context,
+        useRootNavigator: false,
         builder: (context) => const MyProfileDeleteDialog(),
       );
 
   const MyProfileDeleteDialog({super.key});
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => AlertDialog.adaptive(
         title: const Text(
           'Are you sure you want to delete your profile?',
         ),
@@ -27,15 +28,10 @@ class MyProfileDeleteDialog extends StatelessWidget {
           TextButton(
             onPressed: () async {
               final authCubit = context.read<AuthCubit>();
-              final myId = authCubit.state.currentAccount;
               final profileCubit = context.read<ProfileCubit>();
               try {
                 await profileCubit.delete();
-                await authCubit.signOut();
-                authCubit.removeAccount(myId);
-                if (context.mounted) {
-                  await context.maybePop();
-                }
+                await authCubit.removeAccount(authCubit.state.currentAccountId);
               } catch (e) {
                 if (context.mounted) {
                   showSnackBar(
@@ -43,9 +39,9 @@ class MyProfileDeleteDialog extends StatelessWidget {
                     isError: true,
                     text: e.toString(),
                   );
-                  await context.maybePop();
                 }
               }
+              if (context.mounted) await context.maybePop();
             },
             child: const Text('Delete'),
           ),

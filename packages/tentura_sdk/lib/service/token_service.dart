@@ -58,7 +58,7 @@ class TokenService {
         await signIn();
         return GetTokenResponse(value: _jwt.accessToken);
       } catch (e) {
-        return GetTokenResponse(error: e as Exception);
+        return GetTokenResponse(error: e);
       }
     }
 

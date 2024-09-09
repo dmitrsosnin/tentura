@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:nil/nil.dart';
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
@@ -19,7 +20,7 @@ class GraphBody extends StatefulWidget {
     this.animationDuration = const Duration(seconds: 2),
     this.canvasSize = const GraphCanvasSize.fixed(Size(4096, 4096)),
     this.layoutAlgorithm = const FruchtermanReingoldAlgorithm(
-      iterations: 1500,
+      iterations: kIsWeb && !kIsWasm ? 300 : 500,
       temperature: 500,
       optimalDistance: 100,
       showIterations: true,

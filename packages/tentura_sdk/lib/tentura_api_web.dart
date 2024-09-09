@@ -50,6 +50,9 @@ class TenturaApi {
           },
         ),
       ),
+      defaultFetchPolicies: {
+        OperationType.query: FetchPolicy.NoCache,
+      },
     );
   }
 

@@ -20,7 +20,7 @@ const pathAppLinkView = '/shared/view';
 @AutoRouterConfig()
 class RootRouter extends RootStackRouter {
   late final reevaluateListenable = _ReevaluateFromStreams([
-    authCubit.stream.map((e) => e.currentAccount),
+    authCubit.stream.map((e) => e.currentAccountId),
     settingsCubit.stream.map((e) => e.introEnabled),
   ]);
 

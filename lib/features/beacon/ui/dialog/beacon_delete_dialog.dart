@@ -12,6 +12,7 @@ class BeaconDeleteDialog extends StatelessWidget {
   }) =>
       showDialog(
         context: context,
+        useRootNavigator: false,
         builder: (context) => BeaconDeleteDialog(id: id),
       );
 
@@ -23,7 +24,7 @@ class BeaconDeleteDialog extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => AlertDialog.adaptive(
         title: const Text('Are you sure you want to delete this beacon?'),
         actions: [
           TextButton(
