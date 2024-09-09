@@ -21,17 +21,13 @@ class BeaconTileControl extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Comments count
-          TextButton.icon(
+          IconButton(
+            icon: const Icon(Icons.comment_outlined),
             onPressed: () => context.pushRoute(
               BeaconViewRoute(
                 id: beacon.id,
                 initiallyExpanded: true,
               ),
-            ),
-            icon: const Icon(Icons.comment_outlined),
-            label: Text(
-              beacon.comments_count.toString(),
-              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
 

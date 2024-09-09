@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -65,19 +64,8 @@ class _QRScanDialogState extends State<QRScanDialog>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final size = MediaQuery.of(context).size;
-    final scanAreaSize = switch (ScreenSize.get(size)) {
-      ScreenSmall _ => size.width * 0.7,
-      ScreenMedium _ => size.width * 0.7,
-      ScreenLarge _ => size.width * 0.6,
-      ScreenBig _ => size.width * 0.5,
-    };
-    _scanWindow = Rect.fromCenter(
-      center: size.center(Offset.zero),
-      width: scanAreaSize,
-      height: scanAreaSize,
-    );
-    if (!kIsWeb) _controller.updateScanWindow(_scanWindow);
+    _scanWindow = _getScanWindow(context);
+    unawaited(_controller.updateScanWindow(_scanWindow));
   }
 
   @override
@@ -115,11 +103,28 @@ class _QRScanDialogState extends State<QRScanDialog>
                 controller: _controller,
                 scanWindow: _scanWindow,
               ),
-              CustomPaint(painter: _ScannerOverlay(frame: _scanWindow)),
+              CustomPaint(
+                painter: _ScannerOverlay(frame: _scanWindow),
+              ),
             ],
           ),
         ),
       );
+
+  Rect _getScanWindow(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final scanAreaSize = switch (ScreenSize.get(size)) {
+      ScreenSmall _ => size.width * 0.75,
+      ScreenMedium _ => size.width * 0.7,
+      ScreenLarge _ => size.width * 0.6,
+      ScreenBig _ => size.width * 0.5,
+    };
+    return Rect.fromCenter(
+      center: size.center(Offset.zero),
+      width: scanAreaSize,
+      height: scanAreaSize,
+    );
+  }
 
   void _handleBarcode(BarcodeCapture captured) {
     if (_hasResult || captured.barcodes.isEmpty) return;
