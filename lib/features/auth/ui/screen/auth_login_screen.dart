@@ -1,3 +1,4 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
@@ -17,6 +18,7 @@ class AuthLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
+      bloc: GetIt.I<AuthCubit>(),
       listenWhen: (p, c) => c.hasError,
       listener: (context, state) {
         switch (state.error) {
@@ -47,7 +49,7 @@ class AuthLoginScreen extends StatelessWidget {
       },
       buildWhen: (p, c) => c.hasNoError,
       builder: (context, state) {
-        final authCubit = context.read<AuthCubit>();
+        final authCubit = GetIt.I<AuthCubit>();
         final accounts = state.accounts.map((e) => e.id).toList();
         return Scaffold(
           appBar: AppBar(

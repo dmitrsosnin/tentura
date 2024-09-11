@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart'
     if (dart.library.js_interop) '../service/geocoding_web_service.dart';
@@ -7,18 +8,16 @@ import 'package:tentura/domain/entity/geo.dart';
 
 export 'package:tentura/domain/entity/geo.dart';
 
+@singleton
 class GeoRepository {
-  GeoRepository({
-    bool fetchOnCreate = true,
-  }) {
-    if (fetchOnCreate) getMyCoords();
-  }
-
   final Map<Coordinates, Place?> cache = {};
 
   Coordinates? _myCoords;
 
   Coordinates? get myCoordinates => _myCoords;
+
+  @PostConstruct()
+  void init() => getMyCoords();
 
   Future<Place?> getPlaceNameByCoords(
     Coordinates coords, {

@@ -1,12 +1,12 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/linear_pi_active.dart';
-import 'package:tentura/data/service/remote_api_service.dart';
-import 'package:tentura/domain/entity/user.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
@@ -31,7 +31,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) => BlocProvider(
         create: (context) => BeaconViewCubit(
-          BeaconViewRepository(context.read<RemoteApiService>()),
+          GetIt.I<BeaconViewRepository>(),
           fetchCommentsOnStart: initiallyExpanded,
           id: id,
         ),
@@ -40,7 +40,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = context.read<AuthCubit>();
+    final authCubit = GetIt.I<AuthCubit>();
     final beaconViewCubit = context.read<BeaconViewCubit>();
     return Scaffold(
       appBar: AppBar(

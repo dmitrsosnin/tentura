@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-import 'app/di.dart';
+import 'app/di/di.dart';
 
 Future<void> main() async {
   await SentryFlutter.init(
@@ -14,10 +15,15 @@ Future<void> main() async {
         'AuthenticationNotFoundException',
       ]
       ..tracesSampleRate = 1.0,
-    appRunner: () {
+    appRunner: () async {
       FlutterNativeSplash.preserve(
         widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
       );
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+      await configureDependencies();
+      FlutterNativeSplash.remove();
       runApp(const DI());
     },
   );

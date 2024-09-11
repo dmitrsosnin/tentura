@@ -1,7 +1,7 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import 'package:tentura/app/root_router.dart';
-import 'package:tentura/data/service/remote_api_service.dart';
+import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
@@ -25,9 +25,7 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) => BlocProvider(
         create: (context) => ProfileViewCubit(
-          profileViewRepository: ProfileViewRepository(
-            remoteApiService: context.read<RemoteApiService>(),
-          ),
+          profileViewRepository: GetIt.I<ProfileViewRepository>(),
           id: id,
         ),
         child: this,

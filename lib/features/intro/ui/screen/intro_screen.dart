@@ -1,3 +1,4 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,13 +22,11 @@ class _IntroScreenState extends State<IntroScreen> {
     borderRadius: BorderRadius.circular(4),
   );
 
-  final _pageController = PageController(
-    keepPage: false,
-  );
+  final _settingsCubit = GetIt.I<SettingsCubit>();
+
+  final _pageController = PageController(keepPage: false);
 
   late final _theme = Theme.of(context);
-
-  late final _settingsCubit = context.read<SettingsCubit>();
 
   @override
   void dispose() {
@@ -106,7 +105,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 ),
               ),
 
-              // Continue Bauuton
+              // Continue Button
               Padding(
                 padding: paddingMediumV,
                 child: FilledButton(

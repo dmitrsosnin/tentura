@@ -1,13 +1,10 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import 'package:tentura/data/service/local_secure_storage.dart';
-import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
-import '../../data/repository/profile_local_repository.dart';
-import '../../data/repository/profile_remote_repository.dart';
 import '../../domain/use_case/profile_case.dart';
 import '../bloc/profile_cubit.dart';
 
@@ -19,17 +16,9 @@ class ProfileNavBarItem extends StatelessWidget {
         buildWhen: (p, c) => p.user.imageId != c.user.imageId,
         builder: (context, state) {
           final menuController = MenuController();
-          final authCubit = context.read<AuthCubit>();
+          final authCubit = GetIt.I<AuthCubit>();
           final ids = authCubit.state.accounts.map((e) => e.id);
-          // TBD: use GetIt
-          final profileCase = ProfileCase(
-            profileLocalRepository: ProfileLocalRepository(
-              context.read<LocalSecureStorage>(),
-            ),
-            profileRemoteRepository: ProfileRemoteRepository(
-              context.read<RemoteApiService>(),
-            ),
-          );
+          final profileCase = GetIt.I<ProfileCase>();
           return MenuAnchor(
             controller: menuController,
             menuChildren: [

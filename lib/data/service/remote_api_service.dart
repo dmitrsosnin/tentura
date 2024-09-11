@@ -1,14 +1,28 @@
+import 'package:injectable/injectable.dart';
+
+import 'package:tentura/consts.dart';
 import 'package:tentura_sdk/tentura_sdk.dart';
 
 export 'package:tentura_sdk/tentura_sdk.dart' show DataSource;
 
+@singleton
 class RemoteApiService extends TenturaApi {
+  @FactoryMethod(preResolve: true)
+  static Future<RemoteApiService> create() async {
+    final api = RemoteApiService();
+    await api.init();
+    return api;
+  }
+
   RemoteApiService({
-    required super.serverName,
-    super.jwtExpiresIn,
-    super.storagePath,
-    super.userAgent,
+    super.storagePath = '',
+    super.userAgent = appTitle,
+    super.serverName = appLinkBase,
+    super.jwtExpiresIn = jwtExpiresIn,
   });
+
+  @disposeMethod
+  Future<void> dispose() => close();
 }
 
 extension ErrorHandler<TData, TVars> on OperationResponse<TData, TVars> {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
@@ -17,17 +18,25 @@ const pathBeaconView = '/beacon/view';
 const pathProfileView = '/profile/view';
 const pathAppLinkView = '/shared/view';
 
+@singleton
 @AutoRouterConfig()
 class RootRouter extends RootStackRouter {
+  RootRouter({
+    required AuthCubit authCubit,
+    required SettingsCubit settingsCubit,
+  })  : _authCubit = authCubit,
+        _settingsCubit = settingsCubit;
+
   late final reevaluateListenable = _ReevaluateFromStreams([
-    authCubit.stream.map((e) => e.currentAccountId),
-    settingsCubit.stream.map((e) => e.introEnabled),
+    _authCubit.stream.map((e) => e.currentAccountId),
+    _settingsCubit.stream.map((e) => e.introEnabled),
   ]);
 
-  late AuthCubit authCubit;
-  late SettingsCubit settingsCubit;
+  final AuthCubit _authCubit;
+  final SettingsCubit _settingsCubit;
 
   @override
+  @disposeMethod
   void dispose() {
     reevaluateListenable.dispose();
     super.dispose();
@@ -43,10 +52,10 @@ class RootRouter extends RootStackRouter {
           guards: [
             AutoRouteGuard.redirect(
               (resolver) =>
-                  settingsCubit.state.introEnabled ? const IntroRoute() : null,
+                  _settingsCubit.state.introEnabled ? const IntroRoute() : null,
             ),
             AutoRouteGuard.redirect(
-              (resolver) => authCubit.state.isAuthenticated
+              (resolver) => _authCubit.state.isAuthenticated
                   ? null
                   : const AuthLoginRoute(),
             ),
@@ -83,7 +92,7 @@ class RootRouter extends RootStackRouter {
         AutoRoute(
           guards: [
             AutoRouteGuard.redirect(
-              (resolver) => settingsCubit.state.introEnabled
+              (resolver) => _settingsCubit.state.introEnabled
                   ? null
                   : const AuthLoginRoute(),
             ),
@@ -96,7 +105,7 @@ class RootRouter extends RootStackRouter {
           guards: [
             AutoRouteGuard.redirect(
               (resolver) =>
-                  authCubit.state.isAuthenticated ? const HomeRoute() : null,
+                  _authCubit.state.isAuthenticated ? const HomeRoute() : null,
             ),
           ],
           page: AuthLoginRoute.page,
@@ -108,7 +117,7 @@ class RootRouter extends RootStackRouter {
           path: pathProfileView,
           guards: [
             AutoRouteGuard.redirect(
-              (r) => authCubit.checkIfIsMe(r.route.queryParams.getString('id'))
+              (r) => _authCubit.checkIfIsMe(r.route.queryParams.getString('id'))
                   ? const ProfileMineRoute()
                   : null,
             ),

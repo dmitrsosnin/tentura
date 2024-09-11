@@ -1,6 +1,7 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import 'package:tentura/app/root_router.dart';
+import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/domain/entity/comment.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
@@ -21,7 +22,7 @@ class CommentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final isMine = context.read<AuthCubit>().checkIfIsMe(comment.author.id);
+    final isMine = GetIt.I<AuthCubit>().checkIfIsMe(comment.author.id);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

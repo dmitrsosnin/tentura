@@ -1,3 +1,5 @@
+import 'package:injectable/injectable.dart';
+
 import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/comment.dart';
@@ -8,6 +10,7 @@ import 'gql/_g/comment_fetch_by_id.req.gql.dart';
 import 'gql/_g/comment_vote_by_id.req.gql.dart';
 import 'gql/_g/comment_create.req.gql.dart';
 
+@singleton
 class BeaconViewRepository {
   static const _label = 'BeaconView';
 

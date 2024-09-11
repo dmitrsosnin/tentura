@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/data/service/local_secure_storage.dart';
 
 import '../model/profile_model.dart';
 
+@singleton
 class ProfileLocalRepository {
   static const _repositoryKey = 'Profile:';
   static const _progileKey = '${_repositoryKey}Id:';

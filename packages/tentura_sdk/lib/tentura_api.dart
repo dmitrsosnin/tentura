@@ -60,7 +60,7 @@ class TenturaApi {
     );
   }
 
-  Future<void> dispose() async {
+  Future<void> close() async {
     await _gqlClient.dispose();
   }
 

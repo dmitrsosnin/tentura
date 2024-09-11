@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
@@ -6,6 +7,7 @@ import 'package:tentura/domain/use_case/pick_image_case.dart';
 import '../../data/repository/profile_local_repository.dart';
 import '../../data/repository/profile_remote_repository.dart';
 
+@singleton
 class ProfileCase with PickImageCase {
   ProfileCase({
     required ProfileLocalRepository profileLocalRepository,

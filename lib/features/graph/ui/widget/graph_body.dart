@@ -3,7 +3,7 @@ import 'package:nil/nil.dart';
 import 'package:flutter/material.dart';
 import 'package:force_directed_graphview/force_directed_graphview.dart';
 
-import 'package:tentura/app/root_router.dart';
+import 'package:tentura/app/router/root_router.dart';
 
 import '../../domain/entity/edge_details.dart';
 import '../../domain/entity/node_details.dart';

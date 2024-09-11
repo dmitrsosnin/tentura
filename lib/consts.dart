@@ -6,6 +6,7 @@ const descriptionLength = 2048;
 
 const snackBarDuration = Duration(seconds: 5);
 
+const appTitle = 'Tentura';
 const zeroNodeId = 'U000000000000';
 const appLinkBase = String.fromEnvironment('APP_LINK_BASE');
 const osmLinkBase = String.fromEnvironment(

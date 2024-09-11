@@ -1,8 +1,8 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 import 'package:tentura/consts.dart';
@@ -35,8 +35,7 @@ class ChooseLocationDialog extends StatefulWidget {
 
 class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
   final _mapController = MapController();
-
-  late final _geoRepository = context.read<GeoRepository>();
+  final _geoRepository = GetIt.I<GeoRepository>();
 
   @override
   void dispose() {

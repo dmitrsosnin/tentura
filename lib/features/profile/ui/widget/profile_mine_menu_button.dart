@@ -1,6 +1,7 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import 'package:tentura/app/root_router.dart';
+import 'package:tentura/app/router/root_router.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
@@ -12,7 +13,7 @@ class ProfileMineMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = context.read<AuthCubit>();
+    final authCubit = GetIt.I<AuthCubit>();
     return PopupMenuButton(
       itemBuilder: (context) => <PopupMenuEntry<void>>[
         // Rating
@@ -47,7 +48,7 @@ class ProfileMineMenuButton extends StatelessWidget {
 
         // Intro
         PopupMenuItem<void>(
-          onTap: () => context.read<SettingsCubit>().setIntroEnabled(true),
+          onTap: () => GetIt.I<SettingsCubit>().setIntroEnabled(true),
           child: const Text('Show intro again'),
         ),
         const PopupMenuDivider(),

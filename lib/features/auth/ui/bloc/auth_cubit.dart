@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/exception.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
@@ -10,34 +11,40 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'auth_state.dart';
 
+@singleton
 class AuthCubit extends Cubit<AuthState> {
-  static Future<AuthCubit> hydrated(AuthCase authCase) async => AuthCubit(
-        authCase: authCase,
-        state: AuthState(
-          currentAccountId: await authCase.getCurrentAccountId(),
-          accounts: await authCase.getAccountAll(),
-        ),
-      );
+  @FactoryMethod(preResolve: true)
+  static Future<AuthCubit> hydrated(AuthCase authCase) async {
+    final state = AuthState(
+      accounts: await authCase.getAccountAll(),
+      currentAccountId: await authCase.getCurrentAccountId(),
+    );
+    if (state.isAuthenticated) {
+      try {
+        await authCase.signIn(
+          state.currentAccountId,
+          isPpremature: true,
+        );
+      } catch (e) {
+        return AuthCubit(
+          authCase: authCase,
+          state: state.copyWith(currentAccountId: ''),
+        );
+      }
+    }
+    return AuthCubit(authCase: authCase, state: state);
+  }
 
   AuthCubit({
     required AuthCase authCase,
     AuthState state = const AuthState(),
   })  : _authCase = authCase,
-        super(state) {
-    if (state.isAuthenticated) {
-      emit(state.setLoading());
-      try {
-        _authCase.signIn(
-          state.currentAccountId,
-          isPpremature: true,
-        );
-      } catch (e) {
-        emit(state.setError(e));
-      }
-    }
-  }
+        super(state);
 
   final AuthCase _authCase;
+
+  @disposeMethod
+  Future<void> dispose() => close();
 
   bool checkIfIsMe(String id) => id == state.currentAccountId;
 

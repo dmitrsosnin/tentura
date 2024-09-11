@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/app/root_router.gr.dart';
-
+import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/features/profile/ui/widget/profile_navbar_item.dart';
 
 @RoutePage()

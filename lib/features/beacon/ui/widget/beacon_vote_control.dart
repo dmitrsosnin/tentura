@@ -19,16 +19,13 @@ class BeaconVoteControl extends StatefulWidget {
 }
 
 class _BeaconVoteControlState extends State<BeaconVoteControl> {
-  late final _theme = Theme.of(context);
-  late final _beaconCubit = context.read<BeaconCubit>();
-
   late int _likeAmount = widget.votes;
 
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
-          color: _theme.colorScheme.secondaryContainer,
+          color: Theme.of(context).splashColor,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -45,7 +42,6 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
               maxLines: 1,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
-              style: _theme.textTheme.bodyLarge,
             ),
 
             // Dislike Button
@@ -62,10 +58,10 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
     _likeAmount += add;
     setState(() {});
     try {
-      _likeAmount = await _beaconCubit.vote(
-        beaconId: widget.id,
-        amount: _likeAmount,
-      );
+      _likeAmount = await context.read<BeaconCubit>().vote(
+            beaconId: widget.id,
+            amount: _likeAmount,
+          );
       setState(() {});
     } catch (e) {
       if (mounted) {

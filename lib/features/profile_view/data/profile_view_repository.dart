@@ -1,22 +1,22 @@
-import 'package:tentura/data/service/remote_api_service.dart';
+import 'package:injectable/injectable.dart';
 
+import 'package:tentura/data/service/remote_api_service.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/domain/entity/user.dart';
 
 import 'gql/_g/profile_fetch_by_user_id.req.gql.dart';
 import 'gql/_g/user_vote_by_id.req.gql.dart';
 
+@singleton
 class ProfileViewRepository {
   static const _label = 'ProfileView';
 
-  ProfileViewRepository({
-    required this.remoteApiService,
-  });
+  ProfileViewRepository(this._remoteApiService);
 
-  final RemoteApiService remoteApiService;
+  final RemoteApiService _remoteApiService;
 
   Future<({User user, List<Beacon> beacons})> fetchById(String userId) =>
-      remoteApiService
+      _remoteApiService
           .request(GProfileFetchByUserIdReq((b) => b.vars.user_id = userId))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
@@ -33,7 +33,7 @@ class ProfileViewRepository {
     required String userId,
     required int amount,
   }) =>
-      remoteApiService
+      _remoteApiService
           .request(GUserVoteByIdReq(
             (b) => b.vars
               ..object = userId

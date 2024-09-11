@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/data/service/local_secure_storage.dart';
 
 import '../../domain/entity/account.dart';
 import '../model/account_model.dart';
 
+@singleton
 class AuthRepository {
   static const _repositoryKey = 'Auth:';
   static const _accountKey = '${_repositoryKey}Id:';

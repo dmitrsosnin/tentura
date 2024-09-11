@@ -14,8 +14,4 @@ final themeLight = ThemeData.light().copyWith(
       backgroundColor: WidgetStatePropertyAll(_primaryColor),
     ),
   ),
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: _primaryColor,
-    foregroundColor: Colors.white,
-  ),
 );

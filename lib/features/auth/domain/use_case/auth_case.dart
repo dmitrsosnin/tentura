@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/exception.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
@@ -6,6 +7,7 @@ import 'package:tentura/data/service/remote_api_service.dart';
 import '../../data/repository/auth_repository.dart';
 import '../entity/account.dart';
 
+@singleton
 class AuthCase {
   AuthCase({
     required AuthRepository authRepository,

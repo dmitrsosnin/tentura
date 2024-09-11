@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-import 'package:tentura/app/root_router.dart';
+import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
 import '../../domain/entity/user_rating.dart';
