@@ -12,7 +12,6 @@ import 'package:tentura/ui/theme_dark.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
-import 'package:tentura/features/beacon/data/beacon_repository.dart';
 import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 import 'package:tentura/features/my_field/ui/bloc/my_field_cubit.dart';
@@ -67,7 +66,7 @@ class App extends StatelessWidget {
               BlocProvider(create: (_) => ContextCubit()),
               BlocProvider(create: (_) => MyFieldCubit()),
               BlocProvider(create: (_) => FavoritesCubit()),
-              BlocProvider(create: (_) => BeaconCubit(BeaconRepository())),
+              BlocProvider(create: (_) => BeaconCubit(userId: accountId)),
               BlocProvider(
                 create: (_) => ProfileCubit(id: accountId, fromCache: false),
               ),

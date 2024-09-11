@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
@@ -10,24 +10,18 @@ import 'gql/_g/beacon_update_by_id.req.gql.dart';
 import 'gql/_g/beacon_vote_by_id.req.gql.dart';
 import 'gql/_g/beacons_fetch_by_user_id.req.gql.dart';
 
+@singleton
 class BeaconRepository {
   static const _label = 'Beacon';
 
-  BeaconRepository({RemoteApiService? remoteApiService})
-      : _remoteApiService = remoteApiService ?? GetIt.I<RemoteApiService>();
+  BeaconRepository(this._remoteApiService);
 
   final RemoteApiService _remoteApiService;
 
-  late final _fetchRequest = GBeaconsFetchByUserIdReq(
-    (b) => b.vars.user_id = _remoteApiService.userId,
-  );
-
-  Stream<Iterable<Beacon>> get stream => _remoteApiService
-      .request(_fetchRequest)
-      .map((r) => r.dataOrThrow(label: _label).beacon.map((r) => r as Beacon));
-
-  Future<void> fetch() =>
-      _remoteApiService.addRequestToRequestController(_fetchRequest);
+  Future<Iterable<Beacon>> fetch(String userId) => _remoteApiService
+      .request(GBeaconsFetchByUserIdReq((b) => b.vars.user_id = userId))
+      .firstWhere((e) => e.dataSource == DataSource.Link)
+      .then((r) => r.dataOrThrow(label: _label).beacon.map((e) => e as Beacon));
 
   Future<Beacon> create(Beacon beacon) => _remoteApiService
       .request(

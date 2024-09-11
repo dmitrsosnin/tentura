@@ -1,3 +1,4 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tentura/domain/entity/geo.dart';
@@ -12,27 +13,24 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'beacon_state.dart';
 
 class BeaconCubit extends Cubit<BeaconState> with PickImageCase {
-  BeaconCubit(this._repository) : super(const BeaconState()) {
-    _fetchSubscription.resume();
-  }
+  BeaconCubit({
+    required this.userId,
+    BeaconRepository? beaconRepository,
+  })  : _repository = beaconRepository ?? GetIt.I<BeaconRepository>(),
+        super(const BeaconState());
+
+  final String userId;
 
   final BeaconRepository _repository;
 
-  late final _fetchSubscription = _repository.stream.listen(
-    (e) => emit(BeaconState(beacons: e.toList())),
-    onError: (Object e) => emit(state.setError(e.toString())),
-    cancelOnError: false,
-  );
-
-  @override
-  Future<void> close() async {
-    await _fetchSubscription.cancel();
-    return super.close();
-  }
-
   Future<void> fetch() async {
     emit(state.setLoading());
-    return _repository.fetch();
+    try {
+      final beacons = await _repository.fetch(userId);
+      emit(BeaconState(beacons: beacons.toList()));
+    } catch (e) {
+      emit(state.setError(e.toString()));
+    }
   }
 
   Future<void> create({
@@ -57,7 +55,6 @@ class BeaconCubit extends Cubit<BeaconState> with PickImageCase {
         image: image,
       );
     }
-    // TBD: update GQL cache
     emit(BeaconState(
       beacons: [
         beacon,
