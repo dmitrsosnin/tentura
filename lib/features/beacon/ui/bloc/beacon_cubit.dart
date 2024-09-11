@@ -17,7 +17,9 @@ class BeaconCubit extends Cubit<BeaconState> with PickImageCase {
     required this.userId,
     BeaconRepository? beaconRepository,
   })  : _repository = beaconRepository ?? GetIt.I<BeaconRepository>(),
-        super(const BeaconState());
+        super(const BeaconState()) {
+    fetch();
+  }
 
   final String userId;
 
