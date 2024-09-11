@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:get_it/get_it.dart';
 
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/data/service/remote_api_service.dart';
@@ -12,7 +13,8 @@ import 'gql/_g/beacons_fetch_by_user_id.req.gql.dart';
 class BeaconRepository {
   static const _label = 'Beacon';
 
-  BeaconRepository(this._remoteApiService);
+  BeaconRepository({RemoteApiService? remoteApiService})
+      : _remoteApiService = remoteApiService ?? GetIt.I<RemoteApiService>();
 
   final RemoteApiService _remoteApiService;
 

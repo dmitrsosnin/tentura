@@ -152,6 +152,24 @@ class RootRouter extends RootStackRouter {
           redirectTo: pathRoot,
         ),
       ];
+
+  FutureOr<DeepLink> deepLinkBuilder(PlatformDeepLink deepLink) {
+    // ignore: avoid_print
+    print('DeepLinkBuilder: ${deepLink.uri}');
+    return deepLink;
+  }
+
+  Future<Uri> deepLinkTransformer(Uri uri) =>
+      SynchronousFuture(uri.path == pathAppLinkView
+          ? uri.replace(
+              path: switch (uri.queryParameters['id']) {
+                final String id when id.startsWith('U') => pathProfileView,
+                final String id when id.startsWith('B') => pathBeaconView,
+                final String id when id.startsWith('C') => pathBeaconView,
+                _ => pathConnect,
+              },
+            )
+          : uri);
 }
 
 class _ReevaluateFromStreams extends ChangeNotifier {

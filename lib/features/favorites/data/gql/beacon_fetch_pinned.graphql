@@ -1,0 +1,9 @@
+# import '/domain/entity/beacon.graphql'
+
+query BeaconFetchPinned {
+  beacon_pinned {
+    beacon {
+      ...BeaconFields
+    }
+  }
+}

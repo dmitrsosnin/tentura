@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 import 'package:collection/collection.dart';
 
 import 'package:tentura/domain/entity/beacon.dart';
@@ -11,7 +12,9 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
-  FavoritesCubit(this._repository) : super(const FavoritesState()) {
+  FavoritesCubit({FavoritesRepository? repository})
+      : _repository = repository ?? GetIt.I<FavoritesRepository>(),
+        super(const FavoritesState()) {
     _fetchSubscription.resume();
   }
 

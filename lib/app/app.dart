@@ -1,16 +1,39 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/ui/theme_light.dart';
 import 'package:tentura/ui/theme_dark.dart';
 
+import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
+import 'package:tentura/features/beacon/data/beacon_repository.dart';
+import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
+import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
+import 'package:tentura/features/my_field/ui/bloc/my_field_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
+import 'package:tentura/features/favorites/ui/bloc/favorites_cubit.dart';
+
+import 'di/di.dart';
 
 class App extends StatelessWidget {
+  static Future<void> appRunner() async {
+    FlutterNativeSplash.preserve(
+      widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
+    );
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    await configureDependencies();
+    FlutterNativeSplash.remove();
+    runApp(const App());
+  }
+
   const App({super.key});
 
   @override
@@ -28,31 +51,29 @@ class App extends StatelessWidget {
         color: const Color(0xFF3A1E5C),
         debugShowCheckedModeBanner: false,
         routerConfig: router.config(
-          deepLinkBuilder: kDebugMode
-              ? (deepLink) {
-                  // ignore: avoid_print
-                  print('DeepLinkBuilder: ${deepLink.uri}');
-                  return deepLink;
-                }
-              : null,
-          deepLinkTransformer: (uri) =>
-              SynchronousFuture(uri.path == pathAppLinkView
-                  ? uri.replace(
-                      path: switch (uri.queryParameters['id']) {
-                        final String id when id.startsWith('U') =>
-                          pathProfileView,
-                        final String id when id.startsWith('B') =>
-                          pathBeaconView,
-                        final String id when id.startsWith('C') =>
-                          pathBeaconView,
-                        _ => pathConnect,
-                      },
-                    )
-                  : uri),
+          deepLinkBuilder: kDebugMode ? router.deepLinkBuilder : null,
+          deepLinkTransformer: router.deepLinkTransformer,
           navigatorObservers: () => [
             getIt<SentryNavigatorObserver>(),
           ],
           reevaluateListenable: router.reevaluateListenable,
+        ),
+        builder: (context, child) => BlocSelector<AuthCubit, AuthState, String>(
+          bloc: getIt<AuthCubit>(),
+          selector: (state) => state.currentAccountId,
+          builder: (context, accountId) => MultiBlocProvider(
+            key: ValueKey(accountId),
+            providers: [
+              BlocProvider(create: (_) => ContextCubit()),
+              BlocProvider(create: (_) => MyFieldCubit()),
+              BlocProvider(create: (_) => FavoritesCubit()),
+              BlocProvider(create: (_) => BeaconCubit(BeaconRepository())),
+              BlocProvider(
+                create: (_) => ProfileCubit(id: accountId, fromCache: false),
+              ),
+            ],
+            child: child ?? Container(),
+          ),
         ),
       ),
     );

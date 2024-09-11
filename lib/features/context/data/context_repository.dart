@@ -1,9 +1,12 @@
+import 'package:injectable/injectable.dart';
+
 import 'package:tentura/data/service/remote_api_service.dart';
 
 import 'gql/_g/context_add.req.gql.dart';
 import 'gql/_g/context_delete.req.gql.dart';
 import 'gql/_g/context_fetch.req.gql.dart';
 
+@singleton
 class ContextRepository {
   static const _label = 'Context';
 

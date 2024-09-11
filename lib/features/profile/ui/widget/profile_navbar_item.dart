@@ -5,7 +5,6 @@ import 'package:tentura/ui/widget/avatar_image.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
-import '../../domain/use_case/profile_case.dart';
 import '../bloc/profile_cubit.dart';
 
 class ProfileNavBarItem extends StatelessWidget {
@@ -18,13 +17,12 @@ class ProfileNavBarItem extends StatelessWidget {
           final menuController = MenuController();
           final authCubit = GetIt.I<AuthCubit>();
           final ids = authCubit.state.accounts.map((e) => e.id);
-          final profileCase = GetIt.I<ProfileCase>();
           return MenuAnchor(
             controller: menuController,
             menuChildren: [
               for (final id in ids)
                 BlocProvider(
-                  create: (context) => ProfileCubit(profileCase, id: id),
+                  create: (_) => ProfileCubit(id: id),
                   child: BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) {
                       final isMe = authCubit.checkIfIsMe(state.user.id);

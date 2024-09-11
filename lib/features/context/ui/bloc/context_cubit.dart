@@ -1,3 +1,5 @@
+import 'package:get_it/get_it.dart';
+
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/context_repository.dart';
@@ -7,7 +9,9 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'context_state.dart';
 
 class ContextCubit extends Cubit<ContextState> {
-  ContextCubit(this._repository) : super(const ContextState()) {
+  ContextCubit({ContextRepository? repository})
+      : _repository = repository ?? GetIt.I<ContextRepository>(),
+        super(const ContextState()) {
     _fetchSubscription.resume();
   }
 

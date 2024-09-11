@@ -10,7 +10,6 @@ import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/auth/ui/dialog/show_seed_dialog.dart';
 import 'package:tentura/features/auth/ui/dialog/account_remove_dialog.dart';
 
-import '../../domain/use_case/profile_case.dart';
 import '../bloc/profile_cubit.dart';
 
 class AccountListTile extends StatelessWidget {
@@ -23,10 +22,7 @@ class AccountListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => ProfileCubit(
-          GetIt.I<ProfileCase>(),
-          id: userId,
-        ),
+        create: (_) => ProfileCubit(id: userId),
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) => ListTile(
             leading: AvatarImage(

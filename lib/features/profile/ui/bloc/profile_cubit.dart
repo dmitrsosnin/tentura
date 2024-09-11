@@ -1,3 +1,5 @@
+import 'package:get_it/get_it.dart';
+
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
@@ -9,11 +11,12 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit(
-    this._profileCase, {
+  ProfileCubit({
     required String id,
     bool fromCache = true,
-  }) : super(ProfileState(user: User.empty.copyWith(id: id))) {
+    ProfileCase? profileCase,
+  })  : _profileCase = profileCase ?? GetIt.I<ProfileCase>(),
+        super(ProfileState(user: User.empty.copyWith(id: id))) {
     fetch(fromCache: fromCache);
   }
 
