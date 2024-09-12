@@ -10,6 +10,15 @@ targets:
         generate_for:
           - lib/app/router/root_router.dart
 
+      freezed:
+        options:
+          # This can significantly speed up code-generation.
+          format: true
+          copy_with: true
+          equal: true
+          when: false
+          map: false
+
       ferry_generator|graphql_builder:
         enabled: true
         options:

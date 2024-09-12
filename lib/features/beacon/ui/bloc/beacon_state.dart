@@ -1,43 +1,26 @@
-part of 'beacon_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-final class BeaconState extends StateBase {
-  const BeaconState({
-    this.beacons = const [],
-    super.status,
-    super.error,
-  });
+import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
-  final List<Beacon> beacons;
+part 'beacon_state.freezed.dart';
 
-  @override
-  List<Object?> get props => [
-        status,
-        error,
-        beacons,
-      ];
-
-  @override
-  BeaconState copyWith({
-    List<Beacon>? beacons,
-    FetchStatus? status,
+@freezed
+class BeaconState with _$BeaconState, StateMixin {
+  const factory BeaconState({
+    @Default([]) List<Beacon> beacons,
+    @Default(FetchStatus.isSuccess) FetchStatus status,
     Object? error,
-  }) =>
-      BeaconState(
-        beacons: beacons ?? this.beacons,
-        status: status ?? this.status,
-        error: error ?? this.error,
-      );
+  }) = _BeaconState;
 
-  @override
-  BeaconState setError(Object error) => BeaconState(
+  const BeaconState._();
+
+  BeaconState setError(Object error) => copyWith(
         status: FetchStatus.isFailure,
-        beacons: beacons,
         error: error,
       );
 
-  @override
-  BeaconState setLoading() => BeaconState(
+  BeaconState setLoading() => copyWith(
         status: FetchStatus.isLoading,
-        beacons: beacons,
       );
 }

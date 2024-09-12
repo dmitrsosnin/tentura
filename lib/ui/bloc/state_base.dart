@@ -10,7 +10,18 @@ extension FetchStatusX on FetchStatus {
   bool get isFailure => this == FetchStatus.isFailure;
 }
 
-abstract base class StateBase with EquatableMixin {
+mixin StateMixin {
+  FetchStatus get status;
+  Object? get error;
+
+  bool get isLoading => status.isLoading;
+  bool get isNotLoading => !status.isLoading;
+
+  bool get hasError => error != null || status.isFailure;
+  bool get hasNoError => error == null && status.isSuccess;
+}
+
+abstract class StateBase with EquatableMixin {
   const StateBase({
     this.status = FetchStatus.isSuccess,
     this.error,

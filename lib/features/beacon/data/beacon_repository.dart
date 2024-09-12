@@ -18,10 +18,16 @@ class BeaconRepository {
 
   final RemoteApiService _remoteApiService;
 
-  Future<Iterable<Beacon>> fetch(String userId) => _remoteApiService
+  Future<List<Beacon>> fetch(String userId) => _remoteApiService
       .request(GBeaconsFetchByUserIdReq((b) => b.vars.user_id = userId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then((r) => r.dataOrThrow(label: _label).beacon.map((e) => e as Beacon));
+      .then(
+        (r) => r
+            .dataOrThrow(label: _label)
+            .beacon
+            .map((e) => e as Beacon)
+            .toList(),
+      );
 
   Future<Beacon> create(Beacon beacon) => _remoteApiService
       .request(

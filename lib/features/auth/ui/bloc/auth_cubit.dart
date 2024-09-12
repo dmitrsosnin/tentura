@@ -6,10 +6,11 @@ import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../domain/entity/account.dart';
 import '../../domain/use_case/auth_case.dart';
+import 'auth_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'auth_state.dart';
+export 'auth_state.dart';
 
 @singleton
 class AuthCubit extends Cubit<AuthState> {
