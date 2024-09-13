@@ -22,9 +22,11 @@ class ShareHandlerService {
   void _handler(SharedMedia? e) {
     if (e == null) return;
     if (kDebugMode) {
-      print('Stream: ${e.content}');
-      // ignore: avoid_print
-      e.attachments?.forEach(print);
+      print('String: ${e.content}');
+      if (e.attachments == null) return;
+      for (final e in e.attachments!) {
+        print('Attached: ${e?.path}');
+      }
     }
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart';
@@ -8,20 +7,13 @@ import 'package:ed25519_edwards/ed25519_edwards.dart';
 import '../consts.dart';
 import '../exception.dart';
 import '../client/message.dart';
-
-typedef JWT = ({String id, String accessToken, DateTime expiresAt});
-
-final _jwtEmpty = (
-  id: '',
-  accessToken: '',
-  expiresAt: DateTime.fromMillisecondsSinceEpoch(0)
-);
+import '../jwt.dart';
 
 /// Set KeyPair before fetchJWT
-class TokenService {
+abstract class TokenServiceBase {
   static const _jwtHeader = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.';
 
-  TokenService({
+  TokenServiceBase({
     required this.serverName,
     this.jwtExpiresIn = const Duration(minutes: 1),
   });
@@ -29,26 +21,18 @@ class TokenService {
   final String serverName;
   final Duration jwtExpiresIn;
 
-  JWT _jwt = _jwtEmpty;
+  KeyPair? keyPair;
 
-  KeyPair? _keyPair;
+  JWT _jwt = jwtEmpty;
 
   bool _tokenLocked = false;
 
   bool get hasValidToken => DateTime.timestamp().isBefore(_jwt.expiresAt);
 
   /// Generate and set new KeyPair and returns its seed
-  Future<String> setNewKeyPair() async {
-    _keyPair = await Isolate.run(generateKey);
-    return Isolate.run(() => base64UrlEncode(seed(_keyPair!.privateKey)));
-  }
+  Future<String> setNewKeyPair();
 
-  Future<void> setKeyPairFromSeed(String seed) async {
-    _keyPair = await Isolate.run(() {
-      final privateKey = newKeyFromSeed(base64Decode(seed));
-      return KeyPair(privateKey, public(privateKey));
-    });
-  }
+  Future<void> setKeyPairFromSeed(String seed);
 
   Future<GetTokenResponse> getToken() async {
     if (hasValidToken) return GetTokenResponse(value: _jwt.accessToken);
@@ -76,7 +60,7 @@ class TokenService {
 
   /// Returns id of actual account
   Future<String> signIn() async {
-    _jwt = _jwtEmpty;
+    _jwt = jwtEmpty;
     _tokenLocked = true;
     try {
       _jwt = await _fetchJWT(pathLogin);
@@ -88,7 +72,7 @@ class TokenService {
 
   /// Returns id of actual account
   Future<String> signUp() async {
-    _jwt = _jwtEmpty;
+    _jwt = jwtEmpty;
     _tokenLocked = true;
     try {
       _jwt = await _fetchJWT(pathRegister);
@@ -100,8 +84,8 @@ class TokenService {
 
   // TBD: invalidate jwt on remote server also
   Future<void> signOut() async {
-    _keyPair = null;
-    _jwt = _jwtEmpty;
+    keyPair = null;
+    _jwt = jwtEmpty;
     _tokenLocked = false;
   }
 
@@ -137,14 +121,14 @@ class TokenService {
   String _createAuthRequestToken() {
     final now = DateTime.timestamp().millisecondsSinceEpoch ~/ 1000;
     final body = base64UrlEncode(utf8.encode(jsonEncode({
-      'pk': base64UrlEncode(_keyPair!.publicKey.bytes).replaceAll('=', ''),
+      'pk': base64UrlEncode(keyPair!.publicKey.bytes).replaceAll('=', ''),
       'iat': now,
       'exp': now + jwtExpiresIn.inSeconds,
       // TBD: uuid for jwt invalidation on logout
       'jti': '',
     }))).replaceAll('=', '');
     final signature = base64UrlEncode(sign(
-      _keyPair!.privateKey,
+      keyPair!.privateKey,
       Uint8List.fromList(utf8.encode(_jwtHeader + body)),
     )).replaceAll('=', '');
     return '$_jwtHeader$body.$signature';

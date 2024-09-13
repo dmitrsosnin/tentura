@@ -5,8 +5,8 @@ publish_to: 'none'
 version: 0.7.5
 
 environment:
-  sdk: '>=3.5.2 <4.0.0'
-  flutter: ^3.24.2
+  sdk: '>=3.5.3 <4.0.0'
+  flutter: ^3.24.3
 
 dependencies:
   flutter:
@@ -25,12 +25,10 @@ dependencies:
   freezed_annotation: ^2.4.4
 
   # Platform related
-  # drift: ^2.20.0
   geocoding: ^3.0.0
   share_plus: ^10.0.2
   geolocator: ^13.0.1
   image_picker: ^1.1.2
-  # drift_flutter: ^0.2.0
   mobile_scanner: ^5.2.3
   flutter_secure_storage: ^9.2.2
 
@@ -58,7 +56,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.5.7
-  # bloc_test: ^9.1.7
   build_runner: ^2.4.11
   ferry_generator: ^0.12.0
   json_serializable: ^6.8.0

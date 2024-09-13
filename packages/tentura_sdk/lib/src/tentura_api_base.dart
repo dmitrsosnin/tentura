@@ -1,22 +1,19 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:ferry/ferry.dart';
-import 'package:gql_http_link/gql_http_link.dart';
 
-import 'consts.dart';
-import 'client/auth_link.dart';
-import '../service/image_service.dart';
-import '../service/token_service_web.dart';
+import 'client/message.dart';
+import 'service/image_service.dart';
+import 'service/token_service_native.dart'
+    if (dart.library.js_interop) 'service/token_service_web.dart';
 
-class TenturaApi {
-  TenturaApi({
+abstract class TenturaApiBase {
+  TenturaApiBase({
     required this.serverName,
     this.jwtExpiresIn = const Duration(minutes: 1),
     this.userAgent = 'Tentura client',
     this.storagePath = '',
-  })  : _imageService = ImageService(
-          serverName: serverName,
-        ),
+  })  : _imageService = ImageService(serverName: serverName),
         _tokenService = TokenService(
           serverName: serverName,
           jwtExpiresIn: jwtExpiresIn,
@@ -27,38 +24,19 @@ class TenturaApi {
   final String storagePath;
   final Duration jwtExpiresIn;
 
-  late final Client _gqlClient;
-
   final TokenService _tokenService;
   final ImageService _imageService;
 
   String _userId = '';
 
+  // TBD: would remove
   String get userId => _userId;
 
-  Future<void> init() async {
-    _gqlClient = Client(
-      link: Link.concat(
-        AuthLink(() => _tokenService.getToken().then((v) => v.value)),
-        HttpLink(
-          Uri.https(
-            serverName,
-            pathGraphQLEndpoint,
-          ).toString(),
-          defaultHeaders: {
-            'accept': 'application/json',
-          },
-        ),
-      ),
-      defaultFetchPolicies: {
-        OperationType.query: FetchPolicy.NoCache,
-      },
-    );
-  }
+  Future<void> init();
 
-  Future<void> close() async {
-    await _gqlClient.dispose();
-  }
+  Future<void> close();
+
+  Future<GetTokenResponse> getToken() => _tokenService.getToken();
 
   Future<String> signIn({
     required String seed,
@@ -78,12 +56,11 @@ class TenturaApi {
   Future<void> signOut() async {
     _userId = '';
     await _tokenService.signOut();
-    _gqlClient.cache.clear();
   }
 
   Future<void> putAvatarImage(Uint8List image) async => _imageService.putAvatar(
         token: (await _tokenService.getToken()).valueOrException,
-        userId: userId,
+        userId: _userId,
         image: image,
       );
 
@@ -94,7 +71,7 @@ class TenturaApi {
       _imageService.putBeacon(
         token: (await _tokenService.getToken()).valueOrException,
         beaconId: beaconId,
-        userId: userId,
+        userId: _userId,
         image: image,
       );
 
@@ -103,11 +80,9 @@ class TenturaApi {
     Stream<OperationResponse<TData, TVars>> Function(
             OperationRequest<TData, TVars>)?
         forward,
-  ]) =>
-      _gqlClient.request(request);
+  ]);
 
   Future<void> addRequestToRequestController<TData, TVars>(
     OperationRequest<TData, TVars> request,
-  ) async =>
-      _gqlClient.requestController.add(request);
+  );
 }

@@ -26,8 +26,6 @@ class RemoteApiService extends TenturaApi {
 }
 
 extension ErrorHandler<TData, TVars> on OperationResponse<TData, TVars> {
-  bool get hasNoErrors => !hasErrors;
-
   OperationResponse<TData, TVars> throwIfError({
     bool failOnNull = true,
     String? label,
