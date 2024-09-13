@@ -9,10 +9,11 @@ import '../../data/graph_repository.dart';
 import '../../domain/entity/edge_details.dart';
 import '../../domain/entity/edge_directed.dart';
 import '../../domain/entity/node_details.dart';
+import 'graph_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'graph_state.dart';
+export 'graph_state.dart';
 
 class GraphCubit extends Cubit<GraphState> {
   GraphCubit(
@@ -62,7 +63,7 @@ class GraphCubit extends Cubit<GraphState> {
 
   Future<void> setContext(String? context) {
     emit(state.copyWith(
-      context: context,
+      context: context ?? '',
       focus: '',
     ));
     graphController.clear();

@@ -24,16 +24,16 @@ class ContextDropDown extends StatelessWidget {
           isExpanded: true,
           items: [
             const DropdownMenuItem(
-              value: ContextNew(),
+              value: Context.add(),
               child: Text('Add new context'),
             ),
             const DropdownMenuItem(
-              value: ContextAll(),
+              value: Context.all(),
               child: Text('All contexts'),
             ),
             for (final e in state.contexts)
               DropdownMenuItem(
-                value: ContextValue(e),
+                value: Context.value(e),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -56,17 +56,17 @@ class ContextDropDown extends StatelessWidget {
               ),
           ],
           onChanged: (value) => switch (value) {
-            const ContextNew() => ContextAddDialog.show(context)
+            const Context.add() => ContextAddDialog.show(context)
                 .then((v) => v == null ? null : onChanged(v)),
-            const ContextAll() =>
+            const Context.all() =>
               onChanged(context.read<ContextCubit>().select('')),
             final ContextValue c =>
               onChanged(context.read<ContextCubit>().select(c.name)),
             _ => null,
           },
           value: switch (state.selected) {
-            '' => const ContextAll(),
-            final c => ContextValue(c),
+            '' => const Context.all(),
+            final c => Context.value(c),
           },
         ),
         listenWhen: (p, c) => c.hasError,

@@ -100,7 +100,6 @@ class GraphBodyState extends State<GraphBody>
             switch (node) {
               final UserNode node => ProfileViewRoute(id: node.id),
               final BeaconNode node => BeaconViewRoute(id: node.id),
-              _ => throw Exception('Wrong node type!'),
             },
           ),
         ),

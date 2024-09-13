@@ -1,12 +1,10 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 part 'beacon_state.freezed.dart';
 
 @freezed
-class BeaconState with _$BeaconState, StateMixin {
+class BeaconState with _$BeaconState, StateFetchMixin {
   const factory BeaconState({
     @Default([]) List<Beacon> beacons,
     @Default(FetchStatus.isSuccess) FetchStatus status,
@@ -15,12 +13,10 @@ class BeaconState with _$BeaconState, StateMixin {
 
   const BeaconState._();
 
+  BeaconState setLoading() => copyWith(status: FetchStatus.isLoading);
+
   BeaconState setError(Object error) => copyWith(
         status: FetchStatus.isFailure,
         error: error,
-      );
-
-  BeaconState setLoading() => copyWith(
-        status: FetchStatus.isLoading,
       );
 }

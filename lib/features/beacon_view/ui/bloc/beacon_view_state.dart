@@ -1,60 +1,28 @@
-part of 'beacon_view_cubit.dart';
+import 'package:tentura/domain/entity/beacon.dart';
+import 'package:tentura/domain/entity/comment.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
-final class BeaconViewState extends StateBase {
-  const BeaconViewState({
-    required this.beacon,
-    this.focusCommentId = '',
-    this.comments = const [],
-    super.status,
-    super.error,
-  });
+part 'beacon_view_state.freezed.dart';
 
-  final Beacon beacon;
-  final String focusCommentId;
-  final List<Comment> comments;
+@freezed
+class BeaconViewState with _$BeaconViewState, StateFetchMixin {
+  const factory BeaconViewState({
+    required Beacon beacon,
+    @Default('') String focusCommentId,
+    @Default([]) List<Comment> comments,
+    @Default(FetchStatus.isSuccess) FetchStatus status,
+    Object? error,
+  }) = _BeaconViewState;
 
-  @override
-  List<Object?> get props => [
-        status,
-        error,
-        beacon,
-        comments,
-        focusCommentId,
-      ];
+  const BeaconViewState._();
 
   bool get hasFocusedComment => focusCommentId.isNotEmpty;
   bool get hasNoFocusedComment => focusCommentId.isEmpty;
 
-  @override
-  BeaconViewState copyWith({
-    FetchStatus? status,
-    Object? error,
-    Beacon? beacon,
-    String? focusCommentId,
-    List<Comment>? comments,
-  }) =>
-      BeaconViewState(
-        error: error ?? this.error,
-        status: status ?? this.status,
-        beacon: beacon ?? this.beacon,
-        comments: comments ?? this.comments,
-        focusCommentId: focusCommentId ?? this.focusCommentId,
-      );
+  BeaconViewState setLoading() => copyWith(status: FetchStatus.isLoading);
 
-  @override
-  BeaconViewState setError(Object error) => BeaconViewState(
+  BeaconViewState setError(Object error) => copyWith(
         status: FetchStatus.isFailure,
-        focusCommentId: focusCommentId,
-        comments: comments,
-        beacon: beacon,
         error: error,
-      );
-
-  @override
-  BeaconViewState setLoading() => BeaconViewState(
-        status: FetchStatus.isLoading,
-        focusCommentId: focusCommentId,
-        comments: comments,
-        beacon: beacon,
       );
 }

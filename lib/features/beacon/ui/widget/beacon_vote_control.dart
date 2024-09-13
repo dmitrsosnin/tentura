@@ -21,11 +21,13 @@ class BeaconVoteControl extends StatefulWidget {
 class _BeaconVoteControlState extends State<BeaconVoteControl> {
   late int _likeAmount = widget.votes;
 
+  late final _theme = Theme.of(context);
+
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
-          color: Theme.of(context).splashColor,
+          color: _theme.splashColor,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -42,6 +44,7 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
               maxLines: 1,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
+              style: _theme.textTheme.bodyLarge,
             ),
 
             // Dislike Button

@@ -55,17 +55,12 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarError(
   BuildContext context,
-  Object state,
+  StateFetchMixin state,
 ) =>
     showSnackBar(
       context,
       isError: true,
-      text: switch (state) {
-            final StateBase s => s.error?.toString(),
-            final StateMixin s => s.error?.toString(),
-            _ => null,
-          } ??
-          'Unknown error!',
+      text: state.error?.toString() ?? 'Unknown error!',
     );
 
 sealed class ScreenSize {

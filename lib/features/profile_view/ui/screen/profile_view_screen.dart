@@ -1,4 +1,3 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
@@ -10,8 +9,7 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 
-import '../../data/profile_view_repository.dart';
-import '../cubit/profile_view_cubit.dart';
+import '../bloc/profile_view_cubit.dart';
 
 @RoutePage()
 class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
@@ -24,10 +22,7 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) => BlocProvider(
-        create: (context) => ProfileViewCubit(
-          profileViewRepository: GetIt.I<ProfileViewRepository>(),
-          id: id,
-        ),
+        create: (_) => ProfileViewCubit(id: id),
         child: this,
       );
 

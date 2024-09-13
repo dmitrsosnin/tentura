@@ -1,4 +1,3 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 
@@ -6,7 +5,6 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 
-import '../../data/rating_repository.dart';
 import '../bloc/rating_cubit.dart';
 import '../widget/rating_list_tile.dart';
 
@@ -19,7 +17,7 @@ class RatingScreen extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) => BlocProvider(
-        create: (context) => RatingCubit(GetIt.I<RatingRepository>()),
+        create: (_) => RatingCubit(),
         child: this,
       );
 }

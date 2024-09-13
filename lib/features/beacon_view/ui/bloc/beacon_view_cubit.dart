@@ -1,12 +1,12 @@
 import 'package:tentura/domain/entity/beacon.dart';
-import 'package:tentura/domain/entity/comment.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/beacon_view_repository.dart';
+import 'beacon_view_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'beacon_view_state.dart';
+export 'beacon_view_state.dart';
 
 class BeaconViewCubit extends Cubit<BeaconViewState> {
   BeaconViewCubit(

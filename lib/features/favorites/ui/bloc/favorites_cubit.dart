@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
-import 'package:collection/collection.dart';
 
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/favorites_repository.dart';
+import 'favorites_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'favorites_state.dart';
+export 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
   FavoritesCubit({FavoritesRepository? repository})

@@ -1,16 +1,21 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/rating_repository.dart';
 import '../../domain/entity/user_rating.dart';
+import 'rating_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'rating_state.dart';
+export 'rating_state.dart';
 
 class RatingCubit extends Cubit<RatingState> {
-  RatingCubit(this._repository) : super(const RatingState()) {
+  RatingCubit({
+    RatingRepository? repository,
+  })  : _repository = repository ?? GetIt.I<RatingRepository>(),
+        super(const RatingState()) {
     fetch();
   }
 

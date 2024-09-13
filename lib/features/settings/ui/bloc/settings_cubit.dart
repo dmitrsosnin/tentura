@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
-
-import 'package:tentura/ui/bloc/state_base.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/settings_repository.dart';
+import 'settings_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'settings_state.dart';
+export 'settings_state.dart';
 
 @singleton
 class SettingsCubit extends Cubit<SettingsState> {

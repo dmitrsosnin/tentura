@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:tentura/domain/entity/exception.dart';
-import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../domain/entity/account.dart';
 import '../../domain/use_case/auth_case.dart';
