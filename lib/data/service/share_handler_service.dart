@@ -1,27 +1,30 @@
-// import 'package:share_handler/share_handler.dart';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
+import 'package:share_handler_multi/share_handler_multi.dart';
 
+@singleton
 class ShareHandlerService {
-  // final _subscription = ShareHandlerPlatform.instance.sharedMediaStream.listen(
-  //   (e) {
-  //     if (kDebugMode) {
-  //       print('Stream: ${e.content}');
-  //       // ignore: avoid_print
-  //       e.attachments?.forEach(print);
-  //     }
-  //   },
-  // );
+  ShareHandlerService() {
+    if (kIsWeb) {
+      _subscription = null;
+    } else {
+      _subscription = ShareHandler.instance.sharedMediaStream.listen(_handler);
+      ShareHandler.instance.getInitialSharedMedia().then(_handler);
+    }
+  }
 
-  // Future<void> init() async {
-  // await ShareHandlerPlatform.instance.getInitialSharedMedia().then(
-  //   (e) {
-  //     if (e != null) {
-  //       if (kDebugMode) {
-  //         print('Initial Future: ${e.content}');
-  //         // ignore: avoid_print
-  //         e.attachments?.forEach(print);
-  //       }
-  //     }
-  //   },
-  // );
-  // }
+  late final StreamSubscription<SharedMedia>? _subscription;
+
+  @disposeMethod
+  Future<void> dispose() async => _subscription?.cancel();
+
+  void _handler(SharedMedia? e) {
+    if (e == null) return;
+    if (kDebugMode) {
+      print('Stream: ${e.content}');
+      // ignore: avoid_print
+      e.attachments?.forEach(print);
+    }
+  }
 }

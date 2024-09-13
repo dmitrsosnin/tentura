@@ -31,7 +31,6 @@ dependencies:
   geolocator: ^13.0.1
   image_picker: ^1.1.2
   # drift_flutter: ^0.2.0
-  # share_handler: ^0.0.21
   mobile_scanner: ^5.2.3
   flutter_secure_storage: ^9.2.2
 
@@ -50,6 +49,8 @@ dependencies:
   # Local
   tentura_sdk:
     path: packages/tentura_sdk
+  share_handler_multi:
+    path: packages/share_handler_multi
 
 dependency_overrides:
 
