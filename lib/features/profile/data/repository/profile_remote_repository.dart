@@ -23,18 +23,17 @@ class ProfileRemoteRepository {
 
   Future<User> update(User profile) => _remoteApiService
       .request(GUserUpdateReq((b) => b.vars
-        ..id = _remoteApiService.userId
+        ..id = profile.id
         ..title = profile.title
         ..description = profile.description
         ..has_picture = profile.has_picture))
       .firstWhere((e) => e.dataSource == DataSource.Link)
       .then((r) => r.dataOrThrow(label: _label).update_user_by_pk! as User);
 
-  Future<String> delete() => _remoteApiService
-      .request(GUserDeleteByIdReq((b) => b.vars.id = _remoteApiService.userId))
+  Future<String> delete(String id) => _remoteApiService
+      .request(GUserDeleteByIdReq((b) => b.vars.id = id))
       .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then((r) => r.dataOrThrow(label: _label))
-      .then((r) => r.delete_user_by_pk!.id);
+      .then((r) => r.dataOrThrow(label: _label).delete_user_by_pk!.id);
 
   Future<void> putAvatarImage(Uint8List image) =>
       _remoteApiService.putAvatarImage(image);

@@ -15,16 +15,17 @@ class FavoritesRepository {
 
   final RemoteApiService _remoteApiService;
 
-  late final _fetchRequest = GBeaconFetchPinnedReq();
+  final _fetchRequest = GBeaconFetchPinnedReq();
 
-  Stream<Iterable<Beacon>> get stream =>
-      _remoteApiService.request(_fetchRequest).map((r) => r
-          .dataOrThrow(label: _label)
-          .beacon_pinned
-          .map((r) => r.beacon as Beacon));
-
-  Future<void> fetch() =>
-      _remoteApiService.addRequestToRequestController(_fetchRequest);
+  Future<Iterable<Beacon>> fetch() => _remoteApiService
+      .request(_fetchRequest)
+      .firstWhere((e) => e.dataSource == DataSource.Link)
+      .then(
+        (r) => r
+            .dataOrThrow(label: _label)
+            .beacon_pinned
+            .map((r) => r.beacon as Beacon),
+      );
 
   Future<Beacon> pin(String beaconId) => _remoteApiService
       .request(GBeaconPinByIdReq((b) => b.vars.beacon_id = beaconId))
@@ -34,15 +35,21 @@ class FavoritesRepository {
             as Beacon,
       );
 
-  Future<Beacon> unpin(String beaconId) => _remoteApiService
-      .request(GBeaconUnpinByIdReq(
-        (b) => b.vars
-          ..user_id = _remoteApiService.userId
-          ..beacon_id = beaconId,
-      ))
-      .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then(
-        (r) => r.dataOrThrow(label: _label).delete_beacon_pinned_by_pk!.beacon
-            as Beacon,
-      );
+  Future<Beacon> unpin({
+    required String userId,
+    required String beaconId,
+  }) =>
+      _remoteApiService
+          .request(GBeaconUnpinByIdReq(
+            (b) => b.vars
+              ..user_id = userId
+              ..beacon_id = beaconId,
+          ))
+          .firstWhere((e) => e.dataSource == DataSource.Link)
+          .then(
+            (r) => r
+                .dataOrThrow(label: _label)
+                .delete_beacon_pinned_by_pk!
+                .beacon as Beacon,
+          );
 }

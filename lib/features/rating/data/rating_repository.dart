@@ -19,14 +19,10 @@ class RatingRepository {
           .request(GRatingFetchReq((r) => r.vars.context = context))
           .firstWhere((e) => e.dataSource == DataSource.Link)
           .then(
-            (r) => r
-                .dataOrThrow(label: _label)
-                .rating
-                .where((e) => e.user?.id != _remoteApiService.userId)
-                .map((e) => UserRating(
-                      egoScore: double.parse(e.src_score!.value),
-                      userScore: double.parse(e.dst_score!.value),
-                      user: e.user! as User,
-                    )),
+            (r) => r.dataOrThrow(label: _label).rating.map((e) => UserRating(
+                  egoScore: double.parse(e.src_score!.value),
+                  userScore: double.parse(e.dst_score!.value),
+                  user: e.user! as User,
+                )),
           );
 }

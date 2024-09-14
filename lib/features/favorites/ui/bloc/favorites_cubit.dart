@@ -12,44 +12,35 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 export 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
-  FavoritesCubit({FavoritesRepository? repository})
-      : _repository = repository ?? GetIt.I<FavoritesRepository>(),
-        super(const FavoritesState()) {
-    _fetchSubscription.resume();
-  }
+  FavoritesCubit({
+    required this.userId,
+    FavoritesRepository? repository,
+  })  : _repository = repository ?? GetIt.I<FavoritesRepository>(),
+        super(const FavoritesState());
+
+  final String userId;
 
   final FavoritesRepository _repository;
 
-  late final _fetchSubscription = _repository.stream.listen(
-    (e) => emit(FavoritesState(beacons: e.toList())),
-    onError: (Object e) => emit(state.setError(e.toString())),
-    cancelOnError: false,
-  );
-
-  @override
-  Future<void> close() async {
-    await _fetchSubscription.cancel();
-    return super.close();
-  }
-
   Future<void> fetch() async {
     emit(state.setLoading());
-    return _repository.fetch();
+    try {
+      emit(FavoritesState(beacons: (await _repository.fetch()).toList()));
+    } catch (e) {
+      emit(state.setError(e.toString()));
+    }
   }
 
   Future<Beacon> pin(String beaconId) async {
     final beacon = await _repository.pin(beaconId);
     emit(FavoritesState(
-      beacons: [
-        ...state.beacons,
-        beacon,
-      ],
+      beacons: [...state.beacons, beacon],
     ));
     return beacon;
   }
 
   Future<Beacon> unpin(String beaconId) async {
-    final beacon = _repository.unpin(beaconId);
+    final beacon = _repository.unpin(beaconId: beaconId, userId: userId);
     final beacons = [...state.beacons]..removeWhere((e) => e.id == beaconId);
     emit(FavoritesState(beacons: beacons));
     return beacon;

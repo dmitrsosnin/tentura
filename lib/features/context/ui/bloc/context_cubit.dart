@@ -10,30 +10,21 @@ export 'context_state.dart';
 
 class ContextCubit extends Cubit<ContextState> {
   ContextCubit({
+    required this.userId,
     ContextRepository? repository,
   })  : _repository = repository ?? GetIt.I<ContextRepository>(),
-        super(const ContextState()) {
-    _fetchSubscription.resume();
-  }
+        super(const ContextState());
+
+  final String userId;
 
   final ContextRepository _repository;
-
-  late final _fetchSubscription = _repository.stream.listen(
-    (e) => emit(state.copyWith(contexts: e.toSet())),
-    onError: (Object e) => emit(state.setError(e.toString())),
-    cancelOnError: false,
-  );
-
-  @override
-  Future<void> close() async {
-    await _fetchSubscription.cancel();
-    return super.close();
-  }
 
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
-      await _repository.fetch();
+      emit(state.copyWith(
+        contexts: (await _repository.fetch()).toSet(),
+      ));
     } catch (e) {
       emit(state.setError(e));
     }
@@ -74,7 +65,10 @@ class ContextCubit extends Cubit<ContextState> {
   Future<bool> delete(String contextName) async {
     final isCurrent = state.selected == contextName;
     try {
-      await _repository.delete(contextName);
+      await _repository.delete(
+        userId: userId,
+        contextName: contextName,
+      );
       state.contexts.remove(contextName);
       emit(ContextState(
         contexts: {...state.contexts},

@@ -29,9 +29,6 @@ abstract class TenturaApiBase {
 
   String _userId = '';
 
-  // TBD: would remove
-  String get userId => _userId;
-
   Future<void> init();
 
   Future<void> close();

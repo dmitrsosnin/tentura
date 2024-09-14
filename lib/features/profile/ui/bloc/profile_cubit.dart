@@ -52,8 +52,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> delete() async {
     emit(state.setLoading());
     try {
-      await _profileCase.delete();
-      emit(ProfileState(user: state.user));
+      await _profileCase.delete(state.user.id);
+      emit(ProfileState(user: User.empty));
     } catch (e) {
       emit(state.setError(e));
     }

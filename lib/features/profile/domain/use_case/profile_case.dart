@@ -35,8 +35,8 @@ class ProfileCase with PickImageCase {
     return profile;
   }
 
-  Future<String> delete() async {
-    final id = await _profileRemoteRepository.delete();
+  Future<String> delete(String id) async {
+    await _profileRemoteRepository.delete(id);
     await _profileLocalRepository.deleteProfileById(id);
     return id;
   }

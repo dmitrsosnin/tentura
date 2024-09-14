@@ -63,10 +63,10 @@ class App extends StatelessWidget {
           builder: (context, accountId) => MultiBlocProvider(
             key: ValueKey(accountId),
             providers: [
-              BlocProvider(create: (_) => ContextCubit()),
               BlocProvider(create: (_) => MyFieldCubit()),
-              BlocProvider(create: (_) => FavoritesCubit()),
               BlocProvider(create: (_) => BeaconCubit(userId: accountId)),
+              BlocProvider(create: (_) => ContextCubit(userId: accountId)),
+              BlocProvider(create: (_) => FavoritesCubit(userId: accountId)),
               BlocProvider(
                 create: (_) => ProfileCubit(id: accountId, fromCache: false),
               ),
