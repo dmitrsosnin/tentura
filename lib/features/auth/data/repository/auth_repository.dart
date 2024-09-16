@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:tentura/data/service/local_secure_storage.dart';
@@ -17,11 +19,29 @@ class AuthRepository {
 
   final LocalSecureStorage _localStorage;
 
-  Future<String> getCurrentAccountId() =>
-      _localStorage.read(_currentAccountKey).then((v) => v ?? '');
+  final _controller = StreamController<String>();
 
-  Future<String> setCurrentAccountId(String? id) =>
-      _localStorage.write(_currentAccountKey, id).then((_) => id ?? '');
+  String? _currentAccountId;
+
+  @disposeMethod
+  Future<void> dispose() => _controller.close();
+
+  Stream<String> currentAccountChanges() async* {
+    yield await getCurrentAccountId();
+    yield* _controller.stream;
+  }
+
+  Future<String> getCurrentAccountId() => _currentAccountId == null
+      ? _localStorage
+          .read(_currentAccountKey)
+          .then((v) => (_currentAccountId = v) ?? '')
+      : SynchronousFuture(_currentAccountId ?? '');
+
+  Future<String?> setCurrentAccountId(String? id) async {
+    await _localStorage.write(_currentAccountKey, _currentAccountId = id);
+    _controller.add(_currentAccountId ?? '');
+    return _currentAccountId;
+  }
 
   Future<Account?> getAccountById(String id) => _localStorage
       .read('$_accountKey$id')

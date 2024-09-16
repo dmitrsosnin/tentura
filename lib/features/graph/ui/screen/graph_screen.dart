@@ -25,7 +25,7 @@ class GraphScreen extends StatelessWidget implements AutoRouteWrapper {
   Widget wrappedRoute(BuildContext context) => BlocProvider(
         create: (context) => GraphCubit(
           GetIt.I<GraphRepository>(),
-          me: context.read<ProfileCubit>().state.user,
+          me: GetIt.I<ProfileCubit>().state.user,
           focus: focus,
         ),
         child: this,

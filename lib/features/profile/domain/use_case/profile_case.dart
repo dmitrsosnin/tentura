@@ -4,19 +4,27 @@ import 'package:injectable/injectable.dart';
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
 
+import 'package:tentura/features/auth/data/repository/auth_repository.dart';
+
 import '../../data/repository/profile_local_repository.dart';
 import '../../data/repository/profile_remote_repository.dart';
 
 @singleton
 class ProfileCase with PickImageCase {
   ProfileCase({
+    required AuthRepository authRepository,
     required ProfileLocalRepository profileLocalRepository,
     required ProfileRemoteRepository profileRemoteRepository,
-  })  : _profileLocalRepository = profileLocalRepository,
+  })  : _authRepository = authRepository,
+        _profileLocalRepository = profileLocalRepository,
         _profileRemoteRepository = profileRemoteRepository;
 
+  final AuthRepository _authRepository;
   final ProfileLocalRepository _profileLocalRepository;
   final ProfileRemoteRepository _profileRemoteRepository;
+
+  Stream<String> get currentAccountChanges =>
+      _authRepository.currentAccountChanges();
 
   Future<User> fetch(
     String id, {

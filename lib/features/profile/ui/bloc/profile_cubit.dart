@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'package:get_it/get_it.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../domain/use_case/profile_case.dart';
 import 'profile_state.dart';
@@ -11,6 +13,7 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'profile_state.dart';
 
+@singleton
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({
     required String id,
@@ -21,7 +24,33 @@ class ProfileCubit extends Cubit<ProfileState> {
     fetch(fromCache: fromCache);
   }
 
+  @factoryMethod
+  ProfileCubit.current({
+    required ProfileCase profileCase,
+  })  : _profileCase = profileCase,
+        super(ProfileState(
+          user: User.empty,
+          status: FetchStatus.isLoading,
+        )) {
+    _authChanges = _profileCase.currentAccountChanges.listen(
+      (id) async {
+        emit(ProfileState(user: User.empty.copyWith(id: id)));
+        await fetch();
+      },
+      cancelOnError: false,
+    );
+  }
+
   final ProfileCase _profileCase;
+
+  StreamSubscription<String>? _authChanges;
+
+  @override
+  @disposeMethod
+  Future<void> close() async {
+    await _authChanges?.cancel();
+    return super.close();
+  }
 
   Future<void> fetch({bool fromCache = false}) async {
     emit(state.setLoading());
@@ -41,9 +70,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (profile == state.user) return;
     emit(state.setLoading());
     try {
-      emit(ProfileState(
-        user: await _profileCase.update(profile),
-      ));
+      emit(ProfileState(user: await _profileCase.update(profile)));
     } catch (e) {
       emit(state.setError(e));
     }

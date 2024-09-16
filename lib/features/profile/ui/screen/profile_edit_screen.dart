@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,7 +23,8 @@ class ProfileEditScreen extends StatefulWidget {
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  late final _profileCubit = context.read<ProfileCubit>();
+  final _profileCubit = GetIt.I<ProfileCubit>();
+
   late final _profile = _profileCubit.state.user;
 
   late final _nameController = TextEditingController(
