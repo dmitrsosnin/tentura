@@ -2,12 +2,12 @@ import 'package:tentura/ui/bloc/state_base.dart';
 
 part 'context_state.freezed.dart';
 
-// TBD: use Entity
 @freezed
 class ContextState with _$ContextState, StateFetchMixin {
   const factory ContextState({
-    @Default({}) Set<String> contexts,
+    required String userId,
     @Default('') String selected,
+    @Default({}) Set<String> contexts,
     @Default(FetchStatus.isSuccess) FetchStatus status,
     Object? error,
   }) = _ContextState;

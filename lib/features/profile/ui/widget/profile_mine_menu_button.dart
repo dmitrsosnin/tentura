@@ -1,4 +1,3 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
@@ -12,53 +11,50 @@ class ProfileMineMenuButton extends StatelessWidget {
   const ProfileMineMenuButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final authCubit = GetIt.I<AuthCubit>();
-    return PopupMenuButton(
-      itemBuilder: (context) => <PopupMenuEntry<void>>[
-        // Rating
-        PopupMenuItem<void>(
-          onTap: () => context.pushRoute(const RatingRoute()),
-          child: const Text('View rating'),
-        ),
-        const PopupMenuDivider(),
-
-        // Seed
-        PopupMenuItem<void>(
-          child: const Text('Show seed'),
-          onTap: () => ShowSeedDialog.show(
-            context,
-            userId: authCubit.state.currentAccountId,
+  Widget build(BuildContext context) => PopupMenuButton(
+        itemBuilder: (context) => <PopupMenuEntry<void>>[
+          // Rating
+          PopupMenuItem<void>(
+            onTap: () => context.pushRoute(const RatingRoute()),
+            child: const Text('View rating'),
           ),
-        ),
-        const PopupMenuDivider(),
+          const PopupMenuDivider(),
 
-        // Edit
-        PopupMenuItem<void>(
-          onTap: () => context.pushRoute(const ProfileEditRoute()),
-          child: const Text('Edit profile'),
-        ),
-        const PopupMenuDivider(),
+          // Seed
+          PopupMenuItem<void>(
+            child: const Text('Show seed'),
+            onTap: () => ShowSeedDialog.show(
+              context,
+              userId: GetIt.I<AuthCubit>().state.currentAccountId,
+            ),
+          ),
+          const PopupMenuDivider(),
 
-        // Theme
-        const PopupMenuItem<void>(
-          child: ThemeSwitchButton(),
-        ),
-        const PopupMenuDivider(),
+          // Edit
+          PopupMenuItem<void>(
+            onTap: () => context.pushRoute(const ProfileEditRoute()),
+            child: const Text('Edit profile'),
+          ),
+          const PopupMenuDivider(),
 
-        // Intro
-        PopupMenuItem<void>(
-          onTap: () => GetIt.I<SettingsCubit>().setIntroEnabled(true),
-          child: const Text('Show intro again'),
-        ),
-        const PopupMenuDivider(),
+          // Theme
+          const PopupMenuItem<void>(
+            child: ThemeSwitchButton(),
+          ),
+          const PopupMenuDivider(),
 
-        //Logout
-        PopupMenuItem<void>(
-          onTap: authCubit.signOut,
-          child: const Text('Logout'),
-        ),
-      ],
-    );
-  }
+          // Intro
+          PopupMenuItem<void>(
+            onTap: () => GetIt.I<SettingsCubit>().setIntroEnabled(true),
+            child: const Text('Show intro again'),
+          ),
+          const PopupMenuDivider(),
+
+          //Logout
+          PopupMenuItem<void>(
+            onTap: GetIt.I<AuthCubit>().signOut,
+            child: const Text('Logout'),
+          ),
+        ],
+      );
 }

@@ -34,10 +34,10 @@ class _ContextAddDialogState extends State<ContextAddDialog> {
           TextButton(
             onPressed: () async {
               final newContext = _controller.text.trim();
-              await context.read<ContextCubit>().add(
-                    name: newContext,
-                    select: true,
-                  );
+              await GetIt.I<ContextCubit>().add(
+                contextName: newContext,
+                select: true,
+              );
               if (context.mounted) Navigator.of(context).pop(newContext);
             },
             child: const Text('Ok'),

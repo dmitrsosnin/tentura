@@ -9,6 +9,7 @@ import '../../domain/use_case/auth_case.dart';
 import 'auth_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
+export 'package:get_it/get_it.dart';
 
 export 'auth_state.dart';
 

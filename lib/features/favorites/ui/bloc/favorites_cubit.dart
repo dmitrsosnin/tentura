@@ -16,7 +16,9 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     required this.userId,
     FavoritesRepository? repository,
   })  : _repository = repository ?? GetIt.I<FavoritesRepository>(),
-        super(const FavoritesState());
+        super(const FavoritesState()) {
+    fetch();
+  }
 
   final String userId;
 

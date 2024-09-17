@@ -20,6 +20,7 @@ class ContextDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocConsumer<ContextCubit, ContextState>(
+        bloc: GetIt.I<ContextCubit>(),
         builder: (context, state) => DropdownButton<Context>(
           isExpanded: true,
           items: [
@@ -59,9 +60,9 @@ class ContextDropDown extends StatelessWidget {
             const Context.add() => ContextAddDialog.show(context)
                 .then((v) => v == null ? null : onChanged(v)),
             const Context.all() =>
-              onChanged(context.read<ContextCubit>().select('')),
+              onChanged(GetIt.I<ContextCubit>().select('')),
             final ContextValue c =>
-              onChanged(context.read<ContextCubit>().select(c.name)),
+              onChanged(GetIt.I<ContextCubit>().select(c.name)),
             _ => null,
           },
           value: switch (state.selected) {

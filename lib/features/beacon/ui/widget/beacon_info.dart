@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/domain/entity/beacon.dart';
@@ -78,11 +78,11 @@ class BeaconInfo extends StatelessWidget {
                 style: textTheme.bodyLarge,
               ),
               onPressed: () async {
-                final hasAdded = await context.read<ContextCubit>().add(
-                      name: beacon.context!,
-                      select: false,
-                    );
-                if (context.mounted && hasAdded) {
+                await GetIt.I<ContextCubit>().add(
+                  contextName: beacon.context!,
+                  select: false,
+                );
+                if (context.mounted) {
                   showSnackBar(
                     context,
                     text: 'Context ${beacon.context} has been added.',
