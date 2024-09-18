@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/domain/entity/_g/comment.data.gql.dart';
+import 'package:tentura/ui/widget/tentura_icons.dart';
 
 import '../bloc/beacon_view_cubit.dart';
 
@@ -33,12 +34,12 @@ class _CommentVoteControlState extends State<CommentVoteControl> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.thumb_up_outlined),
+              icon: const Icon(TenturaIcons.arrowUp),
               onPressed: () => _updateVote(1),
             ),
             Text(_likeAmount.toString()),
             IconButton(
-              icon: const Icon(Icons.thumb_down_outlined),
+              icon: const Icon(TenturaIcons.arrowDown),
               onPressed: () => _updateVote(-1),
             ),
           ],

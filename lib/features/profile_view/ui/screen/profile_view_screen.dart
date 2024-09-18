@@ -41,101 +41,106 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
           final user = state.user;
           final beacons = state.beacons;
           final textTheme = Theme.of(context).textTheme;
-          return CustomScrollView(
-            slivers: [
-              // Header
-              SliverAppBar(
-                actions: [
-                  // Graph View
-                  IconButton(
-                    icon: const Icon(Icons.hub_outlined),
-                    onPressed: () => context.pushRoute(
-                      GraphRoute(focus: user.id),
+          return DecoratedBox(
+            decoration:
+                BoxDecoration(color: Theme.of(context).colorScheme.surface),
+            child: CustomScrollView(
+              slivers: [
+                // Header
+                SliverAppBar(
+                  actions: [
+                    // Graph View
+                    IconButton(
+                      icon: const Icon(Icons.hub_outlined),
+                      onPressed: () => context.pushRoute(
+                        GraphRoute(focus: user.id),
+                      ),
+                    ),
+
+                    // Share
+                    ShareCodeIconButton.id(user.id),
+
+                    // More
+                    PopupMenuButton(
+                      itemBuilder: (context) => <PopupMenuEntry<void>>[
+                        PopupMenuItem<void>(
+                          onTap: () =>
+                              context.read<ProfileViewCubit>().voteById(
+                                    userId: user.id,
+                                    amount: user.isFriend ? 0 : 1,
+                                  ),
+                          child: user.isFriend
+                              ? const Text('Remove from my field')
+                              : const Text('Add to my field'),
+                        )
+                      ],
+                    ),
+                  ],
+                  floating: true,
+                  expandedHeight: GradientStack.defaultHeight,
+                  leading: const AutoLeadingButton(),
+
+                  // Avatar
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: GradientStack(
+                      children: [
+                        AvatarPositioned(
+                          child: AvatarImage(
+                            userId: user.imageId,
+                            size: AvatarPositioned.childSize,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                ),
 
-                  // Share
-                  ShareCodeIconButton.id(user.id),
-
-                  // More
-                  PopupMenuButton(
-                    itemBuilder: (context) => <PopupMenuEntry<void>>[
-                      PopupMenuItem<void>(
-                        onTap: () => context.read<ProfileViewCubit>().voteById(
-                              userId: user.id,
-                              amount: user.isFriend ? 0 : 1,
-                            ),
-                        child: user.isFriend
-                            ? const Text('Remove from my field')
-                            : const Text('Add to my field'),
-                      )
-                    ],
-                  ),
-                ],
-                floating: true,
-                expandedHeight: GradientStack.defaultHeight,
-                leading: const AutoLeadingButton(),
-
-                // Avatar
-                flexibleSpace: FlexibleSpaceBar(
-                  background: GradientStack(
-                    children: [
-                      AvatarPositioned(
-                        child: AvatarImage(
-                          userId: user.imageId,
-                          size: AvatarPositioned.childSize,
+                // Body
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: kPaddingH,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title
+                        Text(
+                          user.title.isEmpty ? 'No name' : user.title,
+                          textAlign: TextAlign.left,
+                          style: textTheme.headlineLarge,
                         ),
-                      ),
-                    ],
+                        const Padding(padding: kPaddingSmallV),
+
+                        // Description
+                        Text(
+                          user.description,
+                          textAlign: TextAlign.left,
+                          style: textTheme.bodyLarge,
+                        ),
+                        const Divider(),
+
+                        Text(
+                          'Beacons',
+                          textAlign: TextAlign.left,
+                          style: textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              // Body
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: paddingMediumH,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title
-                      Text(
-                        user.title.isEmpty ? 'No name' : user.title,
-                        textAlign: TextAlign.left,
-                        style: textTheme.headlineLarge,
-                      ),
-                      const Padding(padding: paddingSmallV),
-
-                      // Description
-                      Text(
-                        user.description,
-                        textAlign: TextAlign.left,
-                        style: textTheme.bodyLarge,
-                      ),
-                      const Divider(),
-
-                      Text(
-                        'Beacons',
-                        textAlign: TextAlign.left,
-                        style: textTheme.titleLarge,
-                      ),
-                    ],
+                // Beacons
+                if (beacons.isNotEmpty)
+                  SliverList.separated(
+                    itemCount: beacons.length,
+                    itemBuilder: (context, i) => Padding(
+                      padding: kPaddingH,
+                      child: BeaconTile(beacon: beacons[i]),
+                    ),
+                    separatorBuilder: (_, __) =>
+                        const Divider(endIndent: 20, indent: 20),
                   ),
-                ),
-              ),
-
-              // Beacons
-              if (beacons.isNotEmpty)
-                SliverList.separated(
-                  itemCount: beacons.length,
-                  itemBuilder: (context, i) => Padding(
-                    padding: paddingMediumH,
-                    child: BeaconTile(beacon: beacons[i]),
-                  ),
-                  separatorBuilder: (_, __) =>
-                      const Divider(endIndent: 20, indent: 20),
-                ),
-            ],
+              ],
+            ),
           );
         },
       );

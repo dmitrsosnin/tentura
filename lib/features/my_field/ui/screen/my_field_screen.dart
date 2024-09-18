@@ -27,7 +27,10 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) => SafeArea(
-        minimum: const EdgeInsets.only(left: 20, right: 20, top: 20),
+        minimum: const EdgeInsets.only(
+            left: kSpacingDefault,
+            right: kSpacingDefault,
+            top: kSpacingDefault),
         child: Column(
           children: [
             // Context selector
@@ -51,7 +54,7 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
                     itemCount: state.beacons.length,
                     itemBuilder: (context, i) => Container(
                       decoration: decoration,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: kPaddingV,
                       child: BeaconTile(beacon: state.beacons[i]),
                     ),
                   );

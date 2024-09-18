@@ -56,18 +56,18 @@ class AuthLoginScreen extends StatelessWidget {
             title: const Text('Choose account'),
           ),
           body: SafeArea(
-            minimum: paddingMediumH,
+            minimum: kPaddingH,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (state.accounts.isEmpty)
                   const Padding(
-                    padding: paddingMediumA,
+                    padding: kPaddingAll,
                     child: Text(
-                      'You can recover your account by\n'
-                      'scanning a QR from your other device\n'
-                      'or using a saved seed.',
+                      'Already have an account?\n'
+                      'Access it by scanning a QR code from another device\n'
+                      'or by using your saved seed phrase.',
                       textAlign: TextAlign.center,
                     ),
                   )
@@ -81,22 +81,20 @@ class AuthLoginScreen extends StatelessWidget {
                     ),
                     separatorBuilder: (context, i) => const Divider(),
                   ),
-
                 // Recover from seed (QR)
                 Padding(
-                  padding: paddingMediumA,
+                  padding: kPaddingAll,
                   child: OutlinedButton(
-                    child: const Text('Recover account by QR'),
+                    child: const Text('Recover by QR'),
                     onPressed: () async =>
                         authCubit.addAccount(await QRScanDialog.show(context)),
                   ),
                 ),
-
                 // Recover from seed (clipboard)
                 Padding(
-                  padding: paddingMediumA,
+                  padding: kPaddingH,
                   child: OutlinedButton(
-                    child: const Text('Recover account by seed'),
+                    child: const Text('Recover by seed'),
                     onPressed: () async {
                       if (await Clipboard.hasStrings() && context.mounted) {
                         await authCubit.addAccount(
@@ -107,15 +105,16 @@ class AuthLoginScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-
                 // Create new account
                 Padding(
-                  padding: paddingMediumA,
+                  padding: kPaddingAll,
                   child: FilledButton(
                     onPressed: authCubit.signUp,
                     child: const Text('Create new'),
                   ),
                 ),
+                const Padding(
+                    padding: EdgeInsets.only(bottom: 60 - kSpacingDefault)),
               ],
             ),
           ),

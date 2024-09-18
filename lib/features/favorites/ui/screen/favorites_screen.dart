@@ -13,7 +13,7 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SafeArea(
-        minimum: paddingMediumH,
+        minimum: kPaddingH,
         child: BlocConsumer<FavoritesCubit, FavoritesState>(
           listenWhen: (p, c) => c.hasError,
           listener: showSnackBarError,
@@ -30,17 +30,25 @@ class FavoritesScreen extends StatelessWidget {
                           SliverFillRemaining(
                             child: Container(
                               alignment: Alignment.center,
-                              child: const Text('Nothing here yet'),
+                              child: Text(
+                                'There is nothing here yet',
+                                style: Theme.of(context).textTheme.displaySmall,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ],
                       )
                     : ListView.separated(
+                        padding: kPaddingSmallT,
                         itemCount: state.beacons.length,
                         separatorBuilder: (_, __) => const Divider(),
-                        itemBuilder: (context, i) => BeaconTile(
-                          key: ValueKey(state.beacons[i]),
-                          beacon: state.beacons[i],
+                        itemBuilder: (context, i) => Padding(
+                          padding: kPaddingSmallV,
+                          child: BeaconTile(
+                            key: ValueKey(state.beacons[i]),
+                            beacon: state.beacons[i],
+                          ),
                         ),
                       ),
           ),

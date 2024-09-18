@@ -26,7 +26,7 @@ class _ContextAddDialogState extends State<ContextAddDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog.adaptive(
-        title: const Text('Adding a new context'),
+        title: const Text('Add a new topic'),
         content: TextField(
           controller: _controller,
         ),

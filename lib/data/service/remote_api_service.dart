@@ -16,9 +16,9 @@ class RemoteApiService extends TenturaApi {
 
   RemoteApiService({
     super.storagePath = '',
-    super.userAgent = appTitle,
-    super.serverName = appLinkBase,
-    super.jwtExpiresIn = jwtExpiresIn,
+    super.userAgent = kAppTitle,
+    super.serverName = kAppLinkBase,
+    super.jwtExpiresIn = kJwtExpiresIn,
   });
 
   @disposeMethod

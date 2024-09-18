@@ -24,13 +24,21 @@ class ContextDropDown extends StatelessWidget {
         builder: (context, state) => DropdownButton<Context>(
           isExpanded: true,
           items: [
-            const DropdownMenuItem(
-              value: Context.add(),
-              child: Text('Add new context'),
+            DropdownMenuItem(
+              value: const Context.add(),
+              child: Text(
+                'Add new topic',
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              ),
             ),
-            const DropdownMenuItem(
-              value: Context.all(),
-              child: Text('All contexts'),
+            DropdownMenuItem(
+              value: const Context.all(),
+              child: Text(
+                'All topics',
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              ),
             ),
             for (final e in state.contexts)
               DropdownMenuItem(

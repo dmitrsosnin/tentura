@@ -24,6 +24,7 @@ class AccountListTile extends StatelessWidget {
         create: (_) => ProfileCubit(id: userId),
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) => ListTile(
+            contentPadding: EdgeInsets.zero,
             leading: AvatarImage(
               userId: state.profile.imageId,
               size: 40,
@@ -38,7 +39,7 @@ class AccountListTile extends StatelessWidget {
                     context,
                     header: userId,
                     link: Uri.https(
-                      appLinkBase,
+                      kAppLinkBase,
                       pathAppLinkView,
                       {'id': userId},
                     ),

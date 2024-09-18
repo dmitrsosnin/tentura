@@ -6,12 +6,12 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/app/router/root_router.dart';
-import 'package:tentura/ui/theme_light.dart';
-import 'package:tentura/ui/theme_dark.dart';
+import 'package:tentura/ui/theme.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 import 'package:tentura/features/favorites/ui/bloc/favorites_cubit.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'di/di.dart';
 
@@ -38,7 +38,7 @@ class App extends StatelessWidget {
       bloc: getIt<SettingsCubit>(),
       selector: (state) => state.themeMode,
       builder: (context, themeMode) => MaterialApp.router(
-        title: appTitle,
+        title: kAppTitle,
         theme: themeLight,
         darkTheme: themeDark,
         themeMode: themeMode,
@@ -60,7 +60,20 @@ class App extends StatelessWidget {
             providers: [
               BlocProvider(create: (_) => FavoritesCubit(userId: accountId)),
             ],
-            child: child ?? Container(),
+            child: kIsWeb
+                ? ColoredBox(
+                    color: Theme.of(context).colorScheme.surfaceBright,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: kWebConstraints,
+                        child: AspectRatio(
+                          aspectRatio: kWebAspectRatio,
+                          child: child ?? Container(),
+                        ),
+                      ),
+                    ),
+                  )
+                : child ?? Container(),
           ),
         ),
       ),

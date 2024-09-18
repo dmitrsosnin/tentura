@@ -37,12 +37,12 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
-          minimum: paddingMediumA,
+          minimum: kPaddingAll,
           child: Column(
             children: [
               // Skip Button
               Padding(
-                padding: paddingSmallV,
+                padding: kPaddingSmallV,
                 child: Row(
                   children: [
                     const Spacer(),
@@ -83,7 +83,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
                       // Title
                       Padding(
-                        padding: paddingMediumA,
+                        padding: kPaddingAll,
                         child: Text(
                           _pages[i].title,
                           textAlign: TextAlign.center,
@@ -93,7 +93,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
                       // Text
                       Padding(
-                        padding: paddingMediumA,
+                        padding: kPaddingAll,
                         child: Text(
                           _pages[i].text,
                           textAlign: TextAlign.center,
@@ -107,7 +107,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
               // Continue Button
               Padding(
-                padding: paddingMediumV,
+                padding: kPaddingMediumV,
                 child: FilledButton(
                   onPressed: () {
                     (_pageController.page?.toInt() ?? 0) >= _pages.length - 1
