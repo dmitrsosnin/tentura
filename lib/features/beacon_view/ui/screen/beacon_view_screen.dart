@@ -66,35 +66,35 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
           return RefreshIndicator.adaptive(
             onRefresh: beaconViewCubit.fetch,
             child: ListView(
-              padding: paddingMediumA,
+              padding: kPaddingAll,
               children: [
                 // User row (Avatar and Name)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      AvatarImage(
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: kSpacingDefault),
+                      child: AvatarImage(
                         userId: author.imageId,
                         size: 40,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          author.title,
-                          style: textTheme.headlineSmall,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      author.title,
+                      style: textTheme.headlineMedium,
+                    ),
+                  ],
                 ),
 
                 // Beacon Info
-                BeaconInfo(beacon: state.beacon),
+                BeaconInfo(
+                  beacon: state.beacon,
+                  isTitleLarge: true,
+                ),
 
                 // Buttons Row
                 if (authCubit.checkIfIsNotMe(author.id))
                   Padding(
-                    padding: paddingSmallV,
+                    padding: kPaddingSmallV,
                     child: BeaconTileControl(
                       beacon: state.beacon,
                       key: ValueKey(state.beacon),

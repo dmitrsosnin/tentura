@@ -57,108 +57,112 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
               final profileCubit = context.watch<ProfileCubit>();
               final beacons = beaconsCubit.state.beacons;
               final profile = profileCubit.state.profile;
-              return CustomScrollView(
-                slivers: [
-                  // Header
-                  SliverAppBar(
-                    // key: ValueKey(user.imageId),
-                    key: Key('ProfileMineScreen:${profile.imageId}'),
-                    actions: [
-                      // Graph View
-                      IconButton(
-                        icon: const Icon(Icons.hub_outlined),
-                        onPressed: () async =>
-                            context.pushRoute(GraphRoute(focus: profile.id)),
-                      ),
+              return DecoratedBox(
+                decoration:
+                    BoxDecoration(color: Theme.of(context).colorScheme.surface),
+                child: CustomScrollView(
+                  slivers: [
+                    // Header
+                    SliverAppBar(
+                      // key: ValueKey(user.imageId),
+                      key: Key('ProfileMineScreen:${profile.imageId}'),
+                      actions: [
+                        // Graph View
+                        IconButton(
+                          icon: const Icon(Icons.hub_outlined),
+                          onPressed: () async =>
+                              context.pushRoute(GraphRoute(focus: profile.id)),
+                        ),
 
-                      // Share
-                      ShareCodeIconButton.id(profile.id),
+                        // Share
+                        ShareCodeIconButton.id(profile.id),
 
-                      // More
-                      const ProfileMineMenuButton(),
-                    ],
-                    floating: true,
-                    expandedHeight: GradientStack.defaultHeight,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: GradientStack(
-                        children: [
-                          AvatarPositioned(
-                            child: AvatarImage(
-                              userId: profile.imageId,
-                              size: AvatarPositioned.childSize,
+                        // More
+                        const ProfileMineMenuButton(),
+                      ],
+                      floating: true,
+                      expandedHeight: GradientStack.defaultHeight,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: GradientStack(
+                          children: [
+                            AvatarPositioned(
+                              child: AvatarImage(
+                                userId: profile.imageId,
+                                size: AvatarPositioned.childSize,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  // Profile
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: paddingMediumH,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Title
-                          Text(
-                            profile.title.isEmpty ? 'No name' : profile.title,
-                            textAlign: TextAlign.left,
-                            style: textTheme.headlineLarge,
-                          ),
-                          const Padding(padding: paddingSmallV),
+                    // Profile
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: kPaddingH,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Title
+                            Text(
+                              profile.title.isEmpty ? 'No name' : profile.title,
+                              textAlign: TextAlign.left,
+                              style: textTheme.headlineLarge,
+                            ),
+                            const Padding(padding: kPaddingSmallV),
 
-                          // Description
-                          Text(
-                            profile.description,
-                            textAlign: TextAlign.left,
-                            style: textTheme.bodyLarge,
-                          ),
-                          const Divider(),
+                            // Description
+                            Text(
+                              profile.description,
+                              textAlign: TextAlign.left,
+                              style: textTheme.bodyLarge,
+                            ),
+                            const Divider(),
 
-                          // Create
-                          Row(
-                            // key: const Key('Control_Row'),
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Beacons',
-                                style: textTheme.titleLarge,
-                              ),
-                              FilledButton(
-                                onPressed: () async => context
-                                    .pushRoute(const BeaconCreateRoute()),
-                                child: const Text('Create'),
-                              ),
-                            ],
-                          ),
-                        ],
+                            // Create
+                            Row(
+                              // key: const Key('Control_Row'),
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Beacons',
+                                  style: textTheme.titleLarge,
+                                ),
+                                FilledButton(
+                                  onPressed: () async => context
+                                      .pushRoute(const BeaconCreateRoute()),
+                                  child: const Text('Create'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  // Beacons List
-                  SliverList.separated(
-                    itemCount: beacons.length,
-                    itemBuilder: (context, i) => Padding(
-                      padding: paddingMediumH,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BeaconInfo(beacon: beacons[i]),
-                          Padding(
-                            padding: paddingSmallV,
-                            child: BeaconMineControl(beacon: beacons[i]),
-                          ),
-                        ],
+                    // Beacons List
+                    SliverList.separated(
+                      itemCount: beacons.length,
+                      itemBuilder: (context, i) => Padding(
+                        padding: kPaddingH,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            BeaconInfo(beacon: beacons[i]),
+                            Padding(
+                              padding: kPaddingSmallV,
+                              child: BeaconMineControl(beacon: beacons[i]),
+                            ),
+                          ],
+                        ),
+                      ),
+                      separatorBuilder: (_, __) => const Divider(
+                        endIndent: 20,
+                        indent: 20,
                       ),
                     ),
-                    separatorBuilder: (_, __) => const Divider(
-                      endIndent: 20,
-                      indent: 20,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               );
             },
           ),

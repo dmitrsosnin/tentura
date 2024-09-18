@@ -25,54 +25,57 @@ class _ConnectScreenState extends State<ConnectScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
-          minimum: paddingMediumA,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Padding(
-                padding: paddingMediumA,
-                child: Text(
-                  'If you have Code, please write it here',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: paddingMediumA,
-                child: TextFormField(
-                  controller: _inputController,
-                  decoration: const InputDecoration(
-                    filled: true,
+          minimum: kPaddingAll,
+          child: Padding(
+            padding: kPaddingAll,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Padding(
+                  padding: kPaddingSmallT,
+                  child: Text(
+                    'If you have the Code, please write it here:',
+                    textAlign: TextAlign.center,
                   ),
-                  maxLength: kIdLength,
-                  textAlign: TextAlign.center,
-                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
-              ),
-              Padding(
-                padding: paddingMediumA,
-                child: FilledButton(
-                  child: const Text('Search'),
-                  onPressed: () => _goWithCode(_inputController.text),
+                Padding(
+                  padding: kPaddingT,
+                  child: TextFormField(
+                    controller: _inputController,
+                    decoration: const InputDecoration(
+                      filled: true,
+                    ),
+                    maxLength: kIdLength,
+                    textAlign: TextAlign.center,
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                  ),
                 ),
-              ),
-              const Padding(
-                padding: paddingMediumA,
-                child: Text(
-                  'or',
-                  textAlign: TextAlign.center,
+                Padding(
+                  padding: kPaddingV,
+                  child: FilledButton(
+                    child: const Text('Search'),
+                    onPressed: () => _goWithCode(_inputController.text),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: paddingMediumA,
-                child: FilledButton(
-                  child: const Text('Scan QR'),
-                  onPressed: () async {
-                    final code = await QRScanDialog.show(context);
-                    if (context.mounted) _goWithCode(code);
-                  },
+                const Padding(
+                  padding: kPaddingLargeV,
+                  child: Text(
+                    'or',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: kPaddingV,
+                  child: FilledButton(
+                    child: const Text('Scan QR'),
+                    onPressed: () async {
+                      final code = await QRScanDialog.show(context);
+                      if (context.mounted) _goWithCode(code);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

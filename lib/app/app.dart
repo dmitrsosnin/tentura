@@ -6,8 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/app/router/root_router.dart';
-import 'package:tentura/ui/theme_light.dart';
-import 'package:tentura/ui/theme_dark.dart';
+import 'package:tentura/ui/theme.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';

@@ -31,32 +31,40 @@ class CommentCard extends StatelessWidget {
             id: comment.author.id,
           )),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Avatar
-              AvatarImage(
-                userId: comment.author.has_picture ? comment.author.id : '',
-                size: 40,
+              Padding(
+                padding: const EdgeInsets.only(right: kSpacingDefault),
+                child: AvatarImage(
+                  userId: comment.author.has_picture ? comment.author.id : '',
+                  size: 40,
+                ),
               ),
-              const SizedBox(width: 20),
-              // Title
-              Text(
-                isMine ? 'Me' : comment.author.title,
-                style: textTheme.headlineSmall,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    isMine ? 'Me' : comment.author.title,
+                    style: textTheme.headlineMedium,
+                  ),
+                  // Body
+                  Padding(
+                    padding: kPaddingSmallT,
+                    child: Text(
+                      comment.content,
+                      style: textTheme.bodyLarge,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-        // Body
-        Padding(
-          padding: paddingSmallV,
-          child: Text(
-            comment.content,
-            style: textTheme.bodyLarge,
-          ),
-        ),
         // Buttons
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             // Share
             ShareCodeIconButton.id(comment.id),
@@ -64,7 +72,7 @@ class CommentCard extends StatelessWidget {
             if (!isMine)
               Container(
                 alignment: Alignment.centerRight,
-                padding: paddingSmallV,
+                padding: kPaddingSmallV,
                 child: CommentVoteControl(comment: comment),
               ),
           ],

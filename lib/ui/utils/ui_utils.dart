@@ -6,15 +6,22 @@ import 'package:tentura/consts.dart';
 
 import '../bloc/state_base.dart';
 
-const paddingMediumA = EdgeInsets.all(20);
+const kSpacingSmall = 8.0;
+const kSpacingDefault = 16.0;
+const kSpacingLarge = 24.0;
 
-const paddingMediumH = EdgeInsets.symmetric(horizontal: 20);
+const kPaddingAll = EdgeInsets.all(kSpacingDefault);
 
-const paddingLargeV = EdgeInsets.symmetric(vertical: 32);
+const kPaddingH = EdgeInsets.symmetric(horizontal: kSpacingDefault);
+const kPaddingV = EdgeInsets.symmetric(vertical: kSpacingDefault);
+const kPaddingT = EdgeInsets.only(top: kSpacingDefault);
 
-const paddingMediumV = EdgeInsets.symmetric(vertical: 20);
+const kPaddingSmallT = EdgeInsets.only(top: kSpacingSmall);
+const kPaddingSmallV = EdgeInsets.symmetric(vertical: kSpacingSmall);
 
-const paddingSmallV = EdgeInsets.symmetric(vertical: 8);
+const kPaddingMediumV = EdgeInsets.symmetric(vertical: 20);
+
+const kPaddingLargeV = EdgeInsets.symmetric(vertical: 32);
 
 final _fYMD = DateFormat.yMd();
 String fYMD(DateTime? dateTime) =>

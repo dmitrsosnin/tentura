@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/features/profile/ui/widget/profile_navbar_item.dart';
+import 'package:tentura/ui/widget/tentura_icons.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
           selectedIndex: tabsRouter.activeIndex,
           destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
+              icon: Icon(TenturaIcons.home),
               label: 'My field',
             ),
             NavigationDestination(
@@ -26,7 +27,7 @@ class HomeScreen extends StatelessWidget {
               label: 'Connect',
             ),
             NavigationDestination(
-              icon: Icon(Icons.notifications_none_outlined),
+              icon: Icon(TenturaIcons.updates),
               label: 'Updates',
             ),
             NavigationDestination(

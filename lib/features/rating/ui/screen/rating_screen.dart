@@ -120,7 +120,7 @@ class _RatingScreenState extends State<RatingScreen> {
           buildWhen: (p, c) => c.hasNoError,
           builder: (context, state) => ListView.separated(
             itemCount: state.items.length,
-            padding: paddingMediumH,
+            padding: kPaddingH,
             separatorBuilder: (context, i) => const Divider(),
             itemBuilder: (context, i) => RatingListTile(
               key: ValueKey(state.items[i]),

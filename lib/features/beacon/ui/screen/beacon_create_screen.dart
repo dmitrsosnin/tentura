@@ -8,6 +8,7 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/dialog/choose_location_dialog.dart';
 
 import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
+import 'package:tentura/ui/widget/tentura_icons.dart';
 
 import '../bloc/beacon_cubit.dart';
 
@@ -90,14 +91,14 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
           key: _formKey,
           autovalidateMode: AutovalidateMode.disabled,
           child: ListView(
-            padding: const EdgeInsets.all(20),
+            padding: kPaddingAll,
             children: [
               // Title
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: _titleController,
                 decoration: const InputDecoration(
-                  hintText: 'Beacon title',
+                  hintText: 'Beacon title (required)',
                 ),
                 keyboardType: TextInputType.text,
                 maxLength: kTitleMaxLength,
@@ -135,7 +136,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                 decoration: InputDecoration(
                   hintText: 'Add location',
                   suffixIcon: _locationController.text.isEmpty
-                      ? const Icon(Icons.add_location_rounded)
+                      ? const Icon(TenturaIcons.location)
                       : IconButton(
                           onPressed: () {
                             _coordinates = null;
@@ -158,16 +159,16 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                   }
                 },
               ),
-              const Padding(padding: paddingSmallV),
+              const Padding(padding: kPaddingSmallV),
 
               // Time
               TextFormField(
                 readOnly: true,
                 controller: _dateRangeController,
                 decoration: InputDecoration(
-                  hintText: 'Set time',
+                  hintText: 'Set display period',
                   suffixIcon: _dateRangeController.text.isEmpty
-                      ? const Icon(Icons.date_range_rounded)
+                      ? const Icon(TenturaIcons.calendar)
                       : IconButton(
                           onPressed: () {
                             _dateRange = null;
@@ -191,7 +192,8 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                   }
                 },
               ),
-              const Padding(padding: paddingSmallV),
+              const Padding(
+                  padding: EdgeInsets.symmetric(vertical: kSpacingSmall)),
 
               // Image Input
               TextFormField(

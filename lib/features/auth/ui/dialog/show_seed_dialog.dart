@@ -34,8 +34,8 @@ class ShowSeedDialog extends StatelessWidget {
   Widget build(BuildContext context) => AlertDialog.adaptive(
         alignment: Alignment.center,
         actionsAlignment: MainAxisAlignment.spaceBetween,
-        titlePadding: paddingMediumA,
-        contentPadding: paddingMediumA,
+        titlePadding: kPaddingAll,
+        contentPadding: kPaddingAll,
 
         // Header
         title: Text(

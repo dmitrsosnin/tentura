@@ -66,6 +66,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Tentura
+      fonts:
+        - asset: assets/fonts/tentura-icons.ttf
   assets:
     - assets/images/
     - assets/intro/

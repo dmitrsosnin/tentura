@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/ui/widget/tentura_icons.dart';
 
 import '../bloc/beacon_cubit.dart';
 
@@ -34,7 +35,7 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
           children: [
             // Like Button
             IconButton(
-              icon: const Icon(Icons.thumb_up_outlined),
+              icon: const Icon(TenturaIcons.arrowUp),
               onPressed: () async => _updateVote(1),
             ),
 
@@ -49,7 +50,7 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
 
             // Dislike Button
             IconButton(
-              icon: const Icon(Icons.thumb_down_outlined),
+              icon: const Icon(TenturaIcons.arrowDown),
               onPressed: () async => _updateVote(-1),
             ),
           ],
