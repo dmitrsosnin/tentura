@@ -23,6 +23,9 @@ const kPaddingMediumV = EdgeInsets.symmetric(vertical: 20);
 
 const kPaddingLargeV = EdgeInsets.symmetric(vertical: 32);
 
+const kWebConstraints = BoxConstraints(minWidth: 600);
+const kWebAspectRatio = 9 / 16;
+
 final _fYMD = DateFormat.yMd();
 String fYMD(DateTime? dateTime) =>
     dateTime == null ? '' : _fYMD.format(dateTime);

@@ -26,10 +26,10 @@ class HomeScreen extends StatelessWidget {
               icon: Icon(Icons.cable),
               label: 'Connect',
             ),
-            // NavigationDestination(
-            //   icon: Icon(TenturaIcons.updates),
-            //   label: 'Updates',
-            // ),
+            NavigationDestination(
+              icon: Icon(TenturaIcons.updates),
+              label: 'Updates',
+            ),
             NavigationDestination(
               icon: ProfileNavBarItem(),
               label: 'Profile',

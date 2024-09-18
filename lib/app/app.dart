@@ -11,6 +11,7 @@ import 'package:tentura/ui/theme.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 import 'package:tentura/features/favorites/ui/bloc/favorites_cubit.dart';
+import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'di/di.dart';
 
@@ -60,15 +61,16 @@ class App extends StatelessWidget {
               BlocProvider(create: (_) => FavoritesCubit(userId: accountId)),
             ],
             child: kIsWeb
-                ? Container(
-                    constraints: const BoxConstraints(
-                      minWidth: 600,
-                    ),
-                    alignment: Alignment.center,
+                ? ColoredBox(
                     color: Theme.of(context).colorScheme.surfaceBright,
-                    child: AspectRatio(
-                      aspectRatio: 9 / 16,
-                      child: child ?? Container(),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: kWebConstraints,
+                        child: AspectRatio(
+                          aspectRatio: kWebAspectRatio,
+                          child: child ?? Container(),
+                        ),
+                      ),
                     ),
                   )
                 : child ?? Container(),
