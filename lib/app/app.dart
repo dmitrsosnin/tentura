@@ -60,7 +60,19 @@ class App extends StatelessWidget {
             providers: [
               BlocProvider(create: (_) => FavoritesCubit(userId: accountId)),
             ],
-            child: child ?? Container(),
+            child: kIsWeb
+                ? Container(
+                    constraints: const BoxConstraints(
+                      minWidth: 600,
+                    ),
+                    alignment: Alignment.center,
+                    color: Theme.of(context).colorScheme.surfaceBright,
+                    child: AspectRatio(
+                      aspectRatio: 9 / 16,
+                      child: child ?? Container(),
+                    ),
+                  )
+                : child ?? Container(),
           ),
         ),
       ),
