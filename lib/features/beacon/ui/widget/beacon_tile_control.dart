@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
+import 'package:tentura/ui/widget/tentura_icons.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
+import 'package:tentura/features/like/ui/widget/like_beacon_control.dart';
 import 'package:tentura/features/favorites/ui/widget/beacon_pin_icon_button.dart';
-import 'package:tentura/ui/widget/tentura_icons.dart';
-
-import 'beacon_vote_control.dart';
 
 class BeaconTileControl extends StatelessWidget {
   const BeaconTileControl({
@@ -54,7 +53,7 @@ class BeaconTileControl extends StatelessWidget {
             ),
 
             // Like\Dislike
-            BeaconVoteControl(
+            LikeBeaconControl(
               id: beacon.id,
               votes: beacon.myVote,
             ),

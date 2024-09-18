@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
 
-import '../bloc/beacon_cubit.dart';
+import '../bloc/like_cubit.dart';
 
-class BeaconVoteControl extends StatefulWidget {
-  const BeaconVoteControl({
+class LikeBeaconControl extends StatefulWidget {
+  const LikeBeaconControl({
     required this.id,
     required this.votes,
     super.key,
@@ -16,10 +17,10 @@ class BeaconVoteControl extends StatefulWidget {
   final int votes;
 
   @override
-  State<BeaconVoteControl> createState() => _BeaconVoteControlState();
+  State<LikeBeaconControl> createState() => _LikeBeaconControlState();
 }
 
-class _BeaconVoteControlState extends State<BeaconVoteControl> {
+class _LikeBeaconControlState extends State<LikeBeaconControl> {
   late int _likeAmount = widget.votes;
 
   late final _theme = Theme.of(context);
@@ -58,23 +59,22 @@ class _BeaconVoteControlState extends State<BeaconVoteControl> {
       );
 
   // TBD: debounce
+  // TBD: use BlocSelector<LikeCubit
   Future<void> _updateVote(int add) async {
-    _likeAmount += add;
-    setState(() {});
-    try {
-      _likeAmount = await context.read<BeaconCubit>().vote(
-            beaconId: widget.id,
-            amount: _likeAmount,
-          );
-      setState(() {});
-    } catch (e) {
+    final result = await GetIt.I<LikeCubit>().likeBeacon(
+      beaconId: widget.id,
+      amount: _likeAmount + add,
+    );
+    if (result == null) {
       if (mounted) {
         showSnackBar(
           context,
           isError: true,
-          text: e.toString(),
+          text: 'Can`t set like for [${widget.id}]',
         );
       }
+    } else {
+      setState(() => _likeAmount = result);
     }
   }
 }

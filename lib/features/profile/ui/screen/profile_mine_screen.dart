@@ -64,7 +64,6 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
                   slivers: [
                     // Header
                     SliverAppBar(
-                      // key: ValueKey(user.imageId),
                       key: Key('ProfileMineScreen:${profile.imageId}'),
                       actions: [
                         // Graph View
@@ -121,7 +120,6 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
 
                             // Create
                             Row(
-                              // key: const Key('Control_Row'),
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(

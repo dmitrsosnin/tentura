@@ -60,20 +60,20 @@ class App extends StatelessWidget {
             providers: [
               BlocProvider(create: (_) => FavoritesCubit(userId: accountId)),
             ],
-            child: kIsWeb
-                ? ColoredBox(
-                    color: Theme.of(context).colorScheme.surfaceBright,
-                    child: Center(
+            child: ColoredBox(
+              color: Theme.of(context).colorScheme.surfaceBright,
+              child: kIsWeb
+                  ? Center(
                       child: ConstrainedBox(
                         constraints: kWebConstraints,
                         child: AspectRatio(
                           aspectRatio: kWebAspectRatio,
-                          child: child ?? Container(),
+                          child: child,
                         ),
                       ),
-                    ),
-                  )
-                : child ?? Container(),
+                    )
+                  : child,
+            ),
           ),
         ),
       ),
