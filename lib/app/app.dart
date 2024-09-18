@@ -38,7 +38,7 @@ class App extends StatelessWidget {
       bloc: getIt<SettingsCubit>(),
       selector: (state) => state.themeMode,
       builder: (context, themeMode) => MaterialApp.router(
-        title: appTitle,
+        title: kAppTitle,
         theme: themeLight,
         darkTheme: themeDark,
         themeMode: themeMode,

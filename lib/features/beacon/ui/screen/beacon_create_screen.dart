@@ -100,10 +100,10 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                   hintText: 'Beacon title',
                 ),
                 keyboardType: TextInputType.text,
-                maxLength: titleMaxLength,
+                maxLength: kTitleMaxLength,
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
                 validator: (value) {
-                  if (value == null || value.length < titleMinLength) {
+                  if (value == null || value.length < kTitleMinLength) {
                     return 'Title too short';
                   }
                   return null;
@@ -117,7 +117,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                   hintText: 'Description',
                 ),
                 keyboardType: TextInputType.multiline,
-                maxLength: descriptionLength,
+                maxLength: kDescriptionLength,
                 maxLines: null,
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),

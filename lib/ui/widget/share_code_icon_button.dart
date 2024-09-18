@@ -16,7 +16,7 @@ class ShareCodeIconButton extends StatelessWidget {
       : this(
           header: id,
           link: Uri.https(
-            appLinkBase,
+            kAppLinkBase,
             pathAppLinkView,
             {'id': id},
           ),

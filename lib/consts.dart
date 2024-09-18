@@ -1,19 +1,19 @@
-const idLength = 13;
-const codeLength = 7;
-const titleMinLength = 3;
-const titleMaxLength = 32;
-const descriptionLength = 2048;
+const kIdLength = 13;
+const kCodeLength = 7;
+const kTitleMinLength = 3;
+const kTitleMaxLength = 32;
+const kDescriptionLength = 2048;
 
-const snackBarDuration = Duration(seconds: 5);
+const kSnackBarDuration = Duration(seconds: 5);
 
-const appTitle = 'Tentura';
-const zeroNodeId = 'U000000000000';
-const appLinkBase = String.fromEnvironment('APP_LINK_BASE');
-const osmLinkBase = String.fromEnvironment(
+const kAppTitle = 'Tentura';
+const kZeroNodeId = 'U000000000000';
+const kAppLinkBase = String.fromEnvironment('APP_LINK_BASE');
+const kOsmLinkBase = String.fromEnvironment(
   'OSM_LINK_BASE',
   defaultValue: 'tile.openstreetmap.org',
 );
-const jwtExpiresIn = Duration(
+const kJwtExpiresIn = Duration(
   seconds: int.fromEnvironment(
     'JWT_EXPIRES_IN',
     defaultValue: 3600,

@@ -38,7 +38,7 @@ class AccountListTile extends StatelessWidget {
                     context,
                     header: userId,
                     link: Uri.https(
-                      appLinkBase,
+                      kAppLinkBase,
                       pathAppLinkView,
                       {'id': userId},
                     ),

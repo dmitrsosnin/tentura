@@ -43,7 +43,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   decoration: const InputDecoration(
                     filled: true,
                   ),
-                  maxLength: idLength,
+                  maxLength: kIdLength,
                   textAlign: TextAlign.center,
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
@@ -79,7 +79,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   void _goWithCode(String? code) {
     if (code == null || code.isEmpty) return;
-    if (code.length != idLength) {
+    if (code.length != kIdLength) {
       showSnackBar(
         context,
         isError: true,

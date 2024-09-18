@@ -127,7 +127,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: TextFormField(
-                maxLength: titleMaxLength,
+                maxLength: kTitleMaxLength,
                 controller: _nameController,
                 style: textTheme.headlineLarge,
                 decoration: const InputDecoration(
@@ -135,7 +135,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ),
                 onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 validator: (value) {
-                  if (value == null || value.length < titleMinLength) {
+                  if (value == null || value.length < kTitleMinLength) {
                     return 'Have to be at least 3 char long!';
                   }
                   return null;
@@ -154,7 +154,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               minLines: 1,
               maxLines: 20,
               style: textTheme.bodyLarge,
-              maxLength: descriptionLength,
+              maxLength: kDescriptionLength,
               controller: _descriptionController,
               keyboardType: TextInputType.multiline,
               decoration: const InputDecoration(
