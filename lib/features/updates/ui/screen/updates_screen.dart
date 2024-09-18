@@ -22,10 +22,13 @@ class UpdatesScreen extends StatelessWidget {
           ],
         ),
         body: Center(
-          child: Text(
-            'There is nothing here yet',
-            style: Theme.of(context).textTheme.displaySmall,
-            textAlign: TextAlign.center,
+          child: Padding(
+            padding: kPaddingH,
+            child: Text(
+              'There is nothing here yet',
+              style: Theme.of(context).textTheme.displaySmall,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       );
