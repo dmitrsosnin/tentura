@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:injectable/injectable.dart';
 
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
 
 import 'package:tentura/features/auth/data/repository/auth_repository.dart';
 
 import '../../data/repository/profile_local_repository.dart';
 import '../../data/repository/profile_remote_repository.dart';
+import '../entity/profile.dart';
 
 @singleton
 class ProfileCase with PickImageCase {
@@ -26,18 +26,18 @@ class ProfileCase with PickImageCase {
   Stream<String> get currentAccountChanges =>
       _authRepository.currentAccountChanges();
 
-  Future<User> fetch(
+  Future<Profile> fetch(
     String id, {
     bool fromCache = true,
   }) async {
     final cached = await _profileLocalRepository.getProfileById(id);
     if (fromCache && cached != null) return cached;
     final profile = await _profileRemoteRepository.fetch(id);
-    if (cached != profile) await _profileLocalRepository.setProfile(profile);
+    if (cached != profile!) await _profileLocalRepository.setProfile(profile);
     return profile;
   }
 
-  Future<User> update(User profile) async {
+  Future<Profile> update(Profile profile) async {
     await _profileRemoteRepository.update(profile);
     await _profileLocalRepository.setProfile(profile);
     return profile;

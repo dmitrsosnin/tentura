@@ -10,7 +10,6 @@ import 'package:tentura/ui/theme_light.dart';
 import 'package:tentura/ui/theme_dark.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
-import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 import 'package:tentura/features/favorites/ui/bloc/favorites_cubit.dart';
 
@@ -59,7 +58,6 @@ class App extends StatelessWidget {
           builder: (context, accountId) => MultiBlocProvider(
             key: ValueKey(accountId),
             providers: [
-              BlocProvider(create: (_) => BeaconCubit(userId: accountId)),
               BlocProvider(create: (_) => FavoritesCubit(userId: accountId)),
             ],
             child: child ?? Container(),

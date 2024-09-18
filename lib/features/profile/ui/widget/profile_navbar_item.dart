@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 
+import '../../domain/entity/profile.dart';
 import '../bloc/profile_cubit.dart';
 
 class ProfileNavBarItem extends StatelessWidget {
   const ProfileNavBarItem({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<ProfileCubit, ProfileState>(
+  Widget build(BuildContext context) =>
+      BlocSelector<ProfileCubit, ProfileState, Profile>(
         bloc: GetIt.I<ProfileCubit>(),
-        builder: (context, state) {
+        selector: (state) => state.profile,
+        builder: (context, profile) {
           final menuController = MenuController();
           final ids = GetIt.I<AuthCubit>()
               .state
               .accounts
-              .where((e) => e.id != state.user.id)
+              .where((e) => e.id != profile.id)
               .map((e) => e.id);
           return MenuAnchor(
             controller: menuController,
             menuChildren: [
               _ProfileMenuItem(
                 isMe: true,
-                profile: state.user,
-                key: ValueKey(state.user),
+                profile: profile,
+                key: Key('CurrentProfileMenuItem:${profile.imageId}'),
                 onTap: menuController.close,
               ),
               for (final id in ids)
@@ -34,22 +36,23 @@ class ProfileNavBarItem extends StatelessWidget {
                   create: (_) => ProfileCubit(id: id),
                   child: BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) => _ProfileMenuItem(
-                      key: ValueKey(state.user),
-                      profile: state.user,
+                      key: Key('ProfileMenuItem:${state.profile.imageId}'),
+                      profile: state.profile,
                       onTap: () async {
                         menuController.close();
-                        await GetIt.I<AuthCubit>().signIn(state.user.id);
+                        await GetIt.I<AuthCubit>().signIn(state.profile.id);
                       },
                     ),
                   ),
                 ),
             ],
             child: GestureDetector(
+              key: Key('ProfileNavbarItem:${profile.imageId}'),
               onLongPress: ids.length > 1 ? menuController.open : null,
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: AvatarImage(
-                  userId: state.user.has_picture ? state.user.id : '',
+                  userId: profile.imageId,
                   size: 36,
                 ),
               ),
@@ -68,16 +71,11 @@ class _ProfileMenuItem extends StatelessWidget {
   });
 
   final bool isMe;
-  final User profile;
+  final Profile profile;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        // onTap: () async {
-        //   menuController.close();
-        //   if (isMe) return;
-        //   await authCubit.signIn(profile.id);
-        // },
         onTap: onTap,
         child: Row(
           children: [

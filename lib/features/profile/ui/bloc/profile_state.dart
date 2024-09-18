@@ -1,12 +1,13 @@
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
+
+import '../../domain/entity/profile.dart';
 
 part 'profile_state.freezed.dart';
 
 @freezed
 class ProfileState with _$ProfileState, StateFetchMixin {
   const factory ProfileState({
-    required User user,
+    @Default(Profile(id: '')) Profile profile,
     @Default(FetchStatus.isSuccess) FetchStatus status,
     Object? error,
   }) = _ProfileState;

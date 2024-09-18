@@ -19,7 +19,7 @@ class AuthRepository {
 
   final LocalSecureStorage _localStorage;
 
-  final _controller = StreamController<String>();
+  final _controller = StreamController<String>.broadcast();
 
   String? _currentAccountId;
 

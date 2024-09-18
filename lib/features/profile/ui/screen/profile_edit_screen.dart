@@ -24,7 +24,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
   final _profileCubit = GetIt.I<ProfileCubit>();
 
-  late final _profile = _profileCubit.state.user;
+  late final _profile = _profileCubit.state.profile;
 
   late final _nameController = TextEditingController(
     text: _profile.title,
@@ -33,7 +33,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     text: _profile.description,
   );
 
-  late bool _hasPicture = _profile.has_picture;
+  late bool _hasAvatar = _profile.hasAvatar;
 
   Uint8List? _imageBytes;
 
@@ -73,7 +73,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 child: _imageBytes == null
                     ? AvatarImage(
                         size: AvatarPositioned.childSize,
-                        userId: _hasPicture ? _profile.imageId : '',
+                        userId: _hasAvatar ? _profile.imageId : '',
                       )
                     : Container(
                         clipBehavior: Clip.hardEdge,
@@ -91,12 +91,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               Positioned(
                 top: 225,
                 left: 200,
-                child: _hasPicture
+                child: _hasAvatar
                     ? IconButton.filledTonal(
                         iconSize: 50,
                         icon: const Icon(Icons.highlight_remove_outlined),
                         onPressed: () => setState(() {
-                          _hasPicture = false;
+                          _hasAvatar = false;
                           _imageBytes = null;
                         }),
                       )
@@ -107,7 +107,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           final image = await _profileCubit.pickImage();
                           if (image != null) {
                             setState(() {
-                              _hasPicture = true;
+                              _hasAvatar = true;
                               _imageBytes = image.bytes;
                             });
                           }
@@ -180,7 +180,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       await _profileCubit.update(_profile.copyWith(
         title: _nameController.text,
         description: _descriptionController.text,
-        hasPicture: _hasPicture,
+        hasAvatar: _hasAvatar,
       ));
       if (mounted) await context.maybePop();
     } catch (e) {

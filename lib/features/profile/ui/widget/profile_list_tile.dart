@@ -25,10 +25,10 @@ class AccountListTile extends StatelessWidget {
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) => ListTile(
             leading: AvatarImage(
-              userId: state.user.imageId,
+              userId: state.profile.imageId,
               size: 40,
             ),
-            title: Text(state.user.title),
+            title: Text(state.profile.title),
             trailing: PopupMenuButton(
               itemBuilder: (context) => <PopupMenuEntry<void>>[
                 // Share account code
