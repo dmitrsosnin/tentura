@@ -1,4 +1,3 @@
-# import '/domain/entity/user.graphql'
 # import '/domain/entity/beacon.graphql'
 
 query GraphFetch(
@@ -22,7 +21,10 @@ query GraphFetch(
     dst
     score
     user {
-      ...UserFields
+      id
+      title
+      score
+      has_picture
     }
   }
   beacon_by_pk(id: $focus) {

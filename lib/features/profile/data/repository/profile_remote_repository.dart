@@ -28,8 +28,6 @@ class ProfileRemoteRepository {
                 title: r.title,
                 description: r.description,
                 hasAvatar: r.has_picture,
-                myVote: r.my_vote ?? 0,
-                score: double.tryParse(r.score?.value ?? '') ?? 0,
               ),
       );
 
@@ -49,8 +47,6 @@ class ProfileRemoteRepository {
                 title: r.title,
                 description: r.description,
                 hasAvatar: r.has_picture,
-                myVote: r.my_vote ?? 0,
-                score: double.tryParse(r.score?.value ?? '') ?? 0,
               ),
       );
 

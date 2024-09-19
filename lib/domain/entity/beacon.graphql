@@ -1,5 +1,3 @@
-# import 'user.graphql'
-
 fragment BeaconFields on beacon {
   id
   title
@@ -17,6 +15,9 @@ fragment BeaconFields on beacon {
   my_vote
   score
   author {
-    ...UserFields
+    id
+    title
+    has_picture
+    score
   }
 }

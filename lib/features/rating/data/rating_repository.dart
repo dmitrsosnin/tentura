@@ -27,9 +27,8 @@ class RatingRepository {
                   profile: Profile(
                     id: e.user?.id ?? '',
                     title: e.user?.title ?? '',
-                    description: e.user?.description ?? '',
-                    hasAvatar: e.user?.has_picture ?? false,
                     myVote: e.user?.my_vote ?? 0,
+                    hasAvatar: e.user?.has_picture ?? false,
                     score: double.tryParse(e.user?.score?.value ?? '') ?? 0,
                   ),
                 )),

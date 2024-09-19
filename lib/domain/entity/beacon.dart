@@ -20,7 +20,6 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
         ..author = (GBeaconFieldsData_authorBuilder()
           ..id = ''
           ..title = ''
-          ..description = ''
           ..has_picture = false))
       .build() as Beacon;
 
@@ -71,7 +70,6 @@ extension type const Beacon(GBeaconFields i) implements GBeaconFields {
             ..author = (GBeaconFieldsData_authorBuilder()
               ..id = authorId ?? author.id
               ..title = author.title
-              ..description = author.description
               ..has_picture = author.has_picture))
           .build() as Beacon;
 }
