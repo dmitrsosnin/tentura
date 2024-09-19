@@ -2,9 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:tentura/domain/entity/exception.dart';
-
 import '../../domain/entity/account.dart';
+import '../../domain/exception.dart';
 import '../../domain/use_case/auth_case.dart';
 import 'auth_state.dart';
 
@@ -58,7 +57,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> addAccount(String? seed) async {
     if (seed == null) return;
     if (state.accounts.any((e) => e.seed == seed)) {
-      return emit(state.setError(const SeedExistsException()));
+      return emit(state.setError(const AuthSeedExistsException()));
     }
     emit(state.setLoading());
     try {

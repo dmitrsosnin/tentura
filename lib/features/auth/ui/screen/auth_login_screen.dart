@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/domain/entity/exception.dart';
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/profile/ui/widget/profile_list_tile.dart';
 
+import '../../domain/exception.dart';
 import '../bloc/auth_cubit.dart';
 
 @RoutePage()
@@ -21,21 +21,21 @@ class AuthLoginScreen extends StatelessWidget {
       listenWhen: (p, c) => c.hasError,
       listener: (context, state) {
         switch (state.error) {
-          case SeedExistsException:
+          case AuthSeedExistsException:
             showSnackBar(
               context,
               isError: true,
               text: 'Seed already exists',
             );
 
-          case SeedIsWrongException:
+          case AuthSeedIsWrongException:
             showSnackBar(
               context,
               isError: true,
               text: 'There is no correct seed!',
             );
 
-          case IdIsWrongException:
+          case AuthIdIsWrongException:
             showSnackBar(
               context,
               isError: true,
