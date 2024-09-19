@@ -55,7 +55,7 @@ class BeaconTileControl extends StatelessWidget {
             // Like\Dislike
             LikeBeaconControl(
               id: beacon.id,
-              votes: beacon.myVote,
+              votes: beacon.my_vote ?? 0,
             ),
           ],
         ),

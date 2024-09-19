@@ -22,6 +22,13 @@ class BeaconInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final hasCoordinates = beacon.lat != null && beacon.long != null;
+    final coordinates = hasCoordinates
+        ? (
+            lat: double.tryParse(beacon.lat?.value ?? '.0') ?? 0,
+            long: double.tryParse(beacon.long?.value ?? '.0') ?? 0,
+          )
+        : (lat: .0, long: .0);
     return GestureDetector(
       onTap: context.routeData.name == BeaconViewRoute.name
           ? null
@@ -39,7 +46,7 @@ class BeaconInfo extends StatelessWidget {
                 ),
                 child: BeaconImage(
                   authorId: beacon.author.id,
-                  beaconId: beacon.imageId,
+                  beaconId: beacon.has_picture ? beacon.id : '',
                 ),
               ),
             ),
@@ -111,7 +118,7 @@ class BeaconInfo extends StatelessWidget {
             ),
 
           // Beacon Timerange and Geolocation
-          if (beacon.timerange != null || beacon.hasCoordinates)
+          if (beacon.timerange != null || hasCoordinates)
             Padding(
               padding: kPaddingSmallT,
               child: Wrap(
@@ -142,7 +149,7 @@ class BeaconInfo extends StatelessWidget {
                       ],
                     ),
                   // Beacon Geolocation
-                  if (beacon.hasCoordinates)
+                  if (hasCoordinates)
                     TextButton.icon(
                       icon: const Icon(
                         TenturaIcons.location,
@@ -154,12 +161,12 @@ class BeaconInfo extends StatelessWidget {
                       label: kIsWeb
                           ? const Text('Show on the map')
                           : PlaceNameText(
-                              coords: beacon.coordinates,
+                              coords: coordinates,
                               style: textTheme.bodySmall,
                             ),
                       onPressed: () => ChooseLocationDialog.show(
                         context,
-                        center: beacon.coordinates,
+                        center: coordinates,
                       ),
                     ),
                 ],

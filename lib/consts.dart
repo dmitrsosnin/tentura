@@ -19,5 +19,3 @@ const kJwtExpiresIn = Duration(
     defaultValue: 3600,
   ),
 );
-
-final zeroDateTime = DateTime.fromMillisecondsSinceEpoch(0);
