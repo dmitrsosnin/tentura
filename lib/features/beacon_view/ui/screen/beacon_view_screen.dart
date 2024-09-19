@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/linear_pi_active.dart';
@@ -61,7 +60,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
         listener: showSnackBarError,
         buildWhen: (p, c) => c.status.isSuccess,
         builder: (context, state) {
-          final author = state.beacon.author as User;
+          final author = state.beacon.author;
           final textTheme = Theme.of(context).textTheme;
           return RefreshIndicator.adaptive(
             onRefresh: beaconViewCubit.fetch,
@@ -74,7 +73,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                     Padding(
                       padding: const EdgeInsets.only(right: kSpacingDefault),
                       child: AvatarImage(
-                        userId: author.imageId,
+                        userId: author.has_picture ? author.id : '',
                         size: 40,
                       ),
                     ),

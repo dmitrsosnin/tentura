@@ -7,7 +7,7 @@ part 'profile_state.freezed.dart';
 @freezed
 class ProfileState with _$ProfileState, StateFetchMixin {
   const factory ProfileState({
-    @Default(Profile(id: '')) Profile profile,
+    @Default(Profile()) Profile profile,
     @Default(FetchStatus.isSuccess) FetchStatus status,
     Object? error,
   }) = _ProfileState;

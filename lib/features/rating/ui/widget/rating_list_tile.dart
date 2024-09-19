@@ -24,22 +24,20 @@ class RatingListTile extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => context.pushRoute(
-          ProfileViewRoute(
-            id: userRating.user.id,
-          ),
+          ProfileViewRoute(id: userRating.profile.id),
         ),
         child: Row(
           children: [
             Padding(
               padding: const EdgeInsets.all(8),
               child: AvatarImage(
-                userId: userRating.user.imageId,
+                userId: userRating.profile.imageId,
                 size: height,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8),
-              child: Text(userRating.user.title),
+              child: Text(userRating.profile.title),
             ),
             const Spacer(),
             Padding(

@@ -1,13 +1,14 @@
 import 'package:tentura/domain/entity/beacon.dart';
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
+
+import 'package:tentura/features/profile/domain/entity/profile.dart';
 
 part 'profile_view_state.freezed.dart';
 
 @freezed
 class ProfileViewState with _$ProfileViewState, StateFetchMixin {
   const factory ProfileViewState({
-    required User user,
+    @Default(Profile()) Profile profile,
     @Default([]) List<Beacon> beacons,
     @Default(FetchStatus.isSuccess) FetchStatus status,
     Object? error,

@@ -54,7 +54,7 @@ class RatingCubit extends Cubit<RatingState> {
         searchFilter: filter,
         items: _items
             .where((e) =>
-                e.user.title.toLowerCase().contains(filter.toLowerCase()))
+                e.profile.title.toLowerCase().contains(filter.toLowerCase()))
             .toList(),
       ));
 

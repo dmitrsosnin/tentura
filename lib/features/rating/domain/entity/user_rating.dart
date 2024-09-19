@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:tentura/domain/entity/user.dart';
+import 'package:tentura/features/profile/domain/entity/profile.dart';
 
 part 'user_rating.freezed.dart';
 
@@ -9,6 +9,6 @@ class UserRating with _$UserRating {
   const factory UserRating({
     required double egoScore,
     required double userScore,
-    required User user,
+    required Profile profile,
   }) = _UserRating;
 }

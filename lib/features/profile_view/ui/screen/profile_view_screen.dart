@@ -34,16 +34,13 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
         buildWhen: (p, c) => c.hasNoError,
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
-          final user = state.user;
+          final profile = state.profile;
           final beacons = state.beacons;
-          final textTheme = Theme.of(context).textTheme;
+          final theme = Theme.of(context);
           return DecoratedBox(
-            decoration:
-                BoxDecoration(color: Theme.of(context).colorScheme.surface),
+            decoration: BoxDecoration(color: theme.colorScheme.surface),
             child: CustomScrollView(
               slivers: [
                 // Header
@@ -52,13 +49,12 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                     // Graph View
                     IconButton(
                       icon: const Icon(Icons.hub_outlined),
-                      onPressed: () => context.pushRoute(
-                        GraphRoute(focus: user.id),
-                      ),
+                      onPressed: () =>
+                          context.pushRoute(GraphRoute(focus: profile.id)),
                     ),
 
                     // Share
-                    ShareCodeIconButton.id(user.id),
+                    ShareCodeIconButton.id(profile.id),
 
                     // More
                     PopupMenuButton(
@@ -66,10 +62,10 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                         PopupMenuItem<void>(
                           onTap: () =>
                               context.read<ProfileViewCubit>().voteById(
-                                    userId: user.id,
-                                    amount: user.isFriend ? 0 : 1,
+                                    userId: profile.id,
+                                    amount: profile.isFriend ? 0 : 1,
                                   ),
-                          child: user.isFriend
+                          child: profile.isFriend
                               ? const Text('Remove from my field')
                               : const Text('Add to my field'),
                         )
@@ -86,7 +82,7 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                       children: [
                         AvatarPositioned(
                           child: AvatarImage(
-                            userId: user.imageId,
+                            userId: profile.imageId,
                             size: AvatarPositioned.childSize,
                           ),
                         ),
@@ -104,24 +100,24 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                       children: [
                         // Title
                         Text(
-                          user.title.isEmpty ? 'No name' : user.title,
+                          profile.title.isEmpty ? 'No name' : profile.title,
                           textAlign: TextAlign.left,
-                          style: textTheme.headlineLarge,
+                          style: theme.textTheme.headlineLarge,
                         ),
                         const Padding(padding: kPaddingSmallV),
 
                         // Description
                         Text(
-                          user.description,
+                          profile.description,
                           textAlign: TextAlign.left,
-                          style: textTheme.bodyLarge,
+                          style: theme.textTheme.bodyLarge,
                         ),
                         const Divider(),
 
                         Text(
                           'Beacons',
                           textAlign: TextAlign.left,
-                          style: textTheme.titleLarge,
+                          style: theme.textTheme.titleLarge,
                         ),
                       ],
                     ),

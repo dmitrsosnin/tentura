@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/profile_view_repository.dart';
@@ -15,7 +14,7 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
     required this.id,
     ProfileViewRepository? repository,
   })  : _repository = repository ?? GetIt.I<ProfileViewRepository>(),
-        super(ProfileViewState(user: User.empty)) {
+        super(const ProfileViewState()) {
     fetch();
   }
 
@@ -26,10 +25,10 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
-      final profile = await _repository.fetchById(id);
+      final (:profile, :beacons) = await _repository.fetchById(id);
       emit(state.copyWith(
-        user: profile.user,
-        beacons: profile.beacons,
+        profile: profile,
+        beacons: beacons,
         status: FetchStatus.isSuccess,
       ));
     } catch (e) {
@@ -42,12 +41,10 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
     required int amount,
   }) async {
     try {
+      final result = await _repository.voteById(userId: userId, amount: amount);
+      if (result == null) throw Exception('Can`t add friend [$userId]');
       emit(state.copyWith(
-        user: state.user.copyWith(
-            myVote: await _repository.voteById(
-          userId: userId,
-          amount: amount,
-        )),
+        profile: state.profile.copyWith(myVote: result),
       ));
     } catch (e) {
       emit(state.setError(e));

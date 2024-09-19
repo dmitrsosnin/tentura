@@ -6,7 +6,7 @@ part 'profile.freezed.dart';
 @freezed
 class Profile with _$Profile {
   const factory Profile({
-    required String id,
+    @Default('') String id,
     @Default('') String title,
     @Default('') String description,
     @Default(false) bool hasAvatar,

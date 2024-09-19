@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
-import 'package:tentura/domain/entity/user.dart';
 import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
@@ -20,7 +19,7 @@ class BeaconTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final author = beacon.author as User;
+    final author = beacon.author;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,7 +33,7 @@ class BeaconTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: kSpacingDefault),
                 child: AvatarImage(
-                  userId: author.imageId,
+                  userId: author.has_picture ? author.id : '',
                   size: 40,
                 ),
               ),

@@ -1,7 +1,8 @@
 import 'package:injectable/injectable.dart';
 
 import 'package:tentura/data/service/remote_api_service.dart';
-import 'package:tentura/domain/entity/user.dart';
+
+import 'package:tentura/features/profile/domain/entity/profile.dart';
 
 import '../domain/entity/user_rating.dart';
 import 'gql/_g/rating_fetch.req.gql.dart';
@@ -18,11 +19,19 @@ class RatingRepository {
       _remoteApiService
           .request(GRatingFetchReq((r) => r.vars.context = context))
           .firstWhere((e) => e.dataSource == DataSource.Link)
+          .then((r) => r.dataOrThrow(label: _label).rating)
           .then(
-            (r) => r.dataOrThrow(label: _label).rating.map((e) => UserRating(
+            (r) => r.map((e) => UserRating(
                   egoScore: double.parse(e.src_score!.value),
                   userScore: double.parse(e.dst_score!.value),
-                  user: e.user! as User,
+                  profile: Profile(
+                    id: e.user?.id ?? '',
+                    title: e.user?.title ?? '',
+                    description: e.user?.description ?? '',
+                    hasAvatar: e.user?.has_picture ?? false,
+                    myVote: e.user?.my_vote ?? 0,
+                    score: double.tryParse(e.user?.score?.value ?? '') ?? 0,
+                  ),
                 )),
           );
 }
