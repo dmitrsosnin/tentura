@@ -43,20 +43,12 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
                 listener: showSnackBarError,
                 buildWhen: (p, c) => c.hasNoError,
                 builder: (context, state) {
-                  final decoration = BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                      ),
-                    ),
-                  );
-                  return ListView.builder(
+                  return ListView.separated(
                     itemCount: state.beacons.length,
-                    itemBuilder: (context, i) => Container(
-                      decoration: decoration,
-                      padding: kPaddingV,
-                      child: BeaconTile(beacon: state.beacons[i]),
-                    ),
+                    separatorBuilder: (_, __) => const Divider(),
+                    itemBuilder: (context, i) => BeaconTile(
+                        key: ValueKey(state.beacons[i]),
+                        beacon: state.beacons[i]),
                   );
                 },
               ),

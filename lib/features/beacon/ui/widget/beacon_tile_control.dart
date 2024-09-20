@@ -22,15 +22,7 @@ class BeaconTileControl extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: kPaddingSmallT,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Comments count
-            IconButton(
-              icon: const Icon(TenturaIcons.comments),
-              onPressed: () =>
-                  context.pushRoute(BeaconViewRoute(id: beacon.id)),
-            ),
-
             // Graph View
             IconButton(
               icon: const Icon(TenturaIcons.graph),
@@ -48,6 +40,7 @@ class BeaconTileControl extends StatelessWidget {
               key: ValueKey(beacon),
             ),
 
+            const Spacer(),
             // Like\Dislike
             LikeBeaconControl(
               id: beacon.id,

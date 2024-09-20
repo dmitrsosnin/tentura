@@ -40,15 +40,11 @@ class FavoritesScreen extends StatelessWidget {
                         ],
                       )
                     : ListView.separated(
-                        padding: kPaddingSmallT,
                         itemCount: state.beacons.length,
                         separatorBuilder: (_, __) => const Divider(),
-                        itemBuilder: (context, i) => Padding(
-                          padding: kPaddingSmallV,
-                          child: BeaconTile(
-                            key: ValueKey(state.beacons[i]),
-                            beacon: state.beacons[i],
-                          ),
+                        itemBuilder: (context, i) => BeaconTile(
+                          key: ValueKey(state.beacons[i]),
+                          beacon: state.beacons[i],
                         ),
                       ),
           ),

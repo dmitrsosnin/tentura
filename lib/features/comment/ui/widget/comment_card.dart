@@ -6,6 +6,7 @@ import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/like/ui/widget/like_comment_control.dart';
+import 'package:tentura/ui/widget/text_show_more.dart';
 
 import '../../domain/entity/comment.dart';
 
@@ -30,36 +31,41 @@ class CommentCard extends StatelessWidget {
           onTap: () => context.pushRoute(ProfileViewRoute(
             id: comment.author.id,
           )),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Avatar
-              Padding(
-                padding: const EdgeInsets.only(right: kSpacingDefault),
-                child: AvatarImage(
-                  userId: comment.author.imageId,
-                  size: 40,
+          child: Padding(
+            padding: kPaddingSmallT,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Avatar
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacingDefault),
+                  child: AvatarImage(
+                    userId: comment.author.imageId,
+                    size: 40,
+                  ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  Text(
-                    isMine ? 'Me' : comment.author.title,
-                    style: textTheme.headlineMedium,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title
+                      Text(
+                        isMine ? 'Me' : comment.author.title,
+                        style: textTheme.headlineMedium,
+                      ),
+                      // Body
+                      Padding(
+                        padding: kPaddingSmallT,
+                        child: TextShowMore(
+                          comment.content,
+                          style: textTheme.bodyMedium,
+                        ),
+                      ),
+                    ],
                   ),
-                  // Body
-                  Padding(
-                    padding: kPaddingSmallT,
-                    child: Text(
-                      comment.content,
-                      style: textTheme.bodyLarge,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
         // Buttons

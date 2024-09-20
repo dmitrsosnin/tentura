@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:tentura/consts.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';
-import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/linear_pi_active.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile_control.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_author_info.dart';
 import 'package:tentura/features/comment/ui/widget/comment_card.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 
@@ -59,27 +60,17 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
         builder: (context, state) {
           final author = state.beacon.author;
           final textTheme = Theme.of(context).textTheme;
+          final isCommentsHidden =
+              !state.showAllComments && state.comments.length > kCommentsShown;
+
           return RefreshIndicator.adaptive(
             onRefresh: beaconViewCubit.fetch,
             child: ListView(
-              padding: kPaddingAll,
+              padding: kPaddingH,
               children: [
                 // User row (Avatar and Name)
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: kSpacingDefault),
-                      child: AvatarImage(
-                        userId: author.imageId,
-                        size: 40,
-                      ),
-                    ),
-                    Text(
-                      author.title,
-                      style: textTheme.headlineMedium,
-                    ),
-                  ],
-                ),
+                BeaconAuthorInfo(
+                    author: author, textTheme: textTheme, beacon: state.beacon),
 
                 // Beacon Info
                 BeaconInfo(
@@ -97,23 +88,49 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                     ),
                   ),
 
-                // Comments ExpansionTile
+                // Comments Section
                 Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 64),
-                  child: ExpansionTile(
-                    maintainState: true,
-                    title: const Text('Comments'),
-                    initiallyExpanded: state.hasFocusedComment,
-                    onExpansionChanged: (isExpanded) =>
-                        isExpanded && state.comments.isEmpty
-                            ? beaconViewCubit.fetch()
-                            : null,
-                    children: state.comments
-                        .map((e) => CommentCard(
-                              comment: e,
-                              isMine: authCubit.checkIfIsMe(e.author.id),
-                            ))
-                        .toList(growable: false),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Comments',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      ...(isCommentsHidden
+                          ? state.comments
+                              .take(3)
+                              .map(
+                                (e) => CommentCard(
+                                  comment: e,
+                                  isMine: authCubit.checkIfIsMe(e.author.id),
+                                ),
+                              )
+                              .toList()
+                          : state.comments
+                              .map(
+                                (e) => CommentCard(
+                                  comment: e,
+                                  isMine: authCubit.checkIfIsMe(e.author.id),
+                                ),
+                              )
+                              .toList()),
+                      if (isCommentsHidden)
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(bottom: kSpacingDefault),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () {
+                                beaconViewCubit.emit(
+                                    state.copyWith(showAllComments: true));
+                              },
+                              child: const Text('Show all comments'),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
 

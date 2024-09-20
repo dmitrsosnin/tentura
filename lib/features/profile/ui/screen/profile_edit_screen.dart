@@ -119,10 +119,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
           // Username
           Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 20,
-            ),
+            padding: kPaddingAll,
             child: Form(
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -145,24 +142,42 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           ),
 
           // User Description
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 20,
-            ),
-            child: TextFormField(
-              minLines: 1,
-              maxLines: 20,
-              style: textTheme.bodyLarge,
-              maxLength: kDescriptionLength,
-              controller: _descriptionController,
-              keyboardType: TextInputType.multiline,
-              decoration: const InputDecoration(
-                labelText: 'Description',
+          Expanded(
+            child: Padding(
+              padding: kPaddingH,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final textStyle = textTheme.bodyMedium!;
+                  final painter = TextPainter(
+                    text: TextSpan(text: 'A', style: textStyle),
+                    maxLines: 1,
+                    textDirection: TextDirection.ltr,
+                  )..layout();
+
+                  final lineHeight = painter.height;
+                  final maxLines = constraints.maxHeight > 0
+                      ? (constraints.maxHeight / lineHeight).floor()
+                      : 1;
+
+                  return TextFormField(
+                    minLines: 1,
+                    maxLines: maxLines,
+                    style: textStyle,
+                    maxLength: kDescriptionLength,
+                    controller: _descriptionController,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      labelStyle: textTheme.bodyMedium,
+                    ),
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                  );
+                },
               ),
-              onTapOutside: (_) => FocusScope.of(context).unfocus(),
             ),
           ),
+
+          const Padding(padding: kPaddingT),
         ],
       ),
     );

@@ -7,8 +7,7 @@ import 'package:tentura/ui/widget/beacon_image.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
 import 'package:tentura/ui/widget/place_name_text.dart';
 import 'package:tentura/ui/dialog/choose_location_dialog.dart';
-
-import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
+import 'package:tentura/ui/widget/text_show_more.dart';
 
 import '../../domain/entity/beacon.dart';
 
@@ -47,48 +46,9 @@ class BeaconInfo extends StatelessWidget {
               ),
             ),
 
-          // Beacon Context
-          if (beacon.context.isNotEmpty)
-            Padding(
-              padding: kPaddingSmallT,
-              child: Text(
-                '#${beacon.context}',
-                maxLines: 1,
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
-                style: textTheme.bodySmall,
-              ),
-            ),
-
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              icon: const Icon(Icons.add_circle_outline),
-              label: Text(
-                beacon.context,
-                maxLines: 1,
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
-                style: textTheme.bodySmall,
-              ),
-              onPressed: () async {
-                await GetIt.I<ContextCubit>().add(
-                  contextName: beacon.context,
-                  select: false,
-                );
-                if (context.mounted) {
-                  showSnackBar(
-                    context,
-                    text: 'Topic ${beacon.context} has been added.',
-                  );
-                }
-              },
-            ),
-          ),
-
           // Beacon Title
           Padding(
-            padding: kPaddingSmallT,
+            padding: kPaddingT,
             child: Text(
               beacon.title,
               maxLines: 1,
@@ -104,12 +64,8 @@ class BeaconInfo extends StatelessWidget {
           if (beacon.description.isNotEmpty)
             Padding(
               padding: kPaddingSmallT,
-              child: Text(
+              child: TextShowMore(
                 beacon.description,
-                maxLines: 3,
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-                style: textTheme.bodyMedium,
               ),
             ),
 
