@@ -35,7 +35,7 @@ class ShareCodeDialog extends StatelessWidget {
         actionsAlignment: MainAxisAlignment.spaceBetween,
         titlePadding: kPaddingAll,
         contentPadding: kPaddingAll,
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.surfaceBright,
 
         // Header
         title: Text(
@@ -52,7 +52,7 @@ class ShareCodeDialog extends StatelessWidget {
           data: header,
           decoration: PrettyQrDecoration(
             shape: PrettyQrSmoothSymbol(
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),

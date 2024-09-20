@@ -11,6 +11,8 @@ import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_mine_control.dart';
+import 'package:tentura/ui/widget/tentura_icons.dart';
+import 'package:tentura/ui/widget/text_show_more.dart';
 
 import '../bloc/profile_cubit.dart';
 import '../widget/profile_mine_menu_button.dart';
@@ -68,7 +70,7 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
                       actions: [
                         // Graph View
                         IconButton(
-                          icon: const Icon(Icons.hub_outlined),
+                          icon: const Icon(TenturaIcons.graph),
                           onPressed: () async =>
                               context.pushRoute(GraphRoute(focus: profile.id)),
                         ),
@@ -111,13 +113,12 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
                             const Padding(padding: kPaddingSmallV),
 
                             // Description
-                            Text(
+                            TextShowMore(
                               profile.description,
-                              textAlign: TextAlign.left,
-                              style: textTheme.bodyLarge,
+                              style: textTheme.bodyMedium,
                             ),
                             const Divider(),
-
+                            const Padding(padding: kPaddingSmallT),
                             // Create
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,26 +140,41 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
                     ),
 
                     // Beacons List
-                    SliverList.separated(
-                      itemCount: beacons.length,
-                      itemBuilder: (context, i) => Padding(
-                        padding: kPaddingH,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            BeaconInfo(beacon: beacons[i]),
-                            Padding(
-                              padding: kPaddingSmallV,
-                              child: BeaconMineControl(beacon: beacons[i]),
-                            ),
-                          ],
+                    if (beacons.isEmpty)
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            right: kSpacingDefault,
+                            bottom: kSpacingDefault,
+                            left: kSpacingDefault,
+                          ),
+                          child: Text(
+                            'There are no beacons yet',
+                            style: textTheme.bodyMedium,
+                          ),
                         ),
                       ),
-                      separatorBuilder: (_, __) => const Divider(
-                        endIndent: 20,
-                        indent: 20,
+                    if (beacons.isNotEmpty)
+                      SliverList.separated(
+                        itemCount: beacons.length,
+                        itemBuilder: (context, i) => Padding(
+                          padding: kPaddingH,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              BeaconInfo(beacon: beacons[i]),
+                              Padding(
+                                padding: kPaddingSmallV,
+                                child: BeaconMineControl(beacon: beacons[i]),
+                              ),
+                            ],
+                          ),
+                        ),
+                        separatorBuilder: (_, __) => const Divider(
+                          endIndent: 20,
+                          indent: 20,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               );

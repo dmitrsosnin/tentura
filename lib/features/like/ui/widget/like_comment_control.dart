@@ -21,14 +21,14 @@ class LikeCommentControl extends StatefulWidget {
 
 class _LikeCommentControlState extends State<LikeCommentControl> {
   late final _cubit = context.read<LikeCubit>();
-
+  late final _theme = Theme.of(context);
   late int _likeAmount = widget.comment.myVote;
 
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
-          color: Theme.of(context).colorScheme.secondaryContainer,
+          color: _theme.colorScheme.secondaryContainer,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -37,7 +37,7 @@ class _LikeCommentControlState extends State<LikeCommentControl> {
               icon: const Icon(TenturaIcons.arrowUp),
               onPressed: () => _updateVote(1),
             ),
-            Text(_likeAmount.toString()),
+            Text(_likeAmount.toString(), style: _theme.textTheme.bodyMedium),
             IconButton(
               icon: const Icon(TenturaIcons.arrowDown),
               onPressed: () => _updateVote(-1),

@@ -40,19 +40,19 @@ class _IntroScreenState extends State<IntroScreen> {
           minimum: kPaddingAll,
           child: Column(
             children: [
-              // Skip Button
-              Padding(
-                padding: kPaddingSmallV,
-                child: Row(
-                  children: [
-                    const Spacer(),
-                    OutlinedButton(
-                      onPressed: () => _settingsCubit.setIntroEnabled(false),
-                      child: const Text('Skip'),
-                    ),
-                  ],
-                ),
-              ),
+              // // Skip Button
+              // Padding(
+              //   padding: kPaddingSmallV,
+              //   child: Row(
+              //     children: [
+              //       const Spacer(),
+              //       OutlinedButton(
+              //         onPressed: () => _settingsCubit.setIntroEnabled(false),
+              //         child: const Text('Skip'),
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
               // Page Body
               Expanded(
@@ -67,19 +67,19 @@ class _IntroScreenState extends State<IntroScreen> {
                         AssetBytesLoader(_pages[i].asset),
                       ),
 
-                      // Position Indicator
-                      DotsIndicator(
-                        position: i,
-                        dotsCount: _pages.length,
-                        decorator: DotsDecorator(
-                          size: const Size(20, 8),
-                          activeSize: const Size(50, 8),
-                          activeColor: _theme.colorScheme.tertiary,
-                          color: _theme.disabledColor,
-                          activeShape: _shape,
-                          shape: _shape,
-                        ),
-                      ),
+                      // // Position Indicator
+                      // DotsIndicator(
+                      //   position: i,
+                      //   dotsCount: _pages.length,
+                      //   decorator: DotsDecorator(
+                      //     size: const Size(20, 8),
+                      //     activeSize: const Size(50, 8),
+                      //     activeColor: _theme.colorScheme.tertiary,
+                      //     color: _theme.disabledColor,
+                      //     activeShape: _shape,
+                      //     shape: _shape,
+                      //   ),
+                      // ),
 
                       // Title
                       Padding(
@@ -117,7 +117,7 @@ class _IntroScreenState extends State<IntroScreen> {
                             duration: const Duration(milliseconds: 250),
                           );
                   },
-                  child: const Text('Continue'),
+                  child: const Text('Start'),
                 ),
               ),
             ],
@@ -126,40 +126,40 @@ class _IntroScreenState extends State<IntroScreen> {
       );
 
   static const _pages = [
-    // Page 1
-    (
-      asset: 'assets/intro/1.svg.vec',
-      title: 'Discover the initiatives of others',
-      text: 'Check the feed with information about new '
-          'initiatives or activities from community members',
-    ),
-    // Page 2
-    (
-      asset: 'assets/intro/2.svg.vec',
-      title: 'Collaborate and Connect',
-      text: 'Establish relationships with new acquaintances by helping '
-          'to implement their projects and supporting initiatives',
-    ),
-    // Page 3
-    (
-      asset: 'assets/intro/3.svg.vec',
-      title: 'Create and Share your initiatives',
-      text: 'Tell the community about your initiative '
-          'or project and get support',
-    ),
-    // Page 4
-    (
-      asset: 'assets/intro/4.svg.vec',
-      title: 'Manage your social field',
-      text: 'Rank projects and supporting '
-          'the most interesting initiatives of community members',
-    ),
+    // // Page 1
+    // (
+    //   asset: 'assets/intro/1.svg.vec',
+    //   title: 'Discover the initiatives of others',
+    //   text: 'Check the feed with information about new '
+    //       'initiatives or activities from community members',
+    // ),
+    // // Page 2
+    // (
+    //   asset: 'assets/intro/2.svg.vec',
+    //   title: 'Collaborate and Connect',
+    //   text: 'Establish relationships with new acquaintances by helping '
+    //       'to implement their projects and supporting initiatives',
+    // ),
+    // // Page 3
+    // (
+    //   asset: 'assets/intro/3.svg.vec',
+    //   title: 'Create and Share your initiatives',
+    //   text: 'Tell the community about your initiative '
+    //       'or project and get support',
+    // ),
+    // // Page 4
+    // (
+    //   asset: 'assets/intro/4.svg.vec',
+    //   title: 'Manage your social field',
+    //   text: 'Rank projects and supporting '
+    //       'the most interesting initiatives of community members',
+    // ),
     // Page 5
     (
       asset: 'assets/intro/5.svg.vec',
-      title: 'Investigate your connections',
-      text: 'A transparent and understandable system to establish '
-          'what connects you with each member of the community',
+      title: 'Build Your Network with Clarity',
+      text: 'Each post reveals the connections you share. '
+          'Enjoy complete transparency and mastery over your relationships',
     ),
   ];
 }

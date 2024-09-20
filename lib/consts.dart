@@ -2,7 +2,9 @@ const kIdLength = 13;
 const kCodeLength = 7;
 const kTitleMinLength = 3;
 const kTitleMaxLength = 32;
+const kMaxLines = 3;
 const kDescriptionLength = 2048;
+const kCommentsShown = 3;
 
 const kSnackBarDuration = Duration(seconds: 5);
 

@@ -46,7 +46,7 @@ class _LikeBeaconControlState extends State<LikeBeaconControl> {
               maxLines: 1,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
-              style: _theme.textTheme.bodyLarge,
+              style: _theme.textTheme.bodyMedium,
             ),
 
             // Dislike Button
