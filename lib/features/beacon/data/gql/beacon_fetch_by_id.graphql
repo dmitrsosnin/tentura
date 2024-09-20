@@ -1,7 +1,7 @@
-# import '/domain/entity/beacon.graphql'
+# import 'beacon_model.graphql'
 
 query BeaconFetchById($id: String!) {
   beacon_by_pk(id: $id) {
-    ...BeaconFields
+    ...BeaconModel
   }
 }

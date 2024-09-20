@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
-import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
 import 'package:tentura/features/like/ui/widget/like_beacon_control.dart';
 import 'package:tentura/features/favorites/ui/widget/beacon_pin_icon_button.dart';
+
+import '../../domain/entity/beacon.dart';
 
 class BeaconTileControl extends StatelessWidget {
   const BeaconTileControl({
@@ -26,18 +27,14 @@ class BeaconTileControl extends StatelessWidget {
             // Comments count
             IconButton(
               icon: const Icon(TenturaIcons.comments),
-              onPressed: () => context.pushRoute(
-                BeaconViewRoute(
-                  id: beacon.id,
-                  initiallyExpanded: true,
-                ),
-              ),
+              onPressed: () =>
+                  context.pushRoute(BeaconViewRoute(id: beacon.id)),
             ),
 
             // Graph View
             IconButton(
               icon: const Icon(TenturaIcons.graph),
-              onPressed: (beacon.my_vote ?? -1) < 0
+              onPressed: beacon.myVote < 0
                   ? null
                   : () => context.pushRoute(GraphRoute(focus: beacon.id)),
             ),
@@ -47,15 +44,14 @@ class BeaconTileControl extends StatelessWidget {
 
             // Favorite
             BeaconPinIconButton(
-              id: beacon.id,
-              isPinned: beacon.is_pinned,
+              beacon: beacon,
               key: ValueKey(beacon),
             ),
 
             // Like\Dislike
             LikeBeaconControl(
               id: beacon.id,
-              votes: beacon.my_vote ?? 0,
+              votes: beacon.myVote,
             ),
           ],
         ),

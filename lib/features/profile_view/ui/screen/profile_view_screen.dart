@@ -7,6 +7,7 @@ import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
+import 'package:tentura/features/like/ui/bloc/like_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 
 import '../bloc/profile_view_cubit.dart';
@@ -60,11 +61,10 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                     PopupMenuButton(
                       itemBuilder: (context) => <PopupMenuEntry<void>>[
                         PopupMenuItem<void>(
-                          onTap: () =>
-                              context.read<ProfileViewCubit>().voteById(
-                                    userId: profile.id,
-                                    amount: profile.isFriend ? 0 : 1,
-                                  ),
+                          onTap: () => context.read<LikeCubit>().likeUser(
+                                userId: profile.id,
+                                amount: profile.isFriend ? 0 : 1,
+                              ),
                           child: profile.isFriend
                               ? const Text('Remove from my field')
                               : const Text('Add to my field'),

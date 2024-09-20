@@ -1,4 +1,4 @@
-fragment BeaconFields on beacon {
+fragment BeaconModel on beacon {
   id
   title
   description
@@ -11,7 +11,6 @@ fragment BeaconFields on beacon {
   long
   timerange
   has_picture
-  comments_count
   my_vote
   score
   author {

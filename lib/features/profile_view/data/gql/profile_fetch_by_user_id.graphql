@@ -1,13 +1,9 @@
-# import '/domain/entity/beacon.graphql'
+# import '/features/beacon/data/gql/beacon_model.graphql'
+# import '/features/user/data/gql/user_model.graphql'
 
 query ProfileFetchByUserId($user_id: String!) {
   user_by_pk(id: $user_id) {
-      id
-      title
-      description
-      has_picture
-      my_vote
-      score
+      ...UserModel
     beacons(
       where: {
         _and: {user_id: {_eq: $user_id},
@@ -15,7 +11,7 @@ query ProfileFetchByUserId($user_id: String!) {
       },
       order_by: {created_at: desc}
     ) {
-      ...BeaconFields
+      ...BeaconModel
     }
   }
 }

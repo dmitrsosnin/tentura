@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
-import 'package:tentura/domain/entity/comment.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/like/ui/widget/like_comment_control.dart';
 
-import 'comment_vote_control.dart';
+import '../../domain/entity/comment.dart';
 
 class CommentCard extends StatelessWidget {
   const CommentCard({
     required this.comment,
+    this.isMine = false,
     super.key,
   });
 
   final Comment comment;
+  final bool isMine;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final isMine = GetIt.I<AuthCubit>().checkIfIsMe(comment.author.id);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -37,7 +37,7 @@ class CommentCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: kSpacingDefault),
                 child: AvatarImage(
-                  userId: comment.author.has_picture ? comment.author.id : '',
+                  userId: comment.author.imageId,
                   size: 40,
                 ),
               ),
@@ -73,7 +73,7 @@ class CommentCard extends StatelessWidget {
               Container(
                 alignment: Alignment.centerRight,
                 padding: kPaddingSmallV,
-                child: CommentVoteControl(comment: comment),
+                child: LikeCommentControl(comment: comment),
               ),
           ],
         ),

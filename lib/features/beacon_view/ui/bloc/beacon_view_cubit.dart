@@ -1,7 +1,12 @@
-import 'package:tentura/domain/entity/beacon.dart';
+import 'package:get_it/get_it.dart';
+
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import '../../data/beacon_view_repository.dart';
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/features/beacon/data/beacon_repository.dart';
+import 'package:tentura/features/comment/data/comment_repository.dart';
+import 'package:tentura/features/profile/domain/entity/profile.dart';
+
 import 'beacon_view_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,37 +14,51 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 export 'beacon_view_state.dart';
 
 class BeaconViewCubit extends Cubit<BeaconViewState> {
-  BeaconViewCubit(
-    this._beaconViewRepository, {
+  static final _zeroDateTime = DateTime.fromMillisecondsSinceEpoch(0);
+  static final _emptyBeacon = Beacon(
+    createdAt: _zeroDateTime,
+    updatedAt: _zeroDateTime,
+  );
+
+  BeaconViewCubit({
     required String id,
-    bool fetchCommentsOnStart = false,
-  }) : super(switch (id) {
+    required Profile myProfile,
+    BeaconRepository? beaconRepository,
+    CommentRepository? commentRepository,
+  })  : _beaconRepository = beaconRepository ?? GetIt.I<BeaconRepository>(),
+        _commentRepository = commentRepository ?? GetIt.I<CommentRepository>(),
+        super(switch (id) {
           _ when id.startsWith('B') => BeaconViewState(
-              beacon: Beacon.empty.copyWith(id: id),
+              beacon: _emptyBeacon.copyWith(id: id),
+              myProfile: myProfile,
             ),
           _ when id.startsWith('C') => BeaconViewState(
-              beacon: Beacon.empty,
+              beacon: _emptyBeacon,
               focusCommentId: id,
+              myProfile: myProfile,
             ),
           _ => BeaconViewState(
-              beacon: Beacon.empty,
+              beacon: _emptyBeacon,
               error: 'Wrong id: $id',
               status: FetchStatus.isFailure,
             ),
         }) {
-    fetch(fetchComments: fetchCommentsOnStart || state.hasFocusedComment);
+    fetch();
   }
 
-  final BeaconViewRepository _beaconViewRepository;
+  final BeaconRepository _beaconRepository;
+  final CommentRepository _commentRepository;
 
-  Future<void> fetch({bool fetchComments = true}) async {
+  Future<void> fetch() async {
     if (state.beacon.id.isEmpty && state.hasNoFocusedComment) return;
     emit(state.setLoading());
     try {
       if (state.hasFocusedComment) {
         // Show Beacon with one Comment
-        final (beacon, comment) =
-            await _beaconViewRepository.fetchCommentById(state.focusCommentId);
+        final comment =
+            await _commentRepository.fetchCommentById(state.focusCommentId);
+        final beacon =
+            await _beaconRepository.fetchBeaconById(comment.beaconId);
         emit(state.copyWith(
           beacon: beacon,
           comments: [comment],
@@ -49,22 +68,17 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
         // show Beacon with all Comments
         if (state.beacon.title.isEmpty) {
           emit(state.copyWith(
-            beacon:
-                await _beaconViewRepository.fetchBeaconById(state.beacon.id),
+            beacon: await _beaconRepository.fetchBeaconById(state.beacon.id),
             status: FetchStatus.isSuccess,
           ));
         }
-        if (fetchComments) {
-          emit(state.setLoading());
-          emit(state.copyWith(
-            status: FetchStatus.isSuccess,
-            comments: List.of(
-              await _beaconViewRepository
-                  .fetchCommentsByBeaconId(state.beacon.id),
-              growable: false,
-            ),
-          ));
-        }
+        emit(state.setLoading());
+        emit(state.copyWith(
+          status: FetchStatus.isSuccess,
+          comments: List.of(
+            await _commentRepository.fetchCommentsByBeaconId(state.beacon.id),
+          ),
+        ));
       }
     } catch (e) {
       emit(state.setError(e));
@@ -79,25 +93,16 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
   Future<void> addComment(String text) async {
     emit(state.setLoading());
     try {
-      final comment = await _beaconViewRepository.addComment(
+      final comment = await _commentRepository.addComment(
         beaconId: state.beacon.id,
-        text: text,
+        content: text,
       );
       emit(state.copyWith(
         status: FetchStatus.isSuccess,
-        comments: List.from(state.comments)..add(comment),
+        comments: state.comments..add(comment),
       ));
     } catch (e) {
       emit(state.setError(e));
     }
   }
-
-  Future<int> voteForComment({
-    required String commentId,
-    required int amount,
-  }) =>
-      _beaconViewRepository.voteForComment(
-        commentId: commentId,
-        amount: amount,
-      );
 }

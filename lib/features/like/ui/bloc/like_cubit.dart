@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/like_repository.dart';
+import '../../domain/exception.dart';
 import 'like_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,20 +16,78 @@ class LikeCubit extends Cubit<LikeState> {
   final LikeRepository _likeRepository;
 
   Future<int?> likeBeacon({
-    required int amount,
     required String beaconId,
+    required int amount,
   }) async {
     emit(state.setLoading());
     try {
       final result = await _likeRepository.likeBeacon(
-        id: beaconId,
+        beaconId: beaconId,
         amount: amount,
       );
       if (result == null) {
-        emit(state.setError(Exception('Can`t set like for [$beaconId]')));
+        emit(state.setError(LikeSetException(beaconId)));
       } else {
-        state.likes[beaconId] = result;
-        emit(LikeState(likes: state.likes));
+        state.beaconLikes[beaconId] = result;
+        emit(LikeState(
+          beaconLikes: state.beaconLikes,
+          commentLikes: state.commentLikes,
+          userLikes: state.userLikes,
+        ));
+      }
+      return result;
+    } catch (e) {
+      emit(state.setError(e));
+      return null;
+    }
+  }
+
+  Future<int?> likeComment({
+    required String commentId,
+    required int amount,
+  }) async {
+    emit(state.setLoading());
+    try {
+      final result = await _likeRepository.likeComment(
+        commentId: commentId,
+        amount: amount,
+      );
+      if (result == null) {
+        emit(state.setError(LikeSetException(commentId)));
+      } else {
+        state.commentLikes[commentId] = result;
+        emit(LikeState(
+          beaconLikes: state.beaconLikes,
+          commentLikes: state.commentLikes,
+          userLikes: state.userLikes,
+        ));
+      }
+      return result;
+    } catch (e) {
+      emit(state.setError(e));
+      return null;
+    }
+  }
+
+  Future<int?> likeUser({
+    required String userId,
+    required int amount,
+  }) async {
+    emit(state.setLoading());
+    try {
+      final result = await _likeRepository.likeUser(
+        userId: userId,
+        amount: amount,
+      );
+      if (result == null) {
+        emit(state.setError(LikeSetException(userId)));
+      } else {
+        state.userLikes[userId] = result;
+        emit(LikeState(
+          beaconLikes: state.beaconLikes,
+          commentLikes: state.commentLikes,
+          userLikes: state.userLikes,
+        ));
       }
       return result;
     } catch (e) {

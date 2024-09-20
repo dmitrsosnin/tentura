@@ -1,4 +1,4 @@
-fragment CommentFields on comment {
+fragment CommentModel on comment {
   id
   beacon_id
   created_at

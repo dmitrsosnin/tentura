@@ -1,5 +1,6 @@
-import 'package:tentura/domain/entity/beacon.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
+
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
 part 'my_field_state.freezed.dart';
 

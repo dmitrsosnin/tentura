@@ -25,26 +25,11 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
-      final (:profile, :beacons) = await _repository.fetchById(id);
+      final (:profile, :beacons) = await _repository.fetchByUserId(id);
       emit(state.copyWith(
         profile: profile,
-        beacons: beacons,
+        beacons: beacons.toList(),
         status: FetchStatus.isSuccess,
-      ));
-    } catch (e) {
-      emit(state.setError(e));
-    }
-  }
-
-  Future<void> voteById({
-    required String userId,
-    required int amount,
-  }) async {
-    try {
-      final result = await _repository.voteById(userId: userId, amount: amount);
-      if (result == null) throw Exception('Can`t add friend [$userId]');
-      emit(state.copyWith(
-        profile: state.profile.copyWith(myVote: result),
       ));
     } catch (e) {
       emit(state.setError(e));

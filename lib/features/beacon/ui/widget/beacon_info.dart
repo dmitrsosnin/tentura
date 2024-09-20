@@ -2,12 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
-import 'package:tentura/domain/entity/beacon.dart';
-import 'package:tentura/ui/dialog/choose_location_dialog.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/ui/widget/beacon_image.dart';
-import 'package:tentura/ui/widget/place_name_text.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
+import 'package:tentura/ui/widget/place_name_text.dart';
+import 'package:tentura/ui/dialog/choose_location_dialog.dart';
+
+import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
+
+import '../../domain/entity/beacon.dart';
 
 class BeaconInfo extends StatelessWidget {
   const BeaconInfo({
@@ -22,13 +25,6 @@ class BeaconInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final hasCoordinates = beacon.lat != null && beacon.long != null;
-    final coordinates = hasCoordinates
-        ? (
-            lat: double.tryParse(beacon.lat?.value ?? '.0') ?? 0,
-            long: double.tryParse(beacon.long?.value ?? '.0') ?? 0,
-          )
-        : (lat: .0, long: .0);
     return GestureDetector(
       onTap: context.routeData.name == BeaconViewRoute.name
           ? null
@@ -37,7 +33,7 @@ class BeaconInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Beacon Image
-          if (beacon.has_picture)
+          if (beacon.hasPicture)
             Padding(
               padding: kPaddingSmallT,
               child: ClipRRect(
@@ -45,18 +41,18 @@ class BeaconInfo extends StatelessWidget {
                   top: Radius.circular(16),
                 ),
                 child: BeaconImage(
-                  authorId: beacon.author.id,
-                  beaconId: beacon.has_picture ? beacon.id : '',
+                  authorId: beacon.author.imageId,
+                  beaconId: beacon.imageId,
                 ),
               ),
             ),
 
           // Beacon Context
-          if (beacon.context != null && beacon.context!.isNotEmpty)
+          if (beacon.context.isNotEmpty)
             Padding(
               padding: kPaddingSmallT,
               child: Text(
-                '#${beacon.context!}',
+                '#${beacon.context}',
                 maxLines: 1,
                 textAlign: TextAlign.right,
                 overflow: TextOverflow.ellipsis,
@@ -64,31 +60,31 @@ class BeaconInfo extends StatelessWidget {
               ),
             ),
 
-          // Align(
-          //   alignment: Alignment.centerRight,
-          //   child: TextButton.icon(
-          //     icon: const Icon(Icons.add_circle_outline),
-          //     label: Text(
-          //       beacon.context!,
-          //       maxLines: 1,
-          //       textAlign: TextAlign.right,
-          //       overflow: TextOverflow.ellipsis,
-          //       style: textTheme.bodySmall,
-          //     ),
-          //     onPressed: () async {
-          //       await GetIt.I<ContextCubit>().add(
-          //         contextName: beacon.context!,
-          //         select: false,
-          //       );
-          //       if (context.mounted) {
-          //         showSnackBar(
-          //           context,
-          //           text: 'Topic ${beacon.context} has been added.',
-          //         );
-          //       }
-          //     },
-          //   ),
-          // ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              icon: const Icon(Icons.add_circle_outline),
+              label: Text(
+                beacon.context,
+                maxLines: 1,
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.bodySmall,
+              ),
+              onPressed: () async {
+                await GetIt.I<ContextCubit>().add(
+                  contextName: beacon.context,
+                  select: false,
+                );
+                if (context.mounted) {
+                  showSnackBar(
+                    context,
+                    text: 'Topic ${beacon.context} has been added.',
+                  );
+                }
+              },
+            ),
+          ),
 
           // Beacon Title
           Padding(
@@ -118,7 +114,7 @@ class BeaconInfo extends StatelessWidget {
             ),
 
           // Beacon Timerange and Geolocation
-          if (beacon.timerange != null || hasCoordinates)
+          if (beacon.dateRange != null || beacon.coordinates != null)
             Padding(
               padding: kPaddingSmallT,
               child: Wrap(
@@ -127,7 +123,7 @@ class BeaconInfo extends StatelessWidget {
                 alignment: WrapAlignment.spaceBetween,
                 children: [
                   // Beacon Timerange
-                  if (beacon.timerange != null)
+                  if (beacon.dateRange != null)
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -139,8 +135,8 @@ class BeaconInfo extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${fYMD(beacon.timerange?.start)}'
-                          ' - ${fYMD(beacon.timerange?.end)}',
+                          '${fYMD(beacon.dateRange?.start)}'
+                          ' - ${fYMD(beacon.dateRange?.end)}',
                           maxLines: 1,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
@@ -149,7 +145,7 @@ class BeaconInfo extends StatelessWidget {
                       ],
                     ),
                   // Beacon Geolocation
-                  if (hasCoordinates)
+                  if (beacon.coordinates != null)
                     TextButton.icon(
                       icon: const Icon(
                         TenturaIcons.location,
@@ -161,12 +157,12 @@ class BeaconInfo extends StatelessWidget {
                       label: kIsWeb
                           ? const Text('Show on the map')
                           : PlaceNameText(
-                              coords: coordinates,
+                              coords: beacon.coordinates!,
                               style: textTheme.bodySmall,
                             ),
                       onPressed: () => ChooseLocationDialog.show(
                         context,
-                        center: coordinates,
+                        center: beacon.coordinates,
                       ),
                     ),
                 ],

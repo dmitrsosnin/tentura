@@ -5,7 +5,9 @@ part 'like_state.freezed.dart';
 @Freezed(makeCollectionsUnmodifiable: false)
 class LikeState with _$LikeState, StateFetchMixin {
   const factory LikeState({
-    @Default({}) Map<String, int> likes,
+    @Default({}) Map<String, int> beaconLikes,
+    @Default({}) Map<String, int> commentLikes,
+    @Default({}) Map<String, int> userLikes,
     @Default(FetchStatus.isSuccess) FetchStatus status,
     Object? error,
   }) = _LikeState;

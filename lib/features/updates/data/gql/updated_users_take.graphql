@@ -1,12 +1,9 @@
+# import '/features/user/data/gql/user_model.graphql'
+
 mutation UpdatedUsersTake {
   updates(args: {prefix: "U"}) {
     user {
-      id
-      title
-      description
-      has_picture
-      my_vote
-      score
+      ...UserModel
     }
   }
 }

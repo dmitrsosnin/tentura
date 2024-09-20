@@ -9,29 +9,26 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile_control.dart';
+import 'package:tentura/features/comment/ui/widget/comment_card.dart';
+import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 
-import '../../data/beacon_view_repository.dart';
 import '../bloc/beacon_view_cubit.dart';
-import '../widget/comment_card.dart';
 import '../widget/new_comment_input.dart';
 
 @RoutePage()
 class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
   const BeaconViewScreen({
     @queryParam this.id = '',
-    @queryParam this.initiallyExpanded = false,
     super.key,
   });
 
   final String id;
-  final bool initiallyExpanded;
 
   @override
   Widget wrappedRoute(BuildContext context) => BlocProvider(
         create: (context) => BeaconViewCubit(
-          GetIt.I<BeaconViewRepository>(),
-          fetchCommentsOnStart: initiallyExpanded,
           id: id,
+          myProfile: GetIt.I<ProfileCubit>().state.profile,
         ),
         child: this,
       );
@@ -73,7 +70,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                     Padding(
                       padding: const EdgeInsets.only(right: kSpacingDefault),
                       child: AvatarImage(
-                        userId: author.has_picture ? author.id : '',
+                        userId: author.imageId,
                         size: 40,
                       ),
                     ),
@@ -106,14 +103,16 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                   child: ExpansionTile(
                     maintainState: true,
                     title: const Text('Comments'),
-                    initiallyExpanded:
-                        initiallyExpanded || state.hasFocusedComment,
+                    initiallyExpanded: state.hasFocusedComment,
                     onExpansionChanged: (isExpanded) =>
                         isExpanded && state.comments.isEmpty
                             ? beaconViewCubit.fetch()
                             : null,
                     children: state.comments
-                        .map((e) => CommentCard(comment: e))
+                        .map((e) => CommentCard(
+                              comment: e,
+                              isMine: authCubit.checkIfIsMe(e.author.id),
+                            ))
                         .toList(growable: false),
                   ),
                 ),

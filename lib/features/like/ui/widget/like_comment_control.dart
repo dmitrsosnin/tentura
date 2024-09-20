@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
-
-import 'package:tentura/domain/entity/_g/comment.data.gql.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
 
-import '../bloc/beacon_view_cubit.dart';
+import 'package:tentura/features/comment/domain/entity/comment.dart';
 
-class CommentVoteControl extends StatefulWidget {
-  final GCommentFields comment;
+import '../bloc/like_cubit.dart';
 
-  const CommentVoteControl({
+class LikeCommentControl extends StatefulWidget {
+  final Comment comment;
+
+  const LikeCommentControl({
     required this.comment,
     super.key,
   });
 
   @override
-  State<CommentVoteControl> createState() => _CommentVoteControlState();
+  State<LikeCommentControl> createState() => _LikeCommentControlState();
 }
 
-class _CommentVoteControlState extends State<CommentVoteControl> {
-  late final _cubit = context.read<BeaconViewCubit>();
+class _LikeCommentControlState extends State<LikeCommentControl> {
+  late final _cubit = context.read<LikeCubit>();
 
-  late int _likeAmount = widget.comment.my_vote ?? 0;
+  late int _likeAmount = widget.comment.myVote;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -47,14 +47,13 @@ class _CommentVoteControlState extends State<CommentVoteControl> {
       );
 
   // TBD: debounce
+  // TBD: move to Cubit
   Future<void> _updateVote(int add) async {
-    _likeAmount += add;
-    setState(() {});
     try {
-      _likeAmount = await _cubit.voteForComment(
+      _likeAmount = (await _cubit.likeComment(
         commentId: widget.comment.id,
-        amount: _likeAmount,
-      );
+        amount: _likeAmount + add,
+      ))!;
       setState(() {});
     } catch (e) {
       if (mounted) {

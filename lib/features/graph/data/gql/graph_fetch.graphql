@@ -1,4 +1,4 @@
-# import '/domain/entity/beacon.graphql'
+# import '/features/beacon/data/gql/beacon_model.graphql'
 
 query GraphFetch(
     $focus: String!,
@@ -28,6 +28,6 @@ query GraphFetch(
     }
   }
   beacon_by_pk(id: $focus) {
-    ...BeaconFields
+    ...BeaconModel
   }
 }
