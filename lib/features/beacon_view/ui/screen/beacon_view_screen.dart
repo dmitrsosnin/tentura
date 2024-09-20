@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:tentura/consts.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/linear_pi_active.dart';
@@ -58,11 +57,6 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
         listener: showSnackBarError,
         buildWhen: (p, c) => c.status.isSuccess,
         builder: (context, state) {
-          final author = state.beacon.author;
-          final textTheme = Theme.of(context).textTheme;
-          final isCommentsHidden =
-              !state.showAllComments && state.comments.length > kCommentsShown;
-
           return RefreshIndicator.adaptive(
             onRefresh: beaconViewCubit.fetch,
             child: ListView(
@@ -70,7 +64,9 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
               children: [
                 // User row (Avatar and Name)
                 BeaconAuthorInfo(
-                    author: author, textTheme: textTheme, beacon: state.beacon),
+                  author: state.beacon.author,
+                  beacon: state.beacon,
+                ),
 
                 // Beacon Info
                 BeaconInfo(
@@ -79,7 +75,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                 ),
 
                 // Buttons Row
-                if (authCubit.checkIfIsNotMe(author.id))
+                if (authCubit.checkIfIsNotMe(state.beacon.author.id))
                   Padding(
                     padding: kPaddingSmallV,
                     child: BeaconTileControl(
@@ -94,41 +90,17 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Comments',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                      ...(isCommentsHidden
-                          ? state.comments
-                              .take(3)
-                              .map(
-                                (e) => CommentCard(
-                                  comment: e,
-                                  isMine: authCubit.checkIfIsMe(e.author.id),
-                                ),
-                              )
-                              .toList()
-                          : state.comments
-                              .map(
-                                (e) => CommentCard(
-                                  comment: e,
-                                  isMine: authCubit.checkIfIsMe(e.author.id),
-                                ),
-                              )
-                              .toList()),
-                      if (isCommentsHidden)
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: kSpacingDefault),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                beaconViewCubit.emit(
-                                    state.copyWith(showAllComments: true));
-                              },
-                              child: const Text('Show all comments'),
-                            ),
-                          ),
+                      const Text(
+                        'Comments',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      for (final e in state.comments)
+                        CommentCard(
+                          comment: e,
+                          isMine: authCubit.checkIfIsMe(e.author.id),
                         ),
                     ],
                   ),

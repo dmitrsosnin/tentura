@@ -114,7 +114,7 @@ class AuthLoginScreen extends StatelessWidget {
                   ),
                 ),
                 const Padding(
-                    padding: EdgeInsets.only(bottom: 60 - kSpacingDefault)),
+                    padding: EdgeInsets.only(bottom: 60 - kSpacingMedium)),
               ],
             ),
           ),

@@ -21,9 +21,7 @@ class FavoritesScreen extends StatelessWidget {
           builder: (context, state) => RefreshIndicator.adaptive(
             onRefresh: context.read<FavoritesCubit>().fetch,
             child: state.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  )
+                ? const Center(child: CircularProgressIndicator.adaptive())
                 : state.beacons.isEmpty
                     ? CustomScrollView(
                         slivers: [
@@ -42,9 +40,12 @@ class FavoritesScreen extends StatelessWidget {
                     : ListView.separated(
                         itemCount: state.beacons.length,
                         separatorBuilder: (_, __) => const Divider(),
-                        itemBuilder: (context, i) => BeaconTile(
-                          key: ValueKey(state.beacons[i]),
-                          beacon: state.beacons[i],
+                        itemBuilder: (context, i) => Padding(
+                          padding: kPaddingV,
+                          child: BeaconTile(
+                            key: ValueKey(state.beacons[i]),
+                            beacon: state.beacons[i],
+                          ),
                         ),
                       ),
           ),

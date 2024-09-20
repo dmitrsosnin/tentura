@@ -11,17 +11,16 @@ import 'package:tentura/features/profile/domain/entity/profile.dart';
 class BeaconAuthorInfo extends StatelessWidget {
   const BeaconAuthorInfo({
     required this.author,
-    required this.textTheme,
     required this.beacon,
     super.key,
   });
 
   final Profile author;
-  final TextTheme textTheme;
   final Beacon beacon;
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
         // Avatar

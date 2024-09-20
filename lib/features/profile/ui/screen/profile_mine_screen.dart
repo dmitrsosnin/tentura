@@ -12,7 +12,7 @@ import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_mine_control.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
-import 'package:tentura/ui/widget/text_show_more.dart';
+import 'package:tentura/ui/widget/show_more_text.dart';
 
 import '../bloc/profile_cubit.dart';
 import '../widget/profile_mine_menu_button.dart';
@@ -113,7 +113,7 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
                             const Padding(padding: kPaddingSmallV),
 
                             // Description
-                            TextShowMore(
+                            ShowMoreText(
                               profile.description,
                               style: textTheme.bodyMedium,
                             ),
@@ -144,9 +144,9 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
                       SliverToBoxAdapter(
                         child: Padding(
                           padding: const EdgeInsets.only(
-                            right: kSpacingDefault,
-                            bottom: kSpacingDefault,
-                            left: kSpacingDefault,
+                            right: kSpacingMedium,
+                            bottom: kSpacingMedium,
+                            left: kSpacingMedium,
                           ),
                           child: Text(
                             'There are no beacons yet',

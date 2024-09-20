@@ -14,7 +14,6 @@ class BeaconViewState with _$BeaconViewState, StateFetchMixin {
     @Default([]) List<Comment> comments,
     @Default(Profile()) Profile myProfile,
     @Default(FetchStatus.isSuccess) FetchStatus status,
-    @Default(false) bool showAllComments,
     Object? error,
   }) = _BeaconViewState;
 

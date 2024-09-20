@@ -28,13 +28,16 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
   @override
   Widget build(BuildContext context) => SafeArea(
         minimum: const EdgeInsets.only(
-            left: kSpacingDefault,
-            right: kSpacingDefault,
-            top: kSpacingDefault),
+          left: kSpacingMedium,
+          right: kSpacingMedium,
+          top: kSpacingMedium,
+        ),
         child: Column(
           children: [
             // Context selector
-            ContextDropDown(onChanged: context.read<MyFieldCubit>().fetch),
+            ContextDropDown(
+              onChanged: context.read<MyFieldCubit>().fetch,
+            ),
 
             // Beacons list
             Expanded(
@@ -46,9 +49,13 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
                   return ListView.separated(
                     itemCount: state.beacons.length,
                     separatorBuilder: (_, __) => const Divider(),
-                    itemBuilder: (context, i) => BeaconTile(
+                    itemBuilder: (context, i) => Padding(
+                      padding: kPaddingV,
+                      child: BeaconTile(
                         key: ValueKey(state.beacons[i]),
-                        beacon: state.beacons[i]),
+                        beacon: state.beacons[i],
+                      ),
+                    ),
                   );
                 },
               ),

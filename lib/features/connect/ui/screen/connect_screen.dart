@@ -58,7 +58,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   ),
                 ),
                 const Padding(
-                  padding: kPaddingLargeV,
+                  padding: EdgeInsets.symmetric(vertical: 32),
                   child: Text(
                     'or',
                     textAlign: TextAlign.center,

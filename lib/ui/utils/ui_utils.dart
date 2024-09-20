@@ -7,22 +7,18 @@ import 'package:tentura/consts.dart';
 import '../bloc/state_base.dart';
 
 const kSpacingSmall = 8.0;
-const kSpacingDefault = 16.0;
+const kSpacingMedium = 16.0;
 const kSpacingLarge = 24.0;
 
-const kPaddingAll = EdgeInsets.all(kSpacingDefault);
-
-const kPaddingH = EdgeInsets.symmetric(horizontal: kSpacingDefault);
-const kPaddingV = EdgeInsets.symmetric(vertical: kSpacingDefault);
-const kPaddingT = EdgeInsets.only(top: kSpacingDefault);
+const kPaddingAll = EdgeInsets.all(kSpacingMedium);
+const kPaddingH = EdgeInsets.symmetric(horizontal: kSpacingMedium);
+const kPaddingV = EdgeInsets.symmetric(vertical: kSpacingMedium);
+const kPaddingT = EdgeInsets.only(top: kSpacingMedium);
 
 const kPaddingSmallT = EdgeInsets.only(top: kSpacingSmall);
 const kPaddingSmallV = EdgeInsets.symmetric(vertical: kSpacingSmall);
 
-const kPaddingMediumV = EdgeInsets.symmetric(vertical: 20);
-
-const kPaddingLargeV = EdgeInsets.symmetric(vertical: 32);
-
+/// 600px in MD guideline means large screen for vertical orientation
 const kWebConstraints = BoxConstraints(minWidth: 600);
 const kWebAspectRatio = 9 / 16;
 

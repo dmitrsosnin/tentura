@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
+import 'package:tentura/ui/widget/show_more_text.dart';
 import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/like/ui/widget/like_comment_control.dart';
-import 'package:tentura/ui/widget/text_show_more.dart';
 
 import '../../domain/entity/comment.dart';
 
@@ -28,9 +28,8 @@ class CommentCard extends StatelessWidget {
       children: [
         const Divider(),
         GestureDetector(
-          onTap: () => context.pushRoute(ProfileViewRoute(
-            id: comment.author.id,
-          )),
+          onTap: () =>
+              context.pushRoute(ProfileViewRoute(id: comment.author.id)),
           child: Padding(
             padding: kPaddingSmallT,
             child: Row(
@@ -38,7 +37,7 @@ class CommentCard extends StatelessWidget {
               children: [
                 // Avatar
                 Padding(
-                  padding: const EdgeInsets.only(right: kSpacingDefault),
+                  padding: const EdgeInsets.only(right: kSpacingMedium),
                   child: AvatarImage(
                     userId: comment.author.imageId,
                     size: 40,
@@ -56,7 +55,7 @@ class CommentCard extends StatelessWidget {
                       // Body
                       Padding(
                         padding: kPaddingSmallT,
-                        child: TextShowMore(
+                        child: ShowMoreText(
                           comment.content,
                           style: textTheme.bodyMedium,
                         ),

@@ -10,7 +10,7 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 import 'package:tentura/features/like/ui/bloc/like_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
-import 'package:tentura/ui/widget/text_show_more.dart';
+import 'package:tentura/ui/widget/show_more_text.dart';
 
 import '../bloc/profile_view_cubit.dart';
 
@@ -37,7 +37,9 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
         buildWhen: (p, c) => c.hasNoError,
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator.adaptive());
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
           }
           final profile = state.profile;
           final beacons = state.beacons;
@@ -59,35 +61,20 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                     // Share
                     ShareCodeIconButton.id(profile.id),
 
-                    // Add to my field
-                    //TBD: Doesn't work yet. Choose more fitting icons
-                    IconButton(
-                      icon: Icon(
-                        profile.isFriend ? Icons.remove : Icons.add,
-                      ),
-                      onPressed: () {
-                        context.read<LikeCubit>().likeUser(
-                              userId: profile.id,
-                              amount: profile.isFriend ? 0 : 1,
-                            );
-                      },
-                    ),
-
-                    // TBD: to remove (looks like we doesn't need that menu)
                     // More
-                    //   PopupMenuButton(
-                    //     itemBuilder: (context) => <PopupMenuEntry<void>>[
-                    //       PopupMenuItem<void>(
-                    //         onTap: () => context.read<LikeCubit>().likeUser(
-                    //               userId: profile.id,
-                    //               amount: profile.isFriend ? 0 : 1,
-                    //             ),
-                    //         child: profile.isFriend
-                    //             ? const Text('Remove from my field')
-                    //             : const Text('Add to my field'),
-                    //       )
-                    //     ],
-                    //   ),
+                    PopupMenuButton(
+                      itemBuilder: (context) => <PopupMenuEntry<void>>[
+                        PopupMenuItem<void>(
+                          onTap: () => context.read<LikeCubit>().likeUser(
+                                userId: profile.id,
+                                amount: profile.isFriend ? 0 : 1,
+                              ),
+                          child: profile.isFriend
+                              ? const Text('Remove from my field')
+                              : const Text('Add to my field'),
+                        )
+                      ],
+                    ),
                   ],
                   floating: true,
                   expandedHeight: GradientStack.defaultHeight,
@@ -124,7 +111,7 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                         const Padding(padding: kPaddingSmallV),
 
                         // Description
-                        TextShowMore(
+                        ShowMoreText(
                           profile.description,
                           style: theme.textTheme.bodyMedium,
                         ),
@@ -146,22 +133,18 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                 if (beacons.isEmpty)
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: kSpacingDefault,
-                        bottom: kSpacingDefault,
-                        left: kSpacingDefault,
-                      ),
+                      padding: kPaddingAll,
                       child: Text(
                         'There are no beacons yet',
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),
-                  ),
-                if (beacons.isNotEmpty)
+                  )
+                else
                   SliverList.separated(
                     itemCount: beacons.length,
                     itemBuilder: (context, i) => Padding(
-                      padding: kPaddingH,
+                      padding: kPaddingAll,
                       child: BeaconTile(beacon: beacons[i]),
                     ),
                     separatorBuilder: (_, __) =>

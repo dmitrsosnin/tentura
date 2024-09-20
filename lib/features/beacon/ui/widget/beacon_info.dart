@@ -7,7 +7,7 @@ import 'package:tentura/ui/widget/beacon_image.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
 import 'package:tentura/ui/widget/place_name_text.dart';
 import 'package:tentura/ui/dialog/choose_location_dialog.dart';
-import 'package:tentura/ui/widget/text_show_more.dart';
+import 'package:tentura/ui/widget/show_more_text.dart';
 
 import '../../domain/entity/beacon.dart';
 
@@ -64,7 +64,7 @@ class BeaconInfo extends StatelessWidget {
           if (beacon.description.isNotEmpty)
             Padding(
               padding: kPaddingSmallT,
-              child: TextShowMore(
+              child: ShowMoreText(
                 beacon.description,
               ),
             ),
