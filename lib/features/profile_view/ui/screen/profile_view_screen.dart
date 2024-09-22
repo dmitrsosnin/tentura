@@ -150,6 +150,18 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                     separatorBuilder: (_, __) =>
                         const Divider(endIndent: 20, indent: 20),
                   ),
+
+                // Show more
+                if (beacons.isNotEmpty && state.hasNotReachedMax)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: kPaddingAll,
+                      child: TextButton(
+                        onPressed: context.read<ProfileViewCubit>().fetchMore,
+                        child: const Text('Show more'),
+                      ),
+                    ),
+                  ),
               ],
             ),
           );

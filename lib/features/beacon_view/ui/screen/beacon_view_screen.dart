@@ -5,7 +5,6 @@ import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/linear_pi_active.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile_control.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_author_info.dart';
@@ -35,8 +34,6 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = GetIt.I<AuthCubit>();
-    final beaconViewCubit = context.read<BeaconViewCubit>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Beacon'),
@@ -57,66 +54,63 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
         listener: showSnackBarError,
         buildWhen: (p, c) => c.status.isSuccess,
         builder: (context, state) {
-          return RefreshIndicator.adaptive(
-            onRefresh: beaconViewCubit.fetch,
-            child: ListView(
-              padding: kPaddingH,
-              children: [
-                // User row (Avatar and Name)
-                BeaconAuthorInfo(
-                  author: state.beacon.author,
-                  beacon: state.beacon,
-                ),
+          return ListView(
+            padding: kPaddingH,
+            children: [
+              // User row (Avatar and Name)
+              BeaconAuthorInfo(
+                author: state.beacon.author,
+                beacon: state.beacon,
+              ),
 
-                // Beacon Info
-                BeaconInfo(
-                  beacon: state.beacon,
-                  isTitleLarge: true,
-                ),
+              // Beacon Info
+              BeaconInfo(
+                beacon: state.beacon,
+                isTitleLarge: true,
+              ),
 
-                // Buttons Row
-                if (authCubit.checkIfIsNotMe(state.beacon.author.id))
-                  Padding(
-                    padding: kPaddingSmallV,
-                    child: BeaconTileControl(
-                      beacon: state.beacon,
-                      key: ValueKey(state.beacon),
-                    ),
+              // Buttons Row
+              if (state.isBeaconMine)
+                Padding(
+                  padding: kPaddingSmallV,
+                  child: BeaconTileControl(
+                    beacon: state.beacon,
+                    key: ValueKey(state.beacon),
                   ),
+                ),
 
-                // Comments Section
+              // Comments Section
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 64),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Comments',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    for (final e in state.comments)
+                      CommentCard(
+                        comment: e,
+                        isMine: state.checkIfCommentIsMine(e),
+                      ),
+                  ],
+                ),
+              ),
+
+              // Show All Button
+              if (state.comments.isNotEmpty && state.hasNotReachedMax)
                 Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 64),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Comments',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      for (final e in state.comments)
-                        CommentCard(
-                          comment: e,
-                          isMine: authCubit.checkIfIsMe(e.author.id),
-                        ),
-                    ],
+                  child: FilledButton(
+                    onPressed: context.read<BeaconViewCubit>().showAll,
+                    child: const Text('Show all'),
                   ),
                 ),
-
-                // Show All Button
-                if (state.hasFocusedComment)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 64),
-                    child: FilledButton(
-                      onPressed: beaconViewCubit.showAll,
-                      child: const Text('Show all'),
-                    ),
-                  ),
-              ],
-            ),
+            ],
           );
         },
       ),

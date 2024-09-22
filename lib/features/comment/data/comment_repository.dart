@@ -20,20 +20,20 @@ class CommentRepository {
   Future<Iterable<Comment>> fetchCommentsByBeaconId(String beaconId) =>
       _remoteApiService
           .request(
-              GCommentFetchByBeaconIdReq((b) => b.vars.beacon_id = beaconId))
-          .firstWhere((e) => e.dataSource == DataSource.Link)
-          .then(
-            (r) =>
-                r.dataOrThrow(label: _label).comment as Iterable<CommentModel>,
+            GCommentFetchByBeaconIdReq((b) => b.vars.beacon_id = beaconId),
           )
-          .then((v) => v.map<Comment>((e) => e.toEntity));
+          .firstWhere((e) => e.dataSource == DataSource.Link)
+          .then((r) => r.dataOrThrow(label: _label).comment)
+          .then((v) => v.map<Comment>((e) => (e as CommentModel).toEntity));
 
   Future<Comment> fetchCommentById(String commentId) => _remoteApiService
       .request(GCommentFetchByIdReq((b) => b.vars.id = commentId))
       .firstWhere((e) => e.dataSource == DataSource.Link)
-      .then((r) => r.dataOrThrow(label: _label).comment_by_pk as CommentModel?)
+      .then((r) => r.dataOrThrow(label: _label).comment_by_pk)
       .then(
-        (v) => v == null ? throw const CommentFetchException() : v.toEntity,
+        (v) => v == null
+            ? throw const CommentFetchException()
+            : (v as CommentModel).toEntity,
       );
 
   Future<Comment> addComment({

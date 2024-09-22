@@ -1,7 +1,7 @@
 # import '/features/beacon/data/gql/beacon_model.graphql'
 # import '/features/user/data/gql/user_model.graphql'
 
-query ProfileFetchByUserId($user_id: String!) {
+query ProfileFetchByUserId($user_id: String!, $limit: Int = 3) {
   user_by_pk(id: $user_id) {
       ...UserModel
     beacons(
@@ -9,7 +9,8 @@ query ProfileFetchByUserId($user_id: String!) {
         _and: {user_id: {_eq: $user_id},
         enabled: {_eq: true}}
       },
-      order_by: {created_at: desc}
+      order_by: {created_at: desc},
+      limit: $limit
     ) {
       ...BeaconModel
     }

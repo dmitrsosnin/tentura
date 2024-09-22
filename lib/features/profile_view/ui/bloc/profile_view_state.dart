@@ -8,13 +8,16 @@ part 'profile_view_state.freezed.dart';
 @freezed
 class ProfileViewState with _$ProfileViewState, StateFetchMixin {
   const factory ProfileViewState({
-    @Default(Profile()) Profile profile,
     @Default([]) List<Beacon> beacons,
+    @Default(Profile()) Profile profile,
+    @Default(false) bool hasReachedMax,
     @Default(FetchStatus.isSuccess) FetchStatus status,
     Object? error,
   }) = _ProfileViewState;
 
   const ProfileViewState._();
+
+  bool get hasNotReachedMax => !hasReachedMax;
 
   ProfileViewState setLoading() => copyWith(status: FetchStatus.isLoading);
 
