@@ -115,7 +115,7 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
                             // Description
                             ShowMoreText(
                               profile.description,
-                              style: textTheme.bodyMedium,
+                              style: ShowMoreText.buildTextStyle(context),
                             ),
                             const Divider(),
                             const Padding(padding: kPaddingSmallT),

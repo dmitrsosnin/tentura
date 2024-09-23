@@ -88,7 +88,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
 
               // Comments Section
               Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 64),
+                padding: const EdgeInsets.only(bottom: 80),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -104,19 +104,21 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                         comment: e,
                         isMine: state.checkIfCommentIsMine(e),
                       ),
+                    // Show All Button
+                    if (state.comments.isNotEmpty && state.hasNotReachedMax)
+                      Padding(
+                        padding: kPaddingSmallV,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: context.read<BeaconViewCubit>().showAll,
+                            child: const Text('Show all comments'),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
-
-              // Show All Button
-              if (state.comments.isNotEmpty && state.hasNotReachedMax)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 64),
-                  child: FilledButton(
-                    onPressed: context.read<BeaconViewCubit>().showAll,
-                    child: const Text('Show all'),
-                  ),
-                ),
             ],
           );
         },

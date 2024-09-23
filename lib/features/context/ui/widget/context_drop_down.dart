@@ -19,10 +19,12 @@ class ContextDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(color: Theme.of(context).colorScheme.onSurface);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textStyle = TextStyle(color: colorScheme.onSurface);
     return BlocConsumer<ContextCubit, ContextState>(
       bloc: GetIt.I<ContextCubit>(),
       builder: (context, state) => DropdownButton<Context>(
+        dropdownColor: colorScheme.surface,
         isExpanded: true,
         items: [
           DropdownMenuItem(
