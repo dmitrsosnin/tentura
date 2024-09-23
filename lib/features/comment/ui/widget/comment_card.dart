@@ -78,7 +78,10 @@ class CommentCard extends StatelessWidget {
               Container(
                 alignment: Alignment.centerRight,
                 padding: kPaddingSmallV,
-                child: LikeCommentControl(comment: comment),
+                child: LikeCommentControl(
+                  comment: comment,
+                  key: ValueKey(comment),
+                ),
               ),
           ],
         ),

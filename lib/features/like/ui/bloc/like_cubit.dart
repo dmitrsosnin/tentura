@@ -1,5 +1,8 @@
 import 'package:injectable/injectable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/features/comment/domain/entity/comment.dart';
+import 'package:tentura/features/profile/domain/entity/profile.dart';
 
 import '../../data/like_repository.dart';
 import '../../domain/exception.dart';
@@ -13,7 +16,41 @@ export 'like_state.dart';
 class LikeCubit extends Cubit<LikeState> {
   LikeCubit(this._likeRepository) : super(const LikeState());
 
+  final _beaconLikes = <String, int?>{};
+  final _commentLikes = <String, int?>{};
+  final _userLikes = <String, int?>{};
+
   final LikeRepository _likeRepository;
+
+  int getLikeAmount(Object entity) => switch (entity) {
+        final Beacon b => _beaconLikes[b.id] ?? b.myVote,
+        final Comment c => _commentLikes[c.id] ?? c.myVote,
+        final Profile p => _userLikes[p.id] ?? p.myVote,
+        _ => throw LikeWrongTypeException(entity.runtimeType.toString()),
+      };
+
+  Future<int> setLikeAmount({
+    required Object entity,
+    required int amount,
+  }) async {
+    try {
+      final result = switch (entity) {
+        final Beacon b => _beaconLikes[b.id] =
+            await _likeRepository.likeBeacon(beaconId: b.id, amount: amount),
+        final Comment c => _commentLikes[c.id] =
+            await _likeRepository.likeComment(commentId: c.id, amount: amount),
+        final Profile p => _userLikes[p.id] =
+            await _likeRepository.likeUser(userId: p.id, amount: amount),
+        _ => throw LikeWrongTypeException(entity.runtimeType.toString()),
+      };
+      if (result == null) throw LikeSetException(entity.toString());
+      emit(const LikeState());
+      return result;
+    } catch (e) {
+      emit(state.setError(e));
+      return amount;
+    }
+  }
 
   Future<int?> likeBeacon({
     required String beaconId,
@@ -42,7 +79,7 @@ class LikeCubit extends Cubit<LikeState> {
     }
   }
 
-  Future<int?> likeComment({
+  Future<int> likeComment({
     required String commentId,
     required int amount,
   }) async {
@@ -52,21 +89,14 @@ class LikeCubit extends Cubit<LikeState> {
         commentId: commentId,
         amount: amount,
       );
-      if (result == null) {
-        emit(state.setError(LikeSetException(commentId)));
-      } else {
-        state.commentLikes[commentId] = result;
-        emit(LikeState(
-          beaconLikes: state.beaconLikes,
-          commentLikes: state.commentLikes,
-          userLikes: state.userLikes,
-        ));
-      }
+      if (result == null) throw LikeSetException(commentId);
+      _commentLikes[commentId] = result;
+      emit(const LikeState());
       return result;
     } catch (e) {
       emit(state.setError(e));
-      return null;
     }
+    return amount;
   }
 
   Future<int?> likeUser({

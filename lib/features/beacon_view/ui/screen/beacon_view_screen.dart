@@ -5,6 +5,7 @@ import 'package:tentura/ui/bloc/state_base.dart';
 import 'package:tentura/ui/widget/linear_pi_active.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
+import 'package:tentura/features/like/ui/bloc/like_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile_control.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_author_info.dart';
@@ -24,12 +25,18 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
   final String id;
 
   @override
-  Widget wrappedRoute(BuildContext context) => BlocProvider(
-        create: (context) => BeaconViewCubit(
-          id: id,
-          myProfile: GetIt.I<ProfileCubit>().state.profile,
+  Widget wrappedRoute(BuildContext context) =>
+      BlocListener<LikeCubit, LikeState>(
+        bloc: GetIt.I<LikeCubit>(),
+        listenWhen: (p, c) => c.hasError,
+        listener: showSnackBarError,
+        child: BlocProvider(
+          create: (context) => BeaconViewCubit(
+            id: id,
+            myProfile: GetIt.I<ProfileCubit>().state.profile,
+          ),
+          child: this,
         ),
-        child: this,
       );
 
   @override
