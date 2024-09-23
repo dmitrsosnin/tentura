@@ -113,7 +113,7 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                         // Description
                         ShowMoreText(
                           profile.description,
-                          style: theme.textTheme.bodyMedium,
+                          style: ShowMoreText.buildTextStyle(context),
                         ),
                         const Divider(),
 

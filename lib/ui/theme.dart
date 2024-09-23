@@ -1,37 +1,14 @@
 import 'package:flutter/material.dart';
 
-const _primaryColorLight = Color(0xFF303030);
-const _primaryColorDark = Color(0xFF3A1E5C);
+const _primaryColor = Color(0xFF3A1E5C);
 
 final colorSchemeLight = ColorScheme.fromSeed(
-  seedColor: _primaryColorLight,
-  primary: Colors.black,
-  onPrimary: Colors.white,
-  primaryContainer: Colors.white,
-  onPrimaryContainer: Colors.black,
-  secondary: const Color(0xFFB77EFF),
-  onSecondary: Colors.white,
-  secondaryContainer: Colors.white,
-  onSecondaryContainer: Colors.black,
-  surface: Colors.white,
-  surfaceTint: Colors.white,
-  onSurface: Colors.black,
+  seedColor: _primaryColor,
 );
 
 final colorSchemeDark = ColorScheme.fromSeed(
+  seedColor: _primaryColor,
   brightness: Brightness.dark,
-  seedColor: _primaryColorDark,
-  primary: Colors.white,
-  onPrimary: Colors.black,
-  primaryContainer: Colors.black,
-  onPrimaryContainer: Colors.white,
-  secondary: const Color(0xFFB77EFF),
-  onSecondary: Colors.black,
-  secondaryContainer: Colors.black,
-  onSecondaryContainer: Colors.white,
-  surface: Colors.black,
-  surfaceTint: Colors.black,
-  onSurface: Colors.white,
 );
 
 final themeLight = _createAppTheme(Brightness.light);
@@ -41,58 +18,69 @@ ThemeData _createAppTheme(Brightness brightness) {
   final isDarkMode = brightness == Brightness.dark;
   final colorScheme = isDarkMode ? colorSchemeDark : colorSchemeLight;
 
+  final textTheme = ThemeData().textTheme;
+
   return ThemeData().copyWith(
     brightness: brightness,
     colorScheme: colorScheme,
     canvasColor: colorScheme.surfaceTint,
     scaffoldBackgroundColor: colorScheme.surface,
     unselectedWidgetColor: colorScheme.onSurface,
+    //Dialog
+    dialogTheme: DialogTheme(
+      backgroundColor: colorScheme.surfaceContainer,
+    ),
     // Icon
     iconTheme: IconThemeData(
       color: colorScheme.onSurface,
     ),
+    //Snack Bar
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: colorScheme.primary,
+      contentTextStyle: TextStyle(
+        color: colorScheme.onPrimary,
+      ),
+    ),
     //Text
-    textTheme: ThemeData().textTheme.copyWith(
-          displaySmall: TextStyle(
-            fontFamily: 'Roboto',
-            color: colorScheme.onSurface,
+    textTheme: textTheme
+        .copyWith(
+          displayMedium: const TextStyle(
+            fontSize: 45,
           ),
-          titleLarge: TextStyle(
-            fontFamily: 'Roboto',
+          titleLarge: const TextStyle(
             fontSize: 22,
-            fontWeight: FontWeight.w400,
-            color: colorScheme.onSurface,
           ),
-          headlineLarge: TextStyle(
-            fontFamily: 'Roboto',
+          titleMedium: const TextStyle(
+            fontSize: 18,
+          ),
+          titleSmall: const TextStyle(
+            fontSize: 14,
+          ),
+          headlineLarge: const TextStyle(
             fontSize: 22,
-            fontWeight: FontWeight.w400,
-            color: colorScheme.onSurface,
           ),
-          headlineMedium: TextStyle(
-            fontFamily: 'Roboto',
+          headlineMedium: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: colorScheme.onSurface,
           ),
-          bodyLarge: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: colorScheme.onSurface,
-          ),
-          bodyMedium: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: colorScheme.onSurface,
-          ),
-          bodySmall: TextStyle(
-            fontFamily: 'Roboto',
+          headlineSmall: const TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.w400,
-            color: colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
           ),
+          bodyLarge: const TextStyle(
+            fontSize: 16,
+          ),
+          bodyMedium: const TextStyle(
+            fontSize: 14,
+          ),
+          bodySmall: const TextStyle(
+            fontSize: 12,
+          ),
+        )
+        .apply(
+          bodyColor: colorScheme.onSurface,
+          displayColor: colorScheme.onSurface,
+          fontFamily: 'Roboto',
         ),
   );
 }

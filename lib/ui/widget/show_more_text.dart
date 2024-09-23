@@ -4,6 +4,16 @@ import 'package:readmore/readmore.dart';
 import 'package:tentura/consts.dart';
 
 class ShowMoreText extends ReadMoreText {
+  static TextStyle buildTextStyle(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return TextStyle(
+      color: textTheme.bodyMedium?.color,
+      fontSize: textTheme.bodyMedium?.fontSize,
+      fontFamily: textTheme.bodyMedium?.fontFamily,
+      fontWeight: textTheme.bodyMedium?.fontWeight,
+    );
+  }
+
   const ShowMoreText(
     super.data, {
     super.key,
