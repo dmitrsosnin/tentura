@@ -19,7 +19,7 @@ class BeaconTile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // User row (Avatar and Name)
-        BeaconAuthorInfo(author: beacon.author, beacon: beacon),
+        BeaconAuthorInfo(author: beacon.author),
 
         // Beacon Info
         BeaconInfo(beacon: beacon),

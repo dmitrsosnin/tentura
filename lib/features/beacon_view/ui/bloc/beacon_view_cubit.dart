@@ -28,15 +28,6 @@ class BeaconViewCubit extends Cubit<BeaconViewState> {
 
   final BeaconViewCase _beaconViewCase;
 
-  // Future<void> fetch() async {
-  //   if (state.beacon.id.isEmpty && state.hasNoFocusedComment) return;
-  //   return state.hasFocusedComment
-  //       // Show Beacon with one Comment
-  //       ? _fetchBeaconByCommentId()
-  //       // show Beacon with all Comments
-  //       : _fetchBeaconByIdWithComments();
-  // }
-
   Future<void> showAll() async {
     emit(state.setLoading());
     try {

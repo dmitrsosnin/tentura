@@ -20,7 +20,6 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
         selector: (state) => state.currentAccountId,
         builder: (context, accountId) => BlocProvider(
           create: (_) => MyFieldCubit(),
-          key: ValueKey(accountId),
           child: this,
         ),
       );
@@ -49,13 +48,16 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
                   return ListView.separated(
                     itemCount: state.beacons.length,
                     separatorBuilder: (_, __) => const Divider(),
-                    itemBuilder: (context, i) => Padding(
-                      padding: kPaddingV,
-                      child: BeaconTile(
-                        key: ValueKey(state.beacons[i]),
-                        beacon: state.beacons[i],
-                      ),
-                    ),
+                    itemBuilder: (context, i) {
+                      final beacon = state.beacons[i];
+                      return Padding(
+                        padding: kPaddingV,
+                        child: BeaconTile(
+                          beacon: beacon,
+                          key: ValueKey(beacon),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
