@@ -59,4 +59,32 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
 
   Future<void> fetchMore() =>
       state.hasNotReachedMax ? fetchBeacons() : fetchProfile();
+
+  Future<void> addFriend() async {
+    emit(state.setLoading());
+    try {
+      emit(state.copyWith(
+        status: FetchStatus.isSuccess,
+        profile: state.profile.copyWith(
+          myVote: await _profileViewCase.addFriend(state.profile.id),
+        ),
+      ));
+    } catch (e) {
+      emit(state.setError(e));
+    }
+  }
+
+  Future<void> removeFriend() async {
+    emit(state.setLoading());
+    try {
+      emit(state.copyWith(
+        status: FetchStatus.isSuccess,
+        profile: state.profile.copyWith(
+          myVote: await _profileViewCase.removeFriend(state.profile.id),
+        ),
+      ));
+    } catch (e) {
+      emit(state.setError(e));
+    }
+  }
 }

@@ -37,11 +37,12 @@ dependencies:
   readmore: ^3.0.0
   flutter_map: ^7.0.2
   flutter_svg: ^2.0.10
-  dots_indicator: ^3.0.0
+  dots_indicator: ^3.0.0 # TBD: remove
   pretty_qr_code: ^3.3.0
   vector_graphics: ^1.1.11
   cached_network_image: ^3.4.1
   flutter_native_splash: ^2.4.0
+  # smooth_page_indicator: ^1.2.0
   force_directed_graphview: ^0.6.2
   flutter_map_cancellable_tile_provider: ^3.0.0
 

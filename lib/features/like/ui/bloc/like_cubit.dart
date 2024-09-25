@@ -14,9 +14,18 @@ export 'like_state.dart';
 class LikeCubit extends Cubit<LikeState> {
   LikeCubit(this._likeCase) : super(const LikeState()) {
     _authChanges.resume();
+    _likeChanges.resume();
   }
 
   final LikeCase _likeCase;
+
+  late final _likeChanges = _likeCase.likeChanges.listen(
+    (e) {
+      state.likes[e.id] = e.amount;
+      emit(LikeState(likes: state.likes));
+    },
+    cancelOnError: false,
+  );
 
   late final _authChanges = _likeCase.currentAccountChanges.listen(
     // ignore: prefer_const_constructors
@@ -28,6 +37,7 @@ class LikeCubit extends Cubit<LikeState> {
   @disposeMethod
   Future<void> close() async {
     await _authChanges.cancel();
+    await _likeChanges.cancel();
     return super.close();
   }
 
@@ -38,11 +48,10 @@ class LikeCubit extends Cubit<LikeState> {
     required int amount,
   }) async {
     try {
-      state.likes[entity.id] = await _likeCase.addLikeAmount(
+      await _likeCase.addLikeAmount(
         amount: state.getLikeAmount(entity).amount + amount,
         entity: entity,
       );
-      emit(LikeState(likes: state.likes));
     } catch (e) {
       emit(state.setError(e));
     }
