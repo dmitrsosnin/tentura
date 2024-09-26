@@ -2,8 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:dots_indicator/dots_indicator.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+// import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
@@ -67,18 +67,10 @@ class _IntroScreenState extends State<IntroScreen> {
                         AssetBytesLoader(_pages[i].asset),
                       ),
 
-                      // // Position Indicator
-                      // DotsIndicator(
-                      //   position: i,
-                      //   dotsCount: _pages.length,
-                      //   decorator: DotsDecorator(
-                      //     size: const Size(20, 8),
-                      //     activeSize: const Size(50, 8),
-                      //     activeColor: _theme.colorScheme.tertiary,
-                      //     color: _theme.disabledColor,
-                      //     activeShape: _shape,
-                      //     shape: _shape,
-                      //   ),
+                      // Position Indicator
+                      // SmoothPageIndicator(
+                      //   controller: _pageController,
+                      //   count: _pages.length,
                       // ),
 
                       // Title

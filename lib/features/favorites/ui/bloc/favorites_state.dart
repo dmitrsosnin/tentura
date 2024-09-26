@@ -4,7 +4,6 @@ import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
 part 'favorites_state.freezed.dart';
 
-// @Freezed(makeCollectionsUnmodifiable: false)
 @freezed
 class FavoritesState with _$FavoritesState, StateFetchMixin {
   const factory FavoritesState({
