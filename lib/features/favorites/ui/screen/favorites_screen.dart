@@ -1,3 +1,4 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 
@@ -12,60 +13,63 @@ class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-        minimum: kPaddingH,
-        child: BlocConsumer<FavoritesCubit, FavoritesState>(
-          listenWhen: (p, c) => c.hasError,
-          listener: showSnackBarError,
-          buildWhen: (p, c) => c.hasNoError,
-          builder: (context, state) {
-            if (state.isLoading) {
-              // Loading state
-              return const Center(
-                child: CircularProgressIndicator.adaptive(),
-              );
-            } else if (state.beacons.isEmpty) {
-              // Empty state
-              return RefreshIndicator.adaptive(
-                onRefresh: context.read<FavoritesCubit>().fetch,
-                child: CustomScrollView(
-                  slivers: [
-                    SliverFillRemaining(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'There is nothing here yet',
-                          style: Theme.of(context).textTheme.displaySmall,
-                          textAlign: TextAlign.center,
-                        ),
+  Widget build(BuildContext context) {
+    final favoritesCubit = GetIt.I<FavoritesCubit>();
+    return SafeArea(
+      minimum: kPaddingH,
+      child: BlocConsumer<FavoritesCubit, FavoritesState>(
+        bloc: favoritesCubit,
+        listenWhen: (p, c) => c.hasError,
+        listener: showSnackBarError,
+        buildWhen: (p, c) => c.hasNoError,
+        builder: (context, state) {
+          if (state.isLoading) {
+            // Loading state
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          } else if (state.beacons.isEmpty) {
+            // Empty state
+            return RefreshIndicator.adaptive(
+              onRefresh: favoritesCubit.fetch,
+              child: CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'There is nothing here yet',
+                        style: Theme.of(context).textTheme.displaySmall,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ],
-                ),
-              );
-            }
-
-            // Beacons list
-            final beacons = state.beacons.iterator;
-            return RefreshIndicator.adaptive(
-              onRefresh: context.read<FavoritesCubit>().fetch,
-              child: ListView.separated(
-                itemCount: state.beacons.length,
-                separatorBuilder: (_, __) => const Divider(),
-                itemBuilder: (context, i) {
-                  beacons.moveNext();
-                  final beacon = beacons.current;
-                  return Padding(
-                    padding: kPaddingV,
-                    child: BeaconTile(
-                      beacon: beacon,
-                      key: ValueKey(beacon),
-                    ),
-                  );
-                },
+                  ),
+                ],
               ),
             );
-          },
-        ),
-      );
+          }
+
+          // Beacons list
+          return RefreshIndicator.adaptive(
+            onRefresh: favoritesCubit.fetch,
+            child: ListView.separated(
+              key: const PageStorageKey('FavoritesListView'),
+              itemCount: state.beacons.length,
+              separatorBuilder: (_, __) => const Divider(),
+              itemBuilder: (context, i) {
+                final beacon = state.beacons[i];
+                return Padding(
+                  padding: kPaddingV,
+                  child: BeaconTile(
+                    beacon: beacon,
+                    key: ValueKey(beacon),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

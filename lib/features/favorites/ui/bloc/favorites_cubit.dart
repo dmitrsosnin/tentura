@@ -14,12 +14,9 @@ export 'favorites_state.dart';
 
 @lazySingleton
 class FavoritesCubit extends Cubit<FavoritesState> {
-  FavoritesCubit(
-    this._favoritesCase, {
-    required String userId,
-  }) : super(FavoritesState(
-          userId: userId,
-          beacons: {},
+  FavoritesCubit(this._favoritesCase)
+      : super(const FavoritesState(
+          status: FetchStatus.isLoading,
         )) {
     _authChanges.resume();
     _favoritesChanges.resume();
@@ -30,8 +27,9 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   late final _authChanges = _favoritesCase.currentAccountChanges.listen(
     (userId) {
       emit(FavoritesState(
+        beacons: [],
         userId: userId,
-        beacons: {},
+        status: FetchStatus.isLoading,
       ));
       fetch();
     },
@@ -39,12 +37,12 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   );
 
   late final _favoritesChanges = _favoritesCase.favoritesChanges.listen(
-    (beacon) {
-      beacon.isPinned
-          ? state.beacons.add(beacon)
-          : state.beacons.removeWhere((e) => e.id == beacon.id);
-      emit(state.copyWith(status: FetchStatus.isSuccess));
-    },
+    (beacon) => emit(state.copyWith(
+      beacons: beacon.isPinned
+          ? [beacon, ...state.beacons]
+          : state.beacons.where((e) => e.id != beacon.id).toList(),
+      status: FetchStatus.isSuccess,
+    )),
     cancelOnError: false,
   );
 
@@ -61,9 +59,9 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
-      emit(FavoritesState(
-        beacons: (await _favoritesCase.fetch()).toSet(),
-        userId: state.userId,
+      emit(state.copyWith(
+        beacons: List.from(await _favoritesCase.fetch()),
+        status: FetchStatus.isSuccess,
       ));
     } catch (e) {
       emit(state.setError(e.toString()));
@@ -71,7 +69,6 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   Future<void> pin(Beacon beacon) async {
-    emit(state.setLoading());
     try {
       await _favoritesCase.pin(beacon);
     } catch (e) {
