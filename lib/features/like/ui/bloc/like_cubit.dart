@@ -10,7 +10,7 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'like_state.dart';
 
-@singleton
+@lazySingleton
 class LikeCubit extends Cubit<LikeState> {
   LikeCubit(this._likeCase) : super(const LikeState()) {
     _authChanges.resume();
@@ -33,6 +33,8 @@ class LikeCubit extends Cubit<LikeState> {
     cancelOnError: false,
   );
 
+  Stream<LikeAmount> get likeChanges => _likeCase.likeChanges;
+
   @override
   @disposeMethod
   Future<void> close() async {
@@ -40,8 +42,6 @@ class LikeCubit extends Cubit<LikeState> {
     await _likeChanges.cancel();
     return super.close();
   }
-
-  Stream<LikeAmount> get likeChanges => _likeCase.likeChanges;
 
   Future<void> addLikeAmount({
     required LikableEntity entity,

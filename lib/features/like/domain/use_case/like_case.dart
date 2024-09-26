@@ -7,7 +7,7 @@ import '../../data/repository/like_remote_repository.dart';
 import '../entity/likable_entity.dart';
 import '../typedef.dart';
 
-@singleton
+@lazySingleton
 class LikeCase {
   LikeCase({
     required AuthRepository authRepository,

@@ -11,7 +11,6 @@ import 'package:tentura/ui/theme.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
-import 'package:tentura/features/favorites/ui/bloc/favorites_cubit.dart';
 
 import 'di/di.dart';
 
@@ -52,31 +51,21 @@ class App extends StatelessWidget {
           ],
           reevaluateListenable: router.reevaluateListenable,
         ),
-        builder: (context, child) => BlocSelector<AuthCubit, AuthState, String>(
-          bloc: getIt<AuthCubit>(),
-          selector: (state) => state.currentAccountId,
-          builder: (context, accountId) => MultiBlocProvider(
-            key: ValueKey(accountId),
-            providers: [
-              BlocProvider(create: (_) => FavoritesCubit(userId: accountId)),
-            ],
-            child: kIsWeb &&
-                    MediaQuery.of(context).orientation == Orientation.landscape
-                ? ColoredBox(
-                    color: Theme.of(context).colorScheme.surfaceBright,
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: kWebConstraints,
-                        child: AspectRatio(
-                          aspectRatio: kWebAspectRatio,
-                          child: child,
-                        ),
-                      ),
+        builder: (context, child) => kIsWeb &&
+                MediaQuery.of(context).orientation == Orientation.landscape
+            ? ColoredBox(
+                color: Theme.of(context).colorScheme.surfaceBright,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: kWebConstraints,
+                    child: AspectRatio(
+                      aspectRatio: kWebAspectRatio,
+                      child: child,
                     ),
-                  )
-                : child ?? const SizedBox(),
-          ),
-        ),
+                  ),
+                ),
+              )
+            : child ?? const SizedBox(),
       ),
     );
   }

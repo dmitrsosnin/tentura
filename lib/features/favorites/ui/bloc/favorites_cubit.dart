@@ -1,33 +1,68 @@
 import 'dart:async';
-import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
-import '../../data/favorites_repository.dart';
+import '../../domain/use_case/favorites_case.dart';
 import 'favorites_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'favorites_state.dart';
 
+@lazySingleton
 class FavoritesCubit extends Cubit<FavoritesState> {
-  FavoritesCubit({
+  FavoritesCubit(
+    this._favoritesCase, {
     required String userId,
-    FavoritesRepository? repository,
-  })  : _repository = repository ?? GetIt.I<FavoritesRepository>(),
-        super(FavoritesState(userId: userId)) {
-    fetch();
+  }) : super(FavoritesState(
+          userId: userId,
+          beacons: {},
+        )) {
+    _authChanges.resume();
+    _favoritesChanges.resume();
   }
 
-  final FavoritesRepository _repository;
+  final FavoritesCase _favoritesCase;
+
+  late final _authChanges = _favoritesCase.currentAccountChanges.listen(
+    (userId) {
+      emit(FavoritesState(
+        userId: userId,
+        beacons: {},
+      ));
+      fetch();
+    },
+    cancelOnError: false,
+  );
+
+  late final _favoritesChanges = _favoritesCase.favoritesChanges.listen(
+    (beacon) {
+      beacon.isPinned
+          ? state.beacons.add(beacon)
+          : state.beacons.removeWhere((e) => e.id == beacon.id);
+      emit(state.copyWith(status: FetchStatus.isSuccess));
+    },
+    cancelOnError: false,
+  );
+
+  Stream<Beacon> get favoritesChanges => _favoritesCase.favoritesChanges;
+
+  @override
+  @disposeMethod
+  Future<void> close() async {
+    await _authChanges.cancel();
+    await _favoritesChanges.cancel();
+    return super.close();
+  }
 
   Future<void> fetch() async {
     emit(state.setLoading());
     try {
       emit(FavoritesState(
-        beacons: (await _repository.fetch()).toList(),
+        beacons: (await _favoritesCase.fetch()).toSet(),
         userId: state.userId,
       ));
     } catch (e) {
@@ -35,35 +70,23 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     }
   }
 
-  Future<Beacon> pin(Beacon beacon) async {
+  Future<void> pin(Beacon beacon) async {
+    emit(state.setLoading());
     try {
-      await _repository.pin(beacon.id);
-      emit(FavoritesState(
-        beacons: [...state.beacons, beacon],
-        userId: state.userId,
-      ));
-      return beacon.copyWith(isPinned: true);
+      await _favoritesCase.pin(beacon);
     } catch (e) {
       emit(state.setError(e.toString()));
-      rethrow;
     }
   }
 
-  Future<Beacon> unpin(Beacon beacon) async {
+  Future<void> unpin(Beacon beacon) async {
     try {
-      await _repository.unpin(
-        beaconId: beacon.id,
+      await _favoritesCase.unpin(
+        beacon: beacon,
         userId: state.userId,
       );
-      final beacons = [...state.beacons]..removeWhere((e) => e.id == beacon.id);
-      emit(FavoritesState(
-        beacons: beacons,
-        userId: state.userId,
-      ));
-      return beacon.copyWith(isPinned: false);
     } catch (e) {
       emit(state.setError(e.toString()));
-      rethrow;
     }
   }
 }

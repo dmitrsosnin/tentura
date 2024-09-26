@@ -4,11 +4,11 @@ import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
 part 'favorites_state.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class FavoritesState with _$FavoritesState, StateFetchMixin {
   const factory FavoritesState({
     @Default('') String userId,
-    @Default([]) List<Beacon> beacons,
+    @Default({}) Set<Beacon> beacons,
     @Default(FetchStatus.isSuccess) FetchStatus status,
     Object? error,
   }) = _FavoritesState;

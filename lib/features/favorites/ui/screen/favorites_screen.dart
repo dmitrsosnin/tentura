@@ -18,40 +18,54 @@ class FavoritesScreen extends StatelessWidget {
           listenWhen: (p, c) => c.hasError,
           listener: showSnackBarError,
           buildWhen: (p, c) => c.hasNoError,
-          builder: (context, state) => RefreshIndicator.adaptive(
-            onRefresh: context.read<FavoritesCubit>().fetch,
-            child: state.isLoading
-                ? const Center(child: CircularProgressIndicator.adaptive())
-                : state.beacons.isEmpty
-                    ? CustomScrollView(
-                        slivers: [
-                          SliverFillRemaining(
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'There is nothing here yet',
-                                style: Theme.of(context).textTheme.displaySmall,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : ListView.separated(
-                        itemCount: state.beacons.length,
-                        separatorBuilder: (_, __) => const Divider(),
-                        itemBuilder: (context, i) {
-                          final beacon = state.beacons[i];
-                          return Padding(
-                            padding: kPaddingV,
-                            child: BeaconTile(
-                              beacon: beacon,
-                              key: ValueKey(beacon),
-                            ),
-                          );
-                        },
+          builder: (context, state) {
+            if (state.isLoading) {
+              // Loading state
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            } else if (state.beacons.isEmpty) {
+              // Empty state
+              return RefreshIndicator.adaptive(
+                onRefresh: context.read<FavoritesCubit>().fetch,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverFillRemaining(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'There is nothing here yet',
+                          style: Theme.of(context).textTheme.displaySmall,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-          ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            // Beacons list
+            final beacons = state.beacons.iterator;
+            return RefreshIndicator.adaptive(
+              onRefresh: context.read<FavoritesCubit>().fetch,
+              child: ListView.separated(
+                itemCount: state.beacons.length,
+                separatorBuilder: (_, __) => const Divider(),
+                itemBuilder: (context, i) {
+                  beacons.moveNext();
+                  final beacon = beacons.current;
+                  return Padding(
+                    padding: kPaddingV,
+                    child: BeaconTile(
+                      beacon: beacon,
+                      key: ValueKey(beacon),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
         ),
       );
 }
