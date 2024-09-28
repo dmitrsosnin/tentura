@@ -29,6 +29,7 @@
 			"args": [
 				"build",
 				"web",
+				"--release",
 				"--dart-define",
 				"APP_LINK_BASE=tentura.intersubjective.space"
 			],
@@ -46,6 +47,7 @@
 				"build",
 				"web",
 				"--wasm",
+				"--release",
 				"--dart-define",
 				"APP_LINK_BASE=tentura.intersubjective.space"
 			],
