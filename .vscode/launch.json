@@ -26,9 +26,7 @@
                 "--dart-define",
                 "APP_LINK_BASE=tentura.intersubjective.space",
             ],
-            "args": ["-d", "chrome", "--web-port", "8888",
-                "--web-browser-flag=--disable-web-security"
-            ]
+            "args": ["-d", "chrome", "--web-port", "8888"]
         },
         {
             "name": "tentura-stage (debug)",

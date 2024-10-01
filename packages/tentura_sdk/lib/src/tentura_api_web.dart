@@ -8,7 +8,7 @@ import 'tentura_api_base.dart';
 
 class TenturaApi extends TenturaApiBase {
   TenturaApi({
-    required super.serverName,
+    required super.apiUrl,
     super.jwtExpiresIn,
     super.userAgent,
     super.storagePath,
@@ -22,10 +22,7 @@ class TenturaApi extends TenturaApiBase {
       link: Link.concat(
         AuthLink(() => getToken().then((v) => v.value)),
         HttpLink(
-          Uri.https(
-            serverName,
-            pathGraphQLEndpoint,
-          ).toString(),
+          pathGraphQLEndpoint,
           defaultHeaders: {
             'accept': 'application/json',
           },

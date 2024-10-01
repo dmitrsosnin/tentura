@@ -189,7 +189,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       if (_imageBytes != null) {
         await _profileCubit.putAvatarImage(_imageBytes!);
         await CachedNetworkImage.evictFromCache(
-          AvatarImage.getAvatarUrl(userId: _profile.id),
+          AvatarImage.getAvatarUrl(_profile.id),
         );
       }
       await _profileCubit.update(_profile.copyWith(

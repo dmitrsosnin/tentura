@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:tentura/consts.dart';
@@ -17,8 +18,8 @@ class RemoteApiService extends TenturaApi {
   RemoteApiService({
     super.storagePath = '',
     super.userAgent = kAppTitle,
-    super.serverName = kAppLinkBase,
     super.jwtExpiresIn = kJwtExpiresIn,
+    super.apiUrl = kIsWeb ? '' : 'https://$kAppLinkBase',
   });
 
   @disposeMethod
@@ -26,21 +27,15 @@ class RemoteApiService extends TenturaApi {
 }
 
 extension ErrorHandler<TData, TVars> on OperationResponse<TData, TVars> {
-  OperationResponse<TData, TVars> throwIfError({
-    bool failOnNull = true,
-    String? label,
-  }) {
+  TData dataOrThrow({String? label}) {
     if (hasErrors) {
       throw GraphQLException(
         error: linkException ?? graphqlErrors,
         label: label,
       );
     }
-    if (failOnNull && data == null) {
-      throw GraphQLNoDataException(label: label);
-    }
-    return this;
-  }
+    if (data == null) throw GraphQLNoDataException(label: label);
 
-  TData dataOrThrow({String? label}) => throwIfError(label: label).data!;
+    return data!;
+  }
 }
