@@ -19,6 +19,7 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
         bloc: GetIt.I<AuthCubit>(),
         selector: (state) => state.currentAccountId,
         builder: (context, accountId) => BlocProvider(
+          key: ValueKey(accountId),
           create: (_) => MyFieldCubit(),
           child: this,
         ),

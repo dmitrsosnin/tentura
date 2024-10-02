@@ -9,7 +9,6 @@ import 'package:tentura/ui/widget/gradient_stack.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/bloc/beacon_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_mine_control.dart';
@@ -22,18 +21,13 @@ class ProfileMineScreen extends StatelessWidget implements AutoRouteWrapper {
   const ProfileMineScreen({super.key});
 
   @override
-  Widget wrappedRoute(BuildContext context) =>
-      BlocSelector<AuthCubit, AuthState, String>(
-          bloc: GetIt.I<AuthCubit>(),
-          selector: (state) => state.currentAccountId,
-          builder: (context, accountId) => MultiBlocProvider(
-                key: Key('ProfileMineScreenProvider:$accountId'),
-                providers: [
-                  BlocProvider.value(value: GetIt.I<ProfileCubit>()),
-                  BlocProvider(create: (_) => BeaconCubit(userId: accountId)),
-                ],
-                child: this,
-              ));
+  Widget wrappedRoute(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: GetIt.I<BeaconCubit>()),
+          BlocProvider.value(value: GetIt.I<ProfileCubit>()),
+        ],
+        child: this,
+      );
 
   @override
   Widget build(BuildContext context) => MultiBlocListener(

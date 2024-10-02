@@ -35,7 +35,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     _authChanges = _profileCase.currentAccountChanges.listen(
       (id) async {
         emit(ProfileState(profile: Profile(id: id)));
-        if (kDebugMode) print('UpdatedId: $id');
+        if (kDebugMode) print('Current User Id: $id');
         await fetch(fromCache: true);
       },
       cancelOnError: false,

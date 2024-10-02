@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:tentura/consts.dart';
 import 'package:tentura/domain/entity/geo.dart';
@@ -27,13 +28,12 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
   final _locationController = TextEditingController();
   final _dateRangeController = TextEditingController();
   final _descriptionController = TextEditingController();
-
-  late final _beaconCubit = context.read<BeaconCubit>();
+  final _beaconCubit = GetIt.I<BeaconCubit>();
 
   DateTimeRange? _dateRange;
   Coordinates? _coordinates;
   Uint8List? _image;
-  String? _context;
+  String _context = '';
 
   @override
   void dispose() {

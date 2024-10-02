@@ -14,10 +14,7 @@ export 'favorites_state.dart';
 
 @lazySingleton
 class FavoritesCubit extends Cubit<FavoritesState> {
-  FavoritesCubit(this._favoritesCase)
-      : super(const FavoritesState(
-          status: FetchStatus.isLoading,
-        )) {
+  FavoritesCubit(this._favoritesCase) : super(const FavoritesState()) {
     _authChanges.resume();
     _favoritesChanges.resume();
   }

@@ -3,13 +3,14 @@ import 'package:flutter/material.dart' show DateTimeRange;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:tentura/domain/entity/geo.dart';
+import 'package:tentura/domain/entity/identifiable.dart';
 
 import 'package:tentura/features/profile/domain/entity/profile.dart';
 
 part 'beacon.freezed.dart';
 
 @freezed
-class Beacon with _$Beacon {
+class Beacon with _$Beacon implements Identifiable {
   const factory Beacon({
     required DateTime createdAt,
     required DateTime updatedAt,
@@ -31,3 +32,8 @@ class Beacon with _$Beacon {
 
   String get imageId => hasPicture ? id : '';
 }
+
+final emptyBeacon = Beacon(
+  createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+  updatedAt: DateTime.fromMillisecondsSinceEpoch(0),
+);

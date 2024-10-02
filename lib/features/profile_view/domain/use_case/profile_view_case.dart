@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 
-import 'package:tentura/features/beacon/data/beacon_repository.dart';
+import 'package:tentura/features/beacon/data/repository/beacon_repository.dart';
 import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 import 'package:tentura/features/like/data/repository/like_remote_repository.dart';
 

@@ -5,7 +5,7 @@ import 'package:tentura/features/beacon/domain/entity/beacon.dart';
 
 import '../../data/repository/favorites_remote_repository.dart';
 
-@lazySingleton
+@singleton
 class FavoritesCase {
   const FavoritesCase({
     required AuthRepository authRepository,
