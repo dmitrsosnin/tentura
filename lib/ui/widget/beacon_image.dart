@@ -36,8 +36,8 @@ class BeaconImage extends StatelessWidget {
             filterQuality: FilterQuality.high,
             placeholder: (context, url) => placeholder,
             errorWidget: (context, url, error) => placeholder,
-            imageUrl:
-                '${kIsWeb ? '' : kAppLinkBase}/images/$authorId/$beaconId.jpg',
+            imageUrl: '${kIsWeb ? '' : 'https://$kAppLinkBase'}'
+                '/images/$authorId/$beaconId.jpg',
           );
   }
 }
