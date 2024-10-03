@@ -4,9 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart'
     if (dart.library.js_interop) '../service/geocoding_web_service.dart';
 
-import 'package:tentura/domain/entity/geo.dart';
-
-export 'package:tentura/domain/entity/geo.dart';
+import '../../domain/entity/coordinates.dart';
+import '../../domain/entity/place.dart';
 
 @singleton
 class GeoRepository {
@@ -29,9 +28,9 @@ class GeoRepository {
       final places = await placemarkFromCoordinates(coords.lat, coords.long);
       return cache[coords] = places.isEmpty
           ? null
-          : (
-              country: places.first.country,
-              locality: places.first.locality,
+          : Place(
+              country: places.first.country ?? '',
+              locality: places.first.locality ?? '',
             );
     } catch (_) {
       return null;
@@ -51,7 +50,10 @@ class GeoRepository {
             timeLimit: timeLimit,
           ),
         );
-        return _myCoords = (lat: position.latitude, long: position.longitude);
+        return _myCoords = Coordinates(
+          lat: position.latitude,
+          long: position.longitude,
+        );
       } catch (e) {
         if (kDebugMode) print(e);
       }

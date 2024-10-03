@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show DateTimeRange;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:tentura/domain/entity/geo.dart';
 import 'package:tentura/domain/entity/identifiable.dart';
 
+import 'package:tentura/features/geo/domain/entity/coordinates.dart';
 import 'package:tentura/features/profile/domain/entity/profile.dart';
 
 part 'beacon.freezed.dart';

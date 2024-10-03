@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
-import 'package:tentura/domain/entity/geo.dart';
 import 'package:tentura/domain/entity/repository_event.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
+
+import 'package:tentura/features/geo/domain/entity/coordinates.dart';
 
 import '../../domain/entity/beacon.dart';
 import '../../domain/use_case/beacon_case.dart';

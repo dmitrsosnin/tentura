@@ -1,12 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/data/repository/geo_repository.dart';
+
+import '../../domain/use_case/geo_case.dart';
 
 class ChooseLocationDialog extends StatefulWidget {
   static Future<Location?> show(
@@ -16,13 +15,17 @@ class ChooseLocationDialog extends StatefulWidget {
       showDialog<Location>(
         context: context,
         useSafeArea: false,
-        useRootNavigator: false,
         builder: (_) => ChooseLocationDialog(
-          center: center == null ? null : LatLng(center.lat, center.long),
+          center: center == null
+              ? null
+              : Coordinates(
+                  lat: center.lat,
+                  long: center.long,
+                ),
         ),
       );
 
-  final LatLng? center;
+  final Coordinates? center;
 
   const ChooseLocationDialog({
     this.center,
@@ -35,7 +38,7 @@ class ChooseLocationDialog extends StatefulWidget {
 
 class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
   final _mapController = MapController();
-  final _geoRepository = GetIt.I<GeoRepository>();
+  final _geoCase = GetIt.I<GeoCase>();
 
   @override
   void dispose() {
@@ -58,32 +61,34 @@ class _ChooseLocationDialogState extends State<ChooseLocationDialog> {
             options: MapOptions(
               maxZoom: 12,
               initialZoom: widget.center == null ? 4 : 10,
-              initialCenter: widget.center ?? const LatLng(0, 0),
+              initialCenter: widget.center ?? Coordinates.zero,
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
               ),
               onTap: (tapPosition, point) async {
-                final coords = (lat: point.latitude, long: point.longitude);
-                final place = await _geoRepository.getPlaceNameByCoords(coords);
-                if (context.mounted) {
-                  await context.maybePop((coords: coords, place: place));
-                }
+                final location = await _geoCase.getLocationByCoords(Coordinates(
+                  lat: point.latitude,
+                  long: point.longitude,
+                ));
+                if (context.mounted) Navigator.of(context).pop(location);
               },
               onMapReady: () {
-                if (widget.center == null ||
-                    _geoRepository.myCoordinates == null) return;
-                final center = widget.center ??
-                    (_geoRepository.myCoordinates == null
-                        ? null
-                        : LatLng(
-                            _geoRepository.myCoordinates!.lat,
-                            _geoRepository.myCoordinates!.long,
-                          ));
-                if (center != null) {
+                if (widget.center != null) {
                   _mapController.move(
-                    center,
+                    widget.center!,
                     _mapController.camera.zoom,
                   );
+                } else {
+                  final myCoordinates = _geoCase.myCoordinates;
+                  if (myCoordinates != null) {
+                    _mapController.move(
+                      Coordinates(
+                        lat: myCoordinates.lat,
+                        long: myCoordinates.long,
+                      ),
+                      _mapController.camera.zoom,
+                    );
+                  }
                 }
               },
             ),

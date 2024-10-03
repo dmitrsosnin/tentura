@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/consts.dart';
-import 'package:tentura/domain/entity/geo.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
-import 'package:tentura/ui/dialog/choose_location_dialog.dart';
-
-import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
+
+import 'package:tentura/features/geo/domain/entity/coordinates.dart';
+import 'package:tentura/features/geo/ui/dialog/choose_location_dialog.dart';
+import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 
 import '../bloc/beacon_cubit.dart';
 
@@ -127,9 +127,9 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
               ContextDropDown(
                 onChanged: (value) async => _context = value,
               ),
+              const SizedBox(height: 20),
 
               // Location
-              const SizedBox(height: 20),
               TextFormField(
                 readOnly: true,
                 controller: _locationController,
@@ -139,8 +139,8 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                       ? const Icon(TenturaIcons.location)
                       : IconButton(
                           onPressed: () {
-                            _coordinates = null;
                             _locationController.clear();
+                            setState(() => _coordinates = null);
                           },
                           icon: const Icon(Icons.cancel_rounded),
                         ),
@@ -152,10 +152,9 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                   );
                   if (location != null) {
                     _coordinates = location.coords;
-                    _locationController.text = location.place.country == null
-                        ? _coordinates.toString()
-                        : '${location.place.locality ?? "Unknown"}, '
-                            '${location.place.country}';
+                    _locationController.text =
+                        location.place?.toString() ?? _coordinates.toString();
+                    setState(() {});
                   }
                 },
               ),
