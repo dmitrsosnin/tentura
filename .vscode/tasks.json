@@ -31,8 +31,8 @@
 				"web",
 				"--release",
 				"--dart-define",
-				"APP_LINK_BASE=tentura.intersubjective.space"
-			],
+				"APP_LINK_BASE=tentura.intersubjective.space",
+],
 			"group": {
 				"kind": "build",
 				"isDefault": false
@@ -48,6 +48,8 @@
 				"web",
 				"--wasm",
 				"--release",
+				"--dart-define",
+				"API_URI=",
 				"--dart-define",
 				"APP_LINK_BASE=tentura.intersubjective.space"
 			],

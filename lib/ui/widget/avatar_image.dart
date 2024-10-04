@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -6,8 +5,7 @@ import 'package:tentura/consts.dart';
 
 class AvatarImage extends StatelessWidget {
   static String getAvatarUrl(String userId) =>
-      '${kIsWeb ? '' : 'https://$kAppLinkBase'}'
-      '/images/$userId/avatar.jpg';
+      '$kApiUri/images/$userId/avatar.jpg';
 
   const AvatarImage({
     required this.size,
@@ -37,9 +35,9 @@ class AvatarImage extends StatelessWidget {
               width: size,
               fit: boxFit,
               filterQuality: FilterQuality.high,
+              imageUrl: getAvatarUrl(userId),
               placeholder: (context, url) => placeholder,
               errorWidget: (context, url, error) => placeholder,
-              imageUrl: getAvatarUrl(userId),
             ),
     );
   }

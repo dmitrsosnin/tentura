@@ -9,9 +9,15 @@ const kMaxLines = 3;
 const kSnackBarDuration = Duration(seconds: 5);
 
 const kAppTitle = 'Tentura';
+
 const kZeroNodeId = 'U000000000000';
 
 const kAppLinkBase = String.fromEnvironment('APP_LINK_BASE');
+
+const kApiUri = String.fromEnvironment(
+  'API_URI',
+  defaultValue: 'https://$kAppLinkBase',
+);
 
 const kOsmUrlTemplate = String.fromEnvironment(
   'OSM_LINK_BASE',

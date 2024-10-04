@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:tentura/consts.dart';
@@ -31,13 +30,12 @@ class BeaconImage extends StatelessWidget {
     return beaconId.isEmpty || authorId.isEmpty
         ? placeholder
         : CachedNetworkImage(
+            filterQuality: FilterQuality.high,
+            imageUrl: '$kApiUri/images/$authorId/$beaconId.jpg',
             height: height,
             width: width,
-            filterQuality: FilterQuality.high,
             placeholder: (context, url) => placeholder,
             errorWidget: (context, url, error) => placeholder,
-            imageUrl: '${kIsWeb ? '' : 'https://$kAppLinkBase'}'
-                '/images/$authorId/$beaconId.jpg',
           );
   }
 }

@@ -22,7 +22,7 @@ class TenturaApi extends TenturaApiBase {
       link: Link.concat(
         AuthLink(() => getToken().then((v) => v.value)),
         HttpLink(
-          pathGraphQLEndpoint,
+          apiUrl + pathGraphQLEndpoint,
           defaultHeaders: {
             'accept': 'application/json',
           },
