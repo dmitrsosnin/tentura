@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/repository_event.dart';
-import 'package:tentura/domain/use_case/pick_image_case.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../domain/use_case/beacon_case.dart';
@@ -12,7 +11,7 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 export 'beacon_state.dart';
 
 @lazySingleton
-class BeaconCubit extends Cubit<BeaconState> with PickImageCase {
+class BeaconCubit extends Cubit<BeaconState> {
   BeaconCubit(this._beaconCase) : super(const BeaconState()) {
     _authChanges.resume();
     _beaconChanges.resume();

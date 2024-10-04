@@ -95,22 +95,23 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     ? IconButton.filledTonal(
                         iconSize: 50,
                         icon: const Icon(Icons.highlight_remove_outlined),
-                        onPressed: () => setState(() {
-                          _hasAvatar = false;
-                          _imageBytes = null;
-                        }),
+                        onPressed: () {
+                          setState(() {
+                            _hasAvatar = false;
+                            _imageBytes = null;
+                          });
+                        },
                       )
                     : IconButton.filledTonal(
                         iconSize: 50,
                         icon: const Icon(Icons.add_a_photo_outlined),
                         onPressed: () async {
-                          final image = await _profileCubit.pickImage();
-                          if (image != null) {
-                            setState(() {
-                              _hasAvatar = true;
-                              _imageBytes = image.bytes;
-                            });
-                          }
+                          final image = await pickImage();
+                          if (image == null) return;
+                          setState(() {
+                            _hasAvatar = true;
+                            _imageBytes = image.bytes;
+                          });
                         },
                       ),
               ),
