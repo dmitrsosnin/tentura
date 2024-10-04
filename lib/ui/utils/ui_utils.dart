@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:tentura/consts.dart';
 
@@ -69,37 +70,16 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarError(
       text: state.error?.toString() ?? 'Unknown error!',
     );
 
-sealed class ScreenSize {
-  static ScreenSize get(Size size) => switch (size.height) {
-        < ScreenSmall.height => const ScreenSmall(),
-        < ScreenMedium.height => const ScreenMedium(),
-        < ScreenLarge.height => const ScreenLarge(),
-        _ => const ScreenBig(),
-      };
-
-  const ScreenSize();
-}
-
-class ScreenSmall extends ScreenSize {
-  static const height = 600;
-
-  const ScreenSmall();
-}
-
-class ScreenMedium extends ScreenSize {
-  static const height = 800;
-
-  const ScreenMedium();
-}
-
-class ScreenLarge extends ScreenSize {
-  static const height = 1200;
-
-  const ScreenLarge();
-}
-
-class ScreenBig extends ScreenSize {
-  static const height = 1600;
-
-  const ScreenBig();
+Future<({String name, Uint8List bytes})?> pickImage() async {
+  final xFile = await ImagePicker().pickImage(
+    source: ImageSource.gallery,
+    // TBD: resize and convert by package:image
+    maxWidth: 600,
+  );
+  return xFile == null
+      ? null
+      : (
+          name: xFile.name,
+          bytes: await xFile.readAsBytes(),
+        );
 }

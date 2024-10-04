@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import 'package:tentura/ui/utils/ui_utils.dart';
+import '../utils/screen_size.dart';
 
 class QRScanDialog extends StatefulWidget {
   static Future<String?> show(BuildContext context) => showDialog<String>(
         context: context,
         useSafeArea: false,
-        useRootNavigator: false,
         builder: (context) => const QRScanDialog(),
       );
 
@@ -130,7 +128,7 @@ class _QRScanDialogState extends State<QRScanDialog>
     if (_hasResult || captured.barcodes.isEmpty) return;
     if (context.mounted) {
       _hasResult = true;
-      context.maybePop(captured.barcodes.first.rawValue);
+      Navigator.of(context).pop(captured.barcodes.first.rawValue);
     }
   }
 }

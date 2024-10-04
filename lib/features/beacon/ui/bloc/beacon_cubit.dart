@@ -1,13 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/repository_event.dart';
 import 'package:tentura/domain/use_case/pick_image_case.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import 'package:tentura/features/geo/domain/entity/coordinates.dart';
-
-import '../../domain/entity/beacon.dart';
 import '../../domain/use_case/beacon_case.dart';
 import 'beacon_state.dart';
 
@@ -73,31 +69,6 @@ class BeaconCubit extends Cubit<BeaconState> with PickImageCase {
         beacons: beacons.toList(),
         status: FetchStatus.isSuccess,
       ));
-    } catch (e) {
-      emit(state.setError(e));
-    }
-  }
-
-  Future<void> create({
-    required String title,
-    String description = '',
-    String context = '',
-    DateTimeRange? dateRange,
-    Coordinates? coordinates,
-    Uint8List? image,
-  }) async {
-    emit(state.setLoading());
-    try {
-      await _beaconCase.create(
-        beacon: emptyBeacon.copyWith(
-          title: title,
-          context: context,
-          dateRange: dateRange,
-          description: description,
-          coordinates: coordinates,
-        ),
-        image: image,
-      );
     } catch (e) {
       emit(state.setError(e));
     }

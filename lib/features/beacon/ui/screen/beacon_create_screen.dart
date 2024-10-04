@@ -11,7 +11,8 @@ import 'package:tentura/features/geo/domain/entity/coordinates.dart';
 import 'package:tentura/features/geo/ui/dialog/choose_location_dialog.dart';
 import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 
-import '../bloc/beacon_cubit.dart';
+import '../../domain/use_case/beacon_case.dart';
+import '../dialog/beacon_publish_dialog.dart';
 
 @RoutePage()
 class BeaconCreateScreen extends StatefulWidget {
@@ -28,12 +29,12 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
   final _locationController = TextEditingController();
   final _dateRangeController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _beaconCubit = GetIt.I<BeaconCubit>();
 
   DateTimeRange? _dateRange;
   Coordinates? _coordinates;
   Uint8List? _image;
-  String _context = '';
+
+  var _context = '';
 
   @override
   void dispose() {
@@ -50,39 +51,13 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
         appBar: AppBar(
           actions: [
             // Publish Button
-            TextButton(
-              onPressed: () async {
-                if (_formKey.currentState?.validate() ?? false) {
-                  try {
-                    await _beaconCubit.create(
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      coordinates: _coordinates,
-                      dateRange: _dateRange,
-                      context: _context,
-                      image: _image,
-                    );
-                    if (context.mounted) await context.maybePop();
-                  } catch (e) {
-                    if (context.mounted) {
-                      showSnackBar(
-                        context,
-                        isError: true,
-                        text: e.toString(),
-                      );
-                    }
-                  }
-                } else {
-                  showSnackBar(
-                    context,
-                    isError: true,
-                    text: 'Please check input data!',
-                  );
-                }
-              },
-              child: const Text('Publish'),
+            Padding(
+              padding: kPaddingH,
+              child: TextButton(
+                onPressed: _onPublish,
+                child: const Text('Publish'),
+              ),
             ),
-            const SizedBox(width: 16),
           ],
         ),
 
@@ -103,12 +78,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                 keyboardType: TextInputType.text,
                 maxLength: kTitleMaxLength,
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                validator: (value) {
-                  if (value == null || value.length < kTitleMinLength) {
-                    return 'Title too short';
-                  }
-                  return null;
-                },
+                validator: _titleValidator,
               ),
 
               // Description
@@ -124,113 +94,82 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
               ),
 
               // Context
-              ContextDropDown(
-                onChanged: (value) async => _context = value,
+              Padding(
+                padding: kPaddingSmallV,
+                child: ContextDropDown(
+                  onChanged: (value) async => _context = value,
+                ),
               ),
-              const SizedBox(height: 20),
 
               // Location
-              TextFormField(
-                readOnly: true,
-                controller: _locationController,
-                decoration: InputDecoration(
-                  hintText: 'Add location',
-                  suffixIcon: _locationController.text.isEmpty
-                      ? const Icon(TenturaIcons.location)
-                      : IconButton(
-                          onPressed: () {
-                            _locationController.clear();
-                            setState(() => _coordinates = null);
-                          },
-                          icon: const Icon(Icons.cancel_rounded),
-                        ),
+              Padding(
+                padding: kPaddingSmallV,
+                child: TextFormField(
+                  readOnly: true,
+                  controller: _locationController,
+                  decoration: InputDecoration(
+                    hintText: 'Add location',
+                    suffixIcon: _locationController.text.isEmpty
+                        ? const Icon(TenturaIcons.location)
+                        : IconButton(
+                            icon: const Icon(Icons.cancel_rounded),
+                            onPressed: _onClearLocation,
+                          ),
+                  ),
+                  onTap: _onPickLocation,
                 ),
-                onTap: () async {
-                  final location = await ChooseLocationDialog.show(
-                    context,
-                    center: _coordinates,
-                  );
-                  if (location != null) {
-                    _coordinates = location.coords;
-                    _locationController.text =
-                        location.place?.toString() ?? _coordinates.toString();
-                    setState(() {});
-                  }
-                },
               ),
-              const Padding(padding: kPaddingSmallV),
 
-              // Time
-              TextFormField(
-                readOnly: true,
-                controller: _dateRangeController,
-                decoration: InputDecoration(
-                  hintText: 'Set display period',
-                  suffixIcon: _dateRangeController.text.isEmpty
-                      ? const Icon(TenturaIcons.calendar)
-                      : IconButton(
-                          onPressed: () {
-                            _dateRange = null;
-                            _dateRangeController.clear();
-                          },
-                          icon: const Icon(Icons.cancel_rounded),
-                        ),
+              // Date Range
+              Padding(
+                padding: kPaddingSmallV,
+                child: TextFormField(
+                  readOnly: true,
+                  controller: _dateRangeController,
+                  decoration: InputDecoration(
+                    hintText: 'Set display period',
+                    suffixIcon: _dateRangeController.text.isEmpty
+                        ? const Icon(TenturaIcons.calendar)
+                        : IconButton(
+                            icon: const Icon(Icons.cancel_rounded),
+                            onPressed: _onClearDate,
+                          ),
+                  ),
+                  onTap: _onPickDate,
                 ),
-                onTap: () async {
-                  final now = DateTime.timestamp();
-                  final dateRange = await showDateRangePicker(
-                    context: context,
-                    firstDate: now,
-                    lastDate: now.add(const Duration(days: 365)),
-                    initialEntryMode: DatePickerEntryMode.calendarOnly,
-                  );
-                  if (dateRange != null) {
-                    _dateRange = dateRange;
-                    _dateRangeController.text =
-                        '${fYMD(_dateRange!.start)} - ${fYMD(_dateRange!.end)}';
-                  }
-                },
               ),
-              const Padding(
-                  padding: EdgeInsets.symmetric(vertical: kSpacingSmall)),
 
-              // Image Input
-              TextFormField(
-                readOnly: true,
-                controller: _imageController,
-                decoration: InputDecoration(
-                  hintText: 'Attach image',
-                  suffixIcon: _image == null
-                      ? const Icon(Icons.add_a_photo_rounded)
-                      : IconButton(
-                          onPressed: () {
-                            _imageController.clear();
-                            setState(() => _image = null);
-                          },
-                          icon: const Icon(Icons.cancel_rounded),
-                        ),
+              // Image
+              Padding(
+                padding: kPaddingSmallV,
+                child: TextFormField(
+                  readOnly: true,
+                  controller: _imageController,
+                  decoration: InputDecoration(
+                    hintText: 'Attach image',
+                    suffixIcon: _image == null
+                        ? const Icon(Icons.add_a_photo_rounded)
+                        : IconButton(
+                            icon: const Icon(Icons.cancel_rounded),
+                            onPressed: _onImageClear,
+                          ),
+                  ),
+                  onTap: _onPickImage,
                 ),
-                onTap: () async {
-                  final newImage = await _beaconCubit.pickImage();
-                  if (newImage != null) {
-                    _imageController.text = newImage.name;
-                    _image = newImage.bytes;
-                    setState(() {});
-                  }
-                },
               ),
 
               // Image Container
-              Container(
-                decoration: BoxDecoration(
-                  border:
-                      _image == null ? Border.all(color: Colors.black12) : null,
-                ),
-                margin: const EdgeInsets.symmetric(vertical: 48),
+              Padding(
+                padding: const EdgeInsets.all(48),
                 child: _image == null
-                    ? const Icon(
-                        Icons.photo_outlined,
-                        size: 200,
+                    ? DecoratedBox(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black12),
+                        ),
+                        child: const Icon(
+                          Icons.photo_outlined,
+                          size: 256,
+                        ),
                       )
                     : Image.memory(
                         _image!,
@@ -242,4 +181,86 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
           ),
         ),
       );
+
+  Future<void> _onPickLocation() async {
+    final location = await ChooseLocationDialog.show(
+      context,
+      center: _coordinates,
+    );
+    if (location == null) return;
+    _locationController.text =
+        location.place?.toString() ?? _coordinates.toString();
+    setState(() => _coordinates = location.coords);
+  }
+
+  void _onClearLocation() {
+    _locationController.clear();
+    setState(() => _coordinates = null);
+  }
+
+  Future<void> _onPickDate() async {
+    final now = DateTime.timestamp();
+    final dateRange = await showDateRangePicker(
+      context: context,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 365)),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+    );
+    if (dateRange == null) return;
+    _dateRangeController.text =
+        '${fYMD(_dateRange!.start)} - ${fYMD(_dateRange!.end)}';
+    setState(() => _dateRange = dateRange);
+  }
+
+  void _onClearDate() {
+    _dateRangeController.clear();
+    setState(() => _dateRange = null);
+  }
+
+  Future<void> _onPickImage() async {
+    final newImage = await pickImage();
+    if (newImage == null) return;
+    _imageController.text = newImage.name;
+    setState(() => _image = newImage.bytes);
+  }
+
+  void _onImageClear() {
+    _imageController.clear();
+    setState(() => _image = null);
+  }
+
+  String? _titleValidator(String? title) {
+    if (title == null || title.length < kTitleMinLength) {
+      return 'Title too short';
+    }
+    return null;
+  }
+
+  Future<void> _onPublish() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      if (await BeaconPublishDialog.show(context) ?? false) {
+        try {
+          await GetIt.I<BeaconCase>().create(
+            beacon: emptyBeacon.copyWith(
+              title: _titleController.text,
+              description: _descriptionController.text,
+              coordinates: _coordinates,
+              dateRange: _dateRange,
+              context: _context,
+            ),
+            image: _image,
+          );
+          if (mounted) await context.maybePop();
+        } catch (e) {
+          if (mounted) {
+            showSnackBar(
+              context,
+              isError: true,
+              text: e.toString(),
+            );
+          }
+        }
+      }
+    }
+  }
 }
