@@ -82,6 +82,7 @@ class AuthLoginScreen extends StatelessWidget {
                     ),
                     separatorBuilder: (context, i) => const Divider(),
                   ),
+
                 // Recover from seed (QR)
                 Padding(
                   padding: kPaddingAll,
@@ -93,6 +94,7 @@ class AuthLoginScreen extends StatelessWidget {
                     child: const Text('Recover by QR'),
                   ),
                 ),
+
                 // Recover from seed (clipboard)
                 Padding(
                   padding: kPaddingH,
@@ -108,6 +110,7 @@ class AuthLoginScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
+
                 // Create new account
                 Padding(
                   padding: kPaddingAll,
