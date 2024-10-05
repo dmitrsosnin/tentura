@@ -16,7 +16,7 @@ export 'package:get_it/get_it.dart';
 
 export 'profile_state.dart';
 
-@singleton
+@lazySingleton
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({
     required String id,

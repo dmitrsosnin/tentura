@@ -5,7 +5,7 @@ import 'package:tentura/features/auth/data/repository/auth_repository.dart';
 
 import '../../data/context_repository.dart';
 
-@singleton
+@lazySingleton
 class ContextCase {
   ContextCase({
     required AuthRepository authRepository,

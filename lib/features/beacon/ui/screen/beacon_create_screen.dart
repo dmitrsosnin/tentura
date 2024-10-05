@@ -203,12 +203,14 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
     final dateRange = await showDateRangePicker(
       context: context,
       firstDate: now,
+      currentDate: now,
       lastDate: now.add(const Duration(days: 365)),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
+      saveText: 'Ok',
     );
     if (dateRange == null) return;
     _dateRangeController.text =
-        '${fYMD(_dateRange!.start)} - ${fYMD(_dateRange!.end)}';
+        '${fYMD(dateRange.start)} - ${fYMD(dateRange.end)}';
     setState(() => _dateRange = dateRange);
   }
 
