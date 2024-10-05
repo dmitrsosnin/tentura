@@ -41,7 +41,7 @@ class App extends StatelessWidget {
         theme: themeLight,
         darkTheme: themeDark,
         themeMode: themeMode,
-        color: const Color(0xFF3A1E5C),
+        color: primaryColor,
         debugShowCheckedModeBanner: false,
         routerConfig: router.config(
           deepLinkBuilder: kDebugMode ? router.deepLinkBuilder : null,
