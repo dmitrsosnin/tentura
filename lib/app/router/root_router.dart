@@ -154,8 +154,7 @@ class RootRouter extends RootStackRouter {
       ];
 
   FutureOr<DeepLink> deepLinkBuilder(PlatformDeepLink deepLink) {
-    // ignore: avoid_print
-    print('DeepLinkBuilder: ${deepLink.uri}');
+    if (kDebugMode) print('DeepLinkBuilder: ${deepLink.uri}');
     return deepLink;
   }
 

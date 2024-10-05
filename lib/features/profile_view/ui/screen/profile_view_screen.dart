@@ -6,6 +6,7 @@ import 'package:tentura/ui/widget/avatar_image.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
 import 'package:tentura/ui/widget/show_more_text.dart';
 import 'package:tentura/ui/widget/gradient_stack.dart';
+import 'package:tentura/ui/widget/deep_back_button.dart';
 import 'package:tentura/ui/widget/avatar_positioned.dart';
 import 'package:tentura/ui/widget/share_code_icon_button.dart';
 
@@ -79,8 +80,8 @@ class ProfileViewScreen extends StatelessWidget implements AutoRouteWrapper {
                   ),
                 ],
                 floating: true,
+                leading: const DeepBackButton(),
                 expandedHeight: GradientStack.defaultHeight,
-                leading: const AutoLeadingButton(),
 
                 // Avatar
                 flexibleSpace: FlexibleSpaceBar(

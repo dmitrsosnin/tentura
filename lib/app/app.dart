@@ -44,7 +44,7 @@ class App extends StatelessWidget {
         color: primaryColor,
         debugShowCheckedModeBanner: false,
         routerConfig: router.config(
-          deepLinkBuilder: kDebugMode ? router.deepLinkBuilder : null,
+          deepLinkBuilder: router.deepLinkBuilder,
           deepLinkTransformer: router.deepLinkTransformer,
           navigatorObservers: () => [
             getIt<SentryNavigatorObserver>(),
