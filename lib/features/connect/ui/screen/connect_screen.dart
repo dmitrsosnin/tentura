@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tentura/consts.dart';
@@ -68,12 +67,10 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 Padding(
                   padding: kPaddingV,
                   child: FilledButton(
-                    onPressed: kIsWeb
-                        ? null
-                        : () async {
-                            final code = await QRScanDialog.show(context);
-                            if (context.mounted) _goWithCode(code);
-                          },
+                    onPressed: () async {
+                      final code = await QRScanDialog.show(context);
+                      if (context.mounted) _goWithCode(code);
+                    },
                     child: const Text('Scan QR'),
                   ),
                 ),

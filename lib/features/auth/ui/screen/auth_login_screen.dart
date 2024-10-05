@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/ui/dialog/qr_scan_dialog.dart';
@@ -87,10 +86,8 @@ class AuthLoginScreen extends StatelessWidget {
                 Padding(
                   padding: kPaddingAll,
                   child: OutlinedButton(
-                    onPressed: kIsWeb
-                        ? null
-                        : () async => authCubit
-                            .addAccount(await QRScanDialog.show(context)),
+                    onPressed: () async =>
+                        authCubit.addAccount(await QRScanDialog.show(context)),
                     child: const Text('Recover by QR'),
                   ),
                 ),
