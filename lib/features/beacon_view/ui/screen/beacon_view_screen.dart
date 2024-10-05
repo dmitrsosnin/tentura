@@ -6,8 +6,9 @@ import 'package:tentura/ui/widget/linear_pi_active.dart';
 import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/beacon/ui/widget/beacon_info.dart';
-import 'package:tentura/features/beacon/ui/widget/beacon_tile_control.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_author_info.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_mine_control.dart';
+import 'package:tentura/features/beacon/ui/widget/beacon_tile_control.dart';
 import 'package:tentura/features/comment/ui/widget/comment_card.dart';
 import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 import 'package:tentura/features/like/ui/bloc/like_cubit.dart';
@@ -83,14 +84,18 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                 ),
 
                 // Buttons Row
-                if (state.isBeaconMine)
-                  Padding(
-                    padding: kPaddingSmallV,
-                    child: BeaconTileControl(
-                      beacon: beacon,
-                      key: ValueKey(beacon.id),
-                    ),
-                  ),
+                Padding(
+                  padding: kPaddingSmallV,
+                  child: state.isBeaconMine
+                      ? BeaconMineControl(
+                          beacon: beacon,
+                          key: ValueKey(beacon.id),
+                        )
+                      : BeaconTileControl(
+                          beacon: beacon,
+                          key: ValueKey(beacon.id),
+                        ),
+                ),
 
                 // Comments Section
                 const Text(
