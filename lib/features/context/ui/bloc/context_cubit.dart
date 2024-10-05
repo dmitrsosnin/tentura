@@ -25,7 +25,7 @@ class ContextCubit extends Cubit<ContextState> {
   late final _authChanges = _contextCase.currentAccountChanges.listen(
     (id) async {
       emit(ContextState(userId: id));
-      await fetch();
+      if (id.isNotEmpty) await fetch();
     },
     cancelOnError: false,
     onError: (Object? e) =>

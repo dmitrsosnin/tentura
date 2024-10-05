@@ -22,13 +22,13 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   final FavoritesCase _favoritesCase;
 
   late final _authChanges = _favoritesCase.currentAccountChanges.listen(
-    (userId) {
+    (userId) async {
       emit(FavoritesState(
         beacons: [],
         userId: userId,
         status: FetchStatus.isLoading,
       ));
-      fetch();
+      if (userId.isNotEmpty) await fetch();
     },
     cancelOnError: false,
   );

@@ -20,13 +20,13 @@ class BeaconCubit extends Cubit<BeaconState> {
   final BeaconCase _beaconCase;
 
   late final _authChanges = _beaconCase.currentAccountChanges.listen(
-    (userId) {
+    (userId) async {
       emit(BeaconState(
         beacons: [],
         userId: userId,
         status: FetchStatus.isLoading,
       ));
-      fetch();
+      if (userId.isNotEmpty) await fetch();
     },
     cancelOnError: false,
   );
