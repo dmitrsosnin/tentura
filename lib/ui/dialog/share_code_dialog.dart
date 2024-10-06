@@ -8,7 +8,7 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 
 import '../theme.dart';
 
-class ShareCodeDialog extends StatefulWidget {
+class ShareCodeDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
     required String header,
@@ -33,11 +33,6 @@ class ShareCodeDialog extends StatefulWidget {
   });
 
   @override
-  State<ShareCodeDialog> createState() => _ShareCodeDialogState();
-}
-
-class _ShareCodeDialogState extends State<ShareCodeDialog> {
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog.adaptive(
@@ -50,7 +45,7 @@ class _ShareCodeDialogState extends State<ShareCodeDialog> {
       // Header
       title: GestureDetector(
         onTap: () async {
-          await Clipboard.setData(ClipboardData(text: widget.link));
+          await Clipboard.setData(ClipboardData(text: link));
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Link has been copied')),
@@ -58,7 +53,7 @@ class _ShareCodeDialogState extends State<ShareCodeDialog> {
           }
         },
         child: Text(
-          widget.header,
+          header,
           maxLines: 1,
           overflow: TextOverflow.clip,
           textAlign: TextAlign.center,
@@ -68,8 +63,8 @@ class _ShareCodeDialogState extends State<ShareCodeDialog> {
 
       // QRCode
       content: PrettyQrView.data(
-        key: ValueKey(widget.header),
-        data: widget.header,
+        key: ValueKey(header),
+        data: header,
         decoration: PrettyQrDecoration(
           shape: PrettyQrSmoothSymbol(
             // We can`t read inverted QR
@@ -86,7 +81,7 @@ class _ShareCodeDialogState extends State<ShareCodeDialog> {
             onPressed: () {
               final box = context.findRenderObject()! as RenderBox;
               Share.share(
-                widget.link,
+                link,
                 sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
               );
             },
