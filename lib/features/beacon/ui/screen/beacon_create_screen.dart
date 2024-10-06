@@ -161,21 +161,24 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
               // Image Container
               Padding(
                 padding: const EdgeInsets.all(48),
-                child: _image == null
-                    ? DecoratedBox(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black12),
+                child: GestureDetector(
+                  onTap: _onPickImage,
+                  child: _image == null
+                      ? DecoratedBox(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black12),
+                          ),
+                          child: const Icon(
+                            Icons.photo_outlined,
+                            size: 256,
+                          ),
+                        )
+                      : Image.memory(
+                          _image!,
+                          key: ObjectKey(_image),
+                          fit: BoxFit.fitWidth,
                         ),
-                        child: const Icon(
-                          Icons.photo_outlined,
-                          size: 256,
-                        ),
-                      )
-                    : Image.memory(
-                        _image!,
-                        key: ObjectKey(_image),
-                        fit: BoxFit.fitWidth,
-                      ),
+                ),
               ),
             ],
           ),

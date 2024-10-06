@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
@@ -42,12 +43,22 @@ class ShareCodeDialog extends StatelessWidget {
       backgroundColor: theme.colorScheme.surfaceBright,
 
       // Header
-      title: Text(
-        header,
-        maxLines: 1,
-        overflow: TextOverflow.clip,
-        textAlign: TextAlign.center,
-        style: theme.textTheme.headlineLarge,
+      title: GestureDetector(
+        onTap: () async {
+          await Clipboard.setData(ClipboardData(text: link));
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Link has been copied')),
+            );
+          }
+        },
+        child: Text(
+          header,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.headlineLarge,
+        ),
       ),
 
       // QRCode
