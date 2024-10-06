@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:tentura/app/router/root_router.dart';
-import 'package:tentura/features/profile/ui/widget/profile_navbar_item.dart';
 import 'package:tentura/ui/widget/tentura_icons.dart';
+
+import 'package:tentura/features/profile/ui/widget/profile_navbar_item.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {

@@ -34,13 +34,13 @@ class BeaconCubit extends Cubit<BeaconState> {
   late final _beaconChanges = _beaconCase.beaconChanges.listen(
     (event) => switch (event) {
       final RepositoryEventCreate<Beacon> entity => emit(state.copyWith(
-          beacons: state.beacons..insert(0, entity.value),
+          beacons: state.beacons..add(entity.value),
           status: FetchStatus.isSuccess,
         )),
       final RepositoryEventUpdate<Beacon> entity => emit(state.copyWith(
           beacons: state.beacons
             ..removeWhere((e) => e.id == entity.id)
-            ..insert(0, entity.value),
+            ..add(entity.value),
           status: FetchStatus.isSuccess,
         )),
       final RepositoryEventDelete<Beacon> entity => emit(state.copyWith(
