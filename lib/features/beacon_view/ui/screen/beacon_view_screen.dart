@@ -82,6 +82,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                   key: ValueKey(beacon),
                   beacon: beacon,
                   isTitleLarge: true,
+                  isShowMoreEnabled: false,
                 ),
 
                 // Buttons Row

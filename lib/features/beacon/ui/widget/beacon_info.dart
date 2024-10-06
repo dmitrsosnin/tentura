@@ -17,11 +17,13 @@ class BeaconInfo extends StatelessWidget {
   const BeaconInfo({
     required this.beacon,
     this.isTitleLarge = false,
+    this.isShowMoreEnabled = true,
     super.key,
   });
 
   final Beacon beacon;
   final bool isTitleLarge;
+  final bool isShowMoreEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -95,10 +97,15 @@ class BeaconInfo extends StatelessWidget {
         if (beacon.description.isNotEmpty)
           Padding(
             padding: kPaddingSmallT,
-            child: ShowMoreText(
-              beacon.description,
-              style: ShowMoreText.buildTextStyle(context),
-            ),
+            child: isShowMoreEnabled
+                ? ShowMoreText(
+                    beacon.description,
+                    style: ShowMoreText.buildTextStyle(context),
+                  )
+                : Text(
+                    beacon.description,
+                    style: ShowMoreText.buildTextStyle(context),
+                  ),
           ),
 
         // Beacon Geolocation
