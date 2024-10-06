@@ -109,7 +109,7 @@ class BeaconViewScreen extends StatelessWidget implements AutoRouteWrapper {
                 ),
 
                 // Comments list
-                for (final comment in state.comments)
+                for (final comment in state.comments.reversed)
                   CommentCard(
                     comment: comment,
                     key: ValueKey(comment),
