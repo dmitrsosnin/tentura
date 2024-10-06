@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
@@ -7,7 +8,7 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 
 import '../theme.dart';
 
-class ShareCodeDialog extends StatelessWidget {
+class ShareCodeDialog extends StatefulWidget {
   static Future<void> show(
     BuildContext context, {
     required String header,
@@ -32,6 +33,11 @@ class ShareCodeDialog extends StatelessWidget {
   });
 
   @override
+  State<ShareCodeDialog> createState() => _ShareCodeDialogState();
+}
+
+class _ShareCodeDialogState extends State<ShareCodeDialog> {
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog.adaptive(
@@ -42,18 +48,28 @@ class ShareCodeDialog extends StatelessWidget {
       backgroundColor: theme.colorScheme.surfaceBright,
 
       // Header
-      title: Text(
-        header,
-        maxLines: 1,
-        overflow: TextOverflow.clip,
-        textAlign: TextAlign.center,
-        style: theme.textTheme.headlineLarge,
+      title: GestureDetector(
+        onTap: () async {
+          await Clipboard.setData(ClipboardData(text: widget.link));
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Link has been copied')),
+            );
+          }
+        },
+        child: Text(
+          widget.header,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.headlineLarge,
+        ),
       ),
 
       // QRCode
       content: PrettyQrView.data(
-        key: ValueKey(header),
-        data: header,
+        key: ValueKey(widget.header),
+        data: widget.header,
         decoration: PrettyQrDecoration(
           shape: PrettyQrSmoothSymbol(
             // We can`t read inverted QR
@@ -70,7 +86,7 @@ class ShareCodeDialog extends StatelessWidget {
             onPressed: () {
               final box = context.findRenderObject()! as RenderBox;
               Share.share(
-                link,
+                widget.link,
                 sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
               );
             },
