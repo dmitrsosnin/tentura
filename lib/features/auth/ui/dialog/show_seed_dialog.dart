@@ -42,11 +42,10 @@ class ShowSeedDialog extends StatelessWidget {
 
       // Header
       title: Text(
-        userId,
-        maxLines: 1,
+        seed,
         overflow: TextOverflow.clip,
         textAlign: TextAlign.center,
-        style: theme.textTheme.headlineLarge,
+        style: theme.textTheme.headlineMedium,
       ),
 
       // QRCode
