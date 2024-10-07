@@ -5,7 +5,6 @@ import '../bloc/context_cubit.dart';
 class ContextAddDialog extends StatefulWidget {
   static Future<String?> show(BuildContext context) => showDialog<String>(
         context: context,
-        useRootNavigator: false,
         builder: (context) => const ContextAddDialog(),
       );
 
@@ -34,10 +33,7 @@ class _ContextAddDialogState extends State<ContextAddDialog> {
           TextButton(
             onPressed: () async {
               final newContext = _controller.text.trim();
-              await GetIt.I<ContextCubit>().add(
-                contextName: newContext,
-                select: true,
-              );
+              await GetIt.I<ContextCubit>().add(contextName: newContext);
               if (context.mounted) Navigator.of(context).pop(newContext);
             },
             child: const Text('Ok'),

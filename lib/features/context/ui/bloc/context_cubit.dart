@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:tentura/domain/entity/repository_event.dart';
+import 'package:tentura/ui/bloc/state_base.dart';
 
 import 'package:tentura/features/auth/domain/exception.dart';
 
+import '../../domain/exception.dart';
+import '../../domain/entity/context.dart';
 import '../../domain/use_case/context_case.dart';
 import 'context_state.dart';
 
@@ -14,35 +19,65 @@ export 'context_state.dart';
 
 @singleton
 class ContextCubit extends Cubit<ContextState> {
+  ContextCubit({
+    bool fromCache = true,
+    ContextCase? contextCase,
+  })  : _contextCase = contextCase ?? GetIt.I<ContextCase>(),
+        super(const ContextState()) {
+    _contextChanges.resume();
+    fetch(fromCache: fromCache);
+  }
+
   @factoryMethod
-  ContextCubit.current(this._contextCase)
-      : super(const ContextState(userId: '')) {
+  ContextCubit.global(this._contextCase) : super(const ContextState()) {
     _authChanges.resume();
+    _contextChanges.resume();
   }
 
   final ContextCase _contextCase;
 
   late final _authChanges = _contextCase.currentAccountChanges.listen(
     (id) async {
-      emit(ContextState(userId: id));
-      if (id.isNotEmpty) await fetch();
+      if (id.isNotEmpty) await fetch(fromCache: false);
     },
     cancelOnError: false,
     onError: (Object? e) =>
         emit(state.setError(e ?? const AuthExceptionUnknown())),
   );
 
+  late final _contextChanges = _contextCase.contextChanges.listen(
+    (event) => switch (event) {
+      final RepositoryEventCreate<Context> entity => emit(state.copyWith(
+          contexts: state.contexts..add(entity.value.name),
+          status: FetchStatus.isSuccess,
+        )),
+      final RepositoryEventDelete<Context> entity => emit(state.copyWith(
+          contexts: state.contexts..remove(entity.id),
+          status: FetchStatus.isSuccess,
+        )),
+      RepositoryEventUpdate<Context>() => throw UnimplementedError(),
+    },
+    cancelOnError: false,
+    onError: (Object? e) =>
+        emit(state.setError(e ?? const ContextUnknownException())),
+  );
+
   @override
   @disposeMethod
   Future<void> close() async {
     await _authChanges.cancel();
+    await _contextChanges.cancel();
     return super.close();
   }
 
-  Future<void> fetch() async {
+  Future<void> fetch({bool fromCache = true}) async {
     emit(state.setLoading());
     try {
-      emit(state.copyWith(contexts: (await _contextCase.fetch()).toSet()));
+      final contexts = await _contextCase.fetch(fromCache: fromCache);
+      emit(state.copyWith(
+        contexts: contexts.toSet(),
+        status: FetchStatus.isSuccess,
+      ));
     } catch (e) {
       emit(state.setError(e));
     }
@@ -55,36 +90,28 @@ class ContextCubit extends Cubit<ContextState> {
 
   Future<void> add({
     required String contextName,
-    required bool select,
+    bool select = true,
   }) async {
     if (state.contexts.contains(contextName)) return;
+
+    emit(state.setLoading());
     try {
-      final context = await _contextCase.add(contextName);
-      emit(state.copyWith(
-        selected: context,
-        contexts: {context, ...state.contexts},
-      ));
+      await _contextCase.add(contextName);
+      if (select) emit(state.copyWith(selected: contextName));
     } catch (e) {
       emit(state.setError(e));
     }
   }
 
-  /// Returns `true` if current context deleted
-  Future<bool> delete(String contextName) async {
-    final isCurrent = state.selected == contextName;
+  Future<void> delete(String contextName) async {
+    emit(state.setLoading());
     try {
-      await _contextCase.delete(
-        contextName: contextName,
-        userId: state.userId,
-      );
-      emit(state.copyWith(
-        selected: isCurrent ? '' : state.selected,
-        contexts: state.contexts.where((e) => e != contextName).toSet(),
-      ));
-      return isCurrent;
+      await _contextCase.delete(contextName);
+      if (contextName == state.selected) {
+        emit(state.copyWith(selected: ''));
+      }
     } catch (e) {
       emit(state.setError(e));
-      return false;
     }
   }
 }

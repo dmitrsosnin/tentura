@@ -10,7 +10,7 @@ class ContextRemoveDialog extends StatelessWidget {
       showDialog<bool>(
         context: context,
         useRootNavigator: false,
-        builder: (context) => ContextRemoveDialog(contextName: contextName),
+        builder: (_) => ContextRemoveDialog(contextName: contextName),
       );
 
   const ContextRemoveDialog({
@@ -27,9 +27,8 @@ class ContextRemoveDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              final isCurrent =
-                  await GetIt.I<ContextCubit>().delete(contextName);
-              if (context.mounted) Navigator.of(context).pop(isCurrent);
+              await GetIt.I<ContextCubit>().delete(contextName);
+              if (context.mounted) Navigator.of(context).pop(true);
             },
             child: const Text('Yes'),
           ),

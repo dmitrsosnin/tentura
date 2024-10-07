@@ -5,6 +5,7 @@ import 'package:tentura/ui/utils/ui_utils.dart';
 
 import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
 import 'package:tentura/features/beacon/ui/widget/beacon_tile.dart';
+import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
 import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 
 import '../bloc/my_field_cubit.dart';
@@ -18,9 +19,12 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
       BlocSelector<AuthCubit, AuthState, String>(
         bloc: GetIt.I<AuthCubit>(),
         selector: (state) => state.currentAccountId,
-        builder: (context, accountId) => BlocProvider(
+        builder: (context, accountId) => MultiBlocProvider(
           key: ValueKey(accountId),
-          create: (_) => MyFieldCubit(),
+          providers: [
+            BlocProvider(create: (_) => MyFieldCubit()),
+            BlocProvider.value(value: GetIt.I<ContextCubit>()),
+          ],
           child: this,
         ),
       );

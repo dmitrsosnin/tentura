@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 
@@ -10,16 +9,23 @@ import 'package:tentura/ui/widget/tentura_icons.dart';
 import 'package:tentura/features/geo/domain/entity/coordinates.dart';
 import 'package:tentura/features/geo/ui/dialog/choose_location_dialog.dart';
 import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
+import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
 
 import '../../domain/use_case/beacon_case.dart';
 import '../dialog/beacon_publish_dialog.dart';
 
 @RoutePage()
-class BeaconCreateScreen extends StatefulWidget {
+class BeaconCreateScreen extends StatefulWidget implements AutoRouteWrapper {
   const BeaconCreateScreen({super.key});
 
   @override
   State<BeaconCreateScreen> createState() => _BeaconCreateScreenState();
+
+  @override
+  Widget wrappedRoute(BuildContext context) => BlocProvider(
+        create: (_) => ContextCubit(),
+        child: this,
+      );
 }
 
 class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
@@ -97,7 +103,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
               Padding(
                 padding: kPaddingSmallV,
                 child: ContextDropDown(
-                  onChanged: (value) async => _context = value,
+                  onChanged: (value) => _context = value,
                 ),
               ),
 
