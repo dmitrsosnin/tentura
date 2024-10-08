@@ -13,26 +13,26 @@ export 'rating_state.dart';
 
 class RatingCubit extends Cubit<RatingState> {
   RatingCubit({
+    String initialContext = '',
     RatingRepository? repository,
   })  : _repository = repository ?? GetIt.I<RatingRepository>(),
         super(const RatingState()) {
-    fetch();
+    fetch(initialContext);
   }
 
   final RatingRepository _repository;
 
   List<UserRating> _items = [];
 
-  Future<void> fetch([String? contextName]) async {
+  Future<void> fetch([String contextName = '']) async {
     emit(state.setLoading());
     try {
-      final rating = await _repository.fetch(
-        context: contextName ?? state.context,
-      );
-      _items = rating.toList(growable: false);
       emit(state.copyWith(
+        error: null,
+        context: contextName,
         status: FetchStatus.isSuccess,
-        items: _items,
+        items: _items = (await _repository.fetch(context: contextName))
+            .toList(growable: false),
       ));
       _sort();
     } catch (e) {

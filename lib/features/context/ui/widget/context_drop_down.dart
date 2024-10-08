@@ -8,12 +8,7 @@ import '../dialog/context_add_dialog.dart';
 import '../dialog/context_remove_dialog.dart';
 
 class ContextDropDown extends StatelessWidget {
-  const ContextDropDown({
-    required this.onChanged,
-    super.key,
-  });
-
-  final void Function(String) onChanged;
+  const ContextDropDown({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +54,11 @@ class ContextDropDown extends StatelessWidget {
               ),
           ],
           onChanged: (value) => switch (value) {
-            final ContextSelectionAdd _ => ContextAddDialog.show(context)
-                .then((v) => v == null ? null : onChanged(v)),
+            final ContextSelectionAdd _ => ContextAddDialog.show(context),
             final ContextSelectionAll _ =>
-              onChanged(context.read<ContextCubit>().select('')),
+              context.read<ContextCubit>().select(''),
             final ContextSelectionValue c =>
-              onChanged(context.read<ContextCubit>().select(c.name)),
+              context.read<ContextCubit>().select(c.name),
             null => null,
           },
           value: switch (state.selected) {

@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 
 import 'package:tentura/ui/utils/ui_utils.dart';
 
+import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
 import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 
 import '../bloc/rating_cubit.dart';
@@ -16,9 +17,17 @@ class RatingScreen extends StatefulWidget implements AutoRouteWrapper {
   State<RatingScreen> createState() => _RatingScreenState();
 
   @override
-  Widget wrappedRoute(BuildContext context) => BlocProvider(
-        create: (_) => RatingCubit(),
-        child: this,
+  Widget wrappedRoute(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => RatingCubit()),
+          BlocProvider(create: (_) => ContextCubit()),
+        ],
+        child: BlocListener<ContextCubit, ContextState>(
+          listenWhen: (p, c) => p.selected != c.selected,
+          listener: (context, state) =>
+              context.read<RatingCubit>().fetch(state.selected),
+          child: this,
+        ),
       );
 }
 
@@ -104,11 +113,11 @@ class _RatingScreenState extends State<RatingScreen> {
           title: const Text('Rating'),
 
           // Context selector
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(40),
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(40),
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8),
-              child: ContextDropDown(onChanged: _cubit.fetch),
+              padding: EdgeInsets.only(left: 20, right: 20, bottom: 8),
+              child: ContextDropDown(),
             ),
           ),
         ),

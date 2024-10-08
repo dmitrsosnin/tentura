@@ -22,26 +22,31 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
         builder: (context, accountId) => MultiBlocProvider(
           key: ValueKey(accountId),
           providers: [
-            BlocProvider(create: (_) => MyFieldCubit()),
-            BlocProvider.value(value: GetIt.I<ContextCubit>()),
+            BlocProvider.value(
+              value: GetIt.I<ContextCubit>(),
+            ),
+            BlocProvider(
+              create: (context) => MyFieldCubit(
+                initialContext: GetIt.I<ContextCubit>().state.selected,
+              ),
+            ),
           ],
-          child: this,
+          child: BlocListener<ContextCubit, ContextState>(
+            listenWhen: (p, c) => p.selected != c.selected,
+            listener: (context, state) =>
+                context.read<MyFieldCubit>().fetch(state.selected),
+            child: this,
+          ),
         ),
       );
 
   @override
   Widget build(BuildContext context) => SafeArea(
-        minimum: const EdgeInsets.only(
-          left: kSpacingMedium,
-          right: kSpacingMedium,
-          top: kSpacingMedium,
-        ),
+        minimum: kPaddingAll,
         child: Column(
           children: [
             // Context selector
-            ContextDropDown(
-              onChanged: context.read<MyFieldCubit>().fetch,
-            ),
+            const ContextDropDown(),
 
             // Beacons list
             Expanded(
@@ -50,6 +55,11 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
                 listener: showSnackBarError,
                 buildWhen: (p, c) => c.hasNoError,
                 builder: (context, state) {
+                  if (state.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  }
                   return ListView.separated(
                     itemCount: state.beacons.length,
                     separatorBuilder: (_, __) => const Divider(),
