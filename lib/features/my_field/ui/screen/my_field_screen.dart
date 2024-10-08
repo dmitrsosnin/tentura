@@ -46,7 +46,7 @@ class MyFieldScreen extends StatelessWidget implements AutoRouteWrapper {
         child: Column(
           children: [
             // Context selector
-            const ContextDropDown(),
+            const ContextDropDown(key: Key('MyFieldContextSelector')),
 
             // Beacons list
             Expanded(

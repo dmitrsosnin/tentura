@@ -100,7 +100,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
               // Context
               const Padding(
                 padding: kPaddingSmallV,
-                child: ContextDropDown(),
+                child: ContextDropDown(key: Key('BeaconContextSelector')),
               ),
 
               // Location

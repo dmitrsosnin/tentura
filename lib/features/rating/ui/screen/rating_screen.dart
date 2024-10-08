@@ -117,7 +117,7 @@ class _RatingScreenState extends State<RatingScreen> {
             preferredSize: Size.fromHeight(40),
             child: Padding(
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 8),
-              child: ContextDropDown(),
+              child: ContextDropDown(key: Key('RatingContextSelector')),
             ),
           ),
         ),

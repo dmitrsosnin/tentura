@@ -43,15 +43,13 @@ class ContextCubit extends Cubit<ContextState> {
 
   late final _contextChanges = _contextCase.contextChanges.listen(
     (event) => switch (event) {
-      final RepositoryEventCreate<Context> entity => emit(state.copyWith(
+      final RepositoryEventCreate<Context> entity => emit(ContextState(
           contexts: state.contexts..add(entity.value.name),
-          status: FetchStatus.isSuccess,
-          error: null,
+          selected: state.selected,
         )),
-      final RepositoryEventDelete<Context> entity => emit(state.copyWith(
+      final RepositoryEventDelete<Context> entity => emit(ContextState(
           contexts: state.contexts..remove(entity.id),
-          status: FetchStatus.isSuccess,
-          error: null,
+          selected: state.selected == entity.id ? '' : state.selected,
         )),
       RepositoryEventUpdate<Context>() => throw UnimplementedError(),
     },
@@ -89,8 +87,8 @@ class ContextCubit extends Cubit<ContextState> {
     return contextName;
   }
 
-  Future<void> add({
-    required String contextName,
+  Future<void> add(
+    String contextName, {
     bool select = true,
   }) async {
     if (state.contexts.contains(contextName)) return;

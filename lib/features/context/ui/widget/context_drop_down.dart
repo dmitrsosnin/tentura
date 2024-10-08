@@ -12,6 +12,7 @@ class ContextDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final contextCubit = context.read<ContextCubit>();
     final colorScheme = Theme.of(context).colorScheme;
     return BlocConsumer<ContextCubit, ContextState>(
       builder: (context, state) => DefaultTextStyle.merge(
@@ -41,12 +42,11 @@ class ContextDropDown extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.delete_forever),
                         onPressed: () async {
-                          final isDeleted = await ContextRemoveDialog.show(
+                          final needDelete = await ContextRemoveDialog.show(
                             context,
                             contextName: e,
                           );
-                          if (isDeleted ?? false) return;
-                          if (context.mounted) Navigator.of(context).pop();
+                          if (needDelete ?? false) await contextCubit.delete(e);
                         },
                       ),
                   ],
@@ -54,11 +54,15 @@ class ContextDropDown extends StatelessWidget {
               ),
           ],
           onChanged: (value) => switch (value) {
-            final ContextSelectionAdd _ => ContextAddDialog.show(context),
-            final ContextSelectionAll _ =>
-              context.read<ContextCubit>().select(''),
-            final ContextSelectionValue c =>
-              context.read<ContextCubit>().select(c.name),
+            final ContextSelectionAdd _ => ContextAddDialog.show(context).then(
+                (contextName) async {
+                  if (contextName != null) {
+                    await contextCubit.add(contextName);
+                  }
+                },
+              ),
+            final ContextSelectionAll _ => contextCubit.select(''),
+            final ContextSelectionValue c => contextCubit.select(c.name),
             null => null,
           },
           value: switch (state.selected) {
