@@ -11,7 +11,8 @@ import 'package:tentura/features/geo/ui/dialog/choose_location_dialog.dart';
 import 'package:tentura/features/context/ui/widget/context_drop_down.dart';
 import 'package:tentura/features/context/ui/bloc/context_cubit.dart';
 
-import '../../domain/use_case/beacon_case.dart';
+import '../../domain/entity/beacon.dart';
+import '../bloc/beacon_cubit.dart';
 import '../dialog/beacon_publish_dialog.dart';
 
 @RoutePage()
@@ -248,7 +249,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
       final contextName = context.read<ContextCubit>().state.selected;
       if (await BeaconPublishDialog.show(context) ?? false) {
         try {
-          await GetIt.I<BeaconCase>().create(
+          await GetIt.I<BeaconCubit>().create(
             beacon: emptyBeacon.copyWith(
               title: _titleController.text,
               description: _descriptionController.text,

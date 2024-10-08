@@ -61,11 +61,9 @@ class BeaconRepository {
                   ..replace(Gfloat8(beacon.coordinates!.lat.toString())))),
         )
         .firstWhere((e) => e.dataSource == DataSource.Link)
-        .then(
-          (r) => r.dataOrThrow(label: _label).insert_beacon_one as BeaconModel?,
-        );
+        .then((r) => r.dataOrThrow(label: _label).insert_beacon_one);
     if (response == null) throw BeaconCreateException(beacon);
-    final result = response.toEntity;
+    final result = (response as BeaconModel).toEntity;
     _controller.add(RepositoryEventCreate(result));
     return result;
   }
