@@ -13,7 +13,10 @@ class ContextState with _$ContextState, StateFetchMixin {
 
   const ContextState._();
 
-  ContextState setLoading() => copyWith(status: FetchStatus.isLoading);
+  ContextState setLoading() => copyWith(
+        status: FetchStatus.isLoading,
+        error: null,
+      );
 
   ContextState setError(Object error) => copyWith(
         status: FetchStatus.isFailure,

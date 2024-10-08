@@ -5,8 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:tentura/domain/entity/repository_event.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
-import 'package:tentura/features/auth/domain/exception.dart';
-
 import '../../domain/exception.dart';
 import '../../domain/entity/context.dart';
 import '../../domain/use_case/context_case.dart';
@@ -41,8 +39,6 @@ class ContextCubit extends Cubit<ContextState> {
       if (id.isNotEmpty) await fetch(fromCache: false);
     },
     cancelOnError: false,
-    onError: (Object? e) =>
-        emit(state.setError(e ?? const AuthExceptionUnknown())),
   );
 
   late final _contextChanges = _contextCase.contextChanges.listen(
@@ -50,10 +46,12 @@ class ContextCubit extends Cubit<ContextState> {
       final RepositoryEventCreate<Context> entity => emit(state.copyWith(
           contexts: state.contexts..add(entity.value.name),
           status: FetchStatus.isSuccess,
+          error: null,
         )),
       final RepositoryEventDelete<Context> entity => emit(state.copyWith(
           contexts: state.contexts..remove(entity.id),
           status: FetchStatus.isSuccess,
+          error: null,
         )),
       RepositoryEventUpdate<Context>() => throw UnimplementedError(),
     },
@@ -74,9 +72,9 @@ class ContextCubit extends Cubit<ContextState> {
     emit(state.setLoading());
     try {
       final contexts = await _contextCase.fetch(fromCache: fromCache);
-      emit(state.copyWith(
+      emit(ContextState(
         contexts: contexts.toSet(),
-        status: FetchStatus.isSuccess,
+        selected: state.selected,
       ));
     } catch (e) {
       emit(state.setError(e));
@@ -84,7 +82,10 @@ class ContextCubit extends Cubit<ContextState> {
   }
 
   String select(String contextName) {
-    emit(state.copyWith(selected: contextName));
+    emit(ContextState(
+      contexts: state.contexts,
+      selected: contextName,
+    ));
     return contextName;
   }
 

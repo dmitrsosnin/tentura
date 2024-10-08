@@ -40,8 +40,6 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
   Coordinates? _coordinates;
   Uint8List? _image;
 
-  var _context = '';
-
   @override
   void dispose() {
     _titleController.dispose();
@@ -83,7 +81,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                 ),
                 keyboardType: TextInputType.text,
                 maxLength: kTitleMaxLength,
-                onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 validator: _titleValidator,
               ),
 
@@ -96,14 +94,15 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
                 keyboardType: TextInputType.multiline,
                 maxLength: kDescriptionLength,
                 maxLines: null,
-                onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
               ),
 
               // Context
               Padding(
                 padding: kPaddingSmallV,
                 child: ContextDropDown(
-                  onChanged: (value) => _context = value,
+                  key: const Key('SelectContext'),
+                  onChanged: (_) {},
                 ),
               ),
 
@@ -249,6 +248,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
 
   Future<void> _onPublish() async {
     if (_formKey.currentState?.validate() ?? false) {
+      final contextName = context.read<ContextCubit>().state.selected;
       if (await BeaconPublishDialog.show(context) ?? false) {
         try {
           await GetIt.I<BeaconCase>().create(
@@ -257,7 +257,7 @@ class _BeaconCreateScreenState extends State<BeaconCreateScreen> {
               description: _descriptionController.text,
               coordinates: _coordinates,
               dateRange: _dateRange,
-              context: _context,
+              context: contextName,
             ),
             image: _image,
           );

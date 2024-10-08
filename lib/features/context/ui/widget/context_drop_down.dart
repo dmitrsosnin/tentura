@@ -18,62 +18,60 @@ class ContextDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textStyle = TextStyle(color: colorScheme.onSurface);
     return BlocConsumer<ContextCubit, ContextState>(
-      builder: (context, state) => DropdownButton<ContextSelection>(
-        dropdownColor: colorScheme.surface,
-        isExpanded: true,
-        items: [
-          DropdownMenuItem(
-            value: const ContextSelection.add(),
-            child: Text(
-              'Add new topic',
-              style: textStyle,
+      builder: (context, state) => DefaultTextStyle.merge(
+        style: TextStyle(
+          color: colorScheme.onSurface,
+        ),
+        child: DropdownButton<ContextSelection>(
+          dropdownColor: colorScheme.surface,
+          isExpanded: true,
+          items: [
+            const DropdownMenuItem(
+              value: ContextSelectionAdd(),
+              child: Text('Add new topic'),
             ),
-          ),
-          DropdownMenuItem(
-            value: const ContextSelection.all(),
-            child: Text(
-              'All topics',
-              style: textStyle,
+            const DropdownMenuItem(
+              value: ContextSelectionAll(),
+              child: Text('All topics'),
             ),
-          ),
-          for (final e in state.contexts)
-            DropdownMenuItem(
-              value: ContextSelection.value(e),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(e, style: textStyle),
-                  if (state.selected == e)
-                    IconButton(
-                      icon: const Icon(Icons.delete_forever),
-                      onPressed: () async {
-                        final isDeleted = await ContextRemoveDialog.show(
-                          context,
-                          contextName: e,
-                        );
-                        if (isDeleted ?? false) return;
-                        if (context.mounted) Navigator.of(context).pop();
-                      },
-                    ),
-                ],
+            for (final e in state.contexts)
+              DropdownMenuItem(
+                value: ContextSelectionValue(e),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(e),
+                    if (state.selected == e)
+                      IconButton(
+                        icon: const Icon(Icons.delete_forever),
+                        onPressed: () async {
+                          final isDeleted = await ContextRemoveDialog.show(
+                            context,
+                            contextName: e,
+                          );
+                          if (isDeleted ?? false) return;
+                          if (context.mounted) Navigator.of(context).pop();
+                        },
+                      ),
+                  ],
+                ),
               ),
-            ),
-        ],
-        onChanged: (value) => switch (value) {
-          const ContextSelection.add() => ContextAddDialog.show(context)
-              .then((v) => v == null ? null : onChanged(v)),
-          const ContextSelection.all() =>
-            onChanged(GetIt.I<ContextCubit>().select('')),
-          final ContextSelectionValue c =>
-            onChanged(GetIt.I<ContextCubit>().select(c.name)),
-          _ => null,
-        },
-        value: switch (state.selected) {
-          '' => const ContextSelection.all(),
-          final c => ContextSelection.value(c),
-        },
+          ],
+          onChanged: (value) => switch (value) {
+            final ContextSelectionAdd _ => ContextAddDialog.show(context)
+                .then((v) => v == null ? null : onChanged(v)),
+            final ContextSelectionAll _ =>
+              onChanged(context.read<ContextCubit>().select('')),
+            final ContextSelectionValue c =>
+              onChanged(context.read<ContextCubit>().select(c.name)),
+            null => null,
+          },
+          value: switch (state.selected) {
+            '' => const ContextSelectionAll(),
+            final c => ContextSelectionValue(c),
+          },
+        ),
       ),
       listenWhen: (p, c) => c.hasError,
       listener: showSnackBarError,
