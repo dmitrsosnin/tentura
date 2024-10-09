@@ -19,4 +19,6 @@ class Profile with _$Profile {
   String get imageId => hasAvatar ? id : '';
 
   bool get isFriend => myVote > 0;
+
+  bool get isSeeingMe => score > 0;
 }
