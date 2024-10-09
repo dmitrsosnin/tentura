@@ -58,12 +58,11 @@ class ContextCubit extends Cubit<ContextState> {
         emit(state.setError(e ?? const ContextUnknownException())),
   );
 
-  @override
   @disposeMethod
-  Future<void> close() async {
+  Future<void> dispose() async {
     await _authChanges.cancel();
     await _contextChanges.cancel();
-    return super.close();
+    return close();
   }
 
   Future<void> fetch({bool fromCache = true}) async {
