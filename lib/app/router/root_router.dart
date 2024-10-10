@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:injectable/injectable.dart';
 
-import 'package:tentura/features/auth/ui/bloc/auth_cubit.dart';
+import 'package:tentura/features/profile/ui/bloc/profile_cubit.dart';
 import 'package:tentura/features/settings/ui/bloc/settings_cubit.dart';
 
 import 'root_router.gr.dart';
@@ -22,17 +22,17 @@ const pathAppLinkView = '/shared/view';
 @AutoRouterConfig()
 class RootRouter extends RootStackRouter {
   RootRouter({
-    required AuthCubit authCubit,
+    required ProfileCubit profileCubit,
     required SettingsCubit settingsCubit,
-  })  : _authCubit = authCubit,
+  })  : _profileCubit = profileCubit,
         _settingsCubit = settingsCubit;
 
   late final reevaluateListenable = _ReevaluateFromStreams([
-    _authCubit.stream.map((e) => e.currentAccountId),
     _settingsCubit.stream.map((e) => e.introEnabled),
+    _profileCubit.stream,
   ]);
 
-  final AuthCubit _authCubit;
+  final ProfileCubit _profileCubit;
   final SettingsCubit _settingsCubit;
 
   @override
@@ -49,17 +49,6 @@ class RootRouter extends RootStackRouter {
   List<AutoRoute> get routes => [
         // Home
         AutoRoute(
-          guards: [
-            AutoRouteGuard.redirect(
-              (resolver) =>
-                  _settingsCubit.state.introEnabled ? const IntroRoute() : null,
-            ),
-            AutoRouteGuard.redirect(
-              (resolver) => _authCubit.state.isAuthenticated
-                  ? null
-                  : const AuthLoginRoute(),
-            ),
-          ],
           initial: true,
           path: pathRoot,
           page: HomeRoute.page,
@@ -86,10 +75,24 @@ class RootRouter extends RootStackRouter {
               page: ProfileMineRoute.page,
             ),
           ],
+          guards: [
+            AutoRouteGuard.redirect(
+              (resolver) =>
+                  _settingsCubit.state.introEnabled ? const IntroRoute() : null,
+            ),
+            AutoRouteGuard.redirect(
+              (resolver) => _profileCubit.state.isNotAuthorized
+                  ? const AuthLoginRoute()
+                  : null,
+            ),
+          ],
         ),
 
         // Intro
         AutoRoute(
+          keepHistory: false,
+          maintainState: false,
+          page: IntroRoute.page,
           guards: [
             AutoRouteGuard.redirect(
               (resolver) => _settingsCubit.state.introEnabled
@@ -97,52 +100,73 @@ class RootRouter extends RootStackRouter {
                   : const AuthLoginRoute(),
             ),
           ],
-          page: IntroRoute.page,
         ),
 
         // Login
         AutoRoute(
+          keepHistory: false,
+          maintainState: false,
+          page: AuthLoginRoute.page,
           guards: [
             AutoRouteGuard.redirect(
-              (resolver) =>
-                  _authCubit.state.isAuthenticated ? const HomeRoute() : null,
+              (resolver) => _profileCubit.state.isNotSuccess
+                  ? null
+                  : _profileCubit.state.profile.needEdit
+                      ? const ProfileEditRoute()
+                      : const ProfileMineRoute(),
             ),
           ],
-          page: AuthLoginRoute.page,
         ),
 
-        // Profile
+        // Profile View
         AutoRoute(
-          page: ProfileViewRoute.page,
+          keepHistory: false,
+          maintainState: false,
           path: pathProfileView,
+          page: ProfileViewRoute.page,
           guards: [
             AutoRouteGuard.redirect(
-              (r) => _authCubit.checkIfIsMe(r.route.queryParams.getString('id'))
-                  ? const ProfileMineRoute()
-                  : null,
+              (r) =>
+                  _profileCubit.checkIfIsMe(r.route.queryParams.getString('id'))
+                      ? const ProfileMineRoute()
+                      : null,
             ),
           ],
         ),
+
+        // Profile Edit
         AutoRoute(
+          keepHistory: false,
+          maintainState: false,
           page: ProfileEditRoute.page,
         ),
 
-        //Beacon
+        // Beacon Create
         AutoRoute(
+          keepHistory: false,
+          maintainState: false,
           page: BeaconCreateRoute.page,
         ),
+
+        // Beacon View
         AutoRoute(
-          page: BeaconViewRoute.page,
+          keepHistory: false,
+          maintainState: false,
           path: pathBeaconView,
+          page: BeaconViewRoute.page,
         ),
 
         // Rating
         AutoRoute(
+          keepHistory: false,
+          maintainState: false,
           page: RatingRoute.page,
         ),
 
         // Graph
         AutoRoute(
+          keepHistory: false,
+          maintainState: false,
           page: GraphRoute.page,
         ),
 

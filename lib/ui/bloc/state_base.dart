@@ -13,6 +13,9 @@ mixin StateFetchMixin {
   FetchStatus get status;
   Object? get error;
 
+  bool get isSuccess => status.isSuccess;
+  bool get isNotSuccess => !status.isSuccess;
+
   bool get isLoading => status.isLoading;
   bool get isNotLoading => !status.isLoading;
 

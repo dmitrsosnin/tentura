@@ -21,4 +21,6 @@ class Profile with _$Profile {
   bool get isFriend => myVote > 0;
 
   bool get isSeeingMe => score > 0;
+
+  bool get needEdit => id.isNotEmpty && title.isEmpty;
 }

@@ -59,10 +59,6 @@ class AuthCubit extends Cubit<AuthState> {
     return close();
   }
 
-  bool checkIfIsMe(String id) => id == state.currentAccountId;
-
-  bool checkIfIsNotMe(String id) => id != state.currentAccountId;
-
   String getSeedByAccountId(String id) =>
       state.accounts.firstWhereOrNull((e) => e.id == id)?.seed ?? '';
 
