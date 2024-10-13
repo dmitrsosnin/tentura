@@ -27,10 +27,10 @@ dependencies:
 
   # Platform related
   geocoding: ^3.0.0
-  share_plus: ^10.0.3
   geolocator: ^13.0.1
+  share_plus: ^10.0.3
   image_picker: ^1.1.2
-  mobile_scanner: ^6.0.0
+  mobile_scanner: ^6.0.1
   flutter_secure_storage: ^9.2.2
 
   # UI related
