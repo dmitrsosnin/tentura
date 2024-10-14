@@ -10,11 +10,8 @@ import '../bloc/rating_cubit.dart';
 import '../widget/rating_list_tile.dart';
 
 @RoutePage()
-class RatingScreen extends StatefulWidget implements AutoRouteWrapper {
+class RatingScreen extends StatelessWidget implements AutoRouteWrapper {
   const RatingScreen({super.key});
-
-  @override
-  State<RatingScreen> createState() => _RatingScreenState();
 
   @override
   Widget wrappedRoute(BuildContext context) => MultiBlocProvider(
@@ -29,113 +26,101 @@ class RatingScreen extends StatefulWidget implements AutoRouteWrapper {
           child: this,
         ),
       );
-}
-
-class _RatingScreenState extends State<RatingScreen> {
-  final _searchController = TextEditingController();
-  final _searchFocusNode = FocusNode();
-
-  late final _cubit = context.read<RatingCubit>();
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    _searchFocusNode.dispose();
-    super.dispose();
-  }
+  Widget build(BuildContext context) {
+    final cubit = context.read<RatingCubit>();
+    return BlocConsumer<RatingCubit, RatingState>(
+      listenWhen: (p, c) => c.hasError,
+      listener: showSnackBarError,
+      buildWhen: (p, c) => c.hasNoError,
+      builder: (context, state) {
+        final filter = state.searchFilter;
+        final items = filter.isEmpty
+            ? state.items
+            : state.items
+                .where((e) => e.profile.title
+                    .toLowerCase()
+                    .contains(filter.toLowerCase()))
+                .toList();
 
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          actions: [
-            // Search Input
-            TextFormField(
-              controller: _searchController,
-              focusNode: _searchFocusNode,
-              decoration: InputDecoration(
-                hintText: 'Search by',
-                isDense: true,
-                isCollapsed: true,
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                constraints: BoxConstraints.tightForFinite(
-                  width: MediaQuery.of(context).size.width / 2,
-                ),
-              ),
-              textAlign: TextAlign.end,
-              textInputAction: TextInputAction.go,
-              onChanged: _cubit.setSearchFilter,
-              onTapOutside: (_) => _searchFocusNode.unfocus(),
-            ),
-
-            // Clear input
-            BlocBuilder<RatingCubit, RatingState>(
-              buildWhen: (p, c) =>
-                  p.searchFilter.isEmpty || c.searchFilter.isEmpty,
-              builder: (context, s) => IconButton(
+        return Scaffold(
+          appBar: AppBar(
+            actions: [
+              // Clear input
+              IconButton(
                 padding: EdgeInsets.zero,
                 alignment: Alignment.center,
                 icon: const Icon(Icons.clear_rounded),
-                onPressed: s.searchFilter.isEmpty
-                    ? null
-                    : () {
-                        _searchController.clear();
-                        _cubit.clearSearchFilter();
-                      },
+                onPressed: filter.isEmpty ? null : cubit.clearSearchFilter,
               ),
-            ),
 
-            // Toggle sorting by value
-            BlocBuilder<RatingCubit, RatingState>(
-              buildWhen: (p, c) => p.isSortedByAsc != c.isSortedByAsc,
-              builder: (context, state) => IconButton(
-                onPressed: _cubit.toggleSortingByAsc,
+              // Toggle sorting by value
+              IconButton(
+                onPressed: cubit.toggleSortingByAsc,
                 icon: state.isSortedByAsc
                     ? const Icon(Icons.keyboard_arrow_up_rounded)
                     : const Icon(Icons.keyboard_arrow_down_rounded),
               ),
-            ),
 
-            // Toggle sorting by ego
-            BlocBuilder<RatingCubit, RatingState>(
-              buildWhen: (p, c) => p.isSortedByEgo != c.isSortedByEgo,
-              builder: (context, state) => IconButton(
-                onPressed: _cubit.toggleSortingByEgo,
+              // Toggle sorting by ego
+              IconButton(
+                onPressed: cubit.toggleSortingByEgo,
                 icon: state.isSortedByEgo
                     ? const Icon(Icons.keyboard_arrow_right_rounded)
                     : const Icon(Icons.keyboard_arrow_left_rounded),
               ),
+            ],
+
+            title: Row(
+              children: [
+                // Title
+                const Padding(
+                  padding: EdgeInsets.only(right: kSpacingLarge),
+                  child: Text('Rating'),
+                ),
+
+                // Search Input
+                Expanded(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.zero,
+                      hintText: 'Search by',
+                      isCollapsed: true,
+                      isDense: true,
+                    ),
+                    initialValue: state.searchFilter,
+                    onChanged: cubit.setSearchFilter,
+                    textInputAction: TextInputAction.go,
+                  ),
+                ),
+              ],
             ),
-          ],
 
-          // Title
-          title: const Text('Rating'),
-
-          // Context selector
-          bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(40),
-            child: Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, bottom: 8),
-              child: ContextDropDown(key: Key('RatingContextSelector')),
+            // Context selector
+            bottom: const PreferredSize(
+              preferredSize: Size.fromHeight(48),
+              child: Padding(
+                padding: kPaddingH,
+                child: ContextDropDown(
+                  key: Key('RatingContextSelector'),
+                ),
+              ),
             ),
           ),
-        ),
 
-        // Rating List
-        body: BlocConsumer<RatingCubit, RatingState>(
-          listenWhen: (p, c) => c.hasError,
-          listener: showSnackBarError,
-          buildWhen: (p, c) => c.hasNoError,
-          builder: (context, state) => ListView.separated(
-            itemCount: state.items.length,
+          // Rating List
+          body: ListView.separated(
             padding: kPaddingH,
+            itemCount: items.length,
             separatorBuilder: (context, i) => const Divider(),
             itemBuilder: (context, i) => RatingListTile(
-              key: ValueKey(state.items[i]),
-              userRating: state.items[i],
+              key: ValueKey(items[i]),
+              userRating: items[i],
             ),
           ),
-        ),
-      );
+        );
+      },
+    );
+  }
 }

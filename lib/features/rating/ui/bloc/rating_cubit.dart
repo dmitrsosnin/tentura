@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:tentura/ui/bloc/state_base.dart';
 
 import '../../data/rating_repository.dart';
-import '../../domain/entity/user_rating.dart';
 import 'rating_state.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,8 +21,6 @@ class RatingCubit extends Cubit<RatingState> {
 
   final RatingRepository _repository;
 
-  List<UserRating> _items = [];
-
   Future<void> fetch([String contextName = '']) async {
     emit(state.setLoading());
     try {
@@ -31,7 +28,7 @@ class RatingCubit extends Cubit<RatingState> {
         error: null,
         context: contextName,
         status: FetchStatus.isSuccess,
-        items: _items = (await _repository.fetch(context: contextName))
+        items: (await _repository.fetch(context: contextName))
             .toList(growable: false),
       ));
       _sort();
@@ -41,26 +38,25 @@ class RatingCubit extends Cubit<RatingState> {
   }
 
   void toggleSortingByAsc() {
-    emit(state.copyWith(isSortedByAsc: !state.isSortedByAsc));
+    emit(state.copyWith(
+      isSortedByAsc: !state.isSortedByAsc,
+    ));
     _sort();
   }
 
   void toggleSortingByEgo() {
-    emit(state.copyWith(isSortedByEgo: !state.isSortedByEgo));
+    emit(state.copyWith(
+      isSortedByEgo: !state.isSortedByEgo,
+    ));
     _sort();
   }
 
   void setSearchFilter(String filter) => emit(state.copyWith(
         searchFilter: filter,
-        items: _items
-            .where((e) =>
-                e.profile.title.toLowerCase().contains(filter.toLowerCase()))
-            .toList(),
       ));
 
   void clearSearchFilter() => emit(state.copyWith(
         searchFilter: '',
-        items: _items,
       ));
 
   void _sort() {
