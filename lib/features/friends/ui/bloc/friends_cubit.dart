@@ -25,8 +25,12 @@ class FriendsCubit extends Cubit<FriendsState> {
   );
 
   late final _likeChanges = _friendsCase.friendsChanges.listen(
-    (e) {
-      state.friends[e.id] = e;
+    (profile) {
+      if (profile.isFriend) {
+        state.friends[profile.id] = profile;
+      } else {
+        state.friends.remove(profile.id);
+      }
       emit(FriendsState(friends: state.friends));
     },
     cancelOnError: false,
