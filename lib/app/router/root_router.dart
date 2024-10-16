@@ -61,6 +61,10 @@ class RootRouter extends RootStackRouter {
             AutoRoute(
               page: FavoritesRoute.page,
             ),
+            // Liked Beacons
+            AutoRoute(
+              page: LikedBeaconsRoute.page,
+            ),
             // Connect
             AutoRoute(
               page: ConnectRoute.page,

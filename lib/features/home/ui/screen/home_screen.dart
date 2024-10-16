@@ -24,6 +24,10 @@ class HomeScreen extends StatelessWidget {
               label: 'Favorites',
             ),
             NavigationDestination(
+              icon: Icon(Icons.thumb_up_outlined),
+              label: 'Liked',
+            ),
+            NavigationDestination(
               icon: Icon(Icons.cable),
               label: 'Connect',
             ),
@@ -45,6 +49,7 @@ class HomeScreen extends StatelessWidget {
         routes: const [
           MyFieldRoute(),
           FavoritesRoute(),
+          LikedBeaconsRoute(),
           ConnectRoute(),
           // UpdatesRoute(),
           FriendsRoute(),
