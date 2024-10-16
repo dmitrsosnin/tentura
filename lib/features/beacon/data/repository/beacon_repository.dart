@@ -75,7 +75,9 @@ class BeaconRepository {
       .then(
         (v) => v == null
             ? BeaconDeleteException(id)
-            : _controller.add(RepositoryEventDelete(id)),
+            : _controller.add(RepositoryEventDelete(emptyBeacon.copyWith(
+                id: id,
+              ))),
       );
 
   Future<void> setEnabled(

@@ -1,0 +1,9 @@
+query FriendsFetch {
+  vote_user {
+    user {
+      id
+      title
+      has_picture
+    }
+  }
+}

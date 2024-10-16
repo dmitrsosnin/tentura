@@ -65,9 +65,7 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
     try {
       emit(state.copyWith(
         status: FetchStatus.isSuccess,
-        profile: state.profile.copyWith(
-          myVote: await _profileViewCase.addFriend(state.profile.id),
-        ),
+        profile: await _profileViewCase.addFriend(state.profile),
       ));
     } catch (e) {
       emit(state.setError(e));
@@ -79,9 +77,7 @@ class ProfileViewCubit extends Cubit<ProfileViewState> {
     try {
       emit(state.copyWith(
         status: FetchStatus.isSuccess,
-        profile: state.profile.copyWith(
-          myVote: await _profileViewCase.removeFriend(state.profile.id),
-        ),
+        profile: await _profileViewCase.removeFriend(state.profile),
       ));
     } catch (e) {
       emit(state.setError(e));

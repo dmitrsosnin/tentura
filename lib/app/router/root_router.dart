@@ -66,8 +66,12 @@ class RootRouter extends RootStackRouter {
               page: ConnectRoute.page,
             ),
             // Updates
+            // AutoRoute(
+            //   page: UpdatesRoute.page,
+            // ),
+            // Friends
             AutoRoute(
-              page: UpdatesRoute.page,
+              page: FriendsRoute.page,
             ),
             // Profile
             AutoRoute(

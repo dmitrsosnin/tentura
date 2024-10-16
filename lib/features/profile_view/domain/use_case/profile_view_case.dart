@@ -1,8 +1,9 @@
 import 'package:injectable/injectable.dart';
 
-import 'package:tentura/features/beacon/data/repository/beacon_repository.dart';
 import 'package:tentura/features/beacon/domain/entity/beacon.dart';
+import 'package:tentura/features/beacon/data/repository/beacon_repository.dart';
 import 'package:tentura/features/like/data/repository/like_remote_repository.dart';
+import 'package:tentura/features/profile/domain/entity/profile.dart';
 
 import '../../data/profile_view_repository.dart';
 
@@ -30,13 +31,9 @@ class ProfileViewCase {
   Future<Iterable<Beacon>> fetchBeaconsByUserId(String userId) =>
       _beaconRepository.fetchBeaconsByUserId(userId);
 
-  Future<int> addFriend(String userId) => _likeRemoteRepository.likeUser(
-        userId: userId,
-        amount: 1,
-      );
+  Future<Profile> addFriend(Profile profile) =>
+      _likeRemoteRepository.setLike<Profile>(profile, amount: 1);
 
-  Future<int> removeFriend(String userId) => _likeRemoteRepository.likeUser(
-        userId: userId,
-        amount: 0,
-      );
+  Future<Profile> removeFriend(Profile profile) =>
+      _likeRemoteRepository.setLike<Profile>(profile, amount: 0);
 }

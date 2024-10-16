@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
-import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:tentura/ui/bloc/state_base.dart';

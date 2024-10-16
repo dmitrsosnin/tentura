@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:injectable/injectable.dart';
 
 import 'package:tentura/domain/entity/repository_event.dart';

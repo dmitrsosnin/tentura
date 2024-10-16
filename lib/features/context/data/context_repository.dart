@@ -63,6 +63,8 @@ class ContextRepository {
         .then((r) => r.dataOrThrow(label: _label).delete_user_context_by_pk);
     if (response == null) throw ContextDeleteException(contextName);
     _cache.remove(contextName);
-    _controller.add(RepositoryEventDelete(response.context_name));
+    _controller.add(RepositoryEventDelete(Context(
+      name: response.context_name,
+    )));
   }
 }
