@@ -28,6 +28,7 @@ class LikedBeaconsCubit extends Cubit<LikedBeaconsState> {
 
   late final _likeChanges = _likedBeaconsCase.likeChanges.listen(
     (beacon) {
+      emit(state.setLoading());
       state.beacons.removeWhere((e) => e.id == beacon.id);
       if (beacon.myVote > 0) state.beacons.add(beacon);
       emit(LikedBeaconsState(beacons: state.beacons));
